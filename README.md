@@ -1,6 +1,6 @@
-# Ruby on Rails Tutorial sample application
+# MGSuivi based on Ruby on Rails Tutorial sample application
 
-This is the sample application for
+This application is based on
 [*Ruby on Rails Tutorial:
 Learn Web Development with Rails*](https://www.railstutorial.org/)
 (6th Edition)
@@ -8,9 +8,11 @@ by [Michael Hartl](http://www.michaelhartl.com/).
 
 ## License
 
-All source code in the [Ruby on Rails Tutorial](https://www.railstutorial.org/)
-is available jointly under the MIT License and the Beerware License. See
-[LICENSE.md](LICENSE.md) for details.
+All rights are reserved for MGSuivi by the team MGTool.
+
+## Clone sample version
+
+If you plan to clone a sample empty version take the version 1.0
 
 ## Getting started
 
@@ -38,5 +40,38 @@ If the test suite passes, you'll be ready to run the app in a local server:
 $ rails server
 ```
 
-For more information, see the
-[*Ruby on Rails Tutorial* book](https://www.railstutorial.org/book).
+## Basic git commands
+Basic git usage
+```
+$ git add .
+$ git commit -m "comment"
+$ git push -u origingithub master
+$ git push heroku master
+```
+
+Please tag version directly in github.
+
+
+## Current version
+The current version
+> Handle users
+> Handle all rails security
+
+
+## Deployment
+
+Deployment on Heroky (we assume you have an Heroku account)
+```
+$ heroku login
+$ heroku create
+$ heroku run rails db:migrate
+$ heroku run rails db:seed
+
+$ heroku run rake db:migrate
+$ heroku run rake db:seed
+```
+
+In case of issue
+```
+$ heroku logs --tails
+```
