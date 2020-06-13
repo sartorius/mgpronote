@@ -1,0 +1,40 @@
+remote:        Compiling...
+remote:        Compiled all packs in /tmp/build_d49515aa3cfe3e1fe9245471c8128c44/public/packs
+remote:        Asset precompilation completed (48.53s)
+remote:        Cleaning assets
+remote:        Running: rake assets:clean
+remote: -----> Detecting rails configuration
+remote:
+remote: ###### WARNING:
+remote:
+remote:        You set your `config.active_storage.service` to :local in production.
+remote:        If you are uploading files to this app, they will not persist after the app
+remote:        is restarted, on one-off dynos, or if the app has multiple dynos.
+remote:        Heroku applications have an ephemeral file system. To
+remote:        persist uploaded files, please use a service such as S3 and update your Rails
+remote:        configuration.
+remote:
+remote:        For more information can be found in this article:
+remote:          https://devcenter.heroku.com/articles/active-storage-on-heroku
+remote:
+remote:
+remote: ###### WARNING:
+remote:
+remote:        We detected that some binary dependencies required to
+remote:        use all the preview features of Active Storage are not
+remote:        present on this system.
+remote:
+remote:        For more information please see:
+remote:          https://devcenter.heroku.com/articles/active-storage-on-heroku
+remote:
+remote:
+remote:
+remote: -----> Discovering process types
+remote:        Procfile declares types     -> web
+remote:        Default types for buildpack -> console, rake
+remote:
+remote: -----> Compressing...
+remote:        Done: 82.2M
+remote: -----> Launching...
+remote:        Released v6
+remote:        https://pacific-bayou-41716.herokuapp.com/ deployed to Heroku
