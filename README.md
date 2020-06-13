@@ -41,7 +41,7 @@ $ rails server
 ```
 
 ## Basic git commands
-Basic git usage
+Basic git usage [*Get the private github project*](https://github.com/sartorius/mgscore_appror)
 ```
 $ git add .
 $ git commit -m "comment"
