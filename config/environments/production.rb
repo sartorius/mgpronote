@@ -71,7 +71,7 @@ Rails.application.configure do
   ActionMailer::Base.smtp_settings = {
     :address        => 'mail34.lwspanel.com',
     :port           => '587',
-    :authentication => :plain,
+    :authentication => :login,
     #:user_name      => ENV['SENDGRID_USERNAME'],
     #:password       => ENV['SENDGRID_PASSWORD'],
     :user_name      => 'ne-pas-repondre@projetbannister.com',
