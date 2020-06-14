@@ -5,6 +5,8 @@
 
 $gray-medium-light: #eaeaea;
 
+$main-color-light: #F9F5FA;
+
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
   -webkit-box-sizing: border-box;
@@ -31,6 +33,7 @@ textarea {
     margin-bottom: 10px;
   }
 }
+
 
 /* typography */
 

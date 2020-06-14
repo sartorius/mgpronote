@@ -1,0 +1,16 @@
+
+/* Nav bar */
+.navbar-inverse{
+  background-color: #F9F5FA;
+  border-color: #F9F5FA;
+}
+
+// Link in menu
+.navbar-inverse .navbar-nav > li > a{
+  font-size: 1.1em;
+  color: #727272;
+}
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+  color: #4C045E;
+  background-color: transparent;
+}
