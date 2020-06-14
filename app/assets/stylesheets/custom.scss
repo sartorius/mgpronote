@@ -34,6 +34,19 @@ textarea {
   }
 }
 
+/* Button review */
+
+.btn-default{
+   color: white;
+   background-color:#300055;
+   border-color:#130022;
+ }
+.btn.btn-default:hover,
+.btn.btn-default:focus,
+.btn.btn-default:active,
+.btn.btn-default.active {
+    color: #45007B;
+}
 
 /* typography */
 
@@ -83,7 +96,7 @@ p {
 /* footer */
 
 footer {
-  margin-top: 45px;
+  margin-top: 17em;
   padding-top: 5px;
   border-top: 1px solid $gray-medium-light;
   color: $gray-light;
