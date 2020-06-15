@@ -1,5 +1,5 @@
-<% provide(:title, "Help") %>
-<h1>Read BC</h1>
+<% provide(:title, "Scan") %>
+<h1>Scannez code barre</h1>
 <div id="mg-graph-identifier">readbc</div>
 <div>
   <div class="row">
@@ -7,21 +7,28 @@
       <div class="col-lg-12" id="demo-content">
 
           <div>
-            Vous pouvez scanner un code barre
-          </div>
-          <br>
-          <div>
-            <div class="col-sm-6">
-              <a class="btn btn-sm btn-block btn-default" id="startButton">Start</a>
+            <div class="mgs-bg-scan col-sm-12">
+              <a class="btn btn-lg btn-block btn-default" id="startButton">Scan</a>
             </div>
-            <div class="col-sm-6">
-              <a class="btn btn-sm btn-block btn-default" id="resetButton">Reset</a>
+
+            <div class="mgs-bg-scan col-sm-12">
+              <a class="btn btn-sm btn-block btn-default" id="resetButton">Stopper la Caméra</a>
             </div>
           </div>
-          <br><br><br><br>
+
+          <br><br>
           <div class="col-lg-12 mgs-cam">
-              <video id="video" width="275" height="275" style="border: 1px solid #300055"></video>
+              <video id="video" width="275" height="275" style="background-color: #C6B2D8"></video>
           </div>
+
+
+          <div id="mgs-switchcam" class="mgs-bg-scan col-sm-12 mgs-cam">
+            <div class="btn-group" role="group" aria-label="Switch Camera">
+              <button id="mgs-scan-cam1" type="button" class="btn btn-default">Caméra 1</button>
+              <button id="mgs-scan-cam2" type="button" class="btn btn-default">Caméra 2</button>
+            </div>
+          </div>
+
 
           <div id="sourceSelectPanel" style="display:none">
               <label for="sourceSelect">Change video source:</label>
