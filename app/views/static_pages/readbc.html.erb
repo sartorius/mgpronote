@@ -1,5 +1,6 @@
 <% provide(:title, "Help") %>
 <h1>Read BC</h1>
+<div id="mg-graph-identifier">readbc</div>
 <div>
   <div class="row">
 
@@ -10,16 +11,16 @@
           </div>
           <br>
           <div>
-            <div class="col-lg-6">
+            <div class="col-sm-6">
               <a class="btn btn-sm btn-block btn-default" id="startButton">Start</a>
             </div>
-            <div class="col-lg-6">
+            <div class="col-sm-6">
               <a class="btn btn-sm btn-block btn-default" id="resetButton">Reset</a>
             </div>
           </div>
           <br><br><br><br>
           <div class="mgs-cam">
-              <video id="video" width="600" height="400" style="border: 1px solid gray"></video>
+              <video id="video" max-width="400" height="400" style="border: 1px solid gray"></video>
           </div>
 
           <div id="sourceSelectPanel" style="display:none">
@@ -35,50 +36,5 @@
 </div>
 
 <script type="text/javascript">
-  window.addEventListener('load', function () {
-      let selectedDeviceId;
-      const codeReader = new ZXing.BrowserBarcodeReader()
-      console.log('ZXing code reader initialized')
-      codeReader.getVideoInputDevices()
-          .then((videoInputDevices) => {
-              const sourceSelect = document.getElementById('sourceSelect')
-              selectedDeviceId = videoInputDevices[0].deviceId
-              if (videoInputDevices.length > 1) {
-                  videoInputDevices.forEach((element) => {
-                      const sourceOption = document.createElement('option')
-                      sourceOption.text = element.label
-                      sourceOption.value = element.deviceId
-                      sourceSelect.appendChild(sourceOption)
-                  })
 
-                  sourceSelect.onchange = () => {
-                      selectedDeviceId = sourceSelect.value;
-                  }
-
-                  const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-                  sourceSelectPanel.style.display = 'block'
-              }
-
-              document.getElementById('startButton').addEventListener('click', () => {
-                  codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
-                      console.log(result)
-                      document.getElementById('result').textContent = result.text
-                  }).catch((err) => {
-                      console.error(err)
-                      document.getElementById('result').textContent = err
-                  })
-                  console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
-              })
-
-              document.getElementById('resetButton').addEventListener('click', () => {
-                  document.getElementById('result').textContent = '';
-                  codeReader.reset();
-                  console.log('Reset.')
-              })
-
-          })
-          .catch((err) => {
-              console.error(err)
-          })
-  })
 </script>
