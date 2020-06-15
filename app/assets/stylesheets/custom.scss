@@ -5,6 +5,7 @@
 
 $gray-medium-light: #eaeaea;
 
+$main-color: #300055;
 $main-color-light: #F9F5FA;
 
 @mixin box_sizing {
@@ -38,7 +39,7 @@ textarea {
 
 .btn-default{
    color: white;
-   background-color:#300055;
+   background-color:$main-color;
    border-color:#130022;
  }
 .btn.btn-default:hover,
@@ -46,6 +47,10 @@ textarea {
 .btn.btn-default:active,
 .btn.btn-default.active {
     color: #45007B;
+}
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+    background-color: $main-color;
 }
 
 /* typography */
