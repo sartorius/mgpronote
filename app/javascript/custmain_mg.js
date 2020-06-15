@@ -12,7 +12,8 @@ $(document).ready(function() {
 function loadCameraRead(){
   let selectedDeviceId;
   const codeReader = new ZXing.BrowserBarcodeReader();
-  console.log('ZXing code reader initialized');
+  //console.log('ZXing code reader initialized');
+  alert('ZXing code reader initialized');
   codeReader.getVideoInputDevices()
       .then((videoInputDevices) => {
           const sourceSelect = document.getElementById('sourceSelect')
