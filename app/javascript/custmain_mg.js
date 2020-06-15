@@ -39,7 +39,7 @@ function loadCameraRead(){
               const sourceSelectPanel = document.getElementById('sourceSelectPanel')
               sourceSelectPanel.style.display = 'block'
           }
-
+          /*
           if(videoInputDevices.length == 2){
             $("#mgs-switchcam").show();
             $("#mgs-scan-cam1").click(function() {
@@ -49,6 +49,7 @@ function loadCameraRead(){
                 alert('You clicked on cam 2');
             });
           }
+          */
 
           document.getElementById('startButton').addEventListener('click', () => {
               codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
