@@ -66,7 +66,17 @@ function loadCameraRead(){
 
           $( "#switchCam" ).click(function() {
             if (poolCamJSON.cam.length > 1){
-              alert('You have several cam');
+                var getCurrentCami = parseInt(poolCamJSON.preferredCam);
+                getCurrentCami = getCurrentCami+1;
+                //We overpassed the length
+                if(getCurrentCami > poolCamJSON.cam.length-1){
+                  getCurrentCami = 0;
+                }
+                // Do all the changes and Restart
+                poolCamJSON.preferredCam = getCurrentCami;
+                selectedDeviceId = poolCamJSON.cam[getCurrentCami].value;
+                endScan();
+                startScan();
             }
           });
 
