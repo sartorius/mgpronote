@@ -24,13 +24,29 @@ function loadCameraRead(){
           const sourceSelect = document.getElementById('sourceSelect');
           selectedDeviceId = videoInputDevices[0].deviceId;
 
+          // to be used if seval cam
+          var poolCamJSON = {
+              preferredCam: 0,
+              cam: []
+          };
+
           if (videoInputDevices.length > 1) {
+              // Create the json for source device
+              var icam = 0;
               videoInputDevices.forEach((element) => {
                   const sourceOption = document.createElement('option');
                   sourceOption.text = element.label;
                   sourceOption.value = element.deviceId;
                   sourceSelect.appendChild(sourceOption);
+
+                  poolCamJSON.cam.push({
+                       "camId" : icam,
+                       "label" : element.label,
+                       "value"  : element.deviceId
+                  });
+                  icam = icam+1;
               })
+              alert(JSON.stringify(poolCamJSON));
 
               sourceSelect.onchange = () => {
                   selectedDeviceId = sourceSelect.value;
@@ -40,29 +56,40 @@ function loadCameraRead(){
               sourceSelectPanel.style.display = 'block';
           }
 
-          document.getElementById('startButton').addEventListener('click', () => {
-              codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
-                  console.log(result);
-                  document.getElementById('result').textContent = result.text;
-              }).catch((err) => {
-                  console.error(err);
-                  document.getElementById('result').textContent = err;
-              })
-              console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
-          })
+          $("#startButton").click(function() {
+            startScan();
+          });
 
-          document.getElementById('resetButton').addEventListener('click', () => {
-              document.getElementById('result').textContent = '';
-              codeReader.reset();
-              console.log('Reset.')
-          })
+          $("#resetButton").click(function() {
+            endScan();
+          });
 
-          document.getElementById('switchCam').addEventListener('click', () => {
-            alert('You clicked on switch cam');
-          })
+          $( "#switchCam" ).click(function() {
+            if (poolCamJSON.cam.length > 1){
+              alert('You have several cam');
+            }
+          });
 
       })
       .catch((err) => {
           console.error(err);
       })
+
+      // Function description here
+      function startScan(){
+          codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
+              console.log(result);
+              document.getElementById('result').textContent = result.text;
+          }).catch((err) => {
+              console.error(err);
+              document.getElementById('result').textContent = err;
+          })
+          console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
+      }
+
+      function endScan(){
+        document.getElementById('result').textContent = '';
+        codeReader.reset();
+        console.log('Reset.');
+      }
 }
