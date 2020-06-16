@@ -51,9 +51,7 @@ function loadCameraRead(){
 
               // We load preference cam here
               var prefCami = localStorage.getItem("preferredCam");
-              alert('value of prefCami ' + prefCami);
               if((typeof prefCami != 'undefined') && (prefCami != null)){
-                  alert('input in cam set up');
                   selectedDeviceId = poolCamJSON.cam[prefCami].value;
               }
               /*
