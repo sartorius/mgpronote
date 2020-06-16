@@ -21,7 +21,7 @@ function loadCameraRead(){
   console.log('ZXing code reader initialized');
   codeReader.getVideoInputDevices()
       .then((videoInputDevices) => {
-          const sourceSelect = $('#sourceSelect')
+          const sourceSelect = document.getElementById('sourceSelect')
           selectedDeviceId = videoInputDevices[0].deviceId
 
           if (videoInputDevices.length > 1) {
@@ -36,23 +36,23 @@ function loadCameraRead(){
                   selectedDeviceId = sourceSelect.value;
               }
 
-              const sourceSelectPanel = $('#sourceSelectPanel')
+              const sourceSelectPanel = document.getElementById('sourceSelectPanel')
               sourceSelectPanel.style.display = 'block'
           }
 
-          $('#startButton').addEventListener('click', () => {
+          document.getElementById('startButton').addEventListener('click', () => {
               codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
                   console.log(result)
-                  $('#result').textContent = result.text
+                  document.getElementById('result').textContent = result.text
               }).catch((err) => {
                   console.error(err)
-                  $('#result').textContent = err
+                  document.getElementById('result').textContent = err
               })
               console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
           })
 
-          $('#resetButton').addEventListener('click', () => {
-              $('#result').textContent = '';
+          document.getElementById('resetButton').addEventListener('click', () => {
+              document.getElementById('result').textContent = '';
               codeReader.reset();
               console.log('Reset.')
           })
