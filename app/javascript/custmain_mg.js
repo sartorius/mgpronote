@@ -34,11 +34,13 @@ function loadCameraRead(){
               // Create the json for source device
               var icam = 0;
               videoInputDevices.forEach((element) => {
+
+                  /*
                   const sourceOption = document.createElement('option');
                   sourceOption.text = element.label;
                   sourceOption.value = element.deviceId;
                   sourceSelect.appendChild(sourceOption);
-
+                  */
                   poolCamJSON.cam.push({
                        "camId" : icam,
                        "label" : element.label,
@@ -46,11 +48,17 @@ function loadCameraRead(){
                   });
                   icam = icam+1;
               })
-              alert(JSON.stringify(poolCamJSON));
 
+              // We load preference cam here
+              var prefCami = localStorage.getItem("preferredCam");
+              if((typeof prefCami != 'undefined') && (prefCami != null)){
+                  selectedDeviceId = poolCamJSON.cam[getCurrentCami].value;
+              }
+              /*
               sourceSelect.onchange = () => {
                   selectedDeviceId = sourceSelect.value;
               }
+              */
 
               const sourceSelectPanel = document.getElementById('sourceSelectPanel');
               sourceSelectPanel.style.display = 'block';
@@ -74,6 +82,7 @@ function loadCameraRead(){
                 }
                 // Do all the changes and Restart
                 poolCamJSON.preferredCam = getCurrentCami;
+                localStorage.setItem("preferredCam", getCurrentCami);
                 selectedDeviceId = poolCamJSON.cam[getCurrentCami].value;
                 endScan();
                 startScan();
