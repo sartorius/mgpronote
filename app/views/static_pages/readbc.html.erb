@@ -1,5 +1,5 @@
 <% provide(:title, "Scan") %>
-<h1>Scannez code barre</h1>
+<h2>Scannez code barre</h2>
 <div id="mg-graph-identifier">readbc</div>
 <div>
   <div class="row">
@@ -8,11 +8,15 @@
 
           <div>
             <div class="mgs-bg-scan col-sm-12">
-              <a class="btn btn-lg btn-block btn-default" id="startButton">Scan &nbsp; <i class="glyphicon glyphicon-barcode"></i></a>
+              <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                Scanner &nbsp; <i class="glyphicon glyphicon-barcode"></i>
+              </button>
             </div>
 
             <div class="mgs-bg-scan col-sm-12">
-              <a class="btn btn-sm btn-block btn-default" id="resetButton">Stopper la Caméra &nbsp; <i class="glyphicon glyphicon-remove-circle"></i></a>
+              <button id="resetButton" type="button" class="btn btn-sm btn-block btn-default">
+                Stopper la Caméra &nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+              </button>
             </div>
           </div>
 
@@ -23,9 +27,11 @@
 
 
           <div class="mgs-bg-scan col-sm-12 mgs-cam">
-            <a class="btn btn-sm btn-default" id="switchCam">Changer de Caméra &nbsp; <i class="glyphicon glyphicon-camera"></i></a>
+            <%-# Button trigger modal -%>
+            <button id="switchCam" type="button" class="btn btn-sm btn-default">
+              Changer de Caméra &nbsp; <i class="glyphicon glyphicon-camera"></i>
+            </button>
           </div>
-
 
           <div id="sourceSelectPanel" style="display:none">
               <label for="sourceSelect">Change video source:</label>
