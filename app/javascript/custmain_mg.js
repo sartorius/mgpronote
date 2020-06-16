@@ -74,7 +74,6 @@ function loadCameraRead(){
           });
 
           $( "#switchCam" ).click(function() {
-            $("#load-cam").show(800);
             if (poolCamJSON.cam.length > 1){
                 var getCurrentCami = parseInt(poolCamJSON.preferredCam);
                 getCurrentCami = getCurrentCami+1;
@@ -98,7 +97,6 @@ function loadCameraRead(){
 
       // Function description here
       function startScan(){
-          $("#load-cam").hide();
           codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
               console.log(result);
               document.getElementById('result').textContent = result.text;
