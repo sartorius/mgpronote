@@ -64,12 +64,21 @@ function loadCameraRead(){
               sourceSelectPanel.style.display = 'block';
               */
           }
+          else{
+            $("#switchCam").hide();
+          }
+
+          $("#resetButton").prop('disabled', true);
 
           $("#startButton").click(function() {
+            $("#resetButton").prop('disabled', false);
+            $("#startButton").prop('disabled', true);
             startScan();
           });
 
           $("#resetButton").click(function() {
+            $("#resetButton").prop('disabled', true);
+            $("#startButton").prop('disabled', false);
             endScan();
           });
 
