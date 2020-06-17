@@ -1,0 +1,3 @@
+class BarcodeController < ApplicationController
+
+end
