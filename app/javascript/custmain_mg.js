@@ -10,14 +10,41 @@ $(document).on('turbolinks:load', function() {
 })
 
 function mainLoaderInCaseOfChange(){
-  if($('#mg-graph-identifier').text() == 'readbc'){
+  if($('#mg-graph-identifier').text() == 'savebc-gr'){
     $("#mg-save-step-btn").click(function() {
         getGeoL();
     });
     getGeoL();
     loadCameraRead();
   }
+  if($('#mg-graph-identifier').text() == 'checkbc-gr'){
+    loadCameraRead();
+  }
+  if($('#mg-graph-identifier').text() == 'checktag-gr'){
+    loadBCTag();
+  }
+
+
+
 }
+
+// Show tag
+function loadBCTag(){
+  var resulTag = "";
+
+  for(var i=0; i<dataTagToJsonArray.length; i++){
+    resulTag = resulTag + "Étape: "+ dataTagToJsonArray[i].id
+        + " - Action: " + dataTagToJsonArray[i].step
+        + " - Code Barre: " + dataTagToJsonArray[i].bc
+        + " - Date: " + dataTagToJsonArray[i].create_date
+        + " - Localization: " + dataTagToJsonArray[i].geo + "<br><br>"
+  }
+
+
+  $("#block-of-tag").html(resulTag);
+
+}
+
 
 // Geolocalisation utils
 var geoL = "Localisation indisponible ou non authorisée";
@@ -132,12 +159,18 @@ function loadCameraRead(){
               console.log(result);
               document.getElementById('result').textContent = result.text;
 
-              $("#step-cb").val(result.text);
-              $("#readBC").html(result.text);
+              if($('#mg-graph-identifier').text() == 'savebc-gr'){
+                $("#readBC").html(result.text);
+              }
+              $("#read-cb").val(result.text);
               $("#mgs-main-cam").hide();
-              $("#mgs-save-step").show(800);
-
+              $("#mgs-readbc-bottom").show(800);
               endScan();
+
+              if($('#mg-graph-identifier').text() == 'checkbc-gr'){
+                //Goto POST
+                $("#mg-checkbc-form").submit();
+              }
 
 
           }).catch((err) => {

@@ -1,0 +1,50 @@
+<% provide(:title, "Enregistrer") %>
+<div id="mg-graph-identifier">savebc-gr</div>
+<%= render 'barcode/readbc' %>
+<hr>
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <div class="mgs-note">
+          Code barre lu
+        </div>
+        <div class="mgs-read-bc">
+          <p id="readBC" class="big-BC">
+            MGXXXXUUUUTTTPPW
+          </p>
+        </div>
+        <form action="/save_step" method="post">
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Étape à enregistrer</label>
+            <select name="stepstep" class="custom-select custom-select-lg mb-3" id="exampleFormControlSelect1">
+              <option value="Réception">Réception</option>
+              <option value="Enlèvement">Enlèvement</option>
+              <option value="Dépôt Stock">Dépôt Stock</option>
+              <option value="Prêt départ/CDG">Prêt départ/CDG</option>
+              <option value="Prêt départ/Orly">Prêt départ/Orly</option>
+              <option value="Arrivée/Tana">Arrivée/Tana</option>
+              <option value="Disponible pour le Client">Disponible pour le Client</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" name="stepcomment" placeholder="Commentaire" id="exampleFormControlTextarea1" rows="3" style="resize: none;"></textarea>
+          </div>
+
+
+          <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-save-step-btn"
+                  value="Enregistrer une étape"/>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb" name="stepcb" placeholder="code barre" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
+
+
+
+        </form>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

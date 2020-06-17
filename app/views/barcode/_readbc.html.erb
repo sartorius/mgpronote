@@ -1,0 +1,59 @@
+<div id="mgs-main-cam">
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+        <p class="mgs-note">
+        Vous pouvez scanner ici les codes barres liés à MG Suivi pour enregistrer une étape du processus ou obtenir plus d'informations.
+        </p>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+  <div>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6" id="demo-content">
+
+            <div>
+              <div class="mgs-bg-scan col-sm-12">
+                <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                  Scanner &nbsp; <i class="glyphicon glyphicon-barcode"></i>
+                </button>
+              </div>
+
+              <div class="mgs-bg-scan col-sm-12">
+                <button id="resetButton" type="button" class="btn btn-sm btn-block btn-default">
+                  Stopper la Caméra &nbsp; <i class="glyphicon glyphicon-remove-circle"></i>
+                </button>
+              </div>
+            </div>
+
+            <br><br>
+            <div class="col-lg-12 mgs-cam">
+
+            <video id="video" width="275" height="275" style="background-color: #C6B2D8">
+            </video>
+
+
+            </div>
+
+
+
+            <div class="mgs-bg-scan col-sm-12 mgs-cam">
+              <%-# Button trigger modal -%>
+              <button id="switchCam" type="button" class="btn btn-sm btn-default">
+                Changer de Caméra &nbsp; <i class="glyphicon glyphicon-camera"></i>
+              </button>
+            </div>
+
+            <label>Resultat de la lecture:</label>
+            <pre><code id="result"></code></pre>
+        </div>
+
+        <div class="col-lg-3">
+        </div>
+    </div>
+  </div>
+</div>

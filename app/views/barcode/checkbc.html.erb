@@ -1,0 +1,21 @@
+<% provide(:title, "Vérifier") %>
+<div id="mg-graph-identifier">checkbc-gr</div>
+<%= render 'barcode/readbc' %>
+<hr>
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <form action="/check_step" method="post" id="mg-checkbc-form">
+          <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-step-btn"
+                  value="Vérifier"/>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb" name="checkcb" placeholder="code barre" style="resize: none;"></textarea>
+        </form>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

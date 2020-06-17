@@ -1,8 +1,8 @@
 class BarcodeController < ApplicationController
-  skip_before_action :verify_authenticity_token, :only => [:savestep]
+  skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
 
-  def readbc
-    render 'readbc'
+  def savebc
+    render 'savebc'
   end
 
   def savestep
@@ -22,11 +22,31 @@ class BarcodeController < ApplicationController
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       ActiveRecord::Base.connection.execute(sql_query)
       @returnmessage = "L'étape a été correctement enregistrée"
-      render 'savestep'
+      render 'resultsavestep'
     end
     rescue Exception => exc
        @returnmessage = "Une erreur est survenue #{exec.message}"
-       render 'savestep'
+       render 'resultsavestep'
+  end
+
+  def checkbc
+    render 'checkbc'
+  end
+
+  def checkstep
+    sql_query = "SELECT id, bc, step, geo, create_date FROM tag WHERE bc IN ('" + params[:checkcb] + "') ORDER BY id ASC;"
+
+    begin
+
+      #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+      #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
+      @resultSet = ActiveRecord::Base.connection.execute(sql_query)
+
+      render 'resultcheckstep'
+    end
+    rescue Exception => exc
+       flash[:info] = "Une erreur est survenue #{exec.message}"
+       render 'resultcheckstep'
   end
 
 
