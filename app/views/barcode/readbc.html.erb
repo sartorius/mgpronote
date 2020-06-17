@@ -1,5 +1,5 @@
 <% provide(:title, "Scan") %>
-<div class="mgs-main-cam">
+<div id="mgs-main-cam">
   <div id="mg-graph-identifier">readbc</div>
   <div class="row">
     <div class="col-lg-3">
@@ -56,6 +56,35 @@
 
         <div class="col-lg-3">
         </div>
+    </div>
+  </div>
+</div>
+<hr>
+<div id="mgs-save-step">
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+        <form>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Example select</label>
+            <select class="custom-select custom-select-lg mb-3" id="exampleFormControlSelect1">
+              <option value="1">Réception</option>
+              <option value="2">Enlèvement</option>
+              <option value="3">Dépôt Stock</option>
+              <option value="4">Prêt départ/CDG</option>
+              <option value="5">Prêt départ/Orly</option>
+              <option value="6">Arrivée/Tana</option>
+              <option value="7">Disponible pour le Client</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Commentaire</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
+        </form>
+    </div>
+    <div class="col-lg-3">
     </div>
   </div>
 </div>
