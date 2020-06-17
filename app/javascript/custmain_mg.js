@@ -36,11 +36,15 @@ function loadBCTag(){
     resulTag = resulTag + "Étape: "+ dataTagToJsonArray[i].id
         + " - Action: " + dataTagToJsonArray[i].step
         + " - Code Barre: " + dataTagToJsonArray[i].bc
-        + " - Date: " + dataTagToJsonArray[i].create_date
-        + " - Localization: " + dataTagToJsonArray[i].geo + "<br><br>"
+        + " - Date: " + dataTagToJsonArray[i].create_date + " - Localisation: ";
+        if(dataTagToJsonArray[i].geo == 'Localisation indisponible ou non authorisée'){
+          resulTag = resulTag + 'Localisation indisponible ou non authorisée';
+        }
+        else{
+          resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '">Voir Localisation</a>';
+        }
+        resulTag = resulTag + "<br><br>"
   }
-
-
   $("#block-of-tag").html(resulTag);
 
 }
@@ -159,12 +163,13 @@ function loadCameraRead(){
               console.log(result);
               document.getElementById('result').textContent = result.text;
 
+
+              $("#read-cb").val(result.text);
               if($('#mg-graph-identifier').text() == 'savebc-gr'){
                 $("#readBC").html(result.text);
+                $("#mgs-main-cam").hide();
+                $("#mgs-readbc-bottom").show(800);
               }
-              $("#read-cb").val(result.text);
-              $("#mgs-main-cam").hide();
-              $("#mgs-readbc-bottom").show(800);
               endScan();
 
               if($('#mg-graph-identifier').text() == 'checkbc-gr'){
