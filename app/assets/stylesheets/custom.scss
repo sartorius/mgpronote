@@ -108,6 +108,23 @@ p {
   font-size: 0.8em;
 }
 
+#readBC{
+  text-align: center;
+}
+
+.step-hid{
+  visibility: hidden;
+}
+
+#mgs-save-step{
+  display: none;
+}
+
+.big-BC {
+  font-size: 2em;
+  color: $main-color;
+}
+
 /* header */
 
 #logo {

@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  get    '/readbc',    to: 'barcode#readbc'
+  get     '/readbc',    to: 'barcode#readbc'
+  post	  '/save_step'   => 'barcode#savestep'
+  get     '/save_step',    to: 'static_pages#home'
 end

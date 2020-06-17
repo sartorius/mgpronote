@@ -11,10 +11,32 @@ $(document).on('turbolinks:load', function() {
 
 function mainLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'readbc'){
+    $("#mg-save-step-btn").click(function() {
+        getGeoL();
+    });
+    getGeoL();
     loadCameraRead();
   }
 }
 
+// Geolocalisation utils
+var geoL = "Localisation indisponible ou non authorisée";
+function getGeoL(){
+  console.log("start geolocalisation");
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    console.log("Issue geolocation");
+  }
+  $("#step-geol").val(geoL);
+}
+function showPosition(position) {
+  geoL = position.coords.latitude + ", " + position.coords.longitude;
+}
+
+
+
+// Camera utils
 function loadCameraRead(){
   let selectedDeviceId;
   const codeReader = new ZXing.BrowserBarcodeReader();
@@ -109,6 +131,15 @@ function loadCameraRead(){
           codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
               console.log(result);
               document.getElementById('result').textContent = result.text;
+
+              $("#step-cb").val(result.text);
+              $("#readBC").html(result.text);
+              $("#mgs-main-cam").hide();
+              $("#mgs-save-step").show();
+
+              endScan();
+
+
           }).catch((err) => {
               console.error(err);
               document.getElementById('result').textContent = err;
