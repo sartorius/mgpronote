@@ -12,5 +12,5 @@ Rails.application.routes.draw do
   resources :password_resets,     only: [:new, :create, :edit, :update]
   get     '/readbc',    to: 'barcode#readbc'
   post	  '/save_step'   => 'barcode#savestep'
-  get     '/save_step',    to: 'static_pages#home'
+  get     '/save_step' => redirect("/")
 end

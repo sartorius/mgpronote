@@ -7,6 +7,7 @@ $gray-medium-light: #eaeaea;
 
 $main-color: #300055;
 $main-color-light: #F9F5FA;
+$main-color-medium: #6D5D7C;
 
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
@@ -103,7 +104,6 @@ p {
 .mgs-note{
   text-align: justify;
   color: #b3b3b3;
-  padding-left: 40px;
   padding-right: 40px;
   font-size: 0.8em;
 }
@@ -121,7 +121,21 @@ p {
 }
 
 .big-BC {
-  font-size: 2em;
+  font-size: 2.4em;
+  color: $main-color;
+}
+
+.mgs-note-top{
+  margin-top: 1.5em;
+}
+
+.mgs-info{
+  font-size: 1.3em;
+  color: $main-color-medium;
+}
+
+.mgs-returnmsg{
+  font-size: 0.8em;
   color: $main-color;
 }
 

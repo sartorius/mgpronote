@@ -1,0 +1,37 @@
+<% provide(:title, "Étape") %>
+<div id="mg-graph-identifier">stepsaved</div>
+<div class="row">
+  <div class="col-lg-3">
+  </div>
+  <div class="col-lg-6">
+    <div class="mgs-read-bc">
+      <p id="readBC" class="big-BC">
+        <%= @stepcb %>
+      </p>
+    </div>
+    <div class="mgs-returnmsg">
+      <%= @returnmessage %>
+    </div>
+    <p>
+      <div class="mgs-note mgs-note-top">
+        L'étape suivante a été enregistrée
+      </div>
+
+      <div class="mgs-info">
+        <%= @stepstep %>
+      </div>
+
+      <div class="mgs-note mgs-note-top">
+        Localisation
+      </div>
+
+      <div class="mgs-info">
+        <%= @stepgeol %>
+      </div>
+
+
+    </p>
+  </div>
+  <div class="col-lg-3">
+  </div>
+</div>

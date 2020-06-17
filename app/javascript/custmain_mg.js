@@ -135,7 +135,7 @@ function loadCameraRead(){
               $("#step-cb").val(result.text);
               $("#readBC").html(result.text);
               $("#mgs-main-cam").hide();
-              $("#mgs-save-step").show();
+              $("#mgs-save-step").show(800);
 
               endScan();
 
