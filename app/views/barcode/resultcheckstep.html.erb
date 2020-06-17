@@ -5,7 +5,7 @@
 <% else %>
   <script>
     var dataTagToJson = "<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>";
-    dataTagToJson = dataTagToJson.replaceAll("&quot;", "\"");
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
 <% end %>
