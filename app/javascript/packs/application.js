@@ -7,6 +7,7 @@ require("@rails/ujs").start()
 require("@rails/activestorage").start()
 require("channels")
 require("custmain_mg.js")
+require("scannermng_mg.js")
 require("turbolinks").start()
 import "bootstrap"
 
