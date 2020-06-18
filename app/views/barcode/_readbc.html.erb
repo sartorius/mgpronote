@@ -47,6 +47,14 @@
               </button>
             </div>
 
+
+            <div class="mgs-bg-scan col-sm-12 mgs-cam">
+              <button id="startManualButton" type="button" class="btn btn-sm btn-default">
+                Entrer le numéro de code barre à la main &nbsp; <i class="glyphicon glyphicon-copy"></i>
+              </button>
+            </div>
+
+
             <label>Code lecture:</label>
             <pre><code id="result"></code></pre>
         </div>
@@ -55,4 +63,24 @@
         </div>
     </div>
   </div>
+</div>
+
+<div id="mgs-manual-cam">
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+
+        <div class="manual-block manual-el">
+          <textarea class="form-control" rows="1" id="manual-cb" placeholder="Entrez manuellement le code barre" style="resize: none;"></textarea>
+          <button id="manualValid" type="button" class="btn btn-lg btn-block btn-default manual-el">
+            Valider &nbsp; <i class="glyphicon glyphicon-barcode"></i>
+          </button>
+        </div>
+
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+  <br><br><br><br><br>
 </div>

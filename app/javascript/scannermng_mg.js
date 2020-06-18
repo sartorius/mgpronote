@@ -149,6 +149,36 @@ function loadCameraRead(){
             endScan();
           });
 
+          $("#startManualButton").click(function() {
+            //We end the scan
+            $("#resetButton").prop('disabled', true);
+            $("#startButton").prop('disabled', false);
+            endScan();
+            $("#mgs-main-cam").hide();
+            $("#mgs-manual-cam").show();
+
+            $("#manualValid").click(function() {
+              // Handle here the valid manual
+              if($('#manual-cb').val().length > 0){
+                  //Go valid
+                  var manualbc = $('#manual-cb').val();
+                  $("#read-cb").val(manualbc);
+                  if($('#mg-graph-identifier').text() == 'savebc-gr'){
+                    $("#readBC").html(manualbc);
+                    $("#mgs-manual-cam").hide();
+                    $("#mgs-readbc-bottom").show(800);
+                  }
+                  if($('#mg-graph-identifier').text() == 'checkbc-gr'){
+                    //Goto POST
+                    $("#mg-checkbc-form").submit();
+                  }
+
+              }
+            });
+          });
+
+
+
           $( "#switchCam" ).click(function() {
             if (poolCamJSON.cam.length > 1){
                 var getCurrentCami = parseInt(poolCamJSON.preferredCam);
