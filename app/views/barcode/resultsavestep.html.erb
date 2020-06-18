@@ -1,5 +1,7 @@
 <% provide(:title, "Étape") %>
 <div id="mg-graph-identifier">stepsaved</div>
+
+
 <div class="row">
   <div class="col-lg-3">
   </div>
@@ -10,14 +12,15 @@
       </p>
     </div>
     <div class="mgs-returnmsg">
-      <%= @returnmessage %>
+      <span class="badge badge-primary-medium">&nbsp;<%= @returnmessage %>&nbsp;</span>
+
     </div>
     <p>
       <div class="mgs-note mgs-note-top">
         L'étape suivante a été enregistrée
       </div>
 
-      <div class="mgs-info">
+      <div class="mgs-info-big">
         <%= @stepstep %>
       </div>
 

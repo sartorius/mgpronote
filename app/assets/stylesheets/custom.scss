@@ -36,7 +36,7 @@ textarea {
   }
 }
 
-/* Button review */
+/* Bootstrap */
 
 .btn-default{
    color: white;
@@ -49,6 +49,21 @@ textarea {
 .btn.btn-default.active {
     color: #45007B;
 }
+
+.badge-primary {
+  background-color: $main-color;
+}
+
+.badge-primary-medium{
+  background-color: $main-color-medium;
+}
+
+.badge-primary-light {
+  background-color: $main-color-light;
+}
+
+/* Bootstrap review */
+
 
 
 /* typography */
@@ -78,6 +93,12 @@ p {
   line-height: 1.7em;
 }
 
+/* Alerting */
+
+#alerting{
+  display: none;
+}
+
 #mg-graph-identifier{
   visibility: hidden;
 }
@@ -85,7 +106,10 @@ p {
 /* Camera */
 .mgs-cam{
   text-align: center;
+  margin-top: 1em;
+  margin-bottom: 2em;
 }
+
 
 .mgs-bg-scan{
   margin-bottom: 1em;
@@ -104,7 +128,6 @@ p {
 .mgs-note{
   text-align: justify;
   color: #b3b3b3;
-  padding-right: 40px;
   font-size: 0.8em;
 }
 
@@ -125,7 +148,7 @@ p {
 }
 
 .big-BC {
-  font-size: 2.4em;
+  font-size: 2.2em;
   color: $main-color;
 }
 
@@ -136,6 +159,12 @@ p {
 .mgs-info{
   font-size: 1.3em;
   color: $main-color-medium;
+}
+
+.mgs-info-big{
+  font-size: 1.9em;
+  color: $main-color-medium;
+  margin-bottom: 1em;
 }
 
 .mgs-returnmsg{

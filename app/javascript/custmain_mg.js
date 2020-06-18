@@ -11,21 +11,44 @@ $(document).on('turbolinks:load', function() {
 
 function mainLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'savebc-gr'){
-    $("#mg-save-step-btn").click(function() {
+    try {
+        $("#mg-save-step-btn").click(function() {
+            getGeoL();
+        });
         getGeoL();
-    });
-    getGeoL();
-    loadCameraRead();
+        loadCameraRead();
+    }
+    catch(err) {
+      console.log(err.message);
+      customLogErr(err.message);
+    }
   }
   if($('#mg-graph-identifier').text() == 'checkbc-gr'){
-    loadCameraRead();
+    try {
+      loadCameraRead();
+    }
+    catch(err) {
+      console.log(err.message);
+      customLogErr(err.message);
+    }
   }
   if($('#mg-graph-identifier').text() == 'checktag-gr'){
-    loadBCTag();
+    try {
+      loadBCTag();
+    }
+    catch(err) {
+      console.log(err.message);
+      customLogErr(err.message);
+    }
   }
 
 
 
+}
+
+function customLogErr(msg){
+  $('#alerting-msg').text('Erreur: ' + msg);
+  $('#alerting').show();
 }
 
 // Show tag
