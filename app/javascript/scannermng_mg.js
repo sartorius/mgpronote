@@ -101,7 +101,7 @@ function loadBCTag(){
             resulTag = resulTag + 'Localisation indisponible ou refusée.';
           }
           else{
-            resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '">Voir Localisation</a>';
+            resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="glyphicon glyphicon-eye-open"></i></a>';
           }
           resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
           resulTag = resulTag + "<hr>";
