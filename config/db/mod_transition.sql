@@ -83,6 +83,7 @@ CREATE TABLE barcode(
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- INSERT INTO barcode (ref_tag, secure, secret_code) VALUES ('000000000', FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT);
 
 
 CREATE TABLE wk_tag(
@@ -91,7 +92,7 @@ CREATE TABLE wk_tag(
   -- This is the transition used to arrived to this step
   mwkf_id               SMALLINT       NOT NULL REFERENCES mod_workflow(id),
   current_step_id       SMALLINT       NOT NULL REFERENCES ref_transition(id),
-  geo_l                 VARCHAR(250),
+  geo_l                 VARCHAR(250)   DEFAULT 'N',
   is_incident           BOOLEAN        DEFAULT  FALSE,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -106,23 +107,60 @@ CREATE TABLE wk_tag_com(
 
 /* ------------------------------------------------------------------------------------------------ */
 
-CREATE OR REPLACE FUNCTION act_tag(read_tag VARCHAR(20))
-  RETURNS TABLE (txt   text
-               , cnt   bigint
-               , ratio bigint) AS
+-- SELECT CLI_ACT_TAG('39287392', 'N');
+DROP FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
+CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
+  RETURNS TABLE ( bc_id         BIGINT,
+                  curr_step     VARCHAR(50),
+                  end_step_id   SMALLINT,
+                  end_step      VARCHAR(50),
+                  end_step_desc VARCHAR(250)) AS
+               -- Do the return at the end
 $func$
+DECLARE
+  var_bc_id           BIGINT;
+  var_found_barcode   SMALLINT;
+  var_found_last_step SMALLINT;
+  var_result_code     CHAR(2);
 BEGIN
+    -- Check if we found the barcode
+    -- CG: We need to look per id not per code
+    -- ref tag will be id and secure concatenation
+    var_bc_id := NULL;
+    SELECT id INTO var_bc_id
+      FROM barcode bc
+      WHERE bc.ref_tag = par_read_barcode;
+
+    IF var_bc_id IS NULL THEN
+      -- Bar code is new // or do not exist
+      -- This need to be changed later when we have the barcode format
+      INSERT INTO barcode (ref_tag, secure, secret_code)
+        VALUES (par_read_barcode, FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+    END IF;
+
+    -- Now check the  last step
+    var_found_last_step := NULL;
+    SELECT MAX(id) INTO var_found_last_step
+      FROM wk_tag wt
+      WHERE wt.bc_id = var_bc_id;
+
+    IF var_found_last_step IS NULL THEN
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)
+        VALUES (var_bc_id, 1, 0, par_geo_l) RETURNING id INTO  var_found_last_step;
+    END IF;
+
+
    RETURN QUERY
-   SELECT t.txt
-        , count(*) AS cnt                 -- column alias only visible inside
-        , (count(*) * 100) / _max_tokens  -- I added brackets
-   FROM  (
-      SELECT t.txt
-      FROM   token t
-      WHERE  t.chartype = 'ALPHABETIC'
-      LIMIT  _max_tokens
-      ) t
-   GROUP  BY t.txt
-   ORDER  BY cnt DESC;                    -- potential ambiguity
+   SELECT
+    wt.bc_id,
+    rtc.step,
+		rte.id,
+		rte.step,
+		rte.description
+		FROM mod_workflow mw JOIN wk_tag wt ON mw.id = wt.mwkf_id
+							             AND mw.start_id = wt.current_step_id
+				                 JOIN ref_transition rtc ON rtc.id = wt.current_step_id
+				                 JOIN ref_transition rte ON rte.id = mw.end_id
+		  WHERE wt.id = var_found_last_step;
 END
 $func$  LANGUAGE plpgsql;
