@@ -96,12 +96,12 @@ function loadBCTag(){
     for(var i=0; i<dataTagToJsonArray.length; i++){
       resulTag = resulTag +
           strbadge(dataTagToJsonArray[i].step) + '<br>'
-          + "<strong>Date: " + dataTagToJsonArray[i].create_date + "</strong><br> Localisation: ";
+          + "<strong>Date: " + dataTagToJsonArray[i].create_date + "</strong><br> ";
           if(dataTagToJsonArray[i].geo_l.trim() == 'N'){
             resulTag = resulTag + 'Localisation indisponible ou refusée.';
           }
           else{
-            resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="glyphicon glyphicon-eye-open"></i></a>';
+            resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="glyphicon glyphicon-eye-open"></i></a>';
           }
           resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
           resulTag = resulTag + "<hr>";
