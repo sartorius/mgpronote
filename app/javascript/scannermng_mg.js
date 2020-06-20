@@ -49,24 +49,24 @@ function mainLoaderInCaseOfChange(){
 /* -------------------------------------------------------------------------- */
 // Show next steps
 function addOptionListener(){
-  console.log('Add in display next');
   $('#stepCtrl').change(function() {
-      console.log('You clicked option');
-      console.log('Read option: ' + $( "#stepCtrl option:selected" ).text());
       $('#read-step-txt').val($("#stepCtrl option:selected").text());
+
+
   });
 }
 
 function displayNext(){
   var nextSteps = "";
-  // target <option value="1">Réception</option>
+  // target <option value="1" title="Tooltip">Réception</option>
   var nsp1 = '<option value="';
-  var nsp2 = '">';
+  var nsp2 = '" >';
   var nsp3 = '</option>';
   if(dataTagToJsonArray.length > 0){
 
 
     $("#read-mwfk").val(dataTagToJsonArray[0].mwkf_id);
+    $("#read-rwfk").val(dataTagToJsonArray[0].rwkf_id);
     $("#read-cb-id").val(dataTagToJsonArray[0].bc_id);
     $('#read-step-txt').val(dataTagToJsonArray[0].end_step);
 
@@ -81,6 +81,9 @@ function displayNext(){
   addOptionListener();
 }
 
+function strbadge(str){
+  return '<span class="badge badge-primary-medium">' + str + '</span>';
+}
 
 /* -------------------------------------------------------------------------- */
 // Show tag
@@ -88,18 +91,21 @@ function loadBCTag(){
   var resulTag = "";
 
   if(dataTagToJsonArray.length > 0){
+
+    $("#readBC").html(dataTagToJsonArray[0].ref_tag);
+
     for(var i=0; i<dataTagToJsonArray.length; i++){
-      resulTag = resulTag + "Étape: "+ dataTagToJsonArray[i].id
-          + " - Action: " + dataTagToJsonArray[i].step
-          + " - Code Barre: " + dataTagToJsonArray[i].bc
-          + " - Date: " + dataTagToJsonArray[i].create_date + " - Localisation: ";
-          if(dataTagToJsonArray[i].geo == 'Localisation indisponible ou non authorisée'){
-            resulTag = resulTag + 'Localisation indisponible ou non authorisée';
+      resulTag = resulTag +
+          strbadge(dataTagToJsonArray[i].step) + '<br>'
+          + "<strong>Date: " + dataTagToJsonArray[i].create_date + "</strong><br> Localisation: ";
+          if(dataTagToJsonArray[i].geo_l.trim() == 'N'){
+            resulTag = resulTag + 'Localisation indisponible ou refusée.';
           }
           else{
             resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '">Voir Localisation</a>';
           }
-          resulTag = resulTag + "<br><br>"
+          resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
+          resulTag = resulTag + "<hr>";
     }
   }
   else{

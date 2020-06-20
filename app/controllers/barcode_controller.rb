@@ -30,9 +30,11 @@ class BarcodeController < ApplicationController
 
 
     sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" +
-                          "VALUES ("+ params[:stepcbid] +", "+ params[:stepmwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
+                          "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 
     #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+
+    @refwkf = params[:steprwfid]
     @stepcb = params[:stepcb]
     @stepcbid = params[:stepcbid]
     @stepmwfid = params[:stepmwfid]
@@ -62,7 +64,23 @@ class BarcodeController < ApplicationController
   end
 
   def checkstep
-    sql_query = "SELECT * FROM tag WHERE bc IN ('" + params[:checkcb] + "') ORDER BY id ASC;"
+
+=begin
+    select bc.ref_tag,
+          rtc.step,
+          to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date,
+          rtc.description,
+          wt.geo_l
+          from wk_tag wt join barcode bc on bc.id = wt.bc_id
+										join ref_transition rtc on rtc.id = wt.current_step_id
+							WHERE bc.ref_tag = '39287392' ORDER BY wt.id ASC;
+
+=end
+
+    sql_query = "select bc.ref_tag, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
+										" join ref_transition rtc on rtc.id = wt.current_step_id " +
+                    " WHERE bc.ref_tag IN ('" + params[:checkcb] + "') ORDER BY wt.id ASC;"
+
 
     begin
 

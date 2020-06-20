@@ -5,7 +5,8 @@
 	//Error
 <% else %>
   <script>
-    var dataTagToJson = "<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>";
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
@@ -15,6 +16,14 @@
     <div class="col-lg-3">
     </div>
     <div class="col-lg-6">
+			<div class="mgs-note">
+				Code barre lu
+			</div>
+			<div class="mgs-read-bc">
+				<p id="readBC" class="big-BC">
+				</p>
+			</div>
+
       <div id="block-of-tag">
       </div>
     </div>
