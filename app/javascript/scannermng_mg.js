@@ -7,21 +7,20 @@ $(document).on('turbolinks:load', function() {
 
 function mainLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'savebc-gr'){
+    $("#mg-save-step-btn").click(function() {
+        getGeoL();
+    });
+    getGeoL();
     // Load the step
     displayNext();
   }
   else if($('#mg-graph-identifier').text() == 'getnext-gr'){
-    try {
-        $("#mg-save-step-btn").click(function() {
-            getGeoL();
-        });
-        getGeoL();
-        loadCameraRead();
-    }
-    catch(err) {
-      console.log(err.message);
-      customLogErr(err.message);
-    }
+      console.log('in getnext-gr');
+      $("#mg-check-step-btn").click(function() {
+          getGeoL();
+      });
+      getGeoL();
+      loadCameraRead();
   }
   else if($('#mg-graph-identifier').text() == 'checkbc-gr'){
     try {
@@ -119,7 +118,7 @@ function loadBCTag(){
 
 
 // Geolocalisation utils
-var geoL = "Localisation indisponible ou non authorisée";
+var geoL = "N";
 
 function getGeoL(){
   console.log("start geolocalisation");
@@ -128,9 +127,11 @@ function getGeoL(){
   } else {
     console.log("Issue geolocation");
   }
+  console.log('Localisation: ' + geoL);
   $("#step-geol").val(geoL);
 }
 function showPosition(position) {
+  console.log('in showPosition');
   geoL = position.coords.latitude + ", " + position.coords.longitude;
 }
 
@@ -215,6 +216,7 @@ function loadCameraRead(){
             $("#manualValid").click(function() {
               // Handle here the valid manual
               if($('#manual-cb').val().length > 0){
+                  getGeoL();
                   //Go valid
                   var manualbc = $('#manual-cb').val();
                   $("#read-cb").val(manualbc);

@@ -124,7 +124,7 @@ select
 */
 
 -- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
-DROP FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
+DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
                   rwkf_id       SMALLINT,
