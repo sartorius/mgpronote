@@ -1,6 +1,13 @@
 class BarcodeController < ApplicationController
   # skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
 
+  # Get the next step BC
+  def getnext
+
+    render 'getnext'
+  end
+
+  # Save Next step BC
   def savebc
     render 'savebc'
   end
@@ -29,12 +36,15 @@ class BarcodeController < ApplicationController
        render 'resultsavestep'
   end
 
+
+  # Check BC Utils
+
   def checkbc
     render 'checkbc'
   end
 
   def checkstep
-    sql_query = "SELECT id, bc, step, geo, create_date FROM tag WHERE bc IN ('" + params[:checkcb] + "') ORDER BY id ASC;"
+    sql_query = "SELECT * FROM tag WHERE bc IN ('" + params[:checkcb] + "') ORDER BY id ASC;"
 
     begin
 

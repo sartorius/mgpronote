@@ -45,19 +45,26 @@ function mainLoaderInCaseOfChange(){
 function loadBCTag(){
   var resulTag = "";
 
-  for(var i=0; i<dataTagToJsonArray.length; i++){
-    resulTag = resulTag + "Étape: "+ dataTagToJsonArray[i].id
-        + " - Action: " + dataTagToJsonArray[i].step
-        + " - Code Barre: " + dataTagToJsonArray[i].bc
-        + " - Date: " + dataTagToJsonArray[i].create_date + " - Localisation: ";
-        if(dataTagToJsonArray[i].geo == 'Localisation indisponible ou non authorisée'){
-          resulTag = resulTag + 'Localisation indisponible ou non authorisée';
-        }
-        else{
-          resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '">Voir Localisation</a>';
-        }
-        resulTag = resulTag + "<br><br>"
+  if(dataTagToJsonArray.length > 0){
+    for(var i=0; i<dataTagToJsonArray.length; i++){
+      resulTag = resulTag + "Étape: "+ dataTagToJsonArray[i].id
+          + " - Action: " + dataTagToJsonArray[i].step
+          + " - Code Barre: " + dataTagToJsonArray[i].bc
+          + " - Date: " + dataTagToJsonArray[i].create_date + " - Localisation: ";
+          if(dataTagToJsonArray[i].geo == 'Localisation indisponible ou non authorisée'){
+            resulTag = resulTag + 'Localisation indisponible ou non authorisée';
+          }
+          else{
+            resulTag = resulTag + '<a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '">Voir Localisation</a>';
+          }
+          resulTag = resulTag + "<br><br>"
+    }
   }
+  else{
+    resulTag = '<h1>Code Barre introuvable<h1>';
+  }
+
+
   $("#block-of-tag").html(resulTag);
 
 }
