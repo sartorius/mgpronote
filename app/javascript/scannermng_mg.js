@@ -7,6 +7,10 @@ $(document).on('turbolinks:load', function() {
 
 function mainLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'savebc-gr'){
+    // Load the step
+    displayNext();
+  }
+  else if($('#mg-graph-identifier').text() == 'getnext-gr'){
     try {
         $("#mg-save-step-btn").click(function() {
             getGeoL();
@@ -19,7 +23,7 @@ function mainLoaderInCaseOfChange(){
       customLogErr(err.message);
     }
   }
-  if($('#mg-graph-identifier').text() == 'checkbc-gr'){
+  else if($('#mg-graph-identifier').text() == 'checkbc-gr'){
     try {
       loadCameraRead();
     }
@@ -28,7 +32,7 @@ function mainLoaderInCaseOfChange(){
       customLogErr(err.message);
     }
   }
-  if($('#mg-graph-identifier').text() == 'checktag-gr'){
+  else if($('#mg-graph-identifier').text() == 'checktag-gr'){
     try {
       loadBCTag();
     }
@@ -37,6 +41,44 @@ function mainLoaderInCaseOfChange(){
       customLogErr(err.message);
     }
   }
+  else{
+    //do nothing
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+// Show next steps
+function addOptionListener(){
+  console.log('Add in display next');
+  $('#stepCtrl').change(function() {
+      console.log('You clicked option');
+      console.log('Read option: ' + $( "#stepCtrl option:selected" ).text());
+      $('#read-step-txt').val($("#stepCtrl option:selected").text());
+  });
+}
+
+function displayNext(){
+  var nextSteps = "";
+  // target <option value="1">Réception</option>
+  var nsp1 = '<option value="';
+  var nsp2 = '">';
+  var nsp3 = '</option>';
+  if(dataTagToJsonArray.length > 0){
+
+
+    $("#read-mwfk").val(dataTagToJsonArray[0].mwkf_id);
+    $("#read-cb-id").val(dataTagToJsonArray[0].bc_id);
+    $('#read-step-txt').val(dataTagToJsonArray[0].end_step);
+
+    for(var i=0; i<dataTagToJsonArray.length; i++){
+        nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + nsp2 + dataTagToJsonArray[i].end_step + nsp3;
+    }
+    $("#stepCtrl").html(nextSteps);
+  }
+  else{
+    $("#displaymsg").html("Erreur: récupération des étapes");
+  }
+  addOptionListener();
 }
 
 
@@ -170,16 +212,8 @@ function loadCameraRead(){
                   //Go valid
                   var manualbc = $('#manual-cb').val();
                   $("#read-cb").val(manualbc);
-                  if($('#mg-graph-identifier').text() == 'savebc-gr'){
-                    $("#readBC").html(manualbc);
-                    $("#mgs-manual-cam").hide();
-                    $("#mgs-readbc-bottom").show(800);
-                  }
-                  if($('#mg-graph-identifier').text() == 'checkbc-gr'){
-                    //Goto POST
-                    $("#mg-checkbc-form").submit();
-                  }
-
+                  // Go to Post directly
+                  $("#mg-checkbc-form").submit();
               }
             });
           });
@@ -216,18 +250,9 @@ function loadCameraRead(){
 
 
               $("#read-cb").val(result.text);
-              if($('#mg-graph-identifier').text() == 'savebc-gr'){
-                $("#readBC").html(result.text);
-                $("#mgs-main-cam").hide();
-                $("#mgs-readbc-bottom").show(800);
-              }
+              $("#mg-checkbc-form").submit();
+
               endScan();
-
-              if($('#mg-graph-identifier').text() == 'checkbc-gr'){
-                //Goto POST
-                $("#mg-checkbc-form").submit();
-              }
-
 
           }).catch((err) => {
               console.error(err);

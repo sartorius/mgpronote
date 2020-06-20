@@ -3,27 +3,45 @@ class BarcodeController < ApplicationController
 
   # Get the next step BC
   def getnext
-
-    render 'getnext'
+      render 'getnext'
   end
 
   # Save Next step BC
   def savebc
+    @readBC = params[:checkcb]
+
+    sql_query = "SELECT * FROM CLI_ACT_TAG('" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
+
+    begin
+
+      #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+      #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
+      @resultSet = ActiveRecord::Base.connection.execute(sql_query)
+
+      render 'savebc'
+    end
+    rescue Exception => exc
+       flash[:info] = "Une erreur est survenue #{exec.message}"
     render 'savebc'
   end
 
+
   def savestep
 
-    sql_query = "INSERT INTO tag (bc, step, geo) VALUES ('" + params[:stepcb] + "', '" +
-                                    params[:stepstep] + "', '" +
-                                    params[:stepgeol] + "');"
 
+    sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" +
+                          "VALUES ("+ params[:stepcbid] +", "+ params[:stepmwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 
-
-
+    #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
     @stepcb = params[:stepcb]
+    @stepcbid = params[:stepcbid]
+    @stepmwfid = params[:stepmwfid]
     @stepstep = params[:stepstep]
     @stepgeol = params[:stepgeol]
+
+
+    @steptxt = params[:steptxt]
+
 
     begin
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query

@@ -10,7 +10,10 @@ Rails.application.routes.draw do
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  get     '/savebc',    to: 'barcode#savebc'
+  get     '/getnext',    to: 'barcode#getnext'
+  post	  '/save_bc'   => 'barcode#savebc'
+  get     '/save_bc' => redirect("/")
+
   post	  '/save_step'   => 'barcode#savestep'
   get     '/save_step' => redirect("/")
 

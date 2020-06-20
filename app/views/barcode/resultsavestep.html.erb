@@ -21,7 +21,7 @@
       </div>
 
       <div class="mgs-info-big">
-        <%= @stepstep %>
+        <%= @steptxt %>
       </div>
 
       <div class="mgs-note mgs-note-top">
@@ -29,7 +29,11 @@
       </div>
 
       <div class="mgs-info">
-        <%= @stepgeol %>
+        <% if @stepgeol = 'N' %>
+          Localisation indisponible ou refusée par l'utilisateur.
+        <% else %>
+          <%= @stepgeol %>
+        <% end %>
       </div>
 
 

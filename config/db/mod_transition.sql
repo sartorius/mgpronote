@@ -177,7 +177,7 @@ BEGIN
 		rte.id,
 		rte.step,
 		rte.description
-		FROM mod_workflow mw JOIN wk_tag wt ON mw.id = wt.mwkf_id -- mod workflow id is the wf line we use
+		FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id -- mod workflow id is the wf line we use
 							             AND mw.start_id = wt.current_step_id
 				                 JOIN ref_transition rtc ON rtc.id = wt.current_step_id
 				                 JOIN ref_transition rte ON rte.id = mw.end_id
