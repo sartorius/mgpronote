@@ -49,7 +49,7 @@ INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Flux process 
 
 CREATE TABLE mod_workflow (
   id            SERIAL      PRIMARY KEY,
-  wkf_id        SMALLINT       NOT NULL,
+  wkf_id        SMALLINT       NOT NULL REFERENCES ref_workflow(id),
   start_id      SMALLINT       NOT NULL REFERENCES ref_transition(id),
   end_id        SMALLINT       NOT NULL REFERENCES ref_transition(id),
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -116,10 +116,28 @@ CREATE TABLE wk_tag_com(
 
 /* ------------------------------------------------------------------------------------------------ */
 
--- SELECT CLI_ACT_TAG('39287392', 'N');
+/*
+select * from wk_tag;
+
+select
+		wt.bc_id,
+		rtc.step,
+		rte.id,
+		rte.step,
+		rte.description
+		from mod_workflow mw join wk_tag wt on mw.id = wt.mwkf_id
+											   and mw.start_id = wt.current_step_id
+								join ref_transition rtc on rtc.id = wt.current_step_id
+								join ref_transition rte on rte.id = mw.end_id
+		  WHERE wt.id = 1
+*/
+
+-- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
 DROP FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
+                  rwkf_id       SMALLINT,
+                  mwkf_id       INT,
                   curr_step     VARCHAR(50),
                   end_step_id   SMALLINT,
                   end_step      VARCHAR(50),
@@ -162,11 +180,13 @@ BEGIN
    RETURN QUERY
    SELECT
     wt.bc_id,
+    mw.wkf_id, -- here is PA
+    mw.id,
     rtc.step,
 		rte.id,
 		rte.step,
 		rte.description
-		FROM mod_workflow mw JOIN wk_tag wt ON mw.id = wt.mwkf_id
+		FROM mod_workflow mw JOIN wk_tag wt ON mw.id = wt.mwkf_id -- mod workflow id is the wf line we use
 							             AND mw.start_id = wt.current_step_id
 				                 JOIN ref_transition rtc ON rtc.id = wt.current_step_id
 				                 JOIN ref_transition rte ON rte.id = mw.end_id

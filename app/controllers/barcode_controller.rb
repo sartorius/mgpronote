@@ -1,5 +1,5 @@
 class BarcodeController < ApplicationController
-  skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
+  # skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
 
   def savebc
     render 'savebc'
