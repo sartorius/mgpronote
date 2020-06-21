@@ -1,0 +1,73 @@
+<% if false %>
+    COMMENT
+    HERE IS A NOTE TO OLD HOW READ A RESULT SET TO SET FROM RUBY TO ERB NO JS
+<% end %>
+
+<% provide(:title, "Tableau de bord") %>
+<div id="mg-graph-identifier">pardash-gr</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Tableau de bord</h1>
+  </div>
+</div>
+
+<div id="jsGrid">
+</div>
+
+<div class="grid-contener">
+
+    <div class="row">
+      <div class="mgs-note mgs-note-mrg-grid">
+        Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-1 hd-col grid-right">
+          #
+        </div>
+        <div class="col-sm-2 hd-col">
+          <i class="glyphicon glyphicon-barcode"></i>&nbsp;Référence
+        </div>
+        <div class="col-sm-3 hd-col">
+          Status
+        </div>
+        <div class="col-sm-1 hd-col grid-right">
+          Code
+        </div>
+        <div class="col-sm-3 hd-col grid-right">
+          Destinataire
+        </div>
+        <div class="col-sm-2 hd-col grid-right">
+          &nbsp;
+        </div>
+
+        <% if @emptyResultSet %>
+          <div class="col-sm-12 no-data">
+            Désolé, nous n'avons pas trouvé de code barre &nbsp; <i class="glyphicon glyphicon-inbox"></i>
+          </div>
+        <% end %>
+
+
+        <% @resultSet.each do |result| %>
+          <div class="col-sm-1 row-mg row-size grid-right <% if "#{result['id']}".to_i.odd? %> mg-bg-odd <% end %>">
+            <%= "#{result['id']}" %>
+          </div>
+          <div class="col-sm-2 row-mg row-size <% if "#{result['id']}".to_i.odd? %> mg-bg-odd <% end %>">
+            <%= "#{result['ref_tag']}" %>
+          </div>
+          <div class="col-sm-3 row-mg row-size <% if "#{result['id']}".to_i.odd? %> mg-bg-odd <% end %>">
+            <%= "#{result['step']}" %>
+          </div>
+          <div class="col-sm-1 row-mg row-size grid-right <% if "#{result['id']}".to_i.odd? %> mg-bg-odd <% end %>">
+            <%= "#{result['bsecret_code']}" %>
+          </div>
+          <div class="col-sm-3 row-mg row-size grid-right <% if "#{result['id']}".to_i.odd? %> mg-bg-odd <% end %>">
+            <% if "#{result['dest_email']}".empty? %>&nbsp;<% else %><%= "#{result['dest_email']}" %><% end %>
+          </div>
+          <div class="col-sm-2 row-mg row-size grid-right <% if "#{result['id']}".to_i.odd? %> mg-bg-odd <% end %>">
+            &nbsp;
+          </div>
+        <% end %>
+      </div>
+    </div>
+</div>

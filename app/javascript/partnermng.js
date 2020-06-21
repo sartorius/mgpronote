@@ -6,8 +6,29 @@ $(document).on('turbolinks:load', function() {
 
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
+    testjsGrid();
   }
   else{
     //do nothing
   }
+}
+
+
+
+function testjsGrid(){
+  $("#jsGrid").jsGrid({
+      height: "auto",
+      width: "100%",
+
+      sorting: true,
+      paging: true,
+
+      data: dataTagToJsonArray,
+
+      fields: [
+          { name: "id", title: "#", type: "text", width: 50 },
+          { name: "ref_tag", title: "Référence", type: "number", width: 50 },
+          { name: "step", title: "Status", type: "text", width: 200 }
+      ]
+  });
 }
