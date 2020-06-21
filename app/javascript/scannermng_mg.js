@@ -68,6 +68,7 @@ function displayNext(){
     $("#read-rwfk").val(dataTagToJsonArray[0].rwkf_id);
     $("#read-cb-id").val(dataTagToJsonArray[0].bc_id);
     $('#read-step-txt').val(dataTagToJsonArray[0].end_step);
+    $('#curr-status').html(dataTagToJsonArray[0].curr_step);
 
     for(var i=0; i<dataTagToJsonArray.length; i++){
         nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + nsp2 + dataTagToJsonArray[i].end_step + nsp3;

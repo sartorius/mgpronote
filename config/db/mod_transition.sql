@@ -6,8 +6,9 @@ DROP TABLE IF EXISTS barcode;
 DROP TABLE IF EXISTS mod_workflow;
 DROP TABLE IF EXISTS ref_workflow;
 DROP TABLE IF EXISTS ref_transition;
+DROP TABLE IF EXISTS ref_status;
 
-CREATE TABLE ref_transition (
+CREATE TABLE ref_status (
   id            SMALLINT      PRIMARY KEY,
   step          VARCHAR(50)   NOT NULL,
   description   VARCHAR(250)  NOT NULL,
@@ -15,17 +16,18 @@ CREATE TABLE ref_transition (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (1, 'Adressé destinataire', 'Les informations du destinataire ont été saisis.', 'Y');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis.', 'Y');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (6, 'Pesé', 'Les information de poids ont été saisis.', 'Y');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité de sortie.', 'N');
-INSERT INTO ref_transition (id, step, description, input_needed) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son colis', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (1, 'Adressé destinataire', 'Les informations nom, prénom et adresse du destinataire ont été saisis.', 'Y');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis. Prêt à être enlevé', 'Y');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (6, 'Pesé', 'Le poids ont été validé.', 'Y');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N');
+INSERT INTO ref_status (id, step, description, input_needed) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N');
 
 
 CREATE TABLE ref_workflow (
@@ -41,8 +43,8 @@ INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Flux process 
 CREATE TABLE mod_workflow (
   id            SERIAL      PRIMARY KEY,
   wkf_id        SMALLINT       NOT NULL REFERENCES ref_workflow(id),
-  start_id      SMALLINT       NOT NULL REFERENCES ref_transition(id),
-  end_id        SMALLINT       NOT NULL REFERENCES ref_transition(id),
+  start_id      SMALLINT       NOT NULL REFERENCES ref_status(id),
+  end_id        SMALLINT       NOT NULL REFERENCES ref_status(id),
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -58,11 +60,12 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 8);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 8, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
 
 /*
 select rw.code, rfs.step, rfe.step
-                              from mod_workflow mw join ref_transition rfs on rfs.id = mw.start_id
-                              join ref_transition rfe on rfe.id = mw.end_id
+                              from mod_workflow mw join ref_status rfs on rfs.id = mw.start_id
+                              join ref_status rfe on rfe.id = mw.end_id
                               join ref_workflow rw on rw.id = mw.wkf_id
                                                     and rw.id = 1;
 */
@@ -76,6 +79,7 @@ CREATE TABLE barcode(
   secure                SMALLINT       NOT NULL,
   -- Mostly beween 0 to 9999
   secret_code           SMALLINT       NOT NULL,
+  status                SMALLINT       DEFAULT 0,
   to_email              VARCHAR(200),
   to_name               VARCHAR(50),
   to_fname              VARCHAR(50),
@@ -91,7 +95,7 @@ CREATE TABLE wk_tag(
   bc_id                 BIGINT         NOT NULL REFERENCES barcode(id),
   -- This is the transition used to arrived to this step
   mwkf_id               SMALLINT       NOT NULL REFERENCES mod_workflow(id),
-  current_step_id       SMALLINT       NOT NULL REFERENCES ref_transition(id),
+  current_step_id       SMALLINT       NOT NULL REFERENCES ref_status(id),
   geo_l                 VARCHAR(250)   DEFAULT 'N',
   is_incident           BOOLEAN        DEFAULT  FALSE,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -118,8 +122,8 @@ select
 		rte.description
 		from mod_workflow mw join wk_tag wt on mw.id = wt.mwkf_id
 											   and mw.start_id = wt.current_step_id
-								join ref_transition rtc on rtc.id = wt.current_step_id
-								join ref_transition rte on rte.id = mw.end_id
+								join ref_status rtc on rtc.id = wt.current_step_id
+								join ref_status rte on rte.id = mw.end_id
 		  WHERE wt.id = 1
 */
 
@@ -152,6 +156,7 @@ BEGIN
     IF var_bc_id IS NULL THEN
       -- Bar code is new // or do not exist
       -- This need to be changed later when we have the barcode format
+      -- The status will be zero by default
       INSERT INTO barcode (ref_tag, secure, secret_code)
         VALUES (par_read_barcode, FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
     END IF;
@@ -179,8 +184,30 @@ BEGIN
 		rte.description
 		FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id -- mod workflow id is the wf line we use
 							             AND mw.start_id = wt.current_step_id
-				                 JOIN ref_transition rtc ON rtc.id = wt.current_step_id
-				                 JOIN ref_transition rte ON rte.id = mw.end_id
+				                 JOIN ref_status rtc ON rtc.id = wt.current_step_id
+				                 JOIN ref_status rte ON rte.id = mw.end_id
 		  WHERE wt.id = var_found_last_step;
 END
 $func$  LANGUAGE plpgsql;
+
+
+-- Create Procedure Insert Step as we need to handle ref_status
+-- CALL stored_procedure_name(parameter_list);
+-- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
+-- (bc_id, mwkf_id, current_step_id, geo_l)
+CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250))
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES ($1, $2, $3, $4);
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = $3
+      WHERE id = $1;
+
+    COMMIT;
+END;
+$$;

@@ -31,12 +31,16 @@
         </div>
         <br>
         <div class="mgs-info">
+          <i class="glyphicon glyphicon-tag"></i>&nbsp;<span id="curr-status">EXXX1234</span>
+        </div>
+        <div class="mgs-info">
           <%= @stepgeol %>
         </div>
+        <hr>
 
         <form action="/save_step" method="post">
           <div class="form-group">
-            <label for="exampleFormControlSelect1">Étape à enregistrer</label>
+            <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
             <select name="stepstep" class="custom-select custom-select-lg mb-3" id="stepCtrl">
               <option value="X">Error XYZ1</option>
               <option value="Y">Error XYZ2</option>
