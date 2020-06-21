@@ -4,13 +4,47 @@
   <div class="col-lg-12">
     <h1>Tableau de bord</h1>
   </div>
+
 </div>
 
-<div class="row">
-  <div class="col-lg-3">
-  </div>
-  <div class="col-lg-6">
-  </div>
-  <div class="col-lg-3">
-  </div>
+<div class="grid-contener">
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="col-lg-1 hd-col grid-right">
+          #
+        </div>
+        <div class="col-lg-2 hd-col">
+          Référence
+        </div>
+        <div class="col-lg-2 hd-col">
+          Status
+        </div>
+        <div class="col-lg-7 hd-col grid-right">
+          Code secret
+        </div>
+
+        <% if @emptyResultSet %>
+          <div class="col-lg-12 no-data">
+            Désolé, nous n'avons pas trouvé de code barre &nbsp; <i class="glyphicon glyphicon-inbox"></i>
+          </div>
+        <% end %>
+
+
+        <% @resultSet.each do |result| %>
+          <div class="col-lg-1 row-mg row-size grid-right">
+            <%= "#{result['id']}" %>
+          </div>
+          <div class="col-lg-2 row-mg row-size">
+            <%= "#{result['ref_tag']}" %>
+          </div>
+          <div class="col-lg-2 row-mg row-size">
+            <%= "#{result['step']}" %>
+          </div>
+          <div class="col-lg-7 row-mg row-size grid-right">
+            <%= "#{result['bsecret_code']}" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
 </div>

@@ -1,1 +1,7 @@
-<%= link_to image_tag("logoSQ400.png", alt: "Rails logo", width: "35"), root_path, id: "logo" %>
+
+
+<% id @emptyResultSet %>
+  <div class="col-lg-12 no-data">
+    Désolé, nous n'avons pas trouvé de code barre &nbsp; <i class="glyphicon glyphicon-inbox"></i>
+  </div>
+<% end %>
