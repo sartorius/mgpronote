@@ -108,13 +108,23 @@ p {
   font-size: 1.3em;
   font-weight: bold;
   background-color: #EED9FF;
-  padding-top: 0.4em;
-  padding-bottom: 0.4em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   margin-bottom: 0.5em;
 }
 
+.mg-bg-odd{
+  background-color: #F7F7F7;
+}
+
+
+
 .grid-right{
   text-align: right;
+}
+
+.mgs-note-mrg-grid{
+  margin-bottom: 0.5em;
 }
 
 .row-mg{
@@ -123,7 +133,7 @@ p {
 }
 
 .row-size{
-  font-size: 1.2em;
+  font-size: 0.9em;
 }
 
 .no-data{

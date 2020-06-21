@@ -2,7 +2,8 @@ class PartnerController < ApplicationController
   # Get the next step BC
   def dashboard
 
-    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
+    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
+                      "bc.to_email AS dest_email " +
                       "FROM barcode bc join ref_status rs on rs.id = bc.status ORDER BY bc.id DESC;"
 
 
