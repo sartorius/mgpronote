@@ -1,7 +1,6 @@
 <nav>
   <div class="navbar-header">
 
-
     <button class="navbar-toggle collapsed" type="button"
             data-toggle="collapse"
             data-target="#bs-example-navbar-collapse-1"
@@ -26,9 +25,27 @@
         <li class="nav-item"><%= link_to "Home", root_path %></li>
         <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
         <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
-        <li class="nav-item"><%= link_to "Aide", help_path %></li>
+
+
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Partenaire <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="nav-item"><%= link_to "Tableau de bord", dashboard_path %></li>
+          </ul>
+        </li class="nav-item">
+
+
+
         <% if logged_in? %>
+
+        <% if false %>
+          code to comment
           <li class="nav-item"><%= link_to "Users", users_path %></li>
+        <% end %>
+
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               Account <b class="caret"></b>
@@ -36,6 +53,8 @@
             <ul class="dropdown-menu">
               <li class="nav-item"><%= link_to "Profile", current_user %></li>
               <li class="nav-item"><%= link_to "Settings", edit_user_path(current_user) %></li>
+              <li class="divider"></li>
+              <li class="nav-item"><%= link_to "Aide", help_path %></li>
               <li class="divider"></li>
               <li class="nav-item">
                 <%= link_to "Log out", logout_path, method: :delete %>

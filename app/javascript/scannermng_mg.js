@@ -1,11 +1,11 @@
 
 $(document).on('turbolinks:load', function() {
   // Should be called at each visit
-  console.log('TBL Page as changed !');
-  mainLoaderInCaseOfChange();
+  console.log('Scan TBL Page as changed');
+  mainScanLoaderInCaseOfChange();
 })
 
-function mainLoaderInCaseOfChange(){
+function mainScanLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'savebc-gr'){
     $("#mg-save-step-btn").click(function() {
         getGeoL();
