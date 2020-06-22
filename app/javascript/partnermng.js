@@ -53,7 +53,7 @@ function generateCb12PDF(){
 	var cel2 = '';
 	var cel3 = '';
 
-  var barcodeWidth = 40;
+  var barcodeWidth = 60;
   var barcodeHeight = 25;
 
 	var startY = 15;
@@ -61,7 +61,7 @@ function generateCb12PDF(){
 	var offsetX = 5;
 	var offsetY = 30;
 
-	var cellSize = 50;
+	var cellSize = 37;
 	var offsetY2 = 40;
   var offsetTextY2 = 20;
 	var offsetBackY = 5;
@@ -86,8 +86,8 @@ function generateCb12PDF(){
       cel1 = cel1 + setCellSize(' - Étape: ' + dataTagToJsonArray[i].step);
     }
     cel1 = cel1 + " - Ce paquet ne vous appartient pas? Contactez contact@partenaire.com";
-    var celRef = doc.setFontSize(7).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
-    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2 + 1)*rowReseter, celRef);
+    var celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
+    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, 3 + (offsetY2 + 1)*rowReseter, celRef);
 
 
     // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
@@ -114,8 +114,9 @@ function display12Cb(){
   numberRow = $('#nb-lines').html();
   console.log("Read number of row: " + numberRow);
   for(i=0; i<numberRow; i++){
-    // Use this to pad
+    // Use this to pad padStart(2, '0')
     JsBarcode("#mbc-"+i, $("#item-bc-"+i).html());
+    //JsBarcode("#mbc-"+i, 'M9999999999PAK15');
   }
 }
 
