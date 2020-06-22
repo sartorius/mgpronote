@@ -114,7 +114,7 @@ function display12Cb(){
   numberRow = $('#nb-lines').html();
   console.log("Read number of row: " + numberRow);
   for(i=0; i<numberRow; i++){
-    JsBarcode("#mbc-"+i, $("#item-bc-"+i).html());
+    JsBarcode("#mbc-"+i, $("#item-bc-"+i).html().padStart(9, 'M') );
   }
 }
 
