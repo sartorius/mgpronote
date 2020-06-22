@@ -8,8 +8,9 @@ require("@rails/activestorage").start()
 require("channels")
 require("custmain_mg.js")
 require("scannermng_mg.js")
-require("partnermng.js")
 require("jsgrid.min.js")
+require("JsBarcode.all.min.js")
+require("partnermng.js")
 require("turbolinks").start()
 import "bootstrap"
 

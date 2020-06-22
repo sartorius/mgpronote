@@ -10,8 +10,7 @@ Rails.application.routes.draw do
   resources :users
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  get     '/dashboard',    to: 'partner#dashboard'
-  
+
   get     '/getnext',    to: 'barcode#getnext'
   post	  '/save_bc'   => 'barcode#savebc'
   get     '/save_bc' => redirect("/")
@@ -23,5 +22,8 @@ Rails.application.routes.draw do
   post	  '/check_step'   => 'barcode#checkstep'
   get     '/check_step' => redirect("/")
 
+
+  get     '/dashboard',    to: 'partner#dashboard'
+  get     '/printtwelve',    to: 'partner#printtwelve'
 
 end
