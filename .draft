@@ -5,3 +5,7 @@
     Désolé, nous n'avons pas trouvé de code barre &nbsp; <i class="glyphicon glyphicon-inbox"></i>
   </div>
 <% end %>
+
+
+
+ActionView::Template::Error: Webpacker can't find jspdf.min in /Users/herinirinaratinahirana/ruby2/mgscore_app/public/packs/manifest.json. Possible causes: 1. You want to set webpacker.yml value of compile to true for your environment unless you are using the `webpack -w` or the webpack-dev-server. 2. webpack has not yet re-run to reflect updates. 3. You have misconfigured Webpacker's config/webpacker.yml file. 4. Your webpack configuration is not creating a manifest. Your manifest contains: { "application.js": "/packs/js/application-0d0a200f0cea2d615c72.js", "application.js.map": "/packs/js/application-0d0a200f0cea2d615c72.js.map", "entrypoints": { "application": { "js": [ "/packs/js/application-0d0a200f0cea2d615c72.js" ], "js.map": [ "/packs/js/application-0d0a200f0cea2d615c72.js.map" ] } } }

@@ -1,6 +1,21 @@
 <% provide(:title, "Imprimer 12") %>
 <div id="mg-graph-identifier">parprint12-gr</div>
 
+<%= render 'partner/dirtyjspdf' %>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+<% end %>
+
 <div class="row">
   <div class="col-lg-12">
     <h1>Imprimer 12</h1>
@@ -8,6 +23,11 @@
 </div>
 
 <div class="grid-contener">
+    <div class="row">
+      <div class="col-sm-12 btn-print">
+          <button id="btn-print-12" class="btn btn-default btn-lg btn-print">Imprimer ces codes barres</button>
+      </div>
+    </div>
     <div class="row">
       <% if @emptyResultSet %>
         <div class="col-sm-12 no-data">
@@ -18,12 +38,11 @@
         <% @resultSet.each do |result| %>
               <div class="col-sm-6 bc-block-print">
                   <div>
-                    <svg id="barcode-<%= i %>"></svg>
-
-
+                    <img id="mbc-<%= i %>">
                   </div>
-                  <%= "#{result['id']}" %>
-                  <span id="item-bc-<%= i %>"><%= "#{result['ref_tag']}" %></span> <br>
+
+                  <%= "#{result['id']}" %> //
+                  <span id="item-bc-<%= i %>"><%= "#{result['ref_tag']}" %></span><br>
                   <%= "#{result['step']}" %>
                   <%= "#{result['bsecret_code']}" %> <br>
                   <%= "#{result['dest_email']}" %> <br>

@@ -6,30 +6,95 @@ $(document).on('turbolinks:load', function() {
 
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
-    testjsGrid();
+    runjsGrid();
   }
   if($('#mg-graph-identifier').text() == 'parprint12-gr'){
-    print12Display();
+    $("#btn-print-12").click(function() {
+        generateCb12PDF();
+    });
+    display12Cb();
   }
-
   else{
     //do nothing
   }
 }
 
-/* Print 12 */
+//These data to make sure data are fit
+function setCellSize(value){
+	return value.substring(0, 170);
+}
+function setCellSizeMedium(value){
+	return value.substring(0, 100);
+}
+function setSmallCellSize(value){
+	return value.substring(0, 50);
+}
 
-function print12Display(){
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
+/* Print 12 */
+// This function is inspired by Camelbull generateAppPDF() function
+function generateCb12PDF(){
+	$("body").addClass("loading");
+  console.log('Click on generateCb12PDF');
+
+  var doc = new jsPDF();
+	var rowReseter = 1;
+
+  var cel1 = '';
+	var cel1_2 = '';
+	var cel2 = '';
+	var cel3 = '';
+
+	var startY = 15;
+	var sizeY = 20;
+	var offsetX = 5;
+	var offsetY = 30;
+	var offsetY2 = 40;
+	var offsetBackY = 5;
+
+  //This should be the loop for one page
+  //Should not oversize 12
+  //rowReseter is the line counter
+  //This handle row max is 2
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    var oddOffsetX =  100 * (i % 2);
+    // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
+    doc.addImage(document.getElementById('mbc-' + i).src, //img src
+                  'PNG', //format
+                  offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
+                  offsetY2*rowReseter, //y
+                  40, //Width
+                  25); //Height
+
+    // Incremetor are here
+    if(((i + 1) % 2) == 0){
+      rowReseter++
+    }
+  }
+
+  doc.save('MGSuivi_P12');
+
+  $("body").removeClass("loading");
+}
+
+function display12Cb(){
   var numberRow = 0;
   numberRow = $('#nb-lines').html();
   console.log("Read number of row: " + numberRow);
   for(i=0; i<numberRow; i++){
-    JsBarcode("#barcode-"+i, $("#item-bc-"+i).html());
+    JsBarcode("#mbc-"+i, $("#item-bc-"+i).html());
   }
 }
 
+
+
 /* JS GRID */
-function testjsGrid(){
+function runjsGrid(){
   $("#jsGrid").jsGrid({
       height: "auto",
       width: "100%",
