@@ -45,16 +45,25 @@ function generateCb12PDF(){
   var doc = new jsPDF();
 	var rowReseter = 1;
 
+  var currentDate = new Date();
+  //console.log('current date: ' + currentDate.toLocaleString())
+
   var cel1 = '';
 	var cel1_2 = '';
 	var cel2 = '';
 	var cel3 = '';
 
+  var barcodeWidth = 40;
+  var barcodeHeight = 25;
+
 	var startY = 15;
 	var sizeY = 20;
 	var offsetX = 5;
 	var offsetY = 30;
+
+	var cellSize = 50;
 	var offsetY2 = 40;
+  var offsetTextY2 = 20;
 	var offsetBackY = 5;
 
   //This should be the loop for one page
@@ -63,13 +72,31 @@ function generateCb12PDF(){
   //This handle row max is 2
   for(i=0; i<dataTagToJsonArray.length; i++){
     var oddOffsetX =  100 * (i % 2);
+
+    if(dataTagToJsonArray[i].dest_email == null){
+      cel1 = setCellSize('Destinataire: non renseigné');
+    }
+    else{
+      cel1 = setCellSize('Destinataire: ' + dataTagToJsonArray[i].dest_email);
+    }
+    if(dataTagToJsonArray[i].step == null){
+      cel1 = cel1 + setCellSize(' - Étape: Err 4890');
+    }
+    else{
+      cel1 = cel1 + setCellSize(' - Étape: ' + dataTagToJsonArray[i].step);
+    }
+    cel1 = cel1 + " - Ce paquet ne vous appartient pas? Contactez contact@partenaire.com";
+    var celRef = doc.setFontSize(7).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
+    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2 + 1)*rowReseter, celRef);
+
+
     // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
     doc.addImage(document.getElementById('mbc-' + i).src, //img src
                   'PNG', //format
                   offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
                   offsetY2*rowReseter, //y
-                  40, //Width
-                  25); //Height
+                  barcodeWidth, //Width
+                  barcodeHeight); //Height
 
     // Incremetor are here
     if(((i + 1) % 2) == 0){
