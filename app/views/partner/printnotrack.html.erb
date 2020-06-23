@@ -1,0 +1,59 @@
+<% provide(:title, "Non Suivi") %>
+<div id="mg-graph-identifier">parprintnotrack-gr</div>
+
+<%= render 'partner/dirtyjspdf' %>
+
+<script>
+  var dataTagToJsonArray = new Array();
+  for(i=0; i<12; i++){
+    dataTagToJsonArray.push({
+         "id" : i,
+         "step" : "NA",
+         "bsecret_code" : "NA",
+         "ref_tag" : "NON SUIVI",
+         "dest_email": "NA"
+    });
+  }
+</script>
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Imprimer 12 non suivi</h1>
+  </div>
+  <div class="col-lg-12 mgs-headq">
+    À quoi serve les codes barres "Non suivi" ?
+  </div>
+  <div class="col-lg-4 mgs-heada">
+    Les codes barres "Non suivi" peuvent être collés sur les paquets que les clients ont refusé de faire suivre. Pour vous faire gagner du temps dans la gestion de vos paquets. Ainsi vous ne perdez pas de temps devant un paquet, vous savez rapidement s'il faut le scanner ou non.
+  </div>
+  <div class="col-lg-8">
+  </div>
+</div>
+
+<div class="grid-contener">
+    <div class="row">
+      <div class="col-sm-12 btn-print">
+          <button id="btn-print-12" class="btn btn-default btn-lg btn-print">Imprimer ces codes barres</button>
+      </div>
+    </div>
+    <div class="row">
+        <% for i in 0..11 do %>
+							<% if i % 2 == 0 %>
+								<div class="row">
+							<% end %>
+			              <div class="col-sm-4 bc-block-print img-center">
+			                  <div>
+			                    <img id="mbc-<%= i %>">
+			                  </div>
+										</div>
+										<div class="col-sm-2 bc-block-print-note">
+                        <span id="item-bc-<%= i %>">NON SUIVI</span><br>
+
+			              </div>
+							<% if i % 2 == 1 %>
+								</div>
+							<% end %>
+              <% i = i + 1 %>
+        <% end %>
+      </div>
+</div>

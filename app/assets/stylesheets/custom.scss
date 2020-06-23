@@ -8,6 +8,7 @@ $gray-medium-light: #eaeaea;
 $main-color: #300055;
 $main-color-light: #F9F5FA;
 $main-color-medium: #6D5D7C;
+$main-color-light-contrast: #D6CADD;
 
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
@@ -48,6 +49,29 @@ textarea {
 .btn.btn-default:active,
 .btn.btn-default.active {
     color: #45007B;
+}
+
+.btn-default-light{
+   color: $main-color;
+   background-color:$main-color-light;
+   border-color:#130022;
+ }
+.btn.btn-default-light:hover,
+.btn.btn-default-light:focus,
+.btn.btn-default-light:active,
+.btn.btn-default-light.active {
+    color: #45007B;
+    background-color: $main-color-light-contrast;
+}
+
+.badge-btn-primary {
+  background-color: $main-color;
+}
+.badge-btn-primary:hover,
+.badge-btn-primary:focus,
+.badge-btn-primary:active,
+.badge-btn-primary.active {
+    background-color: #9421BC;
 }
 
 .badge-primary {
@@ -213,6 +237,22 @@ body.loading .modal {
   margin-bottom: 2em;
 }
 
+.btn-print-top{
+  text-align: center;
+  margin-bottom: 0.5em;
+}
+
+.mgs-headq{
+  font-size: 1.2em;
+  color: $main-color;
+  margin-bottom: 0.2em;
+}
+
+.mgs-heada{
+  font-size: 0.9em;
+  color: $main-color-medium;
+  text-align: justify;
+}
 /* Camera */
 .mgs-cam{
   text-align: center;
@@ -284,6 +324,8 @@ body.loading .modal {
   color: $main-color;
 }
 
+
+
 /* Manual Cam */
 .manual-el{
   margin-top: 3em;
@@ -291,6 +333,99 @@ body.loading .modal {
 
 #mgs-manual-cam{
   display: none;
+}
+
+/* HOME */
+.mgs-homeq{
+  text-align: justify;
+  font-size: 0.9em;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.pos-center{
+  text-align: center;
+}
+
+.pos-left{
+  text-align: left;
+}
+
+.text-sub-search{
+  margin-top: 5em;
+}
+
+.mg-verify-logo{
+  margin-top: 5em;
+  margin-bottom: 8em;
+}
+
+#home-search{
+  margin-bottom: 15em;
+}
+
+
+/*  Pricing */
+
+.title-pc{
+  font-size: 2.5em;
+  margin-bottom: 1em;
+  margin-top: 0.7em;
+}
+
+.subtitle-pc{
+  font-size: 0.9em;
+  padding-bottom: 1.5em;
+  border-bottom: 0.5px solid gray;
+  margin-bottom: 1.5em;
+}
+
+.note-det-pc{
+  font-size: 1em;
+  margin-top: 3em;
+  margin-bottom: 0.5em;
+  text-align: center;
+
+}
+
+.note-pc{
+  font-size: 0.8em;
+  margin-top: 3em;
+  margin-bottom: 0.5em;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.price-pc{
+  font-size: 1.8em;
+  margin-bottom: 0.5em;
+  color: $main-color;
+}
+
+.bg-pc{
+  background-color: #D8D0EC;
+  border: 7px solid white;
+}
+
+.bg-pc-ab{
+  background-color: #D0D4EC;
+  border: 7px solid white;
+}
+
+.bg-pc-free{
+  background-color: #D0ECD2;
+  border: 7px solid white;
+}
+
+.pc-big-block{
+  margin-top: 4em;
+}
+
+.bottom-text{
+  font-size: 1em;
+  margin-top: 1.5em;
+  color: $main-color;
+
 }
 
 /* header */
@@ -313,7 +448,7 @@ body.loading .modal {
 /* footer */
 
 footer {
-  margin-top: 17em;
+  margin-top: 3em;
   padding-top: 5px;
   border-top: 1px solid $gray-medium-light;
   color: $gray-light;

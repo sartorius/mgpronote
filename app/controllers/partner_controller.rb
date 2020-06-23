@@ -41,4 +41,8 @@ class PartnerController < ApplicationController
        flash[:info] = "Une erreur est survenue #{exec.message}"
       render 'printtwelve'
   end
+
+  def printnotrack
+    render 'printnotrack'
+  end
 end

@@ -8,7 +8,8 @@ function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
     runjsGrid();
   }
-  if($('#mg-graph-identifier').text() == 'parprint12-gr'){
+  if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
+          ($('#mg-graph-identifier').text() == 'parprintnotrack-gr')){
     $("#btn-print-12").click(function() {
         generateCb12PDF();
     });
@@ -110,13 +111,11 @@ function generateCb12PDF(){
 }
 
 function display12Cb(){
-  var numberRow = 0;
-  numberRow = $('#nb-lines').html();
-  console.log("Read number of row: " + numberRow);
-  for(i=0; i<numberRow; i++){
+  for(i=0; i<dataTagToJsonArray.length; i++){
     // Use this to pad padStart(2, '0')
     JsBarcode("#mbc-"+i, $("#item-bc-"+i).html());
     //JsBarcode("#mbc-"+i, 'M9999999999PAK15');
+    // var i = 99999999999; i.toString(34); >> 1uovgaaj
   }
 }
 

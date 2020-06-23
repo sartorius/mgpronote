@@ -13,4 +13,8 @@ class StaticPagesController < ApplicationController
 
   def readbc
   end
+
+  def pricing
+    render 'pricing'
+  end
 end

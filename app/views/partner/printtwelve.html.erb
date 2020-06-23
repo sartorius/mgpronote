@@ -57,6 +57,15 @@
               <% i = i + 1 %>
         <% end %>
       </div>
+			<div class="row">
+				<div class="col-sm-12 btn-print">
+	      	Nous avons trouvé <span id="nb-lines"><%= i %></span> codes barres.
+				</div>
+			</div>
 
-      Nous avons trouvé <span id="nb-lines"><%= i %></span> codes barres.
+	    <div class="row">
+				<div class="col-sm-12 btn-print">
+						<a href="/printnotrack" id="btn-print-12-no-track" class="btn btn-default btn-sm btn-print">Imprimer 12 codes barres non suivi</a>
+	      </div>
+	    </div>
 </div>
