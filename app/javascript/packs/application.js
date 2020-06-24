@@ -10,7 +10,7 @@ require("custmain_mg.js")
 require("scannermng_mg.js")
 require("jsgrid.min.js")
 require("JsBarcode.all.min.js")
-require("jspdf.min.js")
+require("Chart.bundle.min.js")
 require("partnermng.js")
 require("turbolinks").start()
 import "bootstrap"
