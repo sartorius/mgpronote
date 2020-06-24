@@ -17,4 +17,12 @@ class StaticPagesController < ApplicationController
   def pricing
     render 'pricing'
   end
+
+  def letsbepartners
+    render 'letsbepartners'
+  end
+
+  def howtouse
+    render 'howtouse'
+  end
 end

@@ -1,4 +1,11 @@
 class PartnerController < ApplicationController
+
+
+  #One barcode manager
+  def onebarcodemng
+    render 'onebarcodemng'
+  end
+
   # Get the next step BC
   def dashboard
 

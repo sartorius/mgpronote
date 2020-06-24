@@ -402,19 +402,22 @@ body.loading .modal {
   color: $main-color;
 }
 
+.bg-pc-gen{
+  border: 7px solid white;
+  min-height: 430px;
+}
+
 .bg-pc{
   background-color: #D8D0EC;
-  border: 7px solid white;
 }
+
 
 .bg-pc-ab{
   background-color: #D0D4EC;
-  border: 7px solid white;
 }
 
 .bg-pc-free{
   background-color: #D0ECD2;
-  border: 7px solid white;
 }
 
 .pc-big-block{
@@ -433,6 +436,11 @@ body.loading .modal {
   margin-top: 1.5em;
   color: $main-color;
 
+}
+
+/* Lorem */
+.lorem-text{
+  text-align: justify;
 }
 /* header */
 
