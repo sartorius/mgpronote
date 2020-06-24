@@ -1,6 +1,10 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+html, body {
+  font-family: "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
+}
+
 /* mixins, variables, etc. */
 
 $gray-medium-light: #eaeaea;
@@ -371,6 +375,8 @@ body.loading .modal {
   font-size: 2.5em;
   margin-bottom: 1em;
   margin-top: 0.7em;
+  font-family: Georgia, arial;
+  color: #290064;
 }
 
 .subtitle-pc{
