@@ -1,6 +1,25 @@
 class PartnerController < ApplicationController
 
 
+  def reception
+    render 'reception'
+  end
+
+  def mainstatistics
+    sql_query = "SELECT rs.step, COUNT(1) AS cnt_stat FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +
+        	             " GROUP BY rs.step;"
+    begin
+
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+      @emptyResultSet = @resultSet.empty?
+
+      render 'mainstatistics'
+    end
+    rescue Exception => exc
+       flash[:info] = "Une erreur est survenue #{exec.message}"
+      render 'mainstatistics'
+  end
+
   #One barcode manager
   def onebarcodemng
     render 'onebarcodemng'

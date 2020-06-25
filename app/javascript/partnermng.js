@@ -7,9 +7,8 @@ $(document).on('turbolinks:load', function() {
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
     runjsGrid();
-    demo2();
   }
-  if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
+  else if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
           ($('#mg-graph-identifier').text() == 'parprintnotrack-gr')){
     $("#btn-print-12").click(function() {
         generateCb12PDF();
@@ -142,44 +141,3 @@ function runjsGrid(){
       ]
   });
 }
-
-/* JSChart */
-function demo2(){
-  var ctx = document.getElementById('myChart2');
-  var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: ['Nouveau', 'Addressé', 'Dépôts', 'Arrivée Tana', 'Dispo clients', 'Terminés'],
-          datasets: [{
-              label: 'Status des codes barres',
-              data: [108, 19, 197, 265, 32, 45],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
-              }]
-          }
-      }
-  });
-};

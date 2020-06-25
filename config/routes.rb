@@ -35,5 +35,9 @@ Rails.application.routes.draw do
   get     '/printnotrack',    to: 'partner#printnotrack'
 
   get     '/onebarcodemng',    to: 'partner#onebarcodemng'
+  get     '/mainstatistics',    to: 'partner#mainstatistics'
+
+  get     '/reception',    to: 'partner#reception'
+
 
 end
