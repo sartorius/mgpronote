@@ -141,7 +141,13 @@ function showPosition(position) {
 // Camera utils
 function loadCameraRead(){
   let selectedDeviceId;
-  const codeReader = new ZXing.BrowserBarcodeReader();
+
+  // 1D barcode reader
+  //const codeReader = new ZXing.BrowserBarcodeReader();
+  //console.log('ZXing code reader initialized');
+
+  //Aztec and QR reader
+  const codeReader = new ZXing.BrowserMultiFormatReader();
   console.log('ZXing code reader initialized');
   codeReader.getVideoInputDevices()
       .then((videoInputDevices) => {
@@ -267,7 +273,7 @@ function loadCameraRead(){
               console.error(err);
               document.getElementById('result').textContent = err;
           })
-          console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
+          //console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
       }
 
       function endScan(){
