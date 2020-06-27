@@ -7,8 +7,11 @@ class PartnerController < ApplicationController
   end
 
   def mainstatistics
-    sql_query = "SELECT rs.step, COUNT(1) AS cnt_stat FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +
-        	             " GROUP BY rs.step;"
+    sql_query = "SELECT rs.step, COUNT(1) AS cnt_stat " +
+                        " FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +
+                        " JOIN users u ON u.partner = bc.partner_id " +
+                        " WHERE u.id = " + @current_user.id.to_s +
+        	              " GROUP BY rs.step;"
     begin
 
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)

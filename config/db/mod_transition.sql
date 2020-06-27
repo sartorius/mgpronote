@@ -129,7 +129,7 @@ select
 -- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
 -- This action is creating the bar code if it does not exist
 -- This action canoot be zero or one (personal client or reseller)
-DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
+DROP FUNCTION IF EXISTS CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
                   rwkf_id       SMALLINT,
@@ -206,7 +206,7 @@ BEGIN
 
     -- We update the barcode with last status
     UPDATE barcode
-      SET status = $3
+      SET status = $3, update_date = CURRENT_TIMESTAMP
       WHERE id = $1;
 
     COMMIT;

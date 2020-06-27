@@ -124,20 +124,25 @@ function display12Cb(){
 
 /* JS GRID */
 function runjsGrid(){
-  $("#jsGrid").jsGrid({
-      height: "auto",
-      width: "100%",
+  if(dataTagToJsonArray.length > 0){
+    $("#jsGrid").jsGrid({
+        height: "auto",
+        width: "100%",
 
-      sorting: true,
-      paging: true,
+        sorting: true,
+        paging: true,
 
-      data: dataTagToJsonArray,
+        data: dataTagToJsonArray,
 
-      fields: [
-          { name: "id", title: "#", type: "number", width: 25, headercss: "h-jsG-r" },
-          { name: "ref_tag", title: "Référence", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
-          //Default width is auto
-          { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" }
-      ]
-  });
+        fields: [
+            { name: "id", title: "#", type: "number", width: 25, headercss: "h-jsG-r" },
+            { name: "ref_tag", title: "Référence", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
+            //Default width is auto
+            { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" }
+        ]
+    });
+  }
+  else{
+    $("#jsGrid").hide();
+  }
 }
