@@ -1,4 +1,5 @@
 class PartnerController < ApplicationController
+  before_action :mgs_user_is_partner
 
 
   def reception

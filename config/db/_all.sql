@@ -1,4 +1,11 @@
 DROP TABLE IF EXISTS tag;
+DROP TABLE IF EXISTS wk_tag_com;
+DROP TABLE IF EXISTS wk_tag;
+DROP TABLE IF EXISTS barcode;
+DROP TABLE IF EXISTS mod_workflow;
+DROP TABLE IF EXISTS ref_workflow;
+DROP TABLE IF EXISTS ref_transition;
+DROP TABLE IF EXISTS ref_status;
 DROP TABLE IF EXISTS ref_partner;
 
 CREATE TABLE ref_partner (
@@ -28,13 +35,6 @@ UPDATE users set partner = 2, incharge = FALSE where users.email = 'raza.hery@gm
 -- Need a cross table client x partner
 -- Transition ref
 
-DROP TABLE IF EXISTS wk_tag_com;
-DROP TABLE IF EXISTS wk_tag;
-DROP TABLE IF EXISTS barcode;
-DROP TABLE IF EXISTS mod_workflow;
-DROP TABLE IF EXISTS ref_workflow;
-DROP TABLE IF EXISTS ref_transition;
-DROP TABLE IF EXISTS ref_status;
 
 CREATE TABLE ref_status (
   id            SMALLINT      PRIMARY KEY,

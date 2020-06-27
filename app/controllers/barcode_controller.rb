@@ -1,5 +1,5 @@
 class BarcodeController < ApplicationController
-  before_action :mgs_user_is_partner, only: [:getnext, :savebc]
+  before_action :mgs_user_is_partner, :except => [:checkbc, :checkstep]
   # skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
 
   # Get the next step BC

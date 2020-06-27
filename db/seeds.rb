@@ -16,7 +16,7 @@ User.create!(name:  "Rakotoarinia",
             password_confirmation: "madagascar12",
             phone: "0320102045",
             admin:     false,
-            incharge:     true,
+            incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
 

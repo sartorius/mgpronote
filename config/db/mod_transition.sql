@@ -1,12 +1,5 @@
 -- Transition ref
 
-DROP TABLE IF EXISTS wk_tag_com;
-DROP TABLE IF EXISTS wk_tag;
-DROP TABLE IF EXISTS barcode;
-DROP TABLE IF EXISTS mod_workflow;
-DROP TABLE IF EXISTS ref_workflow;
-DROP TABLE IF EXISTS ref_transition;
-DROP TABLE IF EXISTS ref_status;
 
 CREATE TABLE ref_status (
   id            SMALLINT      PRIMARY KEY,
