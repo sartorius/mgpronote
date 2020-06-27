@@ -25,4 +25,8 @@ class StaticPagesController < ApplicationController
   def howtouse
     render 'howtouse'
   end
+
+  def accessrightserror
+    render 'accessrightserror'
+  end
 end

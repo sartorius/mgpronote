@@ -74,6 +74,7 @@ function generateCb12PDF(){
   for(i=0; i<dataTagToJsonArray.length; i++){
     var oddOffsetX =  100 * (i % 2);
 
+    //The destinataire is not filled for now
     if(dataTagToJsonArray[i].dest_email == null){
       cel1 = setCellSize('Destinataire: non renseigné');
     }
@@ -136,8 +137,7 @@ function runjsGrid(){
           { name: "id", title: "#", type: "number", width: 25, headercss: "h-jsG-r" },
           { name: "ref_tag", title: "Référence", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
           //Default width is auto
-          { name: "step", title: "Status", type: "text", width: 50, headercss: "h-jsG-l" },
-          { name: "dest_email", title: "Destinataire", type: "text", headercss: "h-jsG-l" }
+          { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" }
       ]
   });
 }

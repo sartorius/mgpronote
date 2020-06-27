@@ -41,7 +41,7 @@ INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Flux process 
 
 
 CREATE TABLE mod_workflow (
-  id            SERIAL      PRIMARY KEY,
+  id            SERIAL         PRIMARY KEY,
   wkf_id        SMALLINT       NOT NULL REFERENCES ref_workflow(id),
   start_id      SMALLINT       NOT NULL REFERENCES ref_status(id),
   end_id        SMALLINT       NOT NULL REFERENCES ref_status(id),
@@ -80,11 +80,17 @@ CREATE TABLE barcode(
   -- Mostly beween 0 to 9999
   secret_code           SMALLINT       NOT NULL,
   status                SMALLINT       DEFAULT 0,
-  to_email              VARCHAR(200),
+  partner_id            INT            NOT NULL REFERENCES ref_partner(id),
+  -- creator id can be the partner or the client with high score who is granteed
+  creator_id            BIGINT         NOT NULL REFERENCES users(id),
+  -- the owner can be null until it is addressed
+  owner_id              BIGINT         REFERENCES users(id),
+  -- If someone else need to come for pick up
   to_name               VARCHAR(50),
-  to_fname              VARCHAR(50),
+  to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
-  create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- INSERT INTO barcode (ref_tag, secure, secret_code) VALUES ('000000000', FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT);
@@ -128,8 +134,10 @@ select
 */
 
 -- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
+-- This action is creating the bar code if it does not exist
+-- This action canoot be zero or one (personal client or reseller)
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
-CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
+CREATE OR REPLACE FUNCTION CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
                   rwkf_id       SMALLINT,
                   mwkf_id       INT,
@@ -157,8 +165,8 @@ BEGIN
       -- Bar code is new // or do not exist
       -- This need to be changed later when we have the barcode format
       -- The status will be zero by default
-      INSERT INTO barcode (ref_tag, secure, secret_code)
-        VALUES (par_read_barcode, FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+      INSERT INTO barcode (creator_id, partner_id, ref_tag, secure, secret_code)
+        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
     END IF;
 
     -- Now check the  last step

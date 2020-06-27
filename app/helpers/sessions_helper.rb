@@ -53,4 +53,34 @@ module SessionsHelper
   def store_location
     session[:forwarding_url] = request.original_url if request.get?
   end
+
+  # Define here specific MGS Access Rights
+
+  def is_partner?
+    !current_user.nil? and (@current_user.partner > 1)
+  end
+
+  # This methode copy paste the user controller
+  # Confirms a logged-in user.
+  def mgs_logged_in_user
+    unless logged_in?
+      store_location
+      flash[:danger] = "Connectez-vous s'il vous plaît"
+      redirect_to login_url
+    end
+  end
+
+  # Confirms user is partner.
+  def mgs_user_is_partner
+    mgs_logged_in_user
+
+    # We need to test logging else it test the user
+    if logged_in?
+      # Partner are greater than 1
+      unless @current_user.partner > 1
+        redirect_to accessrightserror_path
+      end
+    end
+  end
+
 end

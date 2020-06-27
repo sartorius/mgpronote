@@ -1,4 +1,5 @@
 class BarcodeController < ApplicationController
+  before_action :mgs_user_is_partner, only: [:getnext, :savebc]
   # skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
 
   # Get the next step BC
@@ -10,7 +11,7 @@ class BarcodeController < ApplicationController
   def savebc
     @readBC = params[:checkcb]
 
-    sql_query = "SELECT * FROM CLI_ACT_TAG('" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
+    sql_query = "SELECT * FROM CLI_ACT_TAG(" + @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
 
     begin
 

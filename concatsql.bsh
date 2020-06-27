@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
 rm -f ./config/db/_all.sql
-cat ./config/db/company.sql >> ./config/db/_all.sql
+cat ./config/db/partner.sql >> ./config/db/_all.sql
 cat ./config/db/mod_transition.sql >> ./config/db/_all.sql
 cat ./config/db/mod_user.sql >> ./config/db/_all.sql

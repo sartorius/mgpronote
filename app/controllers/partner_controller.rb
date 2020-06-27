@@ -28,8 +28,7 @@ class PartnerController < ApplicationController
   # Get the next step BC
   def dashboard
 
-    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      "bc.to_email AS dest_email " +
+    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
                       "FROM barcode bc join ref_status rs on rs.id = bc.status ORDER BY bc.id ASC;"
 
 
@@ -49,8 +48,7 @@ class PartnerController < ApplicationController
 
   def printtwelve
 
-    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      "bc.to_email AS dest_email " +
+    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
                       "FROM barcode bc join ref_status rs on rs.id = bc.status ORDER BY bc.id ASC LIMIT 12;"
 
 
