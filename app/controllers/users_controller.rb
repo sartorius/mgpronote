@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
+  before_action :mgs_logged_in_user,   only: [:show, :editpwd]
+  before_action :get_partner_company_name,   only: [:show]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -30,6 +32,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def editpwd
+    @user = @current_user
+    render 'editpwd'
+  end
+
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
@@ -50,7 +57,7 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :password,
-                                   :password_confirmation, :firstname, :phone)
+                                   :password_confirmation, :firstname, :phone, :partner)
     end
 
     # Before filters

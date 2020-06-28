@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get    '/termsofuse', to: 'static_pages#termsofuse'
   get    '/accessrightserror', to: 'static_pages#accessrightserror'
   get    '/signup',  to: 'users#new'
+  get    '/editpwd',  to: 'users#editpwd'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'

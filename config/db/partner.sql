@@ -24,7 +24,7 @@ CREATE TABLE ref_partner (
 
 -- These are example of Carrier
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
-INSERT INTO ref_partner (id, name, description) VALUES (1, 'Revendeur', 'Revendeur, je vais revendre les produits que j''ai commandé');
+INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
 INSERT INTO ref_partner (id, name, description, type) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C');
 

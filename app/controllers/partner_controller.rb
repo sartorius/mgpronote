@@ -86,17 +86,5 @@ class PartnerController < ApplicationController
   def printnotrack
     render 'printnotrack'
   end
-
-  private
-
-  def get_partner_company_name
-    unless !@resultSetCompany.nil?
-      sql_query = "SELECT name, description, to_phone, website FROM ref_partner WHERE id = " + @current_user.partner.to_s + ";"
-      begin
-        #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
-        #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
-        @resultSetCompany = ActiveRecord::Base.connection.exec_query(sql_query).cast_values
-      end
-    end
-  end
+  
 end

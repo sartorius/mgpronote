@@ -14,10 +14,15 @@ function mainFormLoaderInCaseOfChange(){
   }
   else if($('#mg-graph-identifier').text() == 'edituser-gr'){
     //edituser-gr
-    //initialize
-    $("#edit-submit").prop('disabled', true);
-    $("#edit-submit").hide();
+    //no initializion as pre-filled
     listenEditFormCreate();
+  }
+  else if($('#mg-graph-identifier').text() == 'editpwd-gr'){
+    //edituser-gr
+    //initialize
+    $("#editpwd-submit").prop('disabled', true);
+    $("#editpwd-submit").hide();
+    listenPwdEditFormCreate();
   }
   else{
     //do nothing
@@ -39,6 +44,15 @@ function listenEditFormCreate(){
     verityEditFieldFormRef();
   });
 }
+
+function listenPwdEditFormCreate(){
+  $( ".crt-fill-form" ).keyup(function() {
+    verityPwdEditFieldFormRef();
+  });
+}
+
+
+
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -117,6 +131,27 @@ function verityFieldFormRef(){
 function verityEditFieldFormRef(){
   let allFieldOK = true;
 
+  if (!(validatePhoneNumber($('#crt-phone').val()))){
+    allFieldOK = false;
+    $('#ck-phone').show(800);
+  }
+  else{
+    $('#ck-phone').hide(800);
+  }
+
+  if(allFieldOK){
+      $("#edit-submit").prop('disabled', false);
+      $("#edit-submit").show(500);
+  }
+  else{
+      $("#edit-submit").prop('disabled', true);
+      $("#edit-submit").hide(500);
+  }
+}
+
+function verityPwdEditFieldFormRef(){
+  let allFieldOK = true;
+
   // Check email
   if($('#crt-pwd').val().length < 7){
     allFieldOK = false;
@@ -134,20 +169,13 @@ function verityEditFieldFormRef(){
   else{
     $('#ck-cpwd').hide(800);
   }
-  if (!(validatePhoneNumber($('#crt-phone').val()))){
-    allFieldOK = false;
-    $('#ck-phone').show(800);
-  }
-  else{
-    $('#ck-phone').hide(800);
-  }
 
   if(allFieldOK){
-      $("#edit-submit").prop('disabled', false);
-      $("#edit-submit").show(500);
+      $("#editpwd-submit").prop('disabled', false);
+      $("#editpwd-submit").show(500);
   }
   else{
-      $("#edit-submit").prop('disabled', true);
-      $("#edit-submit").hide(500);
+      $("#editpwd-submit").prop('disabled', true);
+      $("#editpwd-submit").hide(500);
   }
 }

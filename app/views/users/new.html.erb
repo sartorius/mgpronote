@@ -38,6 +38,9 @@
       <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
       <%= f.text_field :phone, class: 'form-control crt-fill-form', placeholder: "Téléphone", id: 'crt-phone' %>
 
+      <label>Vous êtes</label>
+      <%= select(:user, :partner, [['Particulier', 0], ['Revendeur', 1]], class: 'form-control') %>
+
       <hr>
       <div class="t-of-use mgs-med-note">
       En créant votre compte, vous acceptez <%= link_to "les conditions d'utilisation de MGSuivi", termsofuse_path %>

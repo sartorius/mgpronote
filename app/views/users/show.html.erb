@@ -3,7 +3,7 @@
 <div class="row usr-block">
   <div class="col-md-4">
   </div>
-  <div class="col-md-6">
+  <div class="col-md-4">
     <label>Nom</label>
     <div class="field-big">
       <%= @user.name %>
@@ -24,22 +24,33 @@
       <% elsif @user.partner == 1 %>
         Revendeur
       <% else %>
-        Partenaire
+        Partenaire <% if @user.incharge? %>et <strong>en charge</strong><% end %>
       <% end %>
     </div>
     <label>Téléphone</label>
     <div class="field-md">
       <%= @user.phone %>
     </div>
+    <hr>
+    <label>Compagnie</label>
+    <div class="field-md">
+      <%= @resultSetCompany[0][0].to_s %>
+    </div>
+    <label>Compagnie description</label>
+    <div class="field-md">
+      <%= @resultSetCompany[0][1].to_s %>
+    </div>
   </div>
-  <div class="col-md-2">
+  <div class="col-md-4">
   </div>
 </div>
 <div class="row">
   <div class="col-md-4">
   </div>
   <div class="col-md-4">
-    <%= link_to "Changer", edit_user_path(current_user), class: "btn btn-default btn-block" %>
+    <%= link_to "Modifier", edit_user_path(current_user), class: "btn btn-default btn-lg btn-block" %>
+    <hr>
+    <%= link_to "Changer le mot de passe", "/editpwd", class: "btn btn-sm btn-default-light btn-block" %>
   </div>
   <div class="col-md-4">
   </div>
