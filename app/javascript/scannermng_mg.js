@@ -1,7 +1,7 @@
 
 $(document).on('turbolinks:load', function() {
   // Should be called at each visit
-  console.log('Scan TBL Page as changed');
+  //console.log('Scan TBL Page as changed');
   mainScanLoaderInCaseOfChange();
 })
 

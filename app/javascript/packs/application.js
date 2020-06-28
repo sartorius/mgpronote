@@ -6,6 +6,7 @@
 require("@rails/ujs").start()
 require("@rails/activestorage").start()
 require("channels")
+require("formmng.js")
 require("custmain_mg.js")
 require("scannermng_mg.js")
 require("jsgrid.min.js")

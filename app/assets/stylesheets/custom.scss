@@ -310,6 +310,26 @@ body.loading .modal {
   font-size: 0.8em;
 }
 
+.mgs-med-note{
+  text-align: justify;
+  color: #b3b3b3;
+  font-size: 0.9em;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.t-of-use{
+  margin-bottom: 15px;
+}
+
+.ctr-ck-grp{
+  color: $main-color;
+  font-size: 0.8em;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
 #readBC{
   text-align: center;
 }

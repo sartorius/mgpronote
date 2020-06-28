@@ -29,4 +29,8 @@ class StaticPagesController < ApplicationController
   def accessrightserror
     render 'accessrightserror'
   end
+
+  def termsofuse
+    render 'termsofuse'
+  end
 end
