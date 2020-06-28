@@ -12,6 +12,13 @@ function mainFormLoaderInCaseOfChange(){
     $("#crt-submit").hide();
     listenAllFormCreate();
   }
+  else if($('#mg-graph-identifier').text() == 'signupclt-gr'){
+    //edituser-gr
+    //initialize
+    $("#add-clt-submit").prop('disabled', true);
+    $("#add-clt-submit").hide();
+    listenAddCltFormCreate();
+  }
   else if($('#mg-graph-identifier').text() == 'edituser-gr'){
     //edituser-gr
     //no initializion as pre-filled
@@ -51,8 +58,14 @@ function listenPwdEditFormCreate(){
   });
 }
 
+function listenAddCltFormCreate(){
+  $( ".crt-fill-form" ).keyup(function() {
+    verityAddCltFormRef();
+  });
+}
 
 
+// CONTROLLER Here
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -68,6 +81,9 @@ function validateEmail(email){
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
+
+
+// CHECKER
 
 function verityFieldFormRef(){
   let allFieldOK = true;
@@ -125,6 +141,24 @@ function verityFieldFormRef(){
   else{
       $("#crt-submit").prop('disabled', true);
       $("#crt-submit").hide(500);
+  }
+}
+
+function verityAddCltFormRef(){
+  let allFieldOK = true;
+
+  // Check email
+  if (!(validateEmail($('#crt-email').val()))){
+    allFieldOK = false;
+  }
+  // This could be simpler but we need to keep the logic
+  if(allFieldOK){
+      $("#add-clt-submit").prop('disabled', false);
+      $("#add-clt-submit").show(500);
+  }
+  else{
+      $("#add-clt-submit").prop('disabled', true);
+      $("#add-clt-submit").hide(500);
   }
 }
 

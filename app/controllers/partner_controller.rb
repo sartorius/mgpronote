@@ -3,8 +3,8 @@ class PartnerController < ApplicationController
   before_action :get_partner_company_name
 
 
-  def reception
-    render 'reception'
+  def signnewclient
+    render 'signnewclient'
   end
 
   def mainstatistics
@@ -86,5 +86,5 @@ class PartnerController < ApplicationController
   def printnotrack
     render 'printnotrack'
   end
-  
+
 end

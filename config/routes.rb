@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   get     '/onebarcodemng',    to: 'partner#onebarcodemng'
   get     '/mainstatistics',    to: 'partner#mainstatistics'
 
-  get     '/reception',    to: 'partner#reception'
+  get     '/signnewclient',    to: 'partner#signnewclient'
 
 
 end
