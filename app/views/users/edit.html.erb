@@ -11,13 +11,13 @@
         Le transporteur peut être amené à vous contacter par téléphone pour vous remettre votre colis.
       </div>
 
-      <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp">*</span></label>
+      <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
       <%= f.text_field :phone, class: 'form-control crt-fill-form', id: 'crt-phone' %>
 
       <label>Mot de passe <span id="ck-pwd" class="ctr-ck-grp">(min. 7 caractères)</span></label>
       <%= f.password_field :password, class: 'form-control crt-fill-form', placeholder: "Mot de passe", id: 'crt-pwd' %>
 
-      <label>Confirmation du mot de passe <span id="ck-cpwd" class="ctr-ck-grp">*</span></label>
+      <label>Confirmation du mot de passe <span id="ck-cpwd" class="ctr-ck-grp"> - obligatoire</span></label>
       <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
 
       <%= f.submit "Sauvegarder", class: "btn btn-default btn-block", id: "edit-submit" %>
