@@ -323,11 +323,36 @@ body.loading .modal {
 }
 
 .ctr-ck-grp{
-  color: $main-color;
-  font-size: 0.8em;
-  margin-top: 15px;
-  margin-bottom: 10px;
+  color: #B17FFF;
+}
+
+.crt-block{
+  color: #CBCBCB;
+  font-size: 1.5em;
+  margin-top: 20px;
   font-weight: bold;
+  border-bottom: 0.5px solid #CBCBCB;
+}
+
+.sess-block{
+  margin-top: 3em;
+}
+
+.usr-block{
+  margin-top: 8em;
+  margin-bottom: 3em;
+}
+
+.field-big{
+  color: $main-color;
+  font-size: 2.5em;
+  margin-bottom: 1em;
+}
+
+.field-md{
+  color: $main-color-medium;
+  font-size: 1.2em;
+  margin-bottom: 1em;
 }
 
 #readBC{
@@ -591,7 +616,6 @@ aside {
 }
 
 .gravatar {
-  float: left;
   margin-right: 10px;
 }
 

@@ -5,12 +5,19 @@ $(document).on('turbolinks:load', function() {
 })
 
 function mainFormLoaderInCaseOfChange(){
-  //initialize
-  $("#crt-submit").prop('disabled', true);
-  $("#crt-submit").hide();
 
   if($('#mg-graph-identifier').text() == 'formuser-gr'){
+    //initialize
+    $("#crt-submit").prop('disabled', true);
+    $("#crt-submit").hide();
     listenAllFormCreate();
+  }
+  else if($('#mg-graph-identifier').text() == 'edituser-gr'){
+    //edituser-gr
+    //initialize
+    $("#edit-submit").prop('disabled', true);
+    $("#edit-submit").hide();
+    listenEditFormCreate();
   }
   else{
     //do nothing
@@ -24,6 +31,12 @@ function listenAllFormCreate(){
   $( "#crt-submit" ).click(function() {
     $('#crt-name').val(capitalizeFirstLetter($('#crt-name').val()));
     $('#crt-fname').val(capitalizeFirstLetter($('#crt-fname').val()));
+  });
+}
+
+function listenEditFormCreate(){
+  $( ".crt-fill-form" ).keyup(function() {
+    verityEditFieldFormRef();
   });
 }
 
@@ -98,5 +111,43 @@ function verityFieldFormRef(){
   else{
       $("#crt-submit").prop('disabled', true);
       $("#crt-submit").hide(500);
+  }
+}
+
+function verityEditFieldFormRef(){
+  let allFieldOK = true;
+
+  // Check email
+  if($('#crt-pwd').val().length < 7){
+    allFieldOK = false;
+    $('#ck-pwd').show(800);
+  }
+  else{
+    $('#ck-pwd').hide(800);
+  }
+  // Check password
+  if(($('#crt-pwd').val().length < 7)
+        || (!($('#crt-cpwd').val() == $('#crt-pwd').val()))){
+    allFieldOK = false;
+    $('#ck-cpwd').show(800);
+  }
+  else{
+    $('#ck-cpwd').hide(800);
+  }
+  if (!(validatePhoneNumber($('#crt-phone').val()))){
+    allFieldOK = false;
+    $('#ck-phone').show(800);
+  }
+  else{
+    $('#ck-phone').hide(800);
+  }
+
+  if(allFieldOK){
+      $("#edit-submit").prop('disabled', false);
+      $("#edit-submit").show(500);
+  }
+  else{
+      $("#edit-submit").prop('disabled', true);
+      $("#edit-submit").hide(500);
   }
 }

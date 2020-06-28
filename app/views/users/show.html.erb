@@ -1,11 +1,35 @@
 <% provide(:title, @user.name) %>
+
+<div class="row usr-block">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-6">
+    <label>Nom</label>
+    <div class="field-big">
+      <%= @user.name %>
+    </div>
+    <label>Prénom</label>
+    <div class="field-big">
+      <%= @user.firstname %>
+    </div>
+    <label>Email</label>
+    <div class="field-md">
+      <%= @user.email %>
+    </div>
+    <label>Téléphone</label>
+    <div class="field-md">
+      <%= @user.phone %>
+    </div>
+  </div>
+  <div class="col-md-2">
+  </div>
+</div>
 <div class="row">
-  <aside class="col-md-4">
-    <section class="user_info">
-      <h1>
-        <%= gravatar_for @user %>
-        <%= @user.name %>
-      </h1>
-    </section>
-  </aside>
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-4">
+    <%= link_to "Changer", edit_user_path(current_user), class: "btn btn-default btn-block" %>
+  </div>
+  <div class="col-md-4">
+  </div>
 </div>

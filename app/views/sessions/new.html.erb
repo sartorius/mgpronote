@@ -2,7 +2,7 @@
 <h1>Connexion</h1>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-6 col-md-offset-3 sess-block">
     <%= form_with(url: login_path, scope: :session, local: true) do |f| %>
 
       <%= f.email_field :email, class: 'form-control', placeholder: "Email" %>
