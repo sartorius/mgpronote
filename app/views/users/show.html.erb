@@ -12,9 +12,20 @@
     <div class="field-big">
       <%= @user.firstname %>
     </div>
+    <hr>
     <label>Email</label>
     <div class="field-md">
       <%= @user.email %>
+    </div>
+    <label>Profil</label>
+    <div class="field-md">
+      <% if @user.partner == 0 %>
+        Particulier
+      <% elsif @user.partner == 1 %>
+        Revendeur
+      <% else %>
+        Partenaire
+      <% end %>
     </div>
     <label>Téléphone</label>
     <div class="field-md">
