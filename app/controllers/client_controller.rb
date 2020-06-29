@@ -51,7 +51,7 @@ class ClientController < ApplicationController
   def load_clients
     sql_query = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, to_char(cpx.create_date, 'DD/MM/YYYY') AS since "
 	  sql_query += "FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
-		sql_query += "and cpx.partner_id = " + @current_user.partner.to_s + ";"
+		sql_query += "and cpx.partner_id = " + @current_user.partner.to_s + " ORDER BY cpx.create_date DESC;"
 
     begin
 
