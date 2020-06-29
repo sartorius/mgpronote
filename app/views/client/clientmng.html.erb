@@ -1,13 +1,37 @@
 <% provide(:title, "Client Manager") %>
-<h1>Clients</h1>
 <div id="mg-graph-identifier">cltmng-gr</div>
 <%= render 'partner/partnerutils' %>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+<% end %>
+
 <div class="row">
-    <div class="col-lg-3">
+  <div class="col-lg-12">
+    <h1>Clients</h1>
+  </div>
+</div>
+<div class="mgs-note mgs-note-mrg-grid">
+  Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+</div>
+<% if @emptyResultSet %>
+  <div class="col-sm-12 no-data">
+    Désolé, vous n'avez pas encore de client &nbsp; <i class="glyphicon glyphicon-inbox"></i>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div id="jsGrid">
     </div>
-    <div class="col-lg-6">
-      
-    </div>
-    <div class="col-lg-3">
-    </div>
+  </div>
 </div>

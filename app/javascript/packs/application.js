@@ -14,6 +14,7 @@ require("JsBarcode.all.min.js")
 require("Chart.bundle.min.js")
 require("partnermng.js")
 require("statistics.js")
+require("clientmng.js")
 require("turbolinks").start()
 import "bootstrap"
 

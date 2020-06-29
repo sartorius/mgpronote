@@ -6,7 +6,7 @@ $(document).on('turbolinks:load', function() {
 
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
-    runjsGrid();
+    runjsPartnerGrid();
   }
   else if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
           ($('#mg-graph-identifier').text() == 'parprintnotrack-gr')){
@@ -123,7 +123,7 @@ function display12Cb(){
 
 
 /* JS GRID */
-function runjsGrid(){
+function runjsPartnerGrid(){
   if(dataTagToJsonArray.length > 0){
     $("#jsGrid").jsGrid({
         height: "auto",

@@ -27,19 +27,39 @@ class ClientController < ApplicationController
         flash.now[:danger] = message
       end
 
+      load_clients
       render 'clientmng'
     end
     rescue Exception => exc
-       flash[:info] = "Une erreur est survenue #{exec.message}"
+       flash.now[:danger] = "Une erreur est survenue #{exec.message}"
       render 'clientmng'
   end
 
+
   def clientmng
+    load_clients
+
     render 'clientmng'
   end
 
   def signnewclient
     render 'signnewclient'
+  end
+
+  private
+
+  def load_clients
+    sql_query = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, to_char(cpx.create_date, 'DD/MM/YYYY') AS since "
+	  sql_query += "FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
+		sql_query += "and cpx.partner_id = " + @current_user.partner.to_s + ";"
+
+    begin
+
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+      @emptyResultSet = @resultSet.empty?
+    end
+    rescue Exception => exc
+       flash.now[:danger] = "Une erreur est survenue #{exec.message}"
   end
 
 end
