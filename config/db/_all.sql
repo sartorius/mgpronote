@@ -1,11 +1,9 @@
 DROP TABLE IF EXISTS client_partner_xref;
-DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS wk_tag_com;
 DROP TABLE IF EXISTS wk_tag;
 DROP TABLE IF EXISTS barcode;
 DROP TABLE IF EXISTS mod_workflow;
 DROP TABLE IF EXISTS ref_workflow;
-DROP TABLE IF EXISTS ref_transition;
 DROP TABLE IF EXISTS ref_status;
 DROP TABLE IF EXISTS ref_partner;
 CREATE TABLE ref_partner (

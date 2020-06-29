@@ -1,3 +1,5 @@
+
+=begin
 # Create a main sample user.
 User.create!(name:  "Ratinahirana",
              firstname: "Herinirina",
@@ -52,6 +54,58 @@ User.create!(name:  "Razanamalaza",
             phone: "0612345690",
             admin:     false,
             partner:   2,
+            incharge:     false,
+            activated: true,
+            activated_at: Time.zone.now)
+
+=end
+
+###########################################################################
+# Bunch of Clients
+# Client
+User.create!(name:  "De la Cannelle",
+            firstname: "Tsiky",
+            email: "tsiky.d@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0320102045",
+            admin:     false,
+            incharge:     false,
+            activated: true,
+            activated_at: Time.zone.now)
+
+# Client
+User.create!(name:  "Razafy",
+            firstname: "Hanitra",
+            email: "hanitra.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0320102045",
+            admin:     false,
+            incharge:     false,
+            activated: true,
+            activated_at: Time.zone.now)
+
+# Client
+User.create!(name:  "Rakoto",
+            firstname: "Maeva",
+            email: "maeva.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0320102045",
+            admin:     false,
+            incharge:     false,
+            activated: true,
+            activated_at: Time.zone.now)
+
+# Client
+User.create!(name:  "Ramilison",
+            firstname: "Mila",
+            email: "mila.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0320102045",
+            admin:     false,
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
