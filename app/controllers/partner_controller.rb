@@ -3,10 +3,6 @@ class PartnerController < ApplicationController
   before_action :get_partner_company_name
 
 
-  def signnewclient
-    render 'signnewclient'
-  end
-
   def mainstatistics
     sql_query = "SELECT rs.step, COUNT(1) AS cnt_stat " +
                         " FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +

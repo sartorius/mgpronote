@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS client_partner_xref;
 DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS wk_tag_com;
 DROP TABLE IF EXISTS wk_tag;
@@ -7,7 +8,6 @@ DROP TABLE IF EXISTS ref_workflow;
 DROP TABLE IF EXISTS ref_transition;
 DROP TABLE IF EXISTS ref_status;
 DROP TABLE IF EXISTS ref_partner;
-
 CREATE TABLE ref_partner (
   id            SMALLINT        PRIMARY KEY,
   name          VARCHAR(100)    NOT NULL,
@@ -24,12 +24,9 @@ CREATE TABLE ref_partner (
 
 -- These are example of Carrier
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
-INSERT INTO ref_partner (id, name, description) VALUES (1, 'Revendeur', 'Revendeur, je vais revendre les produits que j''ai commandé');
+INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
 INSERT INTO ref_partner (id, name, description, type) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C');
-
-UPDATE users set partner = 2, incharge = TRUE where users.email = 'rakoto.mamy@gmail.com';
-UPDATE users set partner = 2, incharge = FALSE where users.email = 'raza.hery@gmail.com';
 
 -- Need a cross table partner x mod_workflow
 -- Need a cross table client x partner
@@ -126,10 +123,13 @@ CREATE TABLE barcode(
 
 CREATE TABLE wk_tag(
   id                    BIGSERIAL      PRIMARY KEY,
-  bc_id                 BIGINT         NOT NULL REFERENCES barcode(id),
+  -- REFERENCES barcode(id)
+  bc_id                 BIGINT         NOT NULL,
   -- This is the transition used to arrived to this step
-  mwkf_id               SMALLINT       NOT NULL REFERENCES mod_workflow(id),
-  current_step_id       SMALLINT       NOT NULL REFERENCES ref_status(id),
+  --  REFERENCES mod_workflow(id)
+  mwkf_id               SMALLINT       NOT NULL,
+  --  REFERENCES ref_status(id)
+  current_step_id       SMALLINT       NOT NULL,
   geo_l                 VARCHAR(250)   DEFAULT 'N',
   is_incident           BOOLEAN        DEFAULT  FALSE,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -249,3 +249,67 @@ END;
 $$;
 -- Modify users
 -- ADD firstname, phone number, is_company
+-- This is the cross ref table for all partner to get their client
+CREATE TABLE client_partner_xref (
+  client_id     BIGINT,
+  partner_id    SMALLINT,
+  create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (client_id, partner_id)
+);
+
+-- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
+-- This action is attaching client to a company
+DROP FUNCTION IF EXISTS CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255));
+CREATE OR REPLACE FUNCTION CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255))
+  -- By convention we return zero when everything is OK
+  RETURNS INTEGER AS
+               -- Do the return at the end
+$func$
+DECLARE
+  var_client_id       BIGINT;
+  var_result          SMALLINT;
+  var_result_exists   SMALLINT;
+  var_partner_id      SMALLINT;
+BEGIN
+    var_result := 3;
+    -- Check if we found the email
+    var_client_id := NULL;
+    SELECT id INTO var_client_id
+      FROM users u
+      WHERE u.email = par_email
+      AND u.partner IN (0, 1)
+      AND u.activated = TRUE;
+
+    IF var_client_id IS NULL THEN
+      -- The client does not exists
+      -- Todo : send an email to the client to create an account
+      var_result := 1;
+    ELSE
+
+        -- Check if we found the partner
+        -- par user id is the creator and work for the company
+        var_partner_id := NULL;
+        SELECT partner INTO var_partner_id
+          FROM users u
+          WHERE u.id = par_user_id;
+
+        var_result_exists := 0;
+        SELECT COUNT(1) INTO var_result_exists
+          FROM client_partner_xref cpx
+          WHERE cpx.client_id = var_client_id
+                AND cpx.partner_id = var_partner_id;
+
+        IF var_result_exists > 0 THEN
+          -- The client is already a client of this company
+          var_result := 2;
+        ELSE
+          -- Here we are good !
+          INSERT INTO client_partner_xref (client_id, partner_id) VALUES (var_client_id, var_partner_id);
+          var_result := 0;
+        END IF;
+
+    END IF;
+
+   RETURN var_result;
+END
+$func$  LANGUAGE plpgsql;

@@ -11,11 +11,12 @@ class SessionsController < ApplicationController
         reset_session
         log_in user
         params[:session][:remember_me] == '1' ? remember(user) : forget(user)
-        redirect_to forwarding_url || user
+        #redirect_to forwarding_url || user
+        redirect_to root_url
       else
         message  = "Votre compte n'est pas encore activé. "
         message += "Vérifiez vos emails pour l'email, nous y avons envoyé le lien d'activation."
-        flash[:warning] = message
+        flash.now[:warning] = message
         redirect_to root_url
       end
     else

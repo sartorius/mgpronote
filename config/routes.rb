@@ -40,7 +40,9 @@ Rails.application.routes.draw do
   get     '/onebarcodemng',    to: 'partner#onebarcodemng'
   get     '/mainstatistics',    to: 'partner#mainstatistics'
 
-  get     '/signnewclient',    to: 'partner#signnewclient'
-
+  #Client manager
+  get     '/signnewclient',    to: 'client#signnewclient'
+  get     '/clientmng',    to: 'client#clientmng'
+  post    '/clientmng',    to: 'client#newclient'
 
 end

@@ -1,6 +1,7 @@
 <% provide(:title, "Inscrire un nouveau client") %>
 <h1>Nouveau client</h1>
 <div id="mg-graph-identifier">signupclt-gr</div>
+<%= render 'partner/partnerutils' %>
 
 <div class="row">
     <div class="col-lg-3">
@@ -15,7 +16,7 @@
 
         <div>
 
-          <form action="/" method="post" id="mg-checkbc-form">
+          <form action="/clientmng" method="post" id="mg-checkbc-form">
             <textarea class="form-control crt-fill-form" rows="1" name="email"  id="crt-email" placeholder="Email du client que vous voulez ajouter" style="resize: none;"></textarea>
 
             <input type="submit" name="formSubmit" class="btn btn-lg btn-block btn-default" id="add-clt-submit"

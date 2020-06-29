@@ -8,10 +8,10 @@ User.create!(name:  "Ratinahirana",
              admin:     true,
              activated: true,
              activated_at: Time.zone.now)
-
+# Client
 User.create!(name:  "Rakotoarinia",
             firstname: "Toky",
-            email: "rakotoarinia.toky@gmail.com",
+            email: "toky.r@gmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
             phone: "0320102045",
@@ -19,38 +19,39 @@ User.create!(name:  "Rakotoarinia",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-
-User.create!(name:  "Rakotomalala",
-            firstname: "Mamy",
-            email: "rakoto.mamy@gmail.com",
+# Revendeur
+User.create!(name:  "Hexagone",
+            firstname: "Njara",
+            email: "njara.h@gmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
-            phone: "0612345678",
-            admin:     false,
-            incharge:     true,
-            activated: true,
-            activated_at: Time.zone.now)
-
-User.create!(name:  "Razanamalaza",
-            firstname: "Hery",
-            email: "raza.hery@gmail.com",
-            password:              "madagascar12",
-            password_confirmation: "madagascar12",
-            phone: "0612345690",
+            phone: "0320182045",
+            partner:   1,
             admin:     false,
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-
-# Generate a bunch of additional users.
-2.times do |n|
-  name  = Faker::Name.name
-  email = "fake-#{n+1}@mgsuivi.com"
-  password = "password"
-  User.create!(name:  name,
-              email: email,
-              password:              password,
-              password_confirmation: password,
-              activated: true,
-              activated_at: Time.zone.now)
-end
+# Patron
+User.create!(name:  "Rakotomalala",
+            firstname: "Mamy",
+            email: "mamy.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0612345678",
+            admin:     false,
+            partner:   2,
+            incharge:     true,
+            activated: true,
+            activated_at: Time.zone.now)
+# Livreur Receptionnaur
+User.create!(name:  "Razanamalaza",
+            firstname: "rado",
+            email: "rado.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0612345690",
+            admin:     false,
+            partner:   2,
+            incharge:     false,
+            activated: true,
+            activated_at: Time.zone.now)

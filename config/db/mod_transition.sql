@@ -91,10 +91,13 @@ CREATE TABLE barcode(
 
 CREATE TABLE wk_tag(
   id                    BIGSERIAL      PRIMARY KEY,
-  bc_id                 BIGINT         NOT NULL REFERENCES barcode(id),
+  -- REFERENCES barcode(id)
+  bc_id                 BIGINT         NOT NULL,
   -- This is the transition used to arrived to this step
-  mwkf_id               SMALLINT       NOT NULL REFERENCES mod_workflow(id),
-  current_step_id       SMALLINT       NOT NULL REFERENCES ref_status(id),
+  --  REFERENCES mod_workflow(id)
+  mwkf_id               SMALLINT       NOT NULL,
+  --  REFERENCES ref_status(id)
+  current_step_id       SMALLINT       NOT NULL,
   geo_l                 VARCHAR(250)   DEFAULT 'N',
   is_incident           BOOLEAN        DEFAULT  FALSE,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
