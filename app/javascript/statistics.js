@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function() {
   // Should be called at each visit
-  console.log('Stats TBL Page as changed');
+  //console.log('Stats TBL Page as changed');
   mainPartnLoaderInCaseOfChange();
 })
 

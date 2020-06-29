@@ -193,6 +193,65 @@ p {
 .grid-contener{
   margin-top: 2.8em;
 }
+
+#mgs-dialog{
+}
+
+#mgs-dialog-feedback{
+
+}
+
+.mgs-dialog-big-block{
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+.mgs-dialog-window{
+  background-color: #F9F5FA;
+  padding-top: 10px;
+  min-height: 90px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.mgs-dialog-fdb-success{
+  background-color: #DFF6E6;
+}
+
+.mgs-dialog-fdb-success:hover{
+  background-color: #FBFBFB;
+}
+
+.mgs-dialog-fdb-error{
+  background-color: #FDE8E8;
+}
+
+.mgs-dialog-fdb-error:hover{
+  background-color: #FBFBFB;
+}
+
+.mgs-dialog-window-fdb{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.dialog-btn{
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.diag-btn{
+  margin-top: 10px;
+}
+
+.hid-display{
+  display: none;
+}
+
+
 /* Loading */
 // We do here the loading part
 /* Start by setting display:none to make this hidden.

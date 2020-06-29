@@ -3,6 +3,13 @@ class ClientController < ApplicationController
   before_action :get_partner_company_name
 
 
+
+  def createbarcodeforclient
+    puts 'in createbarcodeforclient <<<<<<<<<<<<<<<' + @current_user.id.to_s
+
+    render plain: 'ok'
+  end
+
   def newclient
     sql_query = "SELECT * FROM CLI_ADD_CLT(" + @current_user.id.to_s + ", TRIM('"+ params[:email] +"'));"
     begin

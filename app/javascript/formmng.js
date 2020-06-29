@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function() {
   // Should be called at each visit
-  console.log('Form TBL Page as changed');
+  //console.log('Form TBL Page as changed');
   mainFormLoaderInCaseOfChange();
 })
 

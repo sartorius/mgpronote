@@ -6,15 +6,77 @@ $(document).on('turbolinks:load', function() {
 
 function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'cltmng-gr'){
-    runjsClientGrid();
-    $( "#mgs-print-csv" ).click(function() {
-      generateCSV();
-    });
+      runjsClientGrid();
+      //Button Barcode creator
+      $( ".bc-crt-clt" ).click(function() {
+        createBarCodeFor($(this).data('name'), $(this).val());
+      });
+      //Button Authorize
+      $( ".bc-auth-clt" ).click(function() {
+        authorizeClientToCreateBC($(this));
+      });
+
+      $("#crt-cb-clt-cf").click(function() {
+        confirmedBarCodeFor();
+      });
+
+      $("#crt-cb-clt-ds").click(function() {
+        $('#mgs-dialog').hide(100);
+      });
+
+      $("#close-feeback").click(function() {
+        console.log('$("#close-feeback").click');
+        $('#mgs-dialog-feedback').hide(100);
+      });
+
+      $( "#mgs-print-csv" ).click(function() {
+        generateCSV();
+      });
   }
   else{
     //do nothing
   }
 }
+
+//Inner variable declaration !
+function createBarCodeFor(name, id){
+  //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
+  $('#nm-t-cf').html(name + '#' + id);
+  $('#crt-cb-param').html(id);
+  $('#mgs-dialog').show(100);
+  //console.log('createBarCodeFor');
+}
+
+function confirmedBarCodeFor(){
+  let clientId = $('#crt-cb-param').html();
+  let partnerId = $('#cur-part-id').html();
+  console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
+  $.ajax('/createbarcodeforclient', {
+      type: 'POST',  // http method
+      data: { client_id: clientId,
+              partner_id: partnerId
+      },  // data to submit
+      success: function (data, status, xhr) {
+          $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
+          $('#mgs-dialog-feedback').show(100);
+          $('#mgs-dialog').hide(100);
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-feedback').html("Navré ! Une erreur POE6728 est survenue");
+          $('#mgs-dialog-feedback').removeClass('mgs-dialog-fdb-success');
+          $('#mgs-dialog-feedback').addClass('mgs-dialog-fdb-error');
+          $('#mgs-dialog-feedback').show(100);
+
+          $('#mgs-dialog').hide(100);
+      }
+  });
+}
+
+//Authorize the client to create his/her own barcode
+function authorizeClientToCreateBC(el){
+  console.log('authorizeClientToCreateBC: you did click on me: ' + el.val());
+}
+
 
 /* JS GRID */
 function runjsClientGrid(){
@@ -29,12 +91,32 @@ function runjsClientGrid(){
         data: dataTagToJsonArray,
 
         fields: [
-            { name: "id", title: "#", type: "number", width: 25 , headercss: "h-jsG-r" },
+            { name: "id", title: "#", type: "number", width: 18 , headercss: "h-jsG-r" },
             { name: "name", title: "Nom", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
             { name: "firstname", title: "Prénom", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
-            { name: "email", title: "Email", type: "text", align: "right", width: 75, headercss: "h-jsG-r" },
+            { name: "email", title: "Email", type: "text", align: "right", headercss: "h-jsG-r" },
             //Default width is auto
-            { name: "since", title: "Client depuis le", type: "text", align: "right", headercss: "h-jsG-r" }
+            { name: "since", title: "Client.e depuis le", type: "text", width: 40, align: "right", headercss: "h-jsG-r" },
+            {
+              name: "id",
+              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              type: "string",
+              align: "left",
+              width: 25,
+              itemTemplate: function(value, item) {
+                return '<button type="submit" id="clt-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="glyphicon glyphicon-barcode"></i>' + '</button>';
+              }
+            },
+            {
+              name: "id",
+              title: '<i class="glyphicon glyphicon-duplicate"></i>',
+              type: "string",
+              align: "left",
+              width: 25,
+              itemTemplate: function(value, item) {
+                return '<button class="btn btn-default btn-sm btn-block bc-auth-clt" value="' + value + '">' + '<i class="glyphicon glyphicon-duplicate"></i>' + '</button>';
+              }
+            }
         ]
     });
   }
@@ -42,6 +124,12 @@ function runjsClientGrid(){
     $("#jsGrid").hide();
   }
 }
+
+
+
+
+
+/***********************************************************************************************************/
 
 function generateCSV(){
 	let csvContent = "data:text/csv;charset=utf-8,";

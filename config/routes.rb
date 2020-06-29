@@ -44,5 +44,7 @@ Rails.application.routes.draw do
   get     '/signnewclient',    to: 'client#signnewclient'
   get     '/clientmng',    to: 'client#clientmng'
   post    '/clientmng',    to: 'client#newclient'
+  post    '/createbarcodeforclient',    to: 'client#createbarcodeforclient'
+
 
 end
