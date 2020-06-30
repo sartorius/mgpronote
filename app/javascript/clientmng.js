@@ -25,7 +25,7 @@ function mainClientLoaderInCaseOfChange(){
       });
 
       $("#close-feeback").click(function() {
-        console.log('$("#close-feeback").click');
+        //console.log('$("#close-feeback").click');
         $('#mgs-dialog-feedback').hide(100);
       });
 
@@ -77,7 +77,7 @@ function confirmedBarCodeFor(){
   let clientId = $('#crt-cb-param').html();
   let partnerId = $('#cur-part-id').html();
   let authToken = $('#auth-token-s').val();
-  console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
+  //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
   $.ajax('/createbarcodeforclient', {
       type: 'POST',  // http method
       data: { client_id: clientId,
@@ -85,7 +85,7 @@ function confirmedBarCodeFor(){
               auth_token: authToken
       },  // data to submit
       success: function (data, status, xhr) {
-          console.log('answer: ' + xhr.responseText);
+          //console.log('answer: ' + xhr.responseText);
           if(xhr.responseText == 'ok'){
             $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
             addbarCodeJson(clientId);

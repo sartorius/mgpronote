@@ -325,33 +325,6 @@ $func$  LANGUAGE plpgsql;
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- Generate tag
 DROP FUNCTION IF EXISTS GEN_REFTAG(par_id BIGINT, par_secure SMALLINT);
-CREATE OR REPLACE FUNCTION GEN_REFTAG(par_id BIGINT, par_secure SMALLINT)
-  -- By convention we return zero when everything is OK
-  RETURNS VARCHAR(25) AS
-               -- Do the return at the end
-$func$
-DECLARE
-  var_calc_ref_tag         VARCHAR(25);
-  var_ref_tag_tp      CHAR(5);
-  var_secure_tp       CHAR(3);
-BEGIN
-
-    var_ref_tag_tp := LPAD(CAST(par_id AS VARCHAR), 5, '0');
-    var_secure_tp := LPAD(CAST(par_secure AS CHAR(3)), 3, '0');
-
-    var_calc_ref_tag := CONCAT('M',
-                          SUBSTRING(var_ref_tag_tp, 1, 3),
-                          SUBSTRING(var_secure_tp, 1, 1),
-                          SUBSTRING(var_ref_tag_tp, 4, 1),
-                          SUBSTRING(var_secure_tp, 2, 1),
-                          SUBSTRING(var_ref_tag_tp, 5, 1),
-                          SUBSTRING(var_secure_tp, 3, 1));
-
-   RETURN var_calc_ref_tag;
-END
-$func$  LANGUAGE plpgsql;
-
-
 
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is creating BC by partner or by client
@@ -397,12 +370,9 @@ BEGIN
 
     IF var_can_crt = TRUE THEN
 
-
-      var_secure := FLOOR(random() * 999 + 1)::INT;
+      var_secure := FLOOR(random() * 9999 + 1)::INT;
       INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
         VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
-
-      UPDATE barcode SET ref_tag = GEN_REFTAG(var_bc_id, CAST(var_secure AS SMALLINT)) WHERE id = var_bc_id;
 
       var_result := var_bc_id;
     ELSE

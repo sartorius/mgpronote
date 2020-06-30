@@ -6,8 +6,6 @@ class ClientController < ApplicationController
 
 
   def createbarcodeforclient
-    puts 'in createbarcodeforclient <<<<<<<<<<<<<<<' + @current_user.id.to_s + '/' + session[:_csrf_token].to_s
-    puts 'in createbarcodeforclient <<<<<<<<<<<<<<<' + session[:_mgs_csrf_token].to_s
     if params[:auth_token] == session[:_mgs_csrf_token].to_s then
 
       sql_query = "SELECT * FROM CLI_CRT_BC(" + @current_user.id.to_s + ", "+ params[:client_id] +", CAST(" + params[:partner_id] + " AS SMALLINT));"

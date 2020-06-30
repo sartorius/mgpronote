@@ -31,7 +31,7 @@ class PartnerController < ApplicationController
   # Get the next step BC
   def dashboard
 
-    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
+    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +
@@ -56,7 +56,7 @@ class PartnerController < ApplicationController
 
   def printtwelve
 
-    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
+    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
                       "FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +

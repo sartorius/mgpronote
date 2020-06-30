@@ -114,16 +114,37 @@ function generateCb12PDF(){
 function display12Cb(){
   for(i=0; i<dataTagToJsonArray.length; i++){
     // Use this to pad padStart(2, '0')
-    JsBarcode("#mbc-"+i, $("#item-bc-"+i).html());
+    dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
+    $("#item-bc-"+i).html(dataTagToJsonArray[i].ref_tag);
+    JsBarcode("#mbc-"+i, dataTagToJsonArray[i].ref_tag);
     //JsBarcode("#mbc-"+i, 'M9999999999PAK15');
     // var i = 99999999999; i.toString(34); >> 1uovgaaj
   }
 }
 
+//pad(10, 4);      // 0010
+function mgspad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+function mgsEncode(lid, sec){
+  //Go to base 26
+  //hexString = yourNumber.toString(16); << 10 to hex
+  //yourNumber = parseInt(hexString, 16); << hex to 10
+  // The format here is 1 / 345 will be 10345
+  let lidPlusSec = parseInt(lid.toString() + pad(sec, 4).toString());
+  return 'M' + mgspad(lidPlusSec.toString(36), 8).toUpperCase();
+}
 
 
 /* JS GRID */
 function runjsPartnerGrid(){
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
+  }
+
   if(dataTagToJsonArray.length > 0){
     $("#jsGrid").jsGrid({
         height: "auto",
@@ -135,8 +156,18 @@ function runjsPartnerGrid(){
         data: dataTagToJsonArray,
 
         fields: [
-            { name: "id", title: "#", type: "number", width: 25, headercss: "h-jsG-r" },
-            { name: "ref_tag", title: "Référence", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
+            { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
+            { name: "secure", title: "Secure", type: "number", width: 25, headercss: "h-jsG-r" },
+            { name: "ref_tag",
+              title: "Référence",
+              type: "text",
+              align: "right",
+              width: 25,
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return '<i class="monosp-ft">' + value + '</i>';
+              }
+            },
             //Default width is auto
             { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" }
         ]
