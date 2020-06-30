@@ -66,18 +66,23 @@ select rw.code, rfs.step, rfe.step
 
 CREATE TABLE barcode(
   id                    BIGSERIAL      PRIMARY KEY,
-  -- Should reference user id
-  ref_tag               VARCHAR(20)    NOT NULL,
+  -- Is a code need to be calculated
+  ref_tag               VARCHAR(25),
   -- Mostly beween 0 to 9999
   secure                SMALLINT       NOT NULL,
   -- Mostly beween 0 to 9999
   secret_code           SMALLINT       NOT NULL,
+  -- Workflow id
+  wf_id                 SMALLINT,
   status                SMALLINT       DEFAULT 0,
-  partner_id            INT            NOT NULL REFERENCES ref_partner(id),
+  -- used to be REFERENCES ref_partner(id)
+  partner_id            INT            NOT NULL,
   -- creator id can be the partner or the client with high score who is granteed
-  creator_id            BIGINT         NOT NULL REFERENCES users(id),
+  -- used to be  REFERENCES users(id)
+  creator_id            BIGINT         NOT NULL,
   -- the owner can be null until it is addressed
-  owner_id              BIGINT         REFERENCES users(id),
+  -- used to be REFERENCES users(id);
+  owner_id              BIGINT,
   -- If someone else need to come for pick up
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
@@ -162,7 +167,7 @@ BEGIN
       -- This need to be changed later when we have the barcode format
       -- The status will be zero by default
       INSERT INTO barcode (creator_id, partner_id, ref_tag, secure, secret_code)
-        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
     END IF;
 
     -- Now check the  last step

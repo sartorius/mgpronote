@@ -17,6 +17,8 @@ CREATE TABLE ref_partner (
   -- O for Other
   type          CHAR(1)         DEFAULT 'P',
   website       VARCHAR(500),
+  -- Paris Workflow id
+  main_wf_id    SMALLINT        DEFAULT 1,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -24,7 +26,7 @@ CREATE TABLE ref_partner (
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
-INSERT INTO ref_partner (id, name, description, type) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C', 1);
 
 -- Need a cross table partner x mod_workflow
 -- Need a cross table client x partner
@@ -96,18 +98,23 @@ select rw.code, rfs.step, rfe.step
 
 CREATE TABLE barcode(
   id                    BIGSERIAL      PRIMARY KEY,
-  -- Should reference user id
-  ref_tag               VARCHAR(20)    NOT NULL,
+  -- Is a code need to be calculated
+  ref_tag               VARCHAR(25),
   -- Mostly beween 0 to 9999
   secure                SMALLINT       NOT NULL,
   -- Mostly beween 0 to 9999
   secret_code           SMALLINT       NOT NULL,
+  -- Workflow id
+  wf_id                 SMALLINT,
   status                SMALLINT       DEFAULT 0,
-  partner_id            INT            NOT NULL REFERENCES ref_partner(id),
+  -- used to be REFERENCES ref_partner(id)
+  partner_id            INT            NOT NULL,
   -- creator id can be the partner or the client with high score who is granteed
-  creator_id            BIGINT         NOT NULL REFERENCES users(id),
+  -- used to be  REFERENCES users(id)
+  creator_id            BIGINT         NOT NULL,
   -- the owner can be null until it is addressed
-  owner_id              BIGINT         REFERENCES users(id),
+  -- used to be REFERENCES users(id);
+  owner_id              BIGINT,
   -- If someone else need to come for pick up
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
@@ -192,7 +199,7 @@ BEGIN
       -- This need to be changed later when we have the barcode format
       -- The status will be zero by default
       INSERT INTO barcode (creator_id, partner_id, ref_tag, secure, secret_code)
-        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
     END IF;
 
     -- Now check the  last step
@@ -251,6 +258,8 @@ $$;
 CREATE TABLE client_partner_xref (
   client_id     BIGINT,
   partner_id    SMALLINT,
+  -- has power of creation of BC
+  has_poc   BOOLEAN  DEFAULT  FALSE,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (client_id, partner_id)
 );
@@ -306,6 +315,99 @@ BEGIN
           var_result := 0;
         END IF;
 
+    END IF;
+
+   RETURN var_result;
+END
+$func$  LANGUAGE plpgsql;
+
+
+-- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
+-- Generate tag
+DROP FUNCTION IF EXISTS GEN_REFTAG(par_id BIGINT, par_secure SMALLINT);
+CREATE OR REPLACE FUNCTION GEN_REFTAG(par_id BIGINT, par_secure SMALLINT)
+  -- By convention we return zero when everything is OK
+  RETURNS VARCHAR(25) AS
+               -- Do the return at the end
+$func$
+DECLARE
+  var_calc_ref_tag         VARCHAR(25);
+  var_ref_tag_tp      CHAR(5);
+  var_secure_tp       CHAR(3);
+BEGIN
+
+    var_ref_tag_tp := LPAD(CAST(par_id AS VARCHAR), 5, '0');
+    var_secure_tp := LPAD(CAST(par_secure AS CHAR(3)), 3, '0');
+
+    var_calc_ref_tag := CONCAT('M',
+                          SUBSTRING(var_ref_tag_tp, 1, 3),
+                          SUBSTRING(var_secure_tp, 1, 1),
+                          SUBSTRING(var_ref_tag_tp, 4, 1),
+                          SUBSTRING(var_secure_tp, 2, 1),
+                          SUBSTRING(var_ref_tag_tp, 5, 1),
+                          SUBSTRING(var_secure_tp, 3, 1));
+
+   RETURN var_calc_ref_tag;
+END
+$func$  LANGUAGE plpgsql;
+
+
+
+-- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
+-- This action is creating BC by partner or by client
+-- Has this method can be used by the client we need to check the access right
+DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT);
+CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT)
+  -- By convention we return zero when everything is OK
+  RETURNS BIGINT AS
+               -- Do the return at the end
+$func$
+DECLARE
+  var_partner_id      SMALLINT;
+  var_can_crt         BOOLEAN;
+  var_bc_id           BIGINT;
+  var_ref_tag         VARCHAR(25);
+  var_secure          SMALLINT;
+
+  var_result          BIGINT;
+  var_result_exists   SMALLINT;
+BEGIN
+    var_result := -3;
+    var_can_crt := FALSE;
+
+    -- Check if the creator can create a BC
+    var_partner_id := NULL;
+    SELECT partner INTO var_partner_id
+      FROM users u
+      WHERE u.id = par_creator_id
+      AND u.partner > 1
+      AND u.activated = TRUE;
+
+    IF var_partner_id IS NULL THEN
+      -- The creator is not a partner but client: personal or reseller
+      -- For this partner
+      SELECT has_poc INTO var_can_crt
+        FROM client_partner_xref cpx
+        WHERE cpx.client_id = par_creator_id
+        AND cpx.partner_id = par_partner_id;
+
+    ELSE
+      var_can_crt := TRUE;
+    END IF;
+
+    IF var_can_crt = TRUE THEN
+
+
+      var_secure := FLOOR(random() * 999 + 1)::INT;
+      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
+        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+
+      UPDATE barcode SET ref_tag = GEN_REFTAG(var_bc_id, CAST(var_secure AS SMALLINT)) WHERE id = var_bc_id;
+
+      var_result := var_bc_id;
+    ELSE
+      -- The creator has no right to create bc
+      var_result := -2;
     END IF;
 
    RETURN var_result;

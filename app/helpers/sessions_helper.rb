@@ -83,4 +83,8 @@ module SessionsHelper
     end
   end
 
+  def mgs_form_authenticity_token
+    session[:_mgs_csrf_token] = SecureRandom.base64(32)
+  end
+
 end

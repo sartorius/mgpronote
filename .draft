@@ -9,3 +9,13 @@
 
 
 ActionView::Template::Error: Webpacker can't find jspdf.min in /Users/herinirinaratinahirana/ruby2/mgscore_app/public/packs/manifest.json. Possible causes: 1. You want to set webpacker.yml value of compile to true for your environment unless you are using the `webpack -w` or the webpack-dev-server. 2. webpack has not yet re-run to reflect updates. 3. You have misconfigured Webpacker's config/webpacker.yml file. 4. Your webpack configuration is not creating a manifest. Your manifest contains: { "application.js": "/packs/js/application-0d0a200f0cea2d615c72.js", "application.js.map": "/packs/js/application-0d0a200f0cea2d615c72.js.map", "entrypoints": { "application": { "js": [ "/packs/js/application-0d0a200f0cea2d615c72.js" ], "js.map": [ "/packs/js/application-0d0a200f0cea2d615c72.js.map" ] } } }
+
+Parameters: {"client_id"=>"144", "partner_id"=>"2", "auth_token"=>"V7AohmKpY08kY6hMOnjXpFvLZ6fvGipqQ9qudAqblXzHDlKmMV/+aKDRtFGZtw0kZz8xLPFJQplZv+Xp2iQlfg=="}
+  User Load (0.9ms)  SELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2  [["id", 140], ["LIMIT", 1]]
+  ↳ app/helpers/sessions_helper.rb:18:in `current_user'
+  SQL (0.8ms)  SELECT id, name, description, COALESCE(to_phone, 'NR') AS pphone, COALESCE(website, 'NR') AS pwebsite FROM ref_partner WHERE id = 2;
+  ↳ app/controllers/application_controller.rb:12:in `get_partner_company_name'
+in createbarcodeforclient <<<<<<<<<<<<<<<140/7c664VfxWLAR9snOAoTcBImqmvQanOH+BTrZUMnNnEo=
+
+B+GhOkUSDDX3IYoZH3Z02NK5w6IbRvQW+Ucq6p9LMqrWpWESVVQrS+vtgg0pnNNdCK4Ik5UzFH9Jd8xZL+cJFw==
+THq9pIlFd61WCcHtJjwv2VyGMfnYp3FWdPHYaVxj+bKdPn2MmQNQ00rFyfkQ1ohchpH6yFbSkT/EwT7a7M/CDw==

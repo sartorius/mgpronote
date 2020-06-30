@@ -1,13 +1,29 @@
 class ClientController < ApplicationController
   before_action :mgs_user_is_partner
   before_action :get_partner_company_name
+  before_action :verify_authenticity_token, :only => [:createbarcodeforclient]
 
 
 
   def createbarcodeforclient
-    puts 'in createbarcodeforclient <<<<<<<<<<<<<<<' + @current_user.id.to_s
+    puts 'in createbarcodeforclient <<<<<<<<<<<<<<<' + @current_user.id.to_s + '/' + session[:_csrf_token].to_s
+    puts 'in createbarcodeforclient <<<<<<<<<<<<<<<' + session[:_mgs_csrf_token].to_s
+    if params[:auth_token] == session[:_mgs_csrf_token].to_s then
 
-    render plain: 'ok'
+      sql_query = "SELECT * FROM CLI_CRT_BC(" + @current_user.id.to_s + ", "+ params[:client_id] +", CAST(" + params[:partner_id] + " AS SMALLINT));"
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+
+      if @resultSet[0]['cli_crt_bc'].to_i > 0 then
+        render plain: 'ok'
+      elsif @resultSet[0]['cli_add_clt'].to_i == -2 then
+        render plain: '-nar'
+      end
+    else
+      #Do nothing
+      render plain: 'ko'
+    end
+
+
   end
 
   def newclient
@@ -45,6 +61,8 @@ class ClientController < ApplicationController
 
   def clientmng
     load_clients
+    @getAuthToken = mgs_form_authenticity_token.to_s
+
 
     render 'clientmng'
   end
@@ -56,9 +74,18 @@ class ClientController < ApplicationController
   private
 
   def load_clients
-    sql_query = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, to_char(cpx.create_date, 'DD/MM/YYYY') AS since "
+=begin
+    sql_query = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, cpx.has_poc AS poc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since "
 	  sql_query += "FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
 		sql_query += "and cpx.partner_id = " + @current_user.partner.to_s + " ORDER BY cpx.create_date DESC;"
+=end
+
+    sql_query = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, cpx.has_poc AS poc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, count(1) - 1 AS totalbc "
+    sql_query += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
+    sql_query += " LEFT JOIN barcode bc on bc.owner_id = u.id "
+    sql_query += " AND cpx.partner_id = " + @current_user.partner.to_s + " "
+    sql_query += " GROUP BY u.id, u.name, u.firstname, u.email, cpx.has_poc, cpx.create_date "
+    sql_query += " ORDER BY cpx.create_date DESC;"
 
     begin
 

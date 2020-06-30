@@ -47,27 +47,57 @@ function createBarCodeFor(name, id){
   //console.log('createBarCodeFor');
 }
 
+function displaySuccessDialog(){
+  $('#mgs-dialog-feedback').show(100);
+  $('#mgs-dialog').hide(100);
+}
+
+function displayErrorDialog(){
+  $('#close-feeback').removeClass('mgs-dialog-fdb-success');
+  $('#close-feeback').addClass('mgs-dialog-fdb-error');
+  $('#mgs-dialog-feedback').show(100);
+  $('#mgs-dialog').hide(100);
+}
+
+
+
+function addbarCodeJson(clientId){
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(dataTagToJsonArray[i].id == clientId){
+      dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) + 1;
+      //console.log('read value: ' + dataTagToJsonArray[i].totalbc);
+      //console.log('updated value: ' + parseInt(dataTagToJsonArray[i].totalbc) + 1);
+      $('#totalbc-'+clientId).html(dataTagToJsonArray[i].totalbc);
+      break;
+    }
+  }
+}
+
 function confirmedBarCodeFor(){
   let clientId = $('#crt-cb-param').html();
   let partnerId = $('#cur-part-id').html();
+  let authToken = $('#auth-token-s').val();
   console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
   $.ajax('/createbarcodeforclient', {
       type: 'POST',  // http method
       data: { client_id: clientId,
-              partner_id: partnerId
+              partner_id: partnerId,
+              auth_token: authToken
       },  // data to submit
       success: function (data, status, xhr) {
-          $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
-          $('#mgs-dialog-feedback').show(100);
-          $('#mgs-dialog').hide(100);
+          console.log('answer: ' + xhr.responseText);
+          if(xhr.responseText == 'ok'){
+            $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
+            addbarCodeJson(clientId);
+          }
+          else{
+            $('#msg-feedback').html("Navré ! L'opération a retourné un erreur FORG283-" + xhr.responseText);
+          }
+          displaySuccessDialog();
       },
       error: function (jqXhr, textStatus, errorMessage) {
           $('#msg-feedback').html("Navré ! Une erreur POE6728 est survenue");
-          $('#mgs-dialog-feedback').removeClass('mgs-dialog-fdb-success');
-          $('#mgs-dialog-feedback').addClass('mgs-dialog-fdb-error');
-          $('#mgs-dialog-feedback').show(100);
-
-          $('#mgs-dialog').hide(100);
+          displayErrorDialog();
       }
   });
 }
@@ -95,6 +125,24 @@ function runjsClientGrid(){
             { name: "name", title: "Nom", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
             { name: "firstname", title: "Prénom", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
             { name: "email", title: "Email", type: "text", align: "right", headercss: "h-jsG-r" },
+            { name: "totalbc",
+              title: '<i class="glyphicon glyphicon-list-alt"></i>',
+              type: "number",
+              width: 18,
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return '<i id="totalbc-' + item.id + '">' + value + '</i>';
+              }
+            },
+            { name: "poc",
+              title: '<i class="glyphicon glyphicon-duplicate"></i>',
+              type: "string",
+              align: "center",
+              width: 10,
+              itemTemplate: function(value, item) {
+                return value ? '<i class="glyphicon glyphicon-ok"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
+              }
+            },
             //Default width is auto
             { name: "since", title: "Client.e depuis le", type: "text", width: 40, align: "right", headercss: "h-jsG-r" },
             {
@@ -134,10 +182,10 @@ function runjsClientGrid(){
 function generateCSV(){
 	let csvContent = "data:text/csv;charset=utf-8,";
 
-	let dataString = "#;Nom;Prénom;Email;Client depuis;\n";
+	let dataString = "#;Nom;Prénom;Email;Total de codes barres;Client depuis;\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArray.length; i++){
-		dataString = dataTagToJsonArray[i].id + ';' + removeDiacritics(dataTagToJsonArray[i].name) + ';' + removeDiacritics(dataTagToJsonArray[i].firstname) + ';' +  dataTagToJsonArray[i].email.toLowerCase() + ';' +  dataTagToJsonArray[i].since.toLowerCase() + ';' ;
+		dataString = dataTagToJsonArray[i].id + ';' + removeDiacritics(dataTagToJsonArray[i].name) + ';' + removeDiacritics(dataTagToJsonArray[i].firstname) + ';' +  dataTagToJsonArray[i].email.toLowerCase() + ';' +  dataTagToJsonArray[i].totalbc + ';' +  dataTagToJsonArray[i].since.toLowerCase() + ';' ;
     // easy close here
     csvContent += i < dataTagToJsonArray.length ? dataString+ "\n" : dataString;
 	}
