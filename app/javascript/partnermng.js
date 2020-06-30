@@ -122,21 +122,7 @@ function display12Cb(){
   }
 }
 
-//pad(10, 4);      // 0010
-function mgspad(n, width, z) {
-  z = z || '0';
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-}
 
-function mgsEncode(lid, sec){
-  //Go to base 26
-  //hexString = yourNumber.toString(16); << 10 to hex
-  //yourNumber = parseInt(hexString, 16); << hex to 10
-  // The format here is 1 / 345 will be 10345
-  let lidPlusSec = parseInt(lid.toString() + pad(sec, 4).toString());
-  return 'M' + mgspad(lidPlusSec.toString(36), 8).toUpperCase();
-}
 
 
 /* JS GRID */

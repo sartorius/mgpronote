@@ -92,7 +92,7 @@ function loadBCTag(){
 
   if(dataTagToJsonArray.length > 0){
 
-    $("#readBC").html(dataTagToJsonArray[0].ref_tag);
+    //$("#readBC").html(dataTagToJsonArray[0].ref_tag);
 
     for(var i=0; i<dataTagToJsonArray.length; i++){
       resulTag = resulTag +
@@ -136,8 +136,6 @@ function showPosition(position) {
   console.log('in showPosition');
   geoL = position.coords.latitude + ", " + position.coords.longitude;
 }
-
-
 
 // Camera utils
 function loadCameraRead(){
@@ -226,8 +224,15 @@ function loadCameraRead(){
               if($('#manual-cb').val().length > 0){
                   getGeoL();
                   //Go valid
-                  var manualbc = $('#manual-cb').val();
+                  let manualbc = $('#manual-cb').val();
                   $("#read-cb").val(manualbc);
+
+                  if(validateMGSCode(manualbc)){
+                    $("#read-cb-id").val(decodeMGSCodePartId(manualbc));
+                    $("#read-cb-sec").val(decodeMGSCodePartSecure(manualbc));
+                  }
+
+                  //alert(manualbc + "valid MGS BC: " + validateMGSCode(manualbc) + " id: " + decodeMGSCodePartId(manualbc) +" sec: " + decodeMGSCodePartSecure(manualbc));
                   // Go to Post directly
                   $("#mg-checkbc-form").submit();
               }
@@ -266,6 +271,11 @@ function loadCameraRead(){
 
 
               $("#read-cb").val(result.text);
+              if(validateMGSCode(result.text)){
+                $("#read-cb-id").val(decodeMGSCodePartId(result.text));
+                $("#read-cb-sec").val(decodeMGSCodePartSecure(result.text));
+              }
+
               $("#mg-checkbc-form").submit();
 
               endScan();

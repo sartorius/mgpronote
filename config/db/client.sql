@@ -117,6 +117,8 @@ BEGIN
       var_secure := FLOOR(random() * 9999 + 1)::INT;
       INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
         VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+      -- Need to insert the first step Nouveau
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id) VALUES (var_bc_id, 1, 0);
 
       var_result := var_bc_id;
     ELSE

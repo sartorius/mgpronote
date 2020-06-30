@@ -11,7 +11,18 @@ class BarcodeController < ApplicationController
   def savebc
     @readBC = params[:checkcb]
 
-    sql_query = "SELECT * FROM CLI_ACT_TAG(" + @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
+
+    if params[:checkcbid] == '' then
+      #puts "<<<<<<<<< checkcbid is empty string"
+      # checkcbid is empty when we have an external code because we cannot solve the MGS id
+      sql_query = "SELECT * FROM CLI_ACT_TAG(0, CAST (0 AS SMALLINT), " + @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
+
+    else
+      # CAST (1 AS SMALLINT)
+      sql_query = "SELECT * FROM CLI_ACT_TAG("+ params[:checkcbid] +", CAST("+ params[:checkcbsec] +" AS SMALLINT), "+ @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
+
+    end
+
 
     begin
 
@@ -29,9 +40,7 @@ class BarcodeController < ApplicationController
 
   def savestep
 
-    # CAST (1 AS SMALLINT)
     sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] +" AS SMALLINT), TRIM('"+ params[:stepgeol] +"'));"
-
     #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
 
     @refwkf = params[:steprwfid]
@@ -76,10 +85,21 @@ class BarcodeController < ApplicationController
 							WHERE bc.ref_tag = '39287392' ORDER BY wt.id ASC;
 
 =end
+    # checkcbid is empty when we have an external code
+    if params[:checkcbid] == '' then
+      #puts "<<<<<<<<< checkcbid is empty string"
+      # checkcbid is empty when we have an external code because we cannot solve the MGS id
+      sql_query = "select bc.ref_tag, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
+  										" join ref_status rtc on rtc.id = wt.current_step_id " +
+                      " WHERE bc.ref_tag IN ('" + params[:checkcb] + "') ORDER BY wt.id ASC;"
+    else
+      #puts "<<<<<<<<< checkcbid is " + params[:checkcbid].to_s
+      sql_query = "select bc.ref_tag, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
+  										" join ref_status rtc on rtc.id = wt.current_step_id " +
+                      " WHERE bc.id = " + params[:checkcbid] + " AND bc.secure = " + params[:checkcbsec] + " ORDER BY wt.id ASC;"
+    end
 
-    sql_query = "select bc.ref_tag, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
-										" join ref_status rtc on rtc.id = wt.current_step_id " +
-                    " WHERE bc.ref_tag IN ('" + params[:checkcb] + "') ORDER BY wt.id ASC;"
+
 
 
     begin

@@ -170,7 +170,8 @@ select
 -- This action is creating the bar code if it does not exist
 -- This action canoot be zero or one (personal client or reseller)
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
-CREATE OR REPLACE FUNCTION CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
+DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
+CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
                   rwkf_id       SMALLINT,
                   mwkf_id       INT,
@@ -190,9 +191,20 @@ BEGIN
     -- CG: We need to look per id not per code
     -- ref tag will be id and secure concatenation
     var_bc_id := NULL;
-    SELECT id INTO var_bc_id
-      FROM barcode bc
-      WHERE bc.ref_tag = par_read_barcode;
+
+    IF par_bc_id > 0 THEN
+      -- We are using owned barcode
+      SELECT id INTO var_bc_id
+        FROM barcode bc
+        WHERE bc.id = par_bc_id
+        AND bc.secure = par_secure_id;
+    ELSE
+      -- We are in external case
+      SELECT id INTO var_bc_id
+        FROM barcode bc
+        WHERE bc.ref_tag = par_read_barcode;
+
+    END IF;
 
     IF var_bc_id IS NULL THEN
       -- Bar code is new // or do not exist
@@ -373,6 +385,8 @@ BEGIN
       var_secure := FLOOR(random() * 9999 + 1)::INT;
       INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
         VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+      -- Need to insert the first step Nouveau
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id) VALUES (var_bc_id, 1, 0);
 
       var_result := var_bc_id;
     ELSE
