@@ -109,11 +109,12 @@ function loadBCTag(){
     }
   }
   else{
-    resulTag = '<h1>Code Barre introuvable<h1>';
+    resulTag = "<h2>Navré, ce code barre est introuvable. Si vous pensez que c'est une erreur et que nous devrions le retrouver, contactez nous avec le code erreur BC404<h2>";
   }
 
 
   $("#block-of-tag").html(resulTag);
+  $("#no-found-bc").show(100);
 
 }
 
