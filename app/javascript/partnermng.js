@@ -7,6 +7,9 @@ $(document).on('turbolinks:load', function() {
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
     runjsPartnerGrid();
+    $( "#mgs-dash-print-csv" ).click(function() {
+      alert('Thum generate CSV');
+    });
   }
   else if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
           ($('#mg-graph-identifier').text() == 'parprintnotrack-gr')){
