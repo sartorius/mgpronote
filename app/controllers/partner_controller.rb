@@ -55,10 +55,11 @@ class PartnerController < ApplicationController
   # Get the next step BC
   def dashboard
 
-    sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
+    sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +
+                      " JOIN users uo ON uo.id = bc.owner_id " +
                       " WHERE u.id = " + @current_user.id.to_s +
                       # End partner check
                       " ORDER BY bc.id ASC;"
