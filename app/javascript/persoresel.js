@@ -8,8 +8,14 @@ function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'peredash-gr'){
       runjsPersoreselGrid();
   }
-  if($('#mg-graph-identifier').text() == 'pereone-gr'){
+  else if($('#mg-graph-identifier').text() == 'pereone-gr'){
       $('#bc-seeone').html(mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()));
+
+      console.log('Read listenPickUpFormCreate');
+      //initialize
+      $("#save-addr-sub").prop('disabled', true);
+      $("#save-addr-sub").hide();
+      listenPickUpFormCreate();
   }
   else{
     //do nothing
@@ -66,6 +72,16 @@ function runjsPersoreselGrid(){
                 return (value == '0') ? '<i class="mgs-red glyphicon glyphicon-pencil"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
               }
             },
+            { name: "type_pack",
+              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              type: "text",
+              align: "center",
+              width: 10,
+              headercss: "h-jsG-c",
+              itemTemplate: function(value, item) {
+                return (value == 'D') ? '<i class="glyphicon glyphicon-save"></i>' : '<i class="glyphicon glyphicon-open"></i>';
+              }
+            },
             { name: "part_phone", title: "Téléphone", type: "text", width: 20, headercss: "h-jsG-l" },
             //Default width is auto
             { name: "part_name", title: "Nom partenaire", type: "text", headercss: "h-jsG-l" },
@@ -77,5 +93,58 @@ function runjsPersoreselGrid(){
   }
   else{
     $("#jsGrid").hide();
+  }
+}
+
+// Check
+
+
+function listenPickUpFormCreate(){
+  $( ".crt-fill-form" ).keyup(function() {
+    verityFieldPickup();
+  });
+  $( "#save-addr-sub" ).click(function() {
+    $('#crt-name').val(capitalizeFirstLetter($('#crt-name').val()));
+    $('#crt-fname').val(capitalizeFirstLetter($('#crt-fname').val()));
+  });
+}
+
+function verityFieldPickup(){
+  // Test Phone number
+  const re = /^[+-]?\d+$/;
+  let allFieldOK = true;
+
+  // Check
+  if($('#mg-add-pk-name').val().length < 3){
+    allFieldOK = false;
+    $('#ck-mg-add-pk-name').show(800);
+  }
+  else{
+    $('#ck-mg-add-pk-name').hide(800);
+  }
+  if($('#mg-add-pk-add').val().length < 10){
+    allFieldOK = false;
+    $('#ck-mg-add-pk-add').show(800);
+  }
+  else{
+    $('#ck-mg-add-pk-add').hide(800);
+  }
+  if (!(re.test($('#mg-add-pk-phone').val()))){
+    allFieldOK = false;
+    $('#ck-mg-add-pk-phone').show(800);
+  }
+  else{
+    $('#ck-mg-add-pk-phone').hide(800);
+  }
+
+
+
+  if(allFieldOK){
+      $("#save-addr-sub").prop('disabled', false);
+      $("#save-addr-sub").show(500);
+  }
+  else{
+      $("#save-addr-sub").prop('disabled', true);
+      $("#save-addr-sub").hide(500);
   }
 }

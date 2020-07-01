@@ -96,5 +96,24 @@
       <%= @resultSet[0]['secret_code'].to_s %>
     </div>
 
+    <% if !(@resultSet[0]['p_name_firstname'].nil?) %>
+      <div class="crt-block">Enlèvement&nbsp;<i class="glyphicon glyphicon-open"></i></div>
+      <div class="t-of-use mgs-med-note">
+        Information concernant l'enlèvement.
+      </div>
+      <label>Nom du contact enlèvement</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['p_name_firstname'].to_s %>
+      </div>
+      <label>Téléphone du contact enlèvement</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['p_phone'].to_s %>
+      </div>
+      <label>Adresse enlèvement</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['p_address_note'].to_s %>
+      </div>
+    <% end %>
+
   </div>
 </div>

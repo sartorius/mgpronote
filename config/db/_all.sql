@@ -183,7 +183,6 @@ select
 -- This action is creating the bar code if it does not exist
 -- This retrieve possible steps
 -- This action cannot be zero or one (personal client or reseller)
-DROP FUNCTION IF EXISTS CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
@@ -263,7 +262,7 @@ $func$  LANGUAGE plpgsql;
 -- CALL stored_procedure_name(parameter_list);
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
-DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250));
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT);
 CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
 LANGUAGE plpgsql
 AS $$
@@ -286,8 +285,9 @@ $$;
 -- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
 -- Copy paste from CLI_STEP_TAG used only for ADDRESSING
 -- param order : id, workflow id, localisation, external ref, tname, tfirstname, tphone
-DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20));
-CREATE OR REPLACE PROCEDURE CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT)
+DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT);
+DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250));
+CREATE OR REPLACE PROCEDURE CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250))
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -302,6 +302,9 @@ BEGIN
       to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
       to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
       to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
+      p_name_firstname = CASE WHEN $9 = '' THEN NULL ELSE $9 END,
+      p_phone = CASE WHEN $10 = '' THEN NULL ELSE $10 END,
+      p_address_note = CASE WHEN $11 = '' THEN NULL ELSE $11 END,
       update_date = CURRENT_TIMESTAMP
       WHERE id = $1;
 
@@ -386,13 +389,8 @@ $func$  LANGUAGE plpgsql;
 
 
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
--- Generate tag
-DROP FUNCTION IF EXISTS GEN_REFTAG(par_id BIGINT, par_secure SMALLINT);
-
--- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is creating BC by partner or by client
 -- Has this method can be used by the client we need to check the access right
-DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT);
 DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1));
 CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1))
   -- By convention we return zero when everything is OK

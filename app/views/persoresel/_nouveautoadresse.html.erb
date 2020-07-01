@@ -6,27 +6,27 @@
   <div class="crt-block">Numéro de suivi externe</div>
   <div class="t-of-use mgs-med-note-imp">
     Amazon, Colissimo, Chronopost, DPD, UPS, DHL, le site marchand peut vous donner un numéro de suivi.<br>
-    <strong>Nous vous invitons fortement à le renseigner ici pour faciliter votre suivi</strong>
+    <strong>Nous vous invitons fortement à le renseigner ici pour faciliter votre suivi. </strong>
     <strong>Veillez bien à copier coller l'information pour éviter tout risque d'erreur&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
   </div>
-  <label>Numéro de suivi</label><br>
   <textarea class="form-control" rows="1" id="mg-add-ext-ref" name="mgaddextref" placeholder="Numéro de suivi externe (optionel)" style="resize: none;"></textarea>
 
 
   <hr>
   <div class="t-of-use mgs-med-note">
-    Nom de la personne qui viendra récupérer le colis si ça n'est pas vous.
+    Nom de la personne qui viendra récupérer le colis <strong>si ça n'est pas vous</strong>.
   </div>
-  <label>Nom réceptionneur.euse</label><br>
-  <textarea class="form-control" rows="1" id="mg-add-tname" name="mgaddtname" placeholder="Optionel" style="resize: none;"></textarea>
-  <label>Prénom réceptionneur.euse</label><br>
-  <textarea class="form-control" rows="1" id="mg-add-tfname" name="mgaddtfname" placeholder="Optionel" style="resize: none;"></textarea>
-  <label>Téléphone réceptionneur.euse</label><br>
-  <textarea class="form-control" rows="1" id="mg-add-tphone" name="mgaddtphone" placeholder="Optionel" style="resize: none;"></textarea>
+  <textarea class="form-control" rows="1" id="mg-add-tname" name="mgaddtname" placeholder="Nom (optionel)" style="resize: none;"></textarea>
+  <textarea class="form-control" rows="1" id="mg-add-tfname" name="mgaddtfname" placeholder="Prénom (optionel)" style="resize: none;"></textarea>
+  <textarea class="form-control" rows="1" id="mg-add-tphone" name="mgaddtphone" placeholder="Téléphone (optionel)" style="resize: none;"></textarea>
 
 
 
   <textarea class="form-control step-hid" rows="1" id="read-steprwf-id" name="steprwfid" placeholder="Workflow id" style="resize: none;">1</textarea>
+
+  <% if @resultSet[0]['type_pack'] == 'P' %>
+    <%= render 'persoresel/nouveauwithpickup' %>
+  <% end %>
 
   <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="save-addr-sub"
           value="Valider"/>

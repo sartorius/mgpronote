@@ -158,7 +158,6 @@ function runjsPartnerGrid(){
 
         fields: [
             { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
-            { name: "secure", title: "Secure", type: "number", width: 25, headercss: "h-jsG-r" },
             { name: "ref_tag",
               title: "Référence",
               type: "text",
@@ -168,6 +167,16 @@ function runjsPartnerGrid(){
               itemTemplate: function(value, item) {
                 return '<i class="monosp-ft">' + value + '</i>';
 
+              }
+            },
+            { name: "type_pack",
+              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              type: "text",
+              align: "center",
+              width: 10,
+              headercss: "h-jsG-c",
+              itemTemplate: function(value, item) {
+                return (value == 'D') ? '<i class="glyphicon glyphicon-save"></i>' : '<i class="glyphicon glyphicon-open"></i>';
               }
             },
             //Default width is auto

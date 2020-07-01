@@ -49,9 +49,8 @@ function listenAllFormCreate(){
   $( ".crt-fill-form" ).keyup(function() {
     verityFieldFormRef();
   });
-  $( "#crt-submit" ).click(function() {
-    $('#crt-name').val(capitalizeFirstLetter($('#crt-name').val()));
-    $('#crt-fname').val(capitalizeFirstLetter($('#crt-fname').val()));
+  $("#crt-submit").click(function() {
+    $('#mg-add-pk-name').val(capitalizeFirstLetter($('#mg-add-pk-name').val()));
   });
 }
 

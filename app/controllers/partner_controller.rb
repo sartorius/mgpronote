@@ -27,6 +27,7 @@ class PartnerController < ApplicationController
   def onebarcodemng
     sql_query = "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
                 		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, rp.name AS part_name,  " +
+                    " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                 		" to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.input_needed, " +
                 		" uo.name AS oname, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
@@ -55,7 +56,8 @@ class PartnerController < ApplicationController
   # Get the next step BC
   def dashboard
 
-    sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code " +
+    sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
+                      " bc.type_pack, bc.ext_ref " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +
