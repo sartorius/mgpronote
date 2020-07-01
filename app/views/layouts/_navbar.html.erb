@@ -89,7 +89,7 @@
 
             <% if (mobile_device == "mobile")  %>
               <%# MOBILE %>
-              <li class="nav-item"><%= link_to "<%= @current_user.name.to_s %>", current_user %></li>
+              <li class="nav-item"><%= link_to "Mon compte", current_user %></li>
               <li class="nav-item">
                 <%= link_to "Se déconnecter", logout_path, method: :delete %>
               </li>
@@ -101,7 +101,7 @@
                     <%= @current_user.name.to_s %> <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
-                    <li class="nav-item"><%= link_to "Profil", current_user %></li>
+                    <li class="nav-item"><%= link_to "Mon compte", current_user %></li>
                     <li class="divider"></li>
                     <li class="nav-item">
                       <%= link_to "Se déconnecter", logout_path, method: :delete %>
