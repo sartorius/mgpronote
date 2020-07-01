@@ -25,7 +25,31 @@ class PartnerController < ApplicationController
 
   #One barcode manager
   def onebarcodemng
-    render 'onebarcodemng'
+    sql_query = "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
+                		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, rp.name AS part_name,  " +
+                		" to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
+                		" rs.id AS step_id, rs.step, rs.description, rs.input_needed, " +
+                		" uo.name AS oname, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
+                		" uc.name AS cname, uc.firstname AS cfirstname, uc.email AS cemail, uc.phone AS cphone " +
+                		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +
+                  		"JOIN ref_status rs ON rs.id = bc.status " +
+                  		"JOIN users uo ON uo.id = bc.owner_id " +
+                  		"JOIN users uc ON uc.id = bc.creator_id " +
+                  		" WHERE bc.id = " + params[:checkcbid] +
+                  		" AND bc.secure = " + params[:checkcbsec] + ";"
+
+    begin
+
+      #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+      #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+      @emptyResultSet = @resultSet.empty?
+
+      render 'onebarcodemng'
+    end
+    rescue Exception => exc
+       flash[:info] = "Une erreur est survenue #{exec.message}"
+      render 'onebarcodemng'
   end
 
   # Get the next step BC

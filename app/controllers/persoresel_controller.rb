@@ -29,8 +29,7 @@ class PersoreselController < ApplicationController
 
 
   def seeone
-
-    sql_query =   "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
+    sql_query = "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
                 		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, rp.name AS part_name,  " +
                 		" to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.input_needed, " +
@@ -43,6 +42,7 @@ class PersoreselController < ApplicationController
                   		" WHERE bc.id = " + params[:checkcbid] +
                   		" AND bc.secure = " + params[:checkcbsec] +
                   		" AND bc.owner_id = " + @current_user.id.to_s + ";"
+
     begin
 
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query

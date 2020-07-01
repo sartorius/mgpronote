@@ -37,7 +37,9 @@ Rails.application.routes.draw do
   get     '/printtwelve',    to: 'partner#printtwelve'
   get     '/printnotrack',    to: 'partner#printnotrack'
 
-  get     '/onebarcodemng',    to: 'partner#onebarcodemng'
+  # Route to check one BC
+  post	  '/onebarcodemng'   => 'partner#onebarcodemng'
+
   get     '/mainstatistics',    to: 'partner#mainstatistics'
 
   #Client manager

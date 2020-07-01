@@ -15,6 +15,9 @@ function mainPartnLoaderInCaseOfChange(){
     });
     display12Cb();
   }
+  else if($('#mg-graph-identifier').text() == 'partonebc-gr'){
+      $('#bc-seeone').html(mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()));
+  }
   else{
     //do nothing
   }
@@ -122,7 +125,13 @@ function display12Cb(){
   }
 }
 
+function goToPartBarcode(lid, lsec){
+  //alert('You clicked on item: ' + el);
+  $("#read-cb-id").val(lid);
+  $("#read-cb-sec").val(lsec);
 
+  $("#mg-checkbc-form").submit();
+}
 
 
 /* JS GRID */
@@ -138,6 +147,10 @@ function runjsPartnerGrid(){
 
         sorting: true,
         paging: true,
+        // args are item - itemIndex - event
+        rowClick: function(args){
+          goToPartBarcode(args.item.id, args.item.secure)
+        },
 
         data: dataTagToJsonArray,
 
