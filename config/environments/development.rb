@@ -32,13 +32,32 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # config.action_mailer.raise_delivery_errors = false
 
-  host = '0ebe1dc6d40e4a4bb06e0ca7fe138127.vfs.cloud9.us-east-2.amazonaws.com'
-  config.action_mailer.default_url_options = { host: host, protocol: 'https' }
+  #host = '0ebe1dc6d40e4a4bb06e0ca7fe138127.vfs.cloud9.us-east-2.amazonaws.com'
+  #config.action_mailer.default_url_options = { host: host, protocol: 'https' }
 
 
   config.action_mailer.perform_caching = false
+
+
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  host = 'https://mgsuivi-test-2046.herokuapp.com'
+  config.action_mailer.default_url_options = { host: host }
+  ActionMailer::Base.smtp_settings = {
+    :address        => 'in-v3.mailjet.com',
+    :port           => '587',
+    :authentication => :login,
+    #:user_name      => ENV['SENDGRID_USERNAME'],
+    #:password       => ENV['SENDGRID_PASSWORD'],
+    :user_name      => '6532da700924bb9f1c446083039c4566',
+    :password       => '77eaf825c21d0015e6cda0fbaed1d6c7',
+    :domain         => 'mailjet.com',
+    :enable_starttls_auto => true
+  }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

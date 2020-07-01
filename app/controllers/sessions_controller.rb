@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
   end
 
   def create
+    puts 'Try to create'
     user = User.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
       if user.activated?
@@ -14,10 +15,10 @@ class SessionsController < ApplicationController
         #redirect_to forwarding_url || user
         redirect_to root_url
       else
-        message  = "Votre compte n'est pas encore activé. "
-        message += "Vérifiez vos emails pour l'email, nous y avons envoyé le lien d'activation."
+        puts 'Try to create not activated'
+        message  = "Votre compte n'est pas encore activé. Vérifiez vos emails pour l'email, nous y avons envoyé le lien d'activation."
         flash.now[:warning] = message
-        redirect_to root_url
+        render 'new'
       end
     else
       flash.now[:danger] = "Le mot de passe et l'email ne correspondent pas."
