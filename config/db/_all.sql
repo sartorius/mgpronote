@@ -209,7 +209,7 @@ BEGIN
       -- We are in external case
       SELECT id INTO var_bc_id
         FROM barcode bc
-        WHERE bc.ref_tag = par_read_barcode;
+        WHERE bc.ext_ref = par_read_barcode;
 
     END IF;
 

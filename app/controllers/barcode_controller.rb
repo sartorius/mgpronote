@@ -7,7 +7,9 @@ class BarcodeController < ApplicationController
       render 'getnext'
   end
 
+  # checkstep/savebc
   # Save Next step BC
+  # Operation after read BC -- Need to review CLI_ACT_TAG must it create BC?
   def savebc
     @readBC = params[:checkcb]
 
@@ -72,6 +74,9 @@ class BarcodeController < ApplicationController
     render 'checkbc'
   end
 
+  # checkstep/savebc
+  # Save Next step BC
+  # Operation after read BC
   def checkstep
 
 =begin
