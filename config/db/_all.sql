@@ -124,6 +124,13 @@ CREATE TABLE barcode(
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
+  -- delivery particularity
+  category              CHAR(1) DEFAULT 'A',
+  -- Delivery or Pickup ? Can be D or P
+  type_pack             CHAR(1) DEFAULT 'D',
+  p_name_firstname      VARCHAR(50),
+  p_phone               VARCHAR(50),
+  p_address_note        VARCHAR(250),
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -386,7 +393,8 @@ DROP FUNCTION IF EXISTS GEN_REFTAG(par_id BIGINT, par_secure SMALLINT);
 -- This action is creating BC by partner or by client
 -- Has this method can be used by the client we need to check the access right
 DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT);
-CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT)
+DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1));
+CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1))
   -- By convention we return zero when everything is OK
   RETURNS BIGINT AS
                -- Do the return at the end
@@ -427,8 +435,8 @@ BEGIN
     IF var_can_crt = TRUE THEN
 
       var_secure := FLOOR(random() * 9999 + 1)::INT;
-      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
-        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack)
+        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
       INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, 0, par_creator_id);
 

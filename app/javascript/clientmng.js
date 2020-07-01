@@ -9,7 +9,7 @@ function mainClientLoaderInCaseOfChange(){
       runjsClientGrid();
       //Button Barcode creator
       $( ".bc-crt-clt" ).click(function() {
-        createBarCodeFor($(this).data('name'), $(this).val());
+        createBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'));
       });
       //Button Authorize
       $( ".bc-auth-clt" ).click(function() {
@@ -39,10 +39,12 @@ function mainClientLoaderInCaseOfChange(){
 }
 
 //Inner variable declaration !
-function createBarCodeFor(name, id){
+function createBarCodeFor(name, id, o){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
-  $('#nm-t-cf').html(name + '#' + id);
+  console.log('Here is o: ' + o);
+  $('#nm-t-cf').html(name + '#' + id + ((o == 'D') ? ' pour une <strong>réception</strong>' : ' pour un <strong>enlèvement</strong>'));
   $('#crt-cb-param').html(id);
+  $('#crt-cb-order').html(o);
   $('#mgs-dialog').show(100);
   //console.log('createBarCodeFor');
 }
@@ -74,15 +76,14 @@ function addbarCodeJson(clientId){
 }
 
 function confirmedBarCodeFor(){
-  let clientId = $('#crt-cb-param').html();
-  let partnerId = $('#cur-part-id').html();
-  let authToken = $('#auth-token-s').val();
   //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
+  let clientId = $('#crt-cb-param').html();
   $.ajax('/createbarcodeforclient', {
       type: 'POST',  // http method
       data: { client_id: clientId,
-              partner_id: partnerId,
-              auth_token: authToken
+              partner_id: $('#cur-part-id').html(),
+              auth_token: $('#auth-token-s').val(),
+              order: $('#crt-cb-order').html(),
       },  // data to submit
       success: function (data, status, xhr) {
           //console.log('answer: ' + xhr.responseText);
@@ -152,7 +153,17 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="clt-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="glyphicon glyphicon-barcode"></i>' + '</button>';
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="glyphicon glyphicon-save"></i>' + '</button>';
+              }
+            },
+            {
+              name: "id",
+              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              type: "string",
+              align: "left",
+              width: 25,
+              itemTemplate: function(value, item) {
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="P" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="glyphicon glyphicon-open"></i>' + '</button>';
               }
             },
             {

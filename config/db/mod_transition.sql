@@ -90,6 +90,13 @@ CREATE TABLE barcode(
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
+  -- delivery particularity
+  category              CHAR(1) DEFAULT 'A',
+  -- Delivery or Pickup ? Can be D or P
+  type_pack             CHAR(1) DEFAULT 'D',
+  p_name_firstname      VARCHAR(50),
+  p_phone               VARCHAR(50),
+  p_address_note        VARCHAR(250),
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -142,7 +149,6 @@ select
 -- This action is creating the bar code if it does not exist
 -- This retrieve possible steps
 -- This action cannot be zero or one (personal client or reseller)
-DROP FUNCTION IF EXISTS CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id         BIGINT,
@@ -222,7 +228,7 @@ $func$  LANGUAGE plpgsql;
 -- CALL stored_procedure_name(parameter_list);
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
-DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250));
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT);
 CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
 LANGUAGE plpgsql
 AS $$
@@ -245,7 +251,7 @@ $$;
 -- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
 -- Copy paste from CLI_STEP_TAG used only for ADDRESSING
 -- param order : id, workflow id, localisation, external ref, tname, tfirstname, tphone
-DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20));
+DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT);
 CREATE OR REPLACE PROCEDURE CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT)
 LANGUAGE plpgsql
 AS $$

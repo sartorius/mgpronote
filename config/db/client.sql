@@ -74,14 +74,10 @@ $func$  LANGUAGE plpgsql;
 
 
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
--- Generate tag
-DROP FUNCTION IF EXISTS GEN_REFTAG(par_id BIGINT, par_secure SMALLINT);
-
--- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is creating BC by partner or by client
 -- Has this method can be used by the client we need to check the access right
-DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT);
-CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT)
+DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1));
+CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1))
   -- By convention we return zero when everything is OK
   RETURNS BIGINT AS
                -- Do the return at the end
@@ -122,8 +118,8 @@ BEGIN
     IF var_can_crt = TRUE THEN
 
       var_secure := FLOOR(random() * 9999 + 1)::INT;
-      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
-        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
+      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack)
+        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
       INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, 0, par_creator_id);
 

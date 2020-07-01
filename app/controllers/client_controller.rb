@@ -8,7 +8,7 @@ class ClientController < ApplicationController
   def createbarcodeforclient
     if params[:auth_token] == session[:_mgs_csrf_token].to_s then
 
-      sql_query = "SELECT * FROM CLI_CRT_BC(" + @current_user.id.to_s + ", "+ params[:client_id] +", CAST(" + params[:partner_id] + " AS SMALLINT));"
+      sql_query = "SELECT * FROM CLI_CRT_BC(" + @current_user.id.to_s + ", "+ params[:client_id] +", CAST(" + params[:partner_id] + " AS SMALLINT), TRIM('" + params[:order] + "'));"
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
 
       if @resultSet[0]['cli_crt_bc'].to_i > 0 then
