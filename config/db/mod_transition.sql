@@ -75,6 +75,8 @@ CREATE TABLE barcode(
   -- Workflow id
   wf_id                 SMALLINT,
   status                SMALLINT       DEFAULT 0,
+  -- in grams
+  weight_in_gr          INT,
   -- used to be REFERENCES ref_partner(id)
   partner_id            INT            NOT NULL,
   -- creator id can be the partner or the client with high score who is granteed
@@ -83,6 +85,7 @@ CREATE TABLE barcode(
   -- the owner can be null until it is addressed
   -- used to be REFERENCES users(id);
   owner_id              BIGINT,
+  ext_ref               VARCHAR(35)    UNIQUE,
   -- If someone else need to come for pick up
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
@@ -98,6 +101,8 @@ CREATE TABLE wk_tag(
   id                    BIGSERIAL      PRIMARY KEY,
   -- REFERENCES barcode(id)
   bc_id                 BIGINT         NOT NULL,
+  -- REFERENCES users(id) who has done the action
+  user_id               BIGINT         NOT NULL,
   -- This is the transition used to arrived to this step
   --  REFERENCES mod_workflow(id)
   mwkf_id               SMALLINT       NOT NULL,
@@ -111,8 +116,7 @@ CREATE TABLE wk_tag(
 
 
 CREATE TABLE wk_tag_com(
-  id        BIGSERIAL      PRIMARY KEY,
-  wk_tag_id BIGINT         NOT NULL REFERENCES wk_tag(id),
+  wk_tag_id BIGINT         PRIMARY KEY,
   comment   VARCHAR(500)
 );
 
@@ -190,8 +194,8 @@ BEGIN
       WHERE wt.bc_id = var_bc_id;
 
     IF var_found_last_step IS NULL THEN
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)
-        VALUES (var_bc_id, 1, 0, par_geo_l) RETURNING id INTO  var_found_last_step;
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+        VALUES (var_bc_id, 1, 0, par_geo_l, user_id) RETURNING id INTO  var_found_last_step;
     END IF;
 
 
@@ -213,21 +217,51 @@ END
 $func$  LANGUAGE plpgsql;
 
 
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
 -- Create Procedure Insert Step as we need to handle ref_status
 -- CALL stored_procedure_name(parameter_list);
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
-CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250))
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250));
+CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
 LANGUAGE plpgsql
 AS $$
 BEGIN
     -- Do the INSERT
     -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
-    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES ($1, $2, $3, $4);
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
 
     -- We update the barcode with last status
     UPDATE barcode
-      SET status = $3, update_date = CURRENT_TIMESTAMP
+      SET status = $3,
+      update_date = CURRENT_TIMESTAMP
+      WHERE id = $1;
+
+    COMMIT;
+END;
+$$;
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- Copy paste from CLI_STEP_TAG used only for ADDRESSING
+-- param order : id, workflow id, localisation, external ref, tname, tfirstname, tphone
+DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20));
+CREATE OR REPLACE PROCEDURE CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], TRIM('params[:stepgeol]'));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, 1, $3, $8);
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = 1,
+      ext_ref = CASE WHEN $4 = '' THEN NULL ELSE $4 END,
+      to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
+      to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
+      to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
+      update_date = CURRENT_TIMESTAMP
       WHERE id = $1;
 
     COMMIT;

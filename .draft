@@ -1,5 +1,12 @@
 
 
+<% if @resultSet[0]['tname'].nil? %>
+  Aucun nom n'est encore renseigné
+<% else %>
+  <%= @resultSet[0]['tname'].to_s %>
+<% end %>
+
+
 <% id @emptyResultSet %>
   <div class="col-lg-12 no-data">
     Désolé, nous n'avons pas trouvé de code barre &nbsp; <i class="glyphicon glyphicon-inbox"></i>

@@ -1,0 +1,145 @@
+<% provide(:title, "Code barre") %>
+<div id="mg-graph-identifier">pereone-gr</div>
+<% if @resultSet.nil? %>
+	//Error TDY789
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+<% end %>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<div class="row mgs-title">
+  <div class="col-lg-12 monosp-ft-title">
+    <span id="bc-seeone">Code barre</span>
+    <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
+    <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
+  </div>
+</div>
+<div class="mgs-note mgs-note-mrg-grid">
+  Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+</div>
+
+<% if @resultSet[0]['step_id'] == 0 %>
+    <div class="row">
+      <div class="col-sm-3">
+      </div>
+      <div class="col-sm-6">
+        <%= render 'persoresel/nouveautoadresse' %>
+      </div>
+      <div class="col-sm-3">
+      </div>
+    </div>
+    <hr>
+<% end %>
+
+
+<div class="row">
+  <div class="col-sm-4">
+    <div class="crt-block">Paquet</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations suivantes concernent le paquet.
+    </div>
+    <label>Statut actuel</label><br>
+    <div class="field-big">
+      <%= @resultSet[0]['step'].to_s %>
+    </div>
+    <label>Description du status</label><br>
+    <div class="field-sm">
+      <%= @resultSet[0]['description'].to_s %>
+    </div>
+    <% if !(@resultSet[0]['ext_ref'].nil?) %>
+        <label>Référence externe</label><br>
+        <div class="field-md">
+          <%= @resultSet[0]['ext_ref'].to_s %>
+        </div>
+    <% end %>
+    <label>Partenaire</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['part_name'].to_s %>
+    </div>
+    <label>Créé par</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['cname'].to_s %>&nbsp;<%= @resultSet[0]['cfirstname'].to_s %>
+    </div>
+    <label>Téléphone</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['cphone'].to_s %>
+    </div>
+    <label>Email</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['cemail'].to_s %>
+    </div>
+    <label>Date de création</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['create_date'].to_s %>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="crt-block">Propriétaire</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations suivantes concernent le propriétaire du paquet.
+    </div>
+    <label>Propriétaire</label><br>
+    <div class="field-big">
+      <%= @resultSet[0]['oname'].to_s %>&nbsp;<%= @resultSet[0]['ofirstname'].to_s %>
+    </div>
+    <label>Email</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['oemail'].to_s %>
+    </div>
+    <label>Téléphone</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['ophone'].to_s %>
+    </div>
+
+
+
+
+
+  </div>
+  <div class="col-sm-4">
+    <div class="crt-block">Réception</div>
+    <div class="t-of-use mgs-med-note">
+      Information concernant la réception.
+    </div>
+    <% if (@resultSet[0]['tname'].nil?) || (@resultSet[0]['tname'] == @resultSet[0]['oname']) %>
+      <label>Receptionneur.euse</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['oname'].to_s %>&nbsp;<%= @resultSet[0]['ofirstname'].to_s %>
+      </div>
+      <label>Téléphone</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['ophone'].to_s %>
+      </div>
+    <% else %>
+      <label>Receptionneur.euse</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['tname'].to_s %>&nbsp;<%= @resultSet[0]['tfirstname'].to_s %>
+      </div>
+      <label>Téléphone</label><br>
+      <div class="field-md">
+        <%= @resultSet[0]['tphone'].to_s %>
+      </div>
+    <% end %>
+
+    <div class="crt-block">Vérification</div>
+    <div class="t-of-use mgs-med-note">
+      En cas de contrôle lors de la remise en main propre, il sera demandé la pièce d'identité mais il est aussi possible de demander ce code.
+    </div>
+    <label>Code de vérification</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['secret_code'].to_s %>
+    </div>
+
+  </div>
+</div>

@@ -149,6 +149,10 @@ p {
   visibility: hidden;
 }
 
+.mgs-title{
+  margin-bottom: 50px;
+}
+
 /* columnt Partner */
 .hd-col{
   font-size: 1.3em;
@@ -202,6 +206,21 @@ p {
   font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
   font-size: 1.2em;
   color: #3E009E;
+}
+
+.monosp-ft-title{
+  font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
+  font-size: 4.2em;
+  color: $main-color;
+  text-align: center;
+}
+
+#id-seeone{
+  display: none;
+}
+
+#sec-seeone{
+  display: none;
 }
 
 #mgs-dialog{
@@ -387,6 +406,14 @@ body.loading .modal {
   margin-bottom: 10px;
 }
 
+.mgs-med-note-imp{
+  text-align: justify;
+  color: #9B0000;
+  font-size: 0.9em;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
 .t-of-use{
   margin-bottom: 15px;
 }
@@ -401,6 +428,19 @@ body.loading .modal {
   margin-top: 20px;
   font-weight: bold;
   border-bottom: 0.5px solid #CBCBCB;
+}
+
+.crt-block-input{
+  color: $main-color;
+  background-color: $main-color-light;
+  font-size: 1.2em;
+  margin-top: 20px;
+  font-weight: bold;
+  border-bottom: 0.5px solid $main-color;
+}
+
+.cancel-btn{
+  margin-top: 15px;
 }
 
 .sess-block{
@@ -421,6 +461,12 @@ body.loading .modal {
 .field-md{
   color: $main-color-medium;
   font-size: 1.2em;
+  margin-bottom: 1em;
+}
+
+.field-sm{
+  color: $main-color-medium;
+  font-size: 0.8em;
   margin-bottom: 1em;
 }
 

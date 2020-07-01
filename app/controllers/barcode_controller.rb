@@ -40,7 +40,7 @@ class BarcodeController < ApplicationController
 
   def savestep
 
-    sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] +" AS SMALLINT), TRIM('"+ params[:stepgeol] +"'));"
+    sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] +" AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
     #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
 
     @refwkf = params[:steprwfid]
@@ -89,13 +89,15 @@ class BarcodeController < ApplicationController
     if params[:checkcbid] == '' then
       #puts "<<<<<<<<< checkcbid is empty string"
       # checkcbid is empty when we have an external code because we cannot solve the MGS id
-      sql_query = "select bc.ref_tag, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
+      sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
   										" join ref_status rtc on rtc.id = wt.current_step_id " +
+                      " join users u on u.id = wt.user_id " +
                       " WHERE bc.ref_tag IN ('" + params[:checkcb] + "') ORDER BY wt.id ASC;"
     else
       #puts "<<<<<<<<< checkcbid is " + params[:checkcbid].to_s
-      sql_query = "select bc.ref_tag, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
+      sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
   										" join ref_status rtc on rtc.id = wt.current_step_id " +
+                      " join users u on u.id = wt.user_id " +
                       " WHERE bc.id = " + params[:checkcbid] + " AND bc.secure = " + params[:checkcbsec] + " ORDER BY wt.id ASC;"
     end
 

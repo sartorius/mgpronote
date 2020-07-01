@@ -40,6 +40,12 @@ function mainScanLoaderInCaseOfChange(){
       customLogErr(err.message);
     }
   }
+  else if($('#mg-graph-identifier').text() == 'pereone-gr'){
+    $("#save-addr-sub").click(function() {
+        getGeoL();
+    });
+    getGeoL();
+  }
   else{
     //do nothing
   }
@@ -105,6 +111,7 @@ function loadBCTag(){
             resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="glyphicon glyphicon-eye-open"></i></a>';
           }
           resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
+          resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-barcode"></i> Opéré par ' + dataTagToJsonArray[i].name + ' ' + dataTagToJsonArray[i].firstname + "</span><br>";
           resulTag = resulTag + "<hr>";
     }
   }
@@ -123,17 +130,17 @@ function loadBCTag(){
 var geoL = "N";
 
 function getGeoL(){
-  console.log("start geolocalisation");
+  //console.log("start geolocalisation");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
   } else {
-    console.log("Issue geolocation");
+    //console.log("Issue geolocation");
   }
-  console.log('Localisation: ' + geoL);
+  //console.log('Localisation: ' + geoL);
   $("#step-geol").val(geoL);
 }
 function showPosition(position) {
-  console.log('in showPosition');
+  //console.log('in showPosition');
   geoL = position.coords.latitude + ", " + position.coords.longitude;
 }
 

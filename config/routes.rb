@@ -46,5 +46,10 @@ Rails.application.routes.draw do
   post    '/clientmng',    to: 'client#newclient'
   post    '/createbarcodeforclient',    to: 'client#createbarcodeforclient'
 
+  #Route for Personal and Reseller Controller
+  get     '/persoreseldash',    to: 'persoresel#dashboard'
+  post	  '/seeone'   => 'persoresel#seeone'
+  get     '/seeone'   => redirect("/")
+  post	  '/addaddress'   => 'persoresel#addaddress'
 
 end

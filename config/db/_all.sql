@@ -17,6 +17,8 @@ CREATE TABLE ref_partner (
   -- O for Other
   type          CHAR(1)         DEFAULT 'P',
   website       VARCHAR(500),
+  delivery_addr VARCHAR(500),
+  pickup_addr   VARCHAR(500),
   -- Paris Workflow id
   main_wf_id    SMALLINT        DEFAULT 1,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -26,7 +28,7 @@ CREATE TABLE ref_partner (
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
-INSERT INTO ref_partner (id, name, description, type, main_wf_id) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C', 1);
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C', 1, '032567876', '48 Rue de la Boétie, 93078 Les Pinsons de la Rivière', 'Box 762, Centre Riviera Malaza Tana 101');
 
 -- Need a cross table partner x mod_workflow
 -- Need a cross table client x partner
@@ -107,6 +109,8 @@ CREATE TABLE barcode(
   -- Workflow id
   wf_id                 SMALLINT,
   status                SMALLINT       DEFAULT 0,
+  -- in grams
+  weight_in_gr          INT,
   -- used to be REFERENCES ref_partner(id)
   partner_id            INT            NOT NULL,
   -- creator id can be the partner or the client with high score who is granteed
@@ -115,6 +119,7 @@ CREATE TABLE barcode(
   -- the owner can be null until it is addressed
   -- used to be REFERENCES users(id);
   owner_id              BIGINT,
+  ext_ref               VARCHAR(35)    UNIQUE,
   -- If someone else need to come for pick up
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
@@ -130,6 +135,8 @@ CREATE TABLE wk_tag(
   id                    BIGSERIAL      PRIMARY KEY,
   -- REFERENCES barcode(id)
   bc_id                 BIGINT         NOT NULL,
+  -- REFERENCES users(id) who has done the action
+  user_id               BIGINT         NOT NULL,
   -- This is the transition used to arrived to this step
   --  REFERENCES mod_workflow(id)
   mwkf_id               SMALLINT       NOT NULL,
@@ -143,8 +150,7 @@ CREATE TABLE wk_tag(
 
 
 CREATE TABLE wk_tag_com(
-  id        BIGSERIAL      PRIMARY KEY,
-  wk_tag_id BIGINT         NOT NULL REFERENCES wk_tag(id),
+  wk_tag_id BIGINT         PRIMARY KEY,
   comment   VARCHAR(500)
 );
 
@@ -168,7 +174,8 @@ select
 
 -- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
 -- This action is creating the bar code if it does not exist
--- This action canoot be zero or one (personal client or reseller)
+-- This retrieve possible steps
+-- This action cannot be zero or one (personal client or reseller)
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
@@ -221,8 +228,8 @@ BEGIN
       WHERE wt.bc_id = var_bc_id;
 
     IF var_found_last_step IS NULL THEN
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)
-        VALUES (var_bc_id, 1, 0, par_geo_l) RETURNING id INTO  var_found_last_step;
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+        VALUES (var_bc_id, 1, 0, par_geo_l, user_id) RETURNING id INTO  var_found_last_step;
     END IF;
 
 
@@ -244,21 +251,51 @@ END
 $func$  LANGUAGE plpgsql;
 
 
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
 -- Create Procedure Insert Step as we need to handle ref_status
 -- CALL stored_procedure_name(parameter_list);
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
-CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250))
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250));
+CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
 LANGUAGE plpgsql
 AS $$
 BEGIN
     -- Do the INSERT
     -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
-    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES ($1, $2, $3, $4);
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
 
     -- We update the barcode with last status
     UPDATE barcode
-      SET status = $3, update_date = CURRENT_TIMESTAMP
+      SET status = $3,
+      update_date = CURRENT_TIMESTAMP
+      WHERE id = $1;
+
+    COMMIT;
+END;
+$$;
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- Copy paste from CLI_STEP_TAG used only for ADDRESSING
+-- param order : id, workflow id, localisation, external ref, tname, tfirstname, tphone
+DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20));
+CREATE OR REPLACE PROCEDURE CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], TRIM('params[:stepgeol]'));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, 1, $3, $8);
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = 1,
+      ext_ref = CASE WHEN $4 = '' THEN NULL ELSE $4 END,
+      to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
+      to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
+      to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
+      update_date = CURRENT_TIMESTAMP
       WHERE id = $1;
 
     COMMIT;
@@ -275,6 +312,13 @@ CREATE TABLE client_partner_xref (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (client_id, partner_id)
 );
+
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
+-- Error to be solved Here
+UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
 
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is attaching client to a company
@@ -386,7 +430,7 @@ BEGIN
       INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code)
         VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id) VALUES (var_bc_id, 1, 0);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, 0, par_creator_id);
 
       var_result := var_bc_id;
     ELSE

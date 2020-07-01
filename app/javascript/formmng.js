@@ -31,6 +31,15 @@ function mainFormLoaderInCaseOfChange(){
     $("#editpwd-submit").hide();
     listenPwdEditFormCreate();
   }
+  else if($('#mg-graph-identifier').text() == 'home-gr'){
+    $("#btnVerify").click(function() {
+      let refTag = $('#inputMG').val();
+      if(validateMGSCode(refTag)){
+        $("#read-cb-id").val(decodeMGSCodePartId(refTag));
+        $("#read-cb-sec").val(decodeMGSCodePartSecure(refTag));
+      }
+    });
+  }
   else{
     //do nothing
   }

@@ -1,6 +1,5 @@
 <% provide(:title, "Manager") %>
-<div id="mg-graph-identifier">pardash-gr</div>
-<%= render 'partner/partnerutils' %>
+<div id="mg-graph-identifier">peredash-gr</div>
 <% if @resultSet.nil? %>
 	//Error
   <script>
@@ -19,9 +18,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
 </style>
 
+
 <div class="row mgs-title">
   <div class="col-lg-12">
-    <h1>Manager</h1>
+    <h1>Mes codes barres</h1>
   </div>
 </div>
 <div class="mgs-note mgs-note-mrg-grid">
@@ -37,5 +37,23 @@
   <div class="col-sm-12">
     <div id="jsGrid">
     </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-3">
+
+</div>
+  <div class="col-lg-6">
+      <form action="/seeone" method="post" id="mg-checkbc-form">
+        <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-step-btn"
+                value="Vérifier"/>
+
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"></textarea>
+        <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"></textarea>
+      </form>
+  </div>
+  <div class="col-lg-3">
   </div>
 </div>

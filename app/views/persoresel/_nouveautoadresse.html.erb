@@ -1,0 +1,44 @@
+<div class="crt-block-input">
+  Les informations suivantes sont requises de votre part <i class="glyphicon glyphicon-exclamation-sign"></i>
+</div>
+<form action="/addaddress" method="post" id="mg-address">
+
+  <div class="crt-block">Numéro de suivi externe</div>
+  <div class="t-of-use mgs-med-note-imp">
+    Amazon, Colissimo, Chronopost, DPD, UPS, DHL, le site marchand peut vous donner un numéro de suivi.<br>
+    <strong>Nous vous invitons fortement à le renseigner ici pour faciliter votre suivi</strong>
+    <strong>Veillez bien à copier coller l'information pour éviter tout risque d'erreur&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+  </div>
+  <label>Numéro de suivi</label><br>
+  <textarea class="form-control" rows="1" id="mg-add-ext-ref" name="mgaddextref" placeholder="Numéro de suivi externe (optionel)" style="resize: none;"></textarea>
+
+
+  <hr>
+  <div class="t-of-use mgs-med-note">
+    Nom de la personne qui viendra récupérer le colis si ça n'est pas vous.
+  </div>
+  <label>Nom réceptionneur.euse</label><br>
+  <textarea class="form-control" rows="1" id="mg-add-tname" name="mgaddtname" placeholder="Optionel" style="resize: none;"></textarea>
+  <label>Prénom réceptionneur.euse</label><br>
+  <textarea class="form-control" rows="1" id="mg-add-tfname" name="mgaddtfname" placeholder="Optionel" style="resize: none;"></textarea>
+  <label>Téléphone réceptionneur.euse</label><br>
+  <textarea class="form-control" rows="1" id="mg-add-tphone" name="mgaddtphone" placeholder="Optionel" style="resize: none;"></textarea>
+
+
+
+  <textarea class="form-control step-hid" rows="1" id="read-steprwf-id" name="steprwfid" placeholder="Workflow id" style="resize: none;">1</textarea>
+
+  <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="save-addr-sub"
+          value="Valider"/>
+
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash">Annuler&nbsp;<i class="glyphicon glyphicon-remove-circle"></i></a>
+
+  <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"><%= @resultSet[0]['id'].to_s %></textarea>
+
+  <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"><%= @resultSet[0]['secure'].to_s %></textarea>
+  <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
+
+
+
+</form>

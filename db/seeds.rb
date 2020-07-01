@@ -47,7 +47,7 @@ User.create!(name:  "Rakotomalala",
             activated_at: Time.zone.now)
 # Livreur Receptionnaur
 User.create!(name:  "Razanamalaza",
-            firstname: "rado",
+            firstname: "Rado",
             email: "rado.r@gmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
