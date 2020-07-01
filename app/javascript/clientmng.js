@@ -6,6 +6,15 @@ $(document).on('turbolinks:load', function() {
 
 function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'cltmng-gr'){
+
+      //Initalize JSON Array
+      for(i=0; i<dataTagToJsonArray.length; i++){
+        //console.log('dataTagToJsonArray[i].owner_id: ' + i + '/' + dataTagToJsonArray[i].owner_id);
+        if(dataTagToJsonArray[i].owner_id == null){
+          dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
+        }
+      }
+
       runjsClientGrid();
       //Button Barcode creator
       $( ".bc-crt-clt" ).click(function() {
@@ -214,6 +223,8 @@ function generateCSV(){
 
 /***************************************************************************************/
 
+/*
+// Deploy as dirty
 function removeDiacritics(str) {
 
   let defaultDiacriticsRemovalMap = [
@@ -310,3 +321,5 @@ function removeDiacritics(str) {
   return str;
 
 }
+
+*/

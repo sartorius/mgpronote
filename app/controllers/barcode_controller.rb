@@ -21,7 +21,7 @@ class BarcodeController < ApplicationController
 
     else
       # CAST (1 AS SMALLINT)
-      sql_query = "SELECT * FROM CLI_ACT_TAG("+ params[:checkcbid] +", CAST("+ params[:checkcbsec] +" AS SMALLINT), "+ @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
+      sql_query = "SELECT * FROM CLI_ACT_TAG("+ params[:checkcbid] +", CAST("+ params[:checkcbsec].gsub(/"|'|-|_|!/, ' ') +" AS SMALLINT), "+ @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb] + "', '" + params[:stepgeol] + "');"
 
     end
 

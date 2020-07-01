@@ -8,7 +8,7 @@ function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
     runjsPartnerGrid();
     $( "#mgs-dash-print-csv" ).click(function() {
-      alert('Thum generate CSV');
+      generatePartDashCSV();
     });
   }
   else if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
@@ -192,4 +192,30 @@ function runjsPartnerGrid(){
   else{
     $("#jsGrid").hide();
   }
+}
+
+
+
+/***********************************************************************************************************/
+
+function generatePartDashCSV(){
+	let csvContent = "data:text/csv;charset=utf-8,";
+
+	let dataString = "#;Référence;Status;Nom;Prénom;Numéro;Date de création;En attente depuis;\n";
+	csvContent += dataString;
+	for(var i=0; i<dataTagToJsonArray.length; i++){
+		dataString = dataTagToJsonArray[i].id + ';' + removeDiacritics(dataTagToJsonArray[i].ref_tag) + ';' + removeDiacritics(dataTagToJsonArray[i].step) + ';' +  dataTagToJsonArray[i].oname + ';' +  dataTagToJsonArray[i].ofirstname + ';' + dataTagToJsonArray[i].ophone + ';' + dataTagToJsonArray[i].create_date + ';' +   dataTagToJsonArray[i].diff_days + ';' ;
+    // easy close here
+    csvContent += i < dataTagToJsonArray.length ? dataString+ "\n" : dataString;
+	}
+	//var encodedUri = encodeURI(csvContent);
+	//window.open(encodedUri);
+
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("href", encodedUri);
+	link.setAttribute("download", 'CodesbarresListe.csv');
+	document.body.appendChild(link); // Required for FF
+
+	link.click(); // This will download the data file named "my_data.csv".
 }

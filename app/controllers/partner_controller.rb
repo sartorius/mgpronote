@@ -37,7 +37,7 @@ class PartnerController < ApplicationController
                   		"JOIN users uo ON uo.id = bc.owner_id " +
                   		"JOIN users uc ON uc.id = bc.creator_id " +
                   		" WHERE bc.id = " + params[:checkcbid] +
-                  		" AND bc.secure = " + params[:checkcbsec] + ";"
+                  		" AND bc.secure = " + params[:checkcbsec].gsub(/"|'|-|_|!/, ' ') + ";"
 
     begin
 

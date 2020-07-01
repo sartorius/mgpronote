@@ -6,8 +6,8 @@ class PersoreselController < ApplicationController
     #We do the transaction here then we go on seeone
 
     sql_query = "CALL CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " +
-                " '" + params[:mgaddextref] + "', '" + params[:mgaddtname] + "', '" + params[:mgaddtfname] + "', '" + params[:mgaddtphone] + "', " +
-                @current_user.id.to_s + ", '" + params[:mgaddpknm] + "', '" + params[:mgaddpkph] + "', '" + params[:mgaddpkadd] + "');"
+                " '" + params[:mgaddextref].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddtname].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddtfname].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddtphone] + "', " +
+                @current_user.id.to_s + ", '" + params[:mgaddpknm].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddpkph].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddpkadd].gsub(/"|'|-|_|!/, ' ') + "');"
 
     puts 'sql_query: ' + sql_query
 
