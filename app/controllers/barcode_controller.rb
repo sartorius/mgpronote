@@ -97,7 +97,7 @@ class BarcodeController < ApplicationController
       sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
   										" join ref_status rtc on rtc.id = wt.current_step_id " +
                       " join users u on u.id = wt.user_id " +
-                      " WHERE bc.ref_tag IN ('" + params[:checkcb] + "') ORDER BY wt.id ASC;"
+                      " WHERE bc.ext_ref IN ('" + params[:checkcb] + "') ORDER BY wt.id ASC;"
     else
       #puts "<<<<<<<<< checkcbid is " + params[:checkcbid].to_s
       sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
