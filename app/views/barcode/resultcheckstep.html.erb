@@ -1,6 +1,8 @@
 <% provide(:title, "Check") %>
 <div id="mg-graph-identifier">checktag-gr</div>
-
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
 <% if @resultSet.nil? %>
 	//Error
 <% else %>
@@ -20,7 +22,7 @@
 				Code barre lu
 			</div>
 			<div class="mgs-read-bc">
-				<p id="readBC" class="big-BC">
+				<p id="readBC" class="monosp-ft-subtitle">
 					<%= @cbToCheck.to_s %>
 				</p>
 			</div>
