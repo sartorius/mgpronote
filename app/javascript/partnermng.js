@@ -136,14 +136,6 @@ function goToPartBarcode(lid, lsec){
   $("#mg-checkbc-form").submit();
 }
 
-function waitingDayFromNow(dateString){
-  const date1 = new Date(dateString);
-  const date2 = new Date();
-  const diffTime = Math.abs(date2 - date1);
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return (diffDays.toString() == '') ? '0' : diffDays.toString();
-}
-
 /* JS GRID */
 function runjsPartnerGrid(){
   for(i=0; i<dataTagToJsonArray.length; i++){
@@ -180,16 +172,11 @@ function runjsPartnerGrid(){
             },
             //Default width is auto
             { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
-            { name: "oname", title: "Nom", type: "text", width: 25, headercss: "h-jsG-l" },
+            { name: "oname", title: "Nom", type: "text", width: 35, headercss: "h-jsG-l" },
             { name: "ofirstname", title: "Prénom", type: "text", width: 25, headercss: "h-jsG-l" },
-            { name: "create_date",
-              title: "En attente",
-              type: "text",
-              width: 25,
-              itemTemplate: function(value, item) {
-                return waitingDayFromNow(value);
-              },
-              headercss: "h-jsG-l" }
+            { name: "ophone", title: '<i class="glyphicon glyphicon-phone-alt"></i>', type: "text", width: 25, headercss: "h-jsG-c" },
+            { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
+            { name: "diff_days", title: '<i class="glyphicon glyphicon-time"></i>', type: "number", width: 3, headercss: "h-jsG-c" }
         ]
     });
   }

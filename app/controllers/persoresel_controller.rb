@@ -61,7 +61,7 @@ class PersoreselController < ApplicationController
   def dashboard
 
     sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      " rp.name AS part_name, rp.to_phone AS part_phone " +
+                      " rp.name AS part_name, bc.status, rp.to_phone AS part_phone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, DATE_PART('day', NOW() - bc.create_date) AS diff_days " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the owner id
                       " JOIN users u ON u.id = bc.owner_id " +

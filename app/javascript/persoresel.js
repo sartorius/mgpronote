@@ -56,9 +56,21 @@ function runjsPersoreselGrid(){
               }
             },
             { name: "step", title: "Status", type: "text", width: 25, headercss: "h-jsG-l" },
-            { name: "part_phone", title: "Téléphone", type: "text", width: 20, headercss: "h-jsG-r" },
+            { name: "status",
+              title: '<i class="glyphicon glyphicon-edit"></i>',
+              type: "text",
+              align: "center",
+              width: 10,
+              headercss: "h-jsG-c",
+              itemTemplate: function(value, item) {
+                return (value == '0') ? '<i class="mgs-red glyphicon glyphicon-pencil"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
+              }
+            },
+            { name: "part_phone", title: "Téléphone", type: "text", width: 20, headercss: "h-jsG-l" },
             //Default width is auto
-            { name: "part_name", title: "Nom partenaire", type: "text", headercss: "h-jsG-l" }
+            { name: "part_name", title: "Nom partenaire", type: "text", headercss: "h-jsG-l" },
+            { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
+            { name: "diff_days", title: '<i class="glyphicon glyphicon-time"></i>', type: "number", width: 3, headercss: "h-jsG-c" }
 
         ]
     });
