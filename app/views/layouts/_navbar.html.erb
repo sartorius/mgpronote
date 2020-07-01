@@ -28,6 +28,8 @@
             <% unless (mobile_device == "mobile")  %>
                   <% if is_partner? %>
                       <%# I am a partner not in mobile %>
+
+                      <%# After test phase we need to remove this %>
                       <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
                       <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
 
@@ -54,6 +56,12 @@
                         <%# I am a not a partner not in mobile %>
                         <li class="nav-item"><%= link_to "Mes codes barres", persoreseldash_path %></li>
                     <% end %>
+            <% else %>
+              <%# I am on mobile %>
+              <% if is_partner? %>
+                  <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
+                  <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
+              <% end %>
             <% end %>
 
         <% else %>
@@ -75,24 +83,35 @@
         <% if logged_in? %>
 
             <% if false %>
-              code to comment
+              code to comment for admin
               <li class="nav-item"><%= link_to "Users", users_path %></li>
             <% end %>
 
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <%= @current_user.name.to_s %> <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li class="nav-item"><%= link_to "Profil", current_user %></li>
-                <li class="divider"></li>
-                <li class="nav-item">
-                  <%= link_to "Log out", logout_path, method: :delete %>
-                </li>
-              </ul>
-            </li class="nav-item">
+            <% if (mobile_device == "mobile")  %>
+              <%# MOBILE %>
+              <li class="nav-item"><%= link_to "<%= @current_user.name.to_s %>", current_user %></li>
+              <li class="nav-item">
+                <%= link_to "Se déconnecter", logout_path, method: :delete %>
+              </li>
+            <% else %>
+
+                <%# !MOBILE %>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <%= @current_user.name.to_s %> <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="nav-item"><%= link_to "Profil", current_user %></li>
+                    <li class="divider"></li>
+                    <li class="nav-item">
+                      <%= link_to "Se déconnecter", logout_path, method: :delete %>
+                    </li>
+                  </ul>
+                </li class="nav-item">
+
+            <% end %>
         <% else %>
-            <li class="nav-item"><%= link_to "Log in", login_path %></li>
+            <li class="nav-item"><%= link_to "Se connecter", login_path %></li>
         <% end %>
       </ul>
   </div>
