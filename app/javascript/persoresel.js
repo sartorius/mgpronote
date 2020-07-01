@@ -11,11 +11,16 @@ function mainClientLoaderInCaseOfChange(){
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
       $('#bc-seeone').html(mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()));
 
-      console.log('Read listenPickUpFormCreate');
-      //initialize
-      $("#save-addr-sub").prop('disabled', true);
-      $("#save-addr-sub").hide();
-      listenPickUpFormCreate();
+
+
+      // In case of pickup
+      if($('#mg-subgraph-identifier').text() == 'pereonepk-gr'){
+        //console.log('Read listenPickUpFormCreate');
+        //initialize
+        $("#save-addr-sub").prop('disabled', true);
+        $("#save-addr-sub").hide();
+        listenPickUpFormCreate();
+      }
   }
   else{
     //do nothing

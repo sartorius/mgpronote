@@ -5,9 +5,30 @@ class PersoreselController < ApplicationController
   def addaddress
     #We do the transaction here then we go on seeone
 
+    #Pickup solve nil
+    if params[:mgaddpknm].nil? then
+      mgaddpknm = ""
+    else
+      mgaddpknm = params[:mgaddpknm]
+    end
+
+    if params[:mgaddpkph].nil? then
+      mgaddpkph = ""
+    else
+      mgaddpkph = params[:mgaddpkph]
+    end
+
+    if params[:mgaddpkadd].nil? then
+      mgaddpkadd = ""
+    else
+      mgaddpkadd = params[:mgaddpkadd]
+    end
+
+
+    #.gsub(/"|'|!/, '')
     sql_query = "CALL CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " +
-                " '" + params[:mgaddextref].gsub(/"|'|!/, '') + "', '" + params[:mgaddtname].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddtfname].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddtphone] + "', " +
-                @current_user.id.to_s + ", '" + params[:mgaddpknm].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddpkph].gsub(/"|'|-|_|!/, ' ') + "', '" + params[:mgaddpkadd].gsub(/"|'|-|_|!/, ' ') + "');"
+                " '" + params[:mgaddextref] + "', '" + params[:mgaddtname] + "', '" + params[:mgaddtfname] + "', '" + params[:mgaddtphone] + "', " +
+                @current_user.id.to_s + ", '" + mgaddpknm + "', '" + mgaddpkph + "', '" + mgaddpkadd + "');"
 
     puts 'sql_query: ' + sql_query
 

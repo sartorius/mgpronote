@@ -181,6 +181,16 @@ function runjsPartnerGrid(){
             },
             //Default width is auto
             { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
+            { name: "ext_ref",
+              title: "Ext Ref",
+              type: "text",
+              align: "right",
+              width: 35,
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return '<i class="monosp-ft">' + ((value == null) ? '-' : value) + '</i>';
+              }
+            },
             { name: "oname", title: "Nom", type: "text", width: 35, headercss: "h-jsG-l" },
             { name: "ofirstname", title: "Prénom", type: "text", width: 25, headercss: "h-jsG-l" },
             { name: "ophone", title: '<i class="glyphicon glyphicon-phone-alt"></i>', type: "text", width: 25, headercss: "h-jsG-c" },
