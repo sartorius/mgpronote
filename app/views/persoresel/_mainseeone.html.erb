@@ -58,6 +58,13 @@
     </div>
   </div>
   <div class="col-sm-4">
+    <div class="crt-block">Poids</div>
+    <div class="t-of-use mgs-med-note">
+      Poids en grammes.
+    </div>
+    <div class="field-big">
+      <%= number_with_delimiter(@resultSet[0]['weight_in_gr'].to_i, :delimiter => ' ') %>
+    </div>
     <div class="crt-block">Propriétaire</div>
     <div class="t-of-use mgs-med-note">
       Les informations suivantes concernent le propriétaire du paquet.
