@@ -111,6 +111,10 @@ CREATE TABLE barcode(
   status                SMALLINT       DEFAULT 0,
   -- in grams
   weight_in_gr          INT,
+  -- delivery particularity
+  category              CHAR(1) DEFAULT 'A',
+  -- Delivery or Pickup ? Can be D or P
+  type_pack             CHAR(1) DEFAULT 'D',
   -- used to be REFERENCES ref_partner(id)
   partner_id            INT            NOT NULL,
   -- creator id can be the partner or the client with high score who is granteed
@@ -124,10 +128,6 @@ CREATE TABLE barcode(
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
-  -- delivery particularity
-  category              CHAR(1) DEFAULT 'A',
-  -- Delivery or Pickup ? Can be D or P
-  type_pack             CHAR(1) DEFAULT 'D',
   p_name_firstname      VARCHAR(50),
   p_phone               VARCHAR(50),
   p_address_note        VARCHAR(250),
@@ -285,32 +285,52 @@ $$;
 -- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
 -- Copy paste from CLI_STEP_TAG used only for ADDRESSING
 -- param order : id, workflow id, localisation, external ref, tname, tfirstname, tphone
+-- Todo change this to function to read the result if duplicate
 DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT);
 DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250));
-CREATE OR REPLACE PROCEDURE CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250))
-LANGUAGE plpgsql
-AS $$
+DROP FUNCTION IF EXISTS  CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250));
+CREATE OR REPLACE FUNCTION CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250))
+-- By convention we return zero when everything is OK
+RETURNS INTEGER AS $$
+DECLARE
+  var_return_code     SMALLINT;
+  var_result_exists   SMALLINT;
 BEGIN
-    -- Do the INSERT
-    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], TRIM('params[:stepgeol]'));
-    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, 1, $3, $8);
+    var_return_code := 0;
 
-    -- We update the barcode with last status
-    UPDATE barcode
-      SET status = 1,
-      ext_ref = CASE WHEN $4 = '' THEN NULL ELSE $4 END,
-      to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
-      to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
-      to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
-      p_name_firstname = CASE WHEN $9 = '' THEN NULL ELSE $9 END,
-      p_phone = CASE WHEN $10 = '' THEN NULL ELSE $10 END,
-      p_address_note = CASE WHEN $11 = '' THEN NULL ELSE $11 END,
-      update_date = CURRENT_TIMESTAMP
-      WHERE id = $1;
+    -- Check if the ext ref is not null it does not EXISTS
+    IF $4 = NULL THEN
+      -- Do nothing as null is ok to be inserted in duplicate
+    ELSE
+      -- Check if any value exist
+      -- If any value exists already we have more than zero
+      SELECT COUNT(1) INTO var_return_code
+        FROM barcode bc
+        WHERE bc.ext_ref = $4;
+    END IF;
 
-    COMMIT;
+
+    IF var_return_code = 0 THEN
+        -- Do the INSERT
+        -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], TRIM('params[:stepgeol]'));
+        INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, 1, $3, $8);
+
+        -- We update the barcode with last status
+        UPDATE barcode
+          SET status = 1,
+          ext_ref = CASE WHEN $4 = '' THEN NULL ELSE $4 END,
+          to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
+          to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
+          to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
+          p_name_firstname = CASE WHEN $9 = '' THEN NULL ELSE $9 END,
+          p_phone = CASE WHEN $10 = '' THEN NULL ELSE $10 END,
+          p_address_note = CASE WHEN $11 = '' THEN NULL ELSE $11 END,
+          update_date = CURRENT_TIMESTAMP
+          WHERE id = $1;
+    END IF;
+    RETURN var_return_code;
 END;
-$$;
+$$ LANGUAGE plpgsql;
 -- Modify users
 -- ADD firstname, phone number, is_company
 -- This is the cross ref table for all partner to get their client

@@ -14,4 +14,22 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # This method need to be use everytime we have a string VARCHAR to had
+  # It contains already the quote
+  def get_safe_pg_wq(str)
+    if str.nil? then
+      return "NULL"
+    else
+      return " TRIM('" + str.gsub(/"|'|!|>|;/, '') + "')"
+    end
+  end
+  #Special no whitespace
+  def get_safe_pg_wq_ns(str)
+    if str.nil? then
+      return "NULL"
+    else
+      return " TRIM('" + str.gsub(/"|'|!|>|;|\s/, '') + "')"
+    end
+  end
+
 end

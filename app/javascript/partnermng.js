@@ -185,10 +185,10 @@ function runjsPartnerGrid(){
               title: "Ext Ref",
               type: "text",
               align: "right",
-              width: 35,
+              width: 50,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
-                return '<i class="monosp-ft">' + ((value == null) ? '-' : value) + '</i>';
+                return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value) + '</i>';
               }
             },
             { name: "oname", title: "Nom", type: "text", width: 35, headercss: "h-jsG-l" },

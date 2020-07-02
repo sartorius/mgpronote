@@ -5,39 +5,25 @@ class PersoreselController < ApplicationController
   def addaddress
     #We do the transaction here then we go on seeone
 
-    #Pickup solve nil
-    if params[:mgaddpknm].nil? then
-      mgaddpknm = ""
-    else
-      mgaddpknm = params[:mgaddpknm]
-    end
 
-    if params[:mgaddpkph].nil? then
-      mgaddpkph = ""
-    else
-      mgaddpkph = params[:mgaddpkph]
-    end
-
-    if params[:mgaddpkadd].nil? then
-      mgaddpkadd = ""
-    else
-      mgaddpkadd = params[:mgaddpkadd]
-    end
-
-
-    #.gsub(/"|'|!/, '')
-    sql_query = "CALL CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " +
-                " '" + params[:mgaddextref] + "', '" + params[:mgaddtname] + "', '" + params[:mgaddtfname] + "', '" + params[:mgaddtphone] + "', " +
-                @current_user.id.to_s + ", '" + mgaddpknm + "', '" + mgaddpkph + "', '" + mgaddpkadd + "');"
+    sql_query = "SELECT * FROM CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " +
+                " " + get_safe_pg_wq_ns(params[:mgaddextref]) + ", " + get_safe_pg_wq(params[:mgaddtname]) + ", " + get_safe_pg_wq(params[:mgaddtfname]) + ", " + get_safe_pg_wq(params[:mgaddtphone]) + ", " +
+                @current_user.id.to_s + ", " + get_safe_pg_wq(params[:mgaddpknm]) + ", " + get_safe_pg_wq(params[:mgaddpkph]) + ", " + get_safe_pg_wq(params[:mgaddpkadd]) + ");"
 
     puts 'sql_query: ' + sql_query
 
     begin
 
-      ActiveRecord::Base.connection.exec_query(sql_query)
+      @resultSetFunc = ActiveRecord::Base.connection.exec_query(sql_query)
 
-      message  = "Les informations ont été correctement enregistrés."
-      flash.now[:success] = message
+      if @resultSetFunc[0]['cli_step_addr_tag'].to_s == '0' then
+        message  = "Les informations ont été correctement enregistrés."
+        flash.now[:success] = message
+      else
+        message  = "Il semble que la référence externe a déjà été enregistrée par quelqu'un d'autre. Veuillez la re-vérifier."
+        message += "Si vous pensez qu'il s'agit d'une erreur, il s'agit d'un code YZJ90, contactez-nous. Nous sommes navrés pour la gêne occasionée."
+        flash.now[:danger] = message
+      end
 
       seeone
     end

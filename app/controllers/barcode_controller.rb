@@ -17,11 +17,11 @@ class BarcodeController < ApplicationController
     if params[:checkcbid] == '' then
       #puts "<<<<<<<<< checkcbid is empty string"
       # checkcbid is empty when we have an external code because we cannot solve the MGS id
-      sql_query = "SELECT * FROM CLI_ACT_TAG(0, CAST (0 AS SMALLINT), " + @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb].gsub(/"|'|!/, '') + "', '" + params[:stepgeol] + "');"
+      sql_query = "SELECT * FROM CLI_ACT_TAG(0, CAST (0 AS SMALLINT), " + @current_user.id.to_s + ", " + @current_user.partner.to_s + ", " + get_safe_pg_wq(params[:checkcb]) + ", '" + params[:stepgeol] + "');"
 
     else
       # CAST (1 AS SMALLINT)
-      sql_query = "SELECT * FROM CLI_ACT_TAG("+ params[:checkcbid] +", CAST("+ params[:checkcbsec] +" AS SMALLINT), "+ @current_user.id.to_s + ", " + @current_user.partner.to_s + ", '" + params[:checkcb].gsub(/"|'|!/, '') + "', '" + params[:stepgeol] + "');"
+      sql_query = "SELECT * FROM CLI_ACT_TAG("+ params[:checkcbid] +", CAST("+ params[:checkcbsec] +" AS SMALLINT), "+ @current_user.id.to_s + ", " + @current_user.partner.to_s + ", " + get_safe_pg_wq(params[:checkcb]) + ", '" + params[:stepgeol] + "');"
 
     end
 
@@ -97,7 +97,7 @@ class BarcodeController < ApplicationController
       sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
   										" join ref_status rtc on rtc.id = wt.current_step_id " +
                       " join users u on u.id = wt.user_id " +
-                      " WHERE bc.ext_ref IN ('" + params[:checkcb].gsub(/"|'|!/, '') + "') ORDER BY wt.id ASC;"
+                      " WHERE bc.ext_ref IN (" + get_safe_pg_wq_ns(params[:checkcb]) + ") ORDER BY wt.id ASC;"
     else
       #puts "<<<<<<<<< checkcbid is " + params[:checkcbid].to_s
       sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +

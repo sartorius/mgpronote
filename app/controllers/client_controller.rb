@@ -25,7 +25,7 @@ class ClientController < ApplicationController
   end
 
   def newclient
-    sql_query = "SELECT * FROM CLI_ADD_CLT(" + @current_user.id.to_s + ", TRIM('"+ params[:email].gsub(/"|'|!/, '') +"'));"
+    sql_query = "SELECT * FROM CLI_ADD_CLT(" + @current_user.id.to_s + ", "+ get_safe_pg_wq_ns(params[:email]) +");"
     begin
 
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
