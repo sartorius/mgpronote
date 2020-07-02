@@ -39,6 +39,7 @@ Rails.application.routes.draw do
 
   # Route to check one BC
   post	  '/onebarcodemng'   => 'partner#onebarcodemng'
+  get	  '/onebarcodemng'   => 'partner#onebarcodemng'
 
   get     '/mainstatistics',    to: 'partner#mainstatistics'
 

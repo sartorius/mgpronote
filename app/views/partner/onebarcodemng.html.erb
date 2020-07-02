@@ -1,5 +1,6 @@
 <% provide(:title, "Code barre") %>
 <div id="mg-graph-identifier">partonebc-gr</div>
+<%= render 'partner/dirtyjspdf' %>
 <% if @resultSet.nil? %>
 	//Error TDY789
   <script>
@@ -7,10 +8,11 @@
   </script>
 <% else %>
   <script>
-    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+    var dataTagToJsonOneBC = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
 
-    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
-    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+    dataTagToJsonOneBC = dataTagToJsonOneBC.replace(/&quot;/g,"\"");
+    var dataTagToJsonOneBCArray = JSON.parse(dataTagToJsonOneBC);
+		var dataTagToJsonArray;
   </script>
 <% end %>
 
@@ -25,11 +27,17 @@
     <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
     <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
   </div>
-	<div class="col-lg-6 center">
+	<div class="col-lg-1">
+	</div>
+	<div class="col-lg-4 center mid-blc">
 			<div>
-				<img id="mbc-bc-disp">
+				<img id="mbc-0">
 			</div>
-			<button id="btn-print-12" class="btn btn-default btn-sm btn-print btn-block">Imprimer</button>
+			<div class="mid-blc">
+				<button id="btn-print-bc" class="btn btn-default btn-sm btn-print btn-block">Imprimer</button>
+			</div>
+	</div>
+	<div class="col-lg-1">
 	</div>
 </div>
 

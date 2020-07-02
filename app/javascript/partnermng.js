@@ -22,7 +22,17 @@ function mainPartnLoaderInCaseOfChange(){
       let getBarcodeMGS = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
       $('#bc-seeone').html(getBarcodeMGS);
       // Display the barcode to print
-      JsBarcode("#mbc-bc-disp", getBarcodeMGS);
+      JsBarcode("#mbc-0", getBarcodeMGS);
+      $("#btn-print-bc").click(function() {
+          //generateCb12PDF();
+          dataTagToJsonArray = new Array();
+          let oneBarcode = {
+            dest_email: dataTagToJsonOneBCArray[0].oemail,
+            step: dataTagToJsonOneBCArray[0].step,
+          };
+          dataTagToJsonArray.push(oneBarcode);
+          generateCb12PDF();
+      });
   }
   else{
     //do nothing
