@@ -194,6 +194,7 @@ select
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
   RETURNS TABLE ( bc_id                   BIGINT,
+                  curr_inc                VARCHAR(500),
                   bc_type_pack            CHAR(1),
                   bc_category             CHAR(1),
                   rse_act_owner           CHAR(1),
@@ -254,6 +255,7 @@ BEGIN
    RETURN QUERY
    SELECT
     wt.bc_id,
+    wtc.comment AS curr_inc,
     bc.type_pack AS bc_type_pack,
     bc.category AS bc_category,
     rte.act_owner AS rse_act_owner,
@@ -269,6 +271,7 @@ BEGIN
 				                 JOIN ref_status rtc ON rtc.id = wt.current_step_id
 				                 JOIN ref_status rte ON rte.id = mw.end_id
                          JOIN barcode bc ON bc.id = wt.bc_id
+                         LEFT JOIN wk_tag_com wtc ON wtc.wk_tag_id = wt.id
 		  WHERE wt.id = var_found_last_step;
 END
 $func$  LANGUAGE plpgsql;

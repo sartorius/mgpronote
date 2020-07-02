@@ -102,6 +102,11 @@ function displayNext(){
     $('#read-step-txt').val(dataTagToJsonArray[0].end_step);
     $('#curr-status').html(dataTagToJsonArray[0].curr_step);
 
+    if((dataTagToJsonArray[0].curr_inc != null) && (dataTagToJsonArray[0].curr_inc != '')){
+      $('#descr-incident').html(dataTagToJsonArray[0].curr_inc);
+      $('#decl-incident').show();
+    }
+
     for(var i=0; i<dataTagToJsonArray.length; i++){
         // We check if the next action is owned by partner or not
         if(dataTagToJsonArray[i].rse_act_owner != 'P'){
@@ -185,6 +190,11 @@ function loadBCTag(){
           }
           resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
           resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-barcode"></i> Opéré par ' + dataTagToJsonArray[i].name + ' ' + dataTagToJsonArray[i].firstname + "</span><br>";
+
+          if (((dataTagToJsonArray[i].com != null)) &&
+                  (dataTagToJsonArray[i].com != '')) {
+            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="glyphicon glyphicon-barcode"></i>&nbsp;Taggué par: ' + dataTagToJsonArray[i].ucomname + ' ' + dataTagToJsonArray[i].ucomfirstname + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
+          }
           resulTag = resulTag + "<hr>";
     }
   }

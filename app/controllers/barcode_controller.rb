@@ -101,19 +101,22 @@ class BarcodeController < ApplicationController
 
 =end
     # checkcbid is empty when we have an external code
+
+    sql_query = "SELECT bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l, " +
+                " wtc.comment AS com, ucom.name AS ucomname, ucom.firstname AS ucomfirstname, to_char(wtc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS ucom_date " +
+                " FROM wk_tag wt JOIN barcode bc on bc.id = wt.bc_id " +
+                    " JOIN ref_status rtc on rtc.id = wt.current_step_id " +
+                    " JOIN users u on u.id = wt.user_id " +
+                    " LEFT JOIN wk_tag_com wtc ON wtc.wk_tag_id = wt.id " +
+                    " LEFT JOIN users ucom ON wtc.user_id = ucom.id "
+
     if params[:checkcbid] == '' then
       #puts "<<<<<<<<< checkcbid is empty string"
       # checkcbid is empty when we have an external code because we cannot solve the MGS id
-      sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
-  										" join ref_status rtc on rtc.id = wt.current_step_id " +
-                      " join users u on u.id = wt.user_id " +
-                      " WHERE bc.ext_ref IN (" + get_safe_pg_wq_ns(params[:checkcb]) + ") ORDER BY wt.id ASC;"
+      sql_query = sql_query + " WHERE bc.ext_ref IN (" + get_safe_pg_wq_ns(params[:checkcb]) + ") ORDER BY wt.id ASC;"
     else
       #puts "<<<<<<<<< checkcbid is " + params[:checkcbid].to_s
-      sql_query = "select bc.id, bc.ref_tag, u.name, u.firstname, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l from wk_tag wt join barcode bc on bc.id = wt.bc_id " +
-  										" join ref_status rtc on rtc.id = wt.current_step_id " +
-                      " join users u on u.id = wt.user_id " +
-                      " WHERE bc.id = " + params[:checkcbid] + " AND bc.secure = " + params[:checkcbsec] + " ORDER BY wt.id ASC;"
+      sql_query = sql_query + " WHERE bc.id = " + params[:checkcbid] + " AND bc.secure = " + params[:checkcbsec] + " ORDER BY wt.id ASC;"
     end
 
 
