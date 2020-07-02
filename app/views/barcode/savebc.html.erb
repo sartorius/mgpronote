@@ -38,6 +38,10 @@
         </div>
         <hr>
 
+				<div id="no-next-step" class="t-of-use mgs-med-note-imp">
+					Navré. Aucune des prochaines étapes ci-dessous ne peut être effectuée par le partenaire. Contactez le propriétaire du code barre pour qu'il passe à la prochaine étape. Si vous pensez qu'il s'agit d'une erreur, contactez nous avec le code UQSK76.
+				</div>
+
         <form action="/save_step" method="post">
           <div class="form-group">
             <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
@@ -55,7 +59,7 @@
           <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-save-step-btn"
                   value="Enregistrer une étape"/>
 					<div class="pos-center blc-cancel">
-						<a href="/" id="btn-print-12-no-track" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="glyphicon glyphicon-remove-sign"></i></a>
+						<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="glyphicon glyphicon-remove-sign"></i></a>
 					</div>
           <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="stepcbid" placeholder="code barre id" style="resize: none;"></textarea>
           <textarea class="form-control step-hid" rows="1" id="read-mwfk" name="stepmwfid" placeholder="code barre id" style="resize: none;"></textarea>

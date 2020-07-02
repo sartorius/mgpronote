@@ -2,25 +2,29 @@
 
 
 CREATE TABLE ref_status (
-  id            SMALLINT      PRIMARY KEY,
-  step          VARCHAR(50)   NOT NULL,
-  description   VARCHAR(250)  NOT NULL,
-  input_needed  CHAR(1)       NOT NULL,
-  create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  id                  SMALLINT      PRIMARY KEY,
+  step                VARCHAR(50)   NOT NULL,
+  description         VARCHAR(250)  NOT NULL,
+  next_input_needed   CHAR(1)       NOT NULL,
+  -- A All
+  -- P Partner
+  -- Q Personal Reseller
+  act_owner           CHAR(1)       NOT NULL,
+  create_date         TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (1, 'Adressé destinataire', 'Les informations nom, prénom et adresse du destinataire ont été saisis.', 'Y');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis. Prêt à être enlevé', 'Y');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (6, 'Pesé', 'Le poids ont été validé.', 'Y');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N');
-INSERT INTO ref_status (id, step, description, input_needed) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'Y', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (1, 'Adressé', 'Les informations du réceptionneur.euse ont été saisis, avec information enlèvement si nécessaires.', 'N', 'Q');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N', 'P');
+-- INSERT INTO ref_status (id, step, description, next_input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis. Prêt à être enlevé', 'Y');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (6, 'Pesé', 'Le poids ont été validé.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P');
 
 
 CREATE TABLE ref_workflow (
@@ -43,8 +47,8 @@ CREATE TABLE mod_workflow (
 
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 1);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 2);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 3);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 4);
+-- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 4);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 4, 5);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 2, 5);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 5, 6);
@@ -73,7 +77,7 @@ CREATE TABLE barcode(
   -- Mostly beween 0 to 9999
   secret_code           SMALLINT       NOT NULL,
   -- Workflow id
-  wf_id                 SMALLINT,
+  wf_id                 SMALLINT       DEFAULT 1,
   status                SMALLINT       DEFAULT 0,
   -- in grams
   weight_in_gr          INT,
@@ -145,19 +149,24 @@ select
 		  WHERE wt.id = 1
 */
 
+
 -- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
 -- This action is creating the bar code if it does not exist
 -- This retrieve possible steps
 -- This action cannot be zero or one (personal client or reseller)
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250))
-  RETURNS TABLE ( bc_id         BIGINT,
-                  rwkf_id       SMALLINT,
-                  mwkf_id       INT,
-                  curr_step     VARCHAR(50),
-                  end_step_id   SMALLINT,
-                  end_step      VARCHAR(50),
-                  end_step_desc VARCHAR(250)) AS
+  RETURNS TABLE ( bc_id                   BIGINT,
+                  bc_type_pack            CHAR(1),
+                  bc_category             CHAR(1),
+                  rse_act_owner           CHAR(1),
+                  rse_next_input_needed   CHAR(1),
+                  rwkf_id                 SMALLINT,
+                  mwkf_id                 INT,
+                  curr_step               VARCHAR(50),
+                  end_step_id             SMALLINT,
+                  end_step                VARCHAR(50),
+                  end_step_desc           VARCHAR(250)) AS
                -- Do the return at the end
 $func$
 DECLARE
@@ -208,6 +217,10 @@ BEGIN
    RETURN QUERY
    SELECT
     wt.bc_id,
+    bc.type_pack AS bc_type_pack,
+    bc.category AS bc_category,
+    rte.act_owner AS rse_act_owner,
+    rte.next_input_needed AS rse_next_input_needed,
     mw.wkf_id, -- here is PA
     mw.id,
     rtc.step,
@@ -218,6 +231,7 @@ BEGIN
 							             AND mw.start_id = wt.current_step_id
 				                 JOIN ref_status rtc ON rtc.id = wt.current_step_id
 				                 JOIN ref_status rte ON rte.id = mw.end_id
+                         JOIN barcode bc ON bc.id = wt.bc_id
 		  WHERE wt.id = var_found_last_step;
 END
 $func$  LANGUAGE plpgsql;
@@ -252,8 +266,6 @@ $$;
 -- Copy paste from CLI_STEP_TAG used only for ADDRESSING
 -- param order : id, workflow id, localisation, external ref, tname, tfirstname, tphone
 -- Todo change this to function to read the result if duplicate
-DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT);
-DROP PROCEDURE IF EXISTS CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250));
 DROP FUNCTION IF EXISTS  CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250));
 CREATE OR REPLACE FUNCTION CLI_STEP_ADDR_TAG(BIGINT, SMALLINT, VARCHAR(250), VARCHAR(25), VARCHAR(50), VARCHAR(50), VARCHAR(20), BIGINT, VARCHAR(50), VARCHAR(50), VARCHAR(250))
 -- By convention we return zero when everything is OK

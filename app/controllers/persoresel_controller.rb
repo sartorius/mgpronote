@@ -41,7 +41,7 @@ class PersoreselController < ApplicationController
                 		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.name AS part_name,  " +
                     " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
-                		" rs.id AS step_id, rs.step, rs.description, rs.input_needed, " +
+                		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
                 		" uo.name AS oname, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.email AS cemail, uc.phone AS cphone " +
                 		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +

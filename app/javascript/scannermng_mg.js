@@ -62,11 +62,18 @@ function addOptionListener(){
 }
 
 function displayNext(){
-  var nextSteps = "";
+
+  // Initialize
+
+  let nextSteps = "";
   // target <option value="1" title="Tooltip">Réception</option>
-  var nsp1 = '<option value="';
-  var nsp2 = '" >';
-  var nsp3 = '</option>';
+  let nsp1 = '<option value="';
+  let nsp2 = '" >';
+  let nsp2Disabled = '" disabled>';
+  let curNsp2 = nsp2;
+  let nsp3 = '</option>';
+  let disabledCounter = 0;
+  let needReInitReadStepTxt = false;
   if(dataTagToJsonArray.length > 0){
 
 
@@ -77,9 +84,54 @@ function displayNext(){
     $('#curr-status').html(dataTagToJsonArray[0].curr_step);
 
     for(var i=0; i<dataTagToJsonArray.length; i++){
-        nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + nsp2 + dataTagToJsonArray[i].end_step + nsp3;
+        // We check if the next action is owned by partner or not
+        if(dataTagToJsonArray[i].rse_act_owner != 'P'){
+          curNsp2 = nsp2Disabled;
+          disabledCounter++;
+        }
+        else{
+          curNsp2 = nsp2;
+        }
+        // Now we need to treat differently 2 and 4 which are specific
+        // 2 is for Reception for D as delivery
+        // 4 is for enlèvement for P as pickup
+        // We need to discard one of them
+        if ((parseInt(dataTagToJsonArray[i].end_step_id) == 2) &&
+              (dataTagToJsonArray[i].bc_type_pack == 'P')){
+              // This is not possible we do nothing
+              if(i == 0){
+                // We need to re-initialize the text
+                needReInitReadStepTxt = true;
+                console.log('needReInitReadStepTxt true');
+              }
+        }
+        else if ((parseInt(dataTagToJsonArray[i].end_step_id) == 4) &&
+              (dataTagToJsonArray[i].bc_type_pack == 'D')) {
+              // This is not possible we do nothing
+              if(i == 0){
+                // We need to re-initialize the text
+                needReInitReadStepTxt = true;
+                console.log('needReInitReadStepTxt true');
+              }
+        }
+        else {
+          nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + curNsp2 + dataTagToJsonArray[i].end_step + nsp3;
+          if (needReInitReadStepTxt){
+            console.log('Did the needReInitReadStepTxt');
+            $('#read-step-txt').val(dataTagToJsonArray[i].end_step);
+          }
+        }
     }
     $("#stepCtrl").html(nextSteps);
+    // No other step is possible
+    if(disabledCounter == dataTagToJsonArray.length){
+      $('#stpcmt').hide();
+      $('#mg-save-step-btn').hide();
+      $('#no-next-step').show();
+      $('#btn-cnl-nstp').removeClass('btn-sm');
+      $('#btn-cnl-nstp').addClass('btn-lg');
+      $('#btn-cnl-nstp').html("Retourner à l'accueil");
+    }
   }
   else{
     $("#displaymsg").html("Erreur: récupération des étapes");
