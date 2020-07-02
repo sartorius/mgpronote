@@ -79,6 +79,7 @@ CREATE TABLE barcode(
   -- Workflow id
   wf_id                 SMALLINT       DEFAULT 1,
   status                SMALLINT       DEFAULT 0,
+  under_incident        BOOLEAN        DEFAULT FALSE,
   -- in grams
   weight_in_gr          INT,
   -- delivery particularity
@@ -128,7 +129,9 @@ CREATE TABLE wk_tag(
 
 CREATE TABLE wk_tag_com(
   wk_tag_id BIGINT         PRIMARY KEY,
-  comment   VARCHAR(500)
+  user_id   BIGINT,
+  comment   VARCHAR(500),
+  create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -254,8 +257,49 @@ BEGIN
     -- We update the barcode with last status
     UPDATE barcode
       SET status = $3,
+      under_incident = FALSE,
       update_date = CURRENT_TIMESTAMP
       WHERE id = $1;
+
+    COMMIT;
+END;
+$$;
+
+-- This will not change the step but add a comment
+-- Parameters are BC ID/USER ID/Comment
+DROP PROCEDURE IF EXISTS CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250));
+CREATE OR REPLACE PROCEDURE CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250))
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  var_last_wk_tag     BIGINT;
+  var_incident_exists SMALLINT;
+BEGIN
+
+    var_incident_exists := 0;
+
+    -- Retrieve the last wk_tag
+    SELECT MAX(id) INTO var_last_wk_tag
+      FROM wk_tag wt
+      WHERE wt.bc_id = $1;
+
+
+    SELECT COUNT(1) INTO var_incident_exists
+      FROM wk_tag_com wtc
+      WHERE wtc.wk_tag_id = var_last_wk_tag;
+
+    IF var_incident_exists = 0 THEN
+      -- No incident exist so we are safe to create one
+      -- Be careful we can have only one comment per working tag
+      INSERT INTO wk_tag_com (wk_tag_id, user_id, comment) VALUES (var_last_wk_tag, $2, $3);
+
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET update_date = CURRENT_TIMESTAMP,
+        under_incident = TRUE
+        WHERE id = $1;
+    END IF;
+
 
     COMMIT;
 END;

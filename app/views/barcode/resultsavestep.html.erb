@@ -11,33 +11,11 @@
         <%= @stepcb %>
       </p>
     </div>
-    <div class="mgs-returnmsg">
-      <span class="badge badge-primary-medium">&nbsp;<%= @returnmessage %>&nbsp;</span>
-
-    </div>
-    <p>
-      <div class="mgs-note mgs-note-top">
-        L'étape suivante a été enregistrée
-      </div>
-
-      <div class="mgs-info-big">
-        <%= @steptxt %>
-      </div>
-
-      <div class="mgs-note mgs-note-top">
-        Localisation
-      </div>
-
-      <div class="mgs-info">
-        <% if @stepgeol == 'N' %>
-          Localisation indisponible ou refusée.
-        <% else %>
-          <%= @stepgeol %>
-        <% end %>
-      </div>
-
-
-    </p>
+    <% if @incidentDeclared == 'N' %>
+        <%= render 'barcode/resultsavestepnoincident' %>
+    <% else %>
+        <%= render 'barcode/resultsavestepwithincident' %>
+    <% end %>
   </div>
   <div class="col-lg-3">
   </div>

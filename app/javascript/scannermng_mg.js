@@ -7,6 +7,25 @@ $(document).on('turbolinks:load', function() {
 
 function mainScanLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'savebc-gr'){
+
+    $("#btn-step-inc").click(function() {
+        $("#blc-step-ctrl").hide(400);
+        $("#blk-cmt").show(400);
+        $("#mg-save-step-btn").val('Enregistrer incident');
+        $("#btn-step-inc").hide();
+        $("#btn-step-inc-cnl").show(400);
+    });
+    //inverse
+    $("#btn-step-inc-cnl").click(function() {
+        $("#blc-step-ctrl").show(400);
+        $("#blk-cmt").hide(400);
+        $("#mg-save-step-btn").val('Enregistrer une étape');
+        $("#btn-step-inc-cnl").hide();
+        $("#btn-step-inc").show(400);
+        //We need to clean the step comment
+        $("#stpcmt").val('');
+    });
+
     $("#mg-save-step-btn").click(function() {
         getGeoL();
     });
@@ -15,7 +34,7 @@ function mainScanLoaderInCaseOfChange(){
     displayNext();
   }
   else if($('#mg-graph-identifier').text() == 'getnext-gr'){
-      console.log('in getnext-gr');
+      //console.log('in getnext-gr');
       $("#mg-check-step-btn").click(function() {
           getGeoL();
       });
@@ -131,6 +150,8 @@ function displayNext(){
       $('#btn-cnl-nstp').removeClass('btn-sm');
       $('#btn-cnl-nstp').addClass('btn-lg');
       $('#btn-cnl-nstp').html("Retourner à l'accueil");
+      $('#blok-inc-btn').hide();
+
     }
   }
   else{

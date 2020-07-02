@@ -14,7 +14,7 @@ class BarcodeController < ApplicationController
     @readBC = params[:checkcb]
 
 
-    if params[:checkcbid] == '' then
+    if (params[:checkcbid] == '') then
       #puts "<<<<<<<<< checkcbid is empty string"
       # checkcbid is empty when we have an external code because we cannot solve the MGS id
       sql_query = "SELECT * FROM CLI_ACT_TAG(0, CAST (0 AS SMALLINT), " + @current_user.id.to_s + ", " + @current_user.partner.to_s + ", " + get_safe_pg_wq(params[:checkcb]) + ", '" + params[:stepgeol] + "');"
@@ -42,24 +42,34 @@ class BarcodeController < ApplicationController
 
   def savestep
 
-    sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] +" AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
-    #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
-
-    @refwkf = params[:steprwfid]
+    @incidentDeclared = 'N'
     @stepcb = params[:stepcb]
-    @stepcbid = params[:stepcbid]
-    @stepmwfid = params[:stepmwfid]
-    @stepstep = params[:stepstep]
-    @stepgeol = params[:stepgeol]
 
+    if (params[:stepcomment].nil?) || (params[:stepcomment] == '') then
 
-    @steptxt = params[:steptxt]
+          # We are not in incident case
+          sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] +" AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
+          #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+
+          @refwkf = params[:steprwfid]
+          @stepcbid = params[:stepcbid]
+          @stepmwfid = params[:stepmwfid]
+          @stepstep = params[:stepstep]
+          @stepgeol = params[:stepgeol]
+          @steptxt = params[:steptxt]
+
+    else
+        # We are in incident case
+        sql_query = "CALL CLI_COM_TAG ("+ params[:stepcbid] +", " + @current_user.id.to_s + ", " + get_safe_pg_wq(params[:stepcomment]) + ");"
+        @incidentDeclared = 'Y'
+        @comment = params[:stepcomment]
+    end
 
 
     begin
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       ActiveRecord::Base.connection.execute(sql_query)
-      @returnmessage = "L'étape a été correctement enregistrée"
+      @returnmessage = "L'opération a été correctement enregistrée"
       render 'resultsavestep'
     end
     rescue Exception => exc

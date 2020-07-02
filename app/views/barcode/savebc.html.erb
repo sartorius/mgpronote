@@ -1,6 +1,8 @@
 <% provide(:title, "Marquer") %>
 <div id="mg-graph-identifier">savebc-gr</div>
-
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
 <% if @resultSet.nil? %>
 	//Error
 <% else %>
@@ -21,7 +23,7 @@
           Code barre lu
         </div>
         <div class="mgs-read-bc">
-          <p id="readBC" class="big-BC">
+          <p id="readBC" class="monosp-ft-subtitle">
             <%= @readBC %>
           </p>
         </div>
@@ -43,7 +45,7 @@
 				</div>
 
         <form action="/save_step" method="post">
-          <div class="form-group">
+          <div class="form-group" id="blc-step-ctrl">
             <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
             <select name="stepstep" class="custom-select custom-select-lg mb-3" id="stepCtrl">
               <option value="X">Error XYZ1</option>
@@ -51,7 +53,8 @@
               <option value="Z">Error XYZ3</option>
             </select>
           </div>
-          <div class="form-group">
+
+          <div class="form-group" id="blk-cmt">
             <textarea class="form-control" name="stepcomment" placeholder="Commentaire" id="stpcmt" rows="3" style="resize: none;"></textarea>
           </div>
 
@@ -61,6 +64,21 @@
 					<div class="pos-center blc-cancel">
 						<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="glyphicon glyphicon-remove-sign"></i></a>
 					</div>
+
+
+					<div id="blok-inc-btn">
+						<hr>
+						<div class="center btn-cnc-step">
+							<a class="btn btn-default-light btn-md" id="btn-step-inc">
+									Déclarer un incident&nbsp;<i class="glyphicon glyphicon-exclamation-sign"></i>
+							</a>
+						</div>
+						<div class="center">
+							<a class="btn btn-default-light btn-md" id="btn-step-inc-cnl">
+									Annuler la déclaration d'incident&nbsp;<i class="glyphicon glyphicon-remove"></i>
+							</a>
+					</div>
+
           <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="stepcbid" placeholder="code barre id" style="resize: none;"></textarea>
           <textarea class="form-control step-hid" rows="1" id="read-mwfk" name="stepmwfid" placeholder="code barre id" style="resize: none;"></textarea>
           <textarea class="form-control step-hid" rows="1" id="read-rwfk" name="steprwfid" placeholder="code barre id" style="resize: none;"></textarea>
@@ -73,6 +91,7 @@
 
 
         </form>
+
 
     </div>
     <div class="col-lg-3">
