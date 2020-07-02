@@ -19,7 +19,10 @@ function mainPartnLoaderInCaseOfChange(){
     display12Cb();
   }
   else if($('#mg-graph-identifier').text() == 'partonebc-gr'){
-      $('#bc-seeone').html(mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()));
+      let getBarcodeMGS = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
+      $('#bc-seeone').html(getBarcodeMGS);
+      // Display the barcode to print
+      JsBarcode("#mbc-bc-disp", getBarcodeMGS);
   }
   else{
     //do nothing
