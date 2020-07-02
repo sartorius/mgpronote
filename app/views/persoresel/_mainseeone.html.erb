@@ -22,7 +22,21 @@
     <div class="field-md">
       <%= @resultSet[0]['part_name'].to_s %>
     </div>
-    <label>Créé par</label><br>
+    <div class="crt-block">Livraison chez le partenaire</div>
+    <div class="t-of-use mgs-med-note">
+      Si vous avez décidé de faire livrer votre colis chez notre partenaire, vous devez le faire aux informations suivantes.
+    </div>
+    <label>À quelle adresse faire livrer votre colis ?</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['delivery_addr'].to_s %>
+    </div>
+    <div class="t-of-use mgs-med-note-imp">
+      <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Astuce importante</strong>&nbsp;lorsque vous commandez, dans le champs adresse, indiquez la référence <strong><i id="bc-ref-del" class="font-mono"></i></strong>.
+      Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.
+    </div>
+    <hr>
+
+    <label>Code barre créé par</label><br>
     <div class="field-md">
       <%= @resultSet[0]['cname'].to_s %>&nbsp;<%= @resultSet[0]['cfirstname'].to_s %>
     </div>
@@ -67,6 +81,10 @@
     <div class="t-of-use mgs-med-note">
       Information concernant la réception.
     </div>
+    <label>Destination finale où récupérer vore colis</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['pickup_addr'].to_s %>
+    </div>
     <% if (@resultSet[0]['tname'].nil?) || (@resultSet[0]['tname'] == @resultSet[0]['oname']) %>
       <label>Receptionneur.euse</label><br>
       <div class="field-md">
@@ -97,7 +115,7 @@
     </div>
 
     <% if !(@resultSet[0]['p_name_firstname'].nil?) %>
-      <div class="crt-block">Enlèvement&nbsp;<i class="glyphicon glyphicon-open"></i></div>
+      <div class="crt-block">Enlèvement&nbsp;<i class="c-b glyphicon glyphicon-open"></i></div>
       <div class="t-of-use mgs-med-note">
         Information concernant l'enlèvement.
       </div>

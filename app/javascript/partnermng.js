@@ -21,6 +21,7 @@ function mainPartnLoaderInCaseOfChange(){
   else if($('#mg-graph-identifier').text() == 'partonebc-gr'){
       let getBarcodeMGS = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
       $('#bc-seeone').html(getBarcodeMGS);
+      $('#bc-ref-del').html(getBarcodeMGS);
       // Display the barcode to print
       JsBarcode("#mbc-0", getBarcodeMGS);
       $("#btn-print-bc").click(function() {
@@ -189,7 +190,7 @@ function runjsPartnerGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="glyphicon glyphicon-save"></i>' : '<i class="glyphicon glyphicon-open"></i>';
+                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-save"></i>' : '<i class="c-b glyphicon glyphicon-open"></i>';
               }
             },
             //Default width is auto
