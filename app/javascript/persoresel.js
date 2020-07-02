@@ -10,8 +10,11 @@ function mainClientLoaderInCaseOfChange(){
   }
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
       let readBCSeeOne = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
+
       $('#bc-seeone').html(readBCSeeOne);
       $('#bc-ref-del').html(readBCSeeOne);
+      $('#del-add-ex').html(readBCSeeOne);
+
 
 
       // In case of pickup

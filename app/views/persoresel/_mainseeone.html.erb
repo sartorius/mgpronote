@@ -32,9 +32,13 @@
     </div>
     <div class="t-of-use mgs-med-note-imp">
       <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Astuce importante</strong>&nbsp;lorsque vous commandez, dans le champs adresse, indiquez la référence <strong><i id="bc-ref-del" class="font-mono"></i></strong>.
-      Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.
+      Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
+      <hr>
+      Exemple:<br>
+      Andry RAKOTO - <strong><i id="del-add-ex" class="font-mono"></i></strong> <br>
+      <%= @resultSet[0]['delivery_addr'].to_s %>
     </div>
-    <hr>
+    <div class="crt-block">Création</div>
 
     <label>Code barre créé par</label><br>
     <div class="field-md">
@@ -81,7 +85,7 @@
     <div class="t-of-use mgs-med-note">
       Information concernant la réception.
     </div>
-    <label>Destination finale où récupérer vore colis</label><br>
+    <label>Destination finale où récupérer le colis</label><br>
     <div class="field-md">
       <%= @resultSet[0]['pickup_addr'].to_s %>
     </div>

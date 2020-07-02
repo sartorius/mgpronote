@@ -22,6 +22,8 @@ function mainPartnLoaderInCaseOfChange(){
       let getBarcodeMGS = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
       $('#bc-seeone').html(getBarcodeMGS);
       $('#bc-ref-del').html(getBarcodeMGS);
+      $('#del-add-ex').html(getBarcodeMGS);
+
       // Display the barcode to print
       JsBarcode("#mbc-0", getBarcodeMGS);
       $("#btn-print-bc").click(function() {
