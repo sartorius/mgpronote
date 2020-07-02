@@ -47,8 +47,10 @@ class BarcodeController < ApplicationController
 
     if (params[:stepcomment].nil?) || (params[:stepcomment] == '') then
 
+
           # We are not in incident case
-          sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] +" AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
+          sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " +
+                          @current_user.id.to_s + ", " + get_safe_pg_number(params[:stepweight]) + ");"
           #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
 
           @refwkf = params[:steprwfid]
@@ -57,6 +59,7 @@ class BarcodeController < ApplicationController
           @stepstep = params[:stepstep]
           @stepgeol = params[:stepgeol]
           @steptxt = params[:steptxt]
+          @stepweight = params[:stepweight]
 
     else
         # We are in incident case

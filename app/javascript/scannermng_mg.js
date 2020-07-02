@@ -80,6 +80,52 @@ function addOptionListener(){
   });
 }
 
+function validateNumberOnly(weight){
+  const re = /^[0-9]*$/;
+  return re.test(weight);
+}
+
+function verityWeightFormRef(){
+  let allFieldOK = true;
+
+  // Check email
+  if (!(validateNumberOnly($('#stpweight').val()))){
+    allFieldOK = false;
+  }
+  if(parseInt($('#stpweight').val()) < 250){
+    allFieldOK = false;
+  }
+  // limite 10t
+  if(parseInt($('#stpweight').val()) > 10000000){
+    allFieldOK = false;
+  }
+  if($('#stpweight').val().length == 0){
+    allFieldOK = false;
+  }
+
+  if(allFieldOK){
+      $("#mg-save-step-btn").prop('disabled', false);
+      $("#mg-save-step-btn").show(500);
+  }
+  else{
+      $("#mg-save-step-btn").prop('disabled', true);
+      $("#mg-save-step-btn").hide(500);
+  }
+}
+
+function weightManager(){
+  //Weight Manager
+  //We are trying to check weight
+  // 6 is the weight step id
+  if(dataTagToJsonArray[0].end_step_id == 6){
+    $('#blk-weight').show();
+    $('#mg-save-step-btn').hide();
+    $( "#stpweight" ).keyup(function() {
+      verityWeightFormRef();
+    });
+  }
+}
+
 function displayNext(){
 
   // Initialize
@@ -101,6 +147,9 @@ function displayNext(){
     $("#read-cb-id").val(dataTagToJsonArray[0].bc_id);
     $('#read-step-txt').val(dataTagToJsonArray[0].end_step);
     $('#curr-status').html(dataTagToJsonArray[0].curr_step);
+
+    //Handle weight action here !
+    weightManager();
 
     if((dataTagToJsonArray[0].curr_inc != null) && (dataTagToJsonArray[0].curr_inc != '')){
       $('#descr-incident').html(dataTagToJsonArray[0].curr_inc);

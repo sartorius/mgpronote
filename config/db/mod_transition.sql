@@ -249,7 +249,8 @@ $func$  LANGUAGE plpgsql;
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
 DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT);
-CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);
+CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -257,12 +258,24 @@ BEGIN
     -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
     INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
 
-    -- We update the barcode with last status
-    UPDATE barcode
-      SET status = $3,
-      under_incident = FALSE,
-      update_date = CURRENT_TIMESTAMP
-      WHERE id = $1;
+    -- Because Weight is specific action
+    IF ($3 = 6) AND NOT($6 IS NULL) THEN
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET status = $3,
+        weight_in_gr = $6,
+        under_incident = FALSE,
+        update_date = CURRENT_TIMESTAMP
+        WHERE id = $1;
+
+    ELSE
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET status = $3,
+        under_incident = FALSE,
+        update_date = CURRENT_TIMESTAMP
+        WHERE id = $1;
+    END IF;
 
     COMMIT;
 END;

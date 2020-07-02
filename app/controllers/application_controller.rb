@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
   def get_safe_pg_wq(str)
     if str.nil? then
       return "NULL"
+    elsif str == ''
+      return "NULL"
     else
       return " TRIM('" + str.gsub(/"|'|!|>|;/, '') + "')"
     end
@@ -27,8 +29,21 @@ class ApplicationController < ActionController::Base
   def get_safe_pg_wq_ns(str)
     if str.nil? then
       return "NULL"
+    elsif str == ''
+      return "NULL"
     else
       return " TRIM('" + str.gsub(/"|'|!|>|;|\s/, '') + "')"
+    end
+  end
+
+  #Special no whitespace
+  def get_safe_pg_number(str)
+    if str.nil? then
+      return "NULL"
+    elsif str == ''
+      return "NULL"
+    else
+      return str.gsub(/"|'|!|>|;|\s/, '')
     end
   end
 

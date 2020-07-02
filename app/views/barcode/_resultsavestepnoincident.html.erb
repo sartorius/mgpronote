@@ -9,6 +9,14 @@
 
   <div class="mgs-info-big">
     <%= @steptxt %>
+    <% unless (@stepweight.nil?) || (@stepweight == '') || (@stepweight.to_i == 0) %>
+    <div class="mgs-note mgs-note-top">
+      Poids
+    </div>
+    <div class="mgs-info">
+      <%= @stepweight.to_i %> grammes.
+    </div>
+    <% end %>
   </div>
 
   <div class="mgs-note mgs-note-top">
