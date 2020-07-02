@@ -13,13 +13,24 @@
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+		var dataTagClientToJson = '<%= @resultSetClient.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagClientToJson = dataTagClientToJson.replace(/&quot;/g,"\"");
+    var dataTagClientToJsonArray = JSON.parse(dataTagClientToJson);
+
   </script>
 <% end %>
 
 <div class="row">
     <div class="col-lg-6">
-      <canvas id="statStatCv"></canvas>
+			<div class="center">Volume</div>
+			<hr>
+      <canvas id="statClientCv"></canvas>
     </div>
     <div class="col-lg-6">
+			<div class="center">Répartition des status</div>
+			<hr>
+			<canvas id="statStatCv"></canvas>
     </div>
 </div>

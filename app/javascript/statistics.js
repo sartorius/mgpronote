@@ -54,11 +54,11 @@ function runStatusStat(){
       '#C87900'
   ];
 
-  var listOfLabel = new Array();
-  var listOfData = new Array();
+  let listOfLabelStat = new Array();
+  let listOfDataStat = new Array();
   for(i=0; i<dataTagToJsonArray.length; i++){
-    listOfLabel.push(dataTagToJsonArray[i].step);
-    listOfData.push(dataTagToJsonArray[i].cnt_stat);
+    listOfLabelStat.push(dataTagToJsonArray[i].step);
+    listOfDataStat.push(dataTagToJsonArray[i].cnt_stat);
   }
 
 
@@ -66,10 +66,10 @@ function runStatusStat(){
   var myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-          labels: listOfLabel,
+          labels: listOfLabelStat,
           datasets: [{
               label: 'Status des codes barres actuellement',
-              data: listOfData,
+              data: listOfDataStat,
               backgroundColor: backgroundColorRef,
               borderColor: borderColorRef,
               borderWidth: 1
@@ -83,6 +83,32 @@ function runStatusStat(){
                   }
               }]
           }
+      }
+  });
+
+
+  let listOfLabelClient = new Array();
+  let listOfDataClient = new Array();
+
+  for(i=0; i<dataTagClientToJsonArray.length; i++){
+    listOfLabelClient.push(dataTagClientToJsonArray[i].name + ' ' + dataTagClientToJsonArray[i].firstname);
+    listOfDataClient.push(dataTagClientToJsonArray[i].totalbc);
+  }
+
+  var ctxClient = document.getElementById('statClientCv');
+  new Chart(ctxClient, {
+      type: 'doughnut',
+      data: {
+        labels: listOfLabelClient,
+        datasets: [
+          {
+            label: "Client",
+            backgroundColor: backgroundColorRef,
+            data: listOfDataClient
+          }
+        ]
+      },
+      options: {
       }
   });
 };

@@ -4,17 +4,31 @@ class PartnerController < ApplicationController
 
 
   def mainstatistics
-    sql_query = "SELECT rs.step, COUNT(1) AS cnt_stat " +
+
+    # Get all status
+    sql_query = "SELECT rs.step, rs.id, COUNT(1) AS cnt_stat " +
                         " FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +
                         # You can use this to make sure barcode is link to the partner
                         " JOIN users u ON u.partner = bc.partner_id " +
                         " WHERE u.id = " + @current_user.id.to_s +
                         # End partner check
-        	              " GROUP BY rs.step;"
+        	              " GROUP BY rs.step, rs.id ORDER BY rs.id ASC;"
+
+    # Get all client stats
+    sql_query_client = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, cpx.has_poc AS poc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, bc.owner_id, count(1) AS totalbc "
+    sql_query_client += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
+    sql_query_client += " JOIN barcode bc on bc.owner_id = u.id "
+    sql_query_client += " AND cpx.partner_id = " + @current_user.partner.to_s + " "
+    sql_query_client += " GROUP BY u.id, u.name, u.firstname, u.email, cpx.has_poc, bc.owner_id, cpx.create_date "
+    sql_query_client += " ORDER BY cpx.create_date DESC LIMIT 10;"
+
     begin
 
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
+
+      @resultSetClient = ActiveRecord::Base.connection.exec_query(sql_query_client)
+      @emptyResultSetClients = @resultSetClient.empty?
 
       render 'mainstatistics'
     end
