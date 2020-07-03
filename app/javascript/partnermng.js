@@ -178,7 +178,7 @@ function runjsPartnerGrid(){
               title: "Référence",
               type: "text",
               align: "right",
-              width: 25,
+              width: 40,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
                 return '<i class="monosp-ft">' + value + '</i>';
@@ -192,7 +192,7 @@ function runjsPartnerGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-save"></i>' : '<i class="c-b glyphicon glyphicon-open"></i>';
+                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-home"></i>' : '<i class="c-b glyphicon glyphicon-arrow-up"></i>';
               }
             },
             //Default width is auto
@@ -201,17 +201,25 @@ function runjsPartnerGrid(){
               title: "Ext Ref",
               type: "text",
               align: "right",
-              width: 50,
+              width: 35,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
                 return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value) + '</i>';
               }
             },
-            { name: "oname", title: "Nom", type: "text", width: 35, headercss: "h-jsG-l" },
+            { name: "oname", title: "Nom", type: "text", width: 70, headercss: "h-jsG-l" },
             { name: "ofirstname", title: "Prénom", type: "text", width: 25, headercss: "h-jsG-l" },
-            { name: "ophone", title: '<i class="glyphicon glyphicon-phone-alt"></i>', type: "text", width: 25, headercss: "h-jsG-c" },
-            { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
-            { name: "diff_days", title: '<i class="glyphicon glyphicon-time"></i>', type: "number", width: 3, headercss: "h-jsG-c" }
+            { name: "ophone", title: '<i class="glyphicon glyphicon-phone-alt"></i>', type: "text", width: 35, headercss: "h-jsG-c" },
+            { name: "create_date", title: "Créé le", type: "text", width: 30, headercss: "h-jsG-l" },
+            { name: "diff_days",
+              title: '<i class="glyphicon glyphicon-time"></i>',
+              type: "number",
+              width: 3,
+              headercss: "h-jsG-c",
+              itemTemplate: function(value, item) {
+                return '<p class="center">' + value + '</p>';
+              }
+            }
         ]
     });
   }

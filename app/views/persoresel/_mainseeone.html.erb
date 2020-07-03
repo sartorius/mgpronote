@@ -68,7 +68,7 @@
         <%= number_with_delimiter(@resultSet[0]['weight_in_gr'].to_i, :delimiter => ' ') %>
       <% else %>
     <div class="field-md">
-        Non renseigné
+        Non renseigné pour l'instant
       <% end %>
     </div>
     <div class="crt-block">Propriétaire</div>
@@ -132,7 +132,7 @@
     </div>
 
     <% if !(@resultSet[0]['p_name_firstname'].nil?) %>
-      <div class="crt-block">Enlèvement&nbsp;<i class="c-b glyphicon glyphicon-open"></i></div>
+      <div class="crt-block">Enlèvement&nbsp;<i class="c-b glyphicon glyphicon-arrow-up"></i></div>
       <div class="t-of-use mgs-med-note">
         Information concernant l'enlèvement.
       </div>

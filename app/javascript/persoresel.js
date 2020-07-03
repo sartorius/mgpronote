@@ -88,7 +88,7 @@ function runjsPersoreselGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-save"></i>' : '<i class="c-b glyphicon glyphicon-open"></i>';
+                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-home"></i>' : '<i class="c-b glyphicon glyphicon-arrow-up"></i>';
               }
             },
             { name: "part_phone", title: "Téléphone", type: "text", width: 20, headercss: "h-jsG-l" },

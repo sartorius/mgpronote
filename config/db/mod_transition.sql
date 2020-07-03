@@ -236,7 +236,6 @@ $func$  LANGUAGE plpgsql;
 -- CALL stored_procedure_name(parameter_list);
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
-DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT);
 DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);
 CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
 LANGUAGE plpgsql

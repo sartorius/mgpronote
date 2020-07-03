@@ -32,7 +32,7 @@ class BarcodeController < ApplicationController
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
 
-      puts '>>>>>>>>>>> ' + @resultSet.to_s
+      #puts '>>>>>>>>>>> ' + @resultSet.to_s
 
       if (@resultSet.nil?) || (@resultSet.empty?) then
 
