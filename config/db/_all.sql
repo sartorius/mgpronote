@@ -127,7 +127,7 @@ CREATE TABLE barcode(
   creator_id            BIGINT         NOT NULL,
   -- the owner can be null until it is addressed
   -- used to be REFERENCES users(id);
-  owner_id              BIGINT,
+  owner_id              BIGINT         NOT NULL,
   ext_ref               VARCHAR(35)    UNIQUE,
   -- If someone else need to come for pick up
   to_name               VARCHAR(50),
@@ -232,25 +232,13 @@ BEGIN
 
     END IF;
 
-    IF var_bc_id IS NULL THEN
-      -- Bar code is new // or do not exist
-      -- This need to be changed later when we have the barcode format
-      -- The status will be zero by default
-      INSERT INTO barcode (creator_id, partner_id, ref_tag, secure, secret_code)
-        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
-    END IF;
-
     -- Now check the  last step
     var_found_last_step := NULL;
     SELECT MAX(id) INTO var_found_last_step
       FROM wk_tag wt
       WHERE wt.bc_id = var_bc_id;
 
-    IF var_found_last_step IS NULL THEN
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
-        VALUES (var_bc_id, 1, 0, par_geo_l, user_id) RETURNING id INTO  var_found_last_step;
-    END IF;
-
+    -- If the BC cannot be found, it is not created.
 
    RETURN QUERY
    SELECT
@@ -283,7 +271,8 @@ $func$  LANGUAGE plpgsql;
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
 DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT);
-CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);
+CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -291,12 +280,24 @@ BEGIN
     -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
     INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
 
-    -- We update the barcode with last status
-    UPDATE barcode
-      SET status = $3,
-      under_incident = FALSE,
-      update_date = CURRENT_TIMESTAMP
-      WHERE id = $1;
+    -- Because Weight is specific action
+    IF ($3 = 6) AND NOT($6 IS NULL) THEN
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET status = $3,
+        weight_in_gr = $6,
+        under_incident = FALSE,
+        update_date = CURRENT_TIMESTAMP
+        WHERE id = $1;
+
+    ELSE
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET status = $3,
+        under_incident = FALSE,
+        update_date = CURRENT_TIMESTAMP
+        WHERE id = $1;
+    END IF;
 
     COMMIT;
 END;

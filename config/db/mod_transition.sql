@@ -93,7 +93,7 @@ CREATE TABLE barcode(
   creator_id            BIGINT         NOT NULL,
   -- the owner can be null until it is addressed
   -- used to be REFERENCES users(id);
-  owner_id              BIGINT,
+  owner_id              BIGINT         NOT NULL,
   ext_ref               VARCHAR(35)    UNIQUE,
   -- If someone else need to come for pick up
   to_name               VARCHAR(50),
@@ -198,25 +198,13 @@ BEGIN
 
     END IF;
 
-    IF var_bc_id IS NULL THEN
-      -- Bar code is new // or do not exist
-      -- This need to be changed later when we have the barcode format
-      -- The status will be zero by default
-      INSERT INTO barcode (creator_id, partner_id, ref_tag, secure, secret_code)
-        VALUES (user_id, part_id, par_read_barcode, FLOOR(random() * 999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT) RETURNING id INTO  var_bc_id;
-    END IF;
-
     -- Now check the  last step
     var_found_last_step := NULL;
     SELECT MAX(id) INTO var_found_last_step
       FROM wk_tag wt
       WHERE wt.bc_id = var_bc_id;
 
-    IF var_found_last_step IS NULL THEN
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
-        VALUES (var_bc_id, 1, 0, par_geo_l, user_id) RETURNING id INTO  var_found_last_step;
-    END IF;
-
+    -- If the BC cannot be found, it is not created.
 
    RETURN QUERY
    SELECT

@@ -30,13 +30,24 @@ class BarcodeController < ApplicationController
 
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
-      @resultSet = ActiveRecord::Base.connection.execute(sql_query)
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
 
-      render 'savebc'
+      puts '>>>>>>>>>>> ' + @resultSet.to_s
+
+      if (@resultSet.nil?) || (@resultSet.empty?) then
+
+        #We did not find the BC
+         @cbToCheck = params[:checkcb];
+         render 'resultcheckstep'
+      else
+        render 'savebc'
+      end
+
+
     end
     rescue Exception => exc
        flash[:info] = "Une erreur est survenue #{exec.message}"
-    render 'savebc'
+      render 'savebc'
   end
 
 
