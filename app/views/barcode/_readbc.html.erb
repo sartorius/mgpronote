@@ -6,7 +6,7 @@
     </div>
     <div class="col-lg-6">
         <p class="mgs-note">
-        Scannez les codes barres liés à MG Suivi pour marquer une étape du processus ou obtenir plus d'informations. Mettez vous bien en face du code barre, le téléphone parallèle à la surface à scanner.
+        Scannez les codes barres liés à MG Suivi pour marquer une étape du processus ou obtenir plus d'informations. Mettez vous bien en face du code barre, le téléphone parallèle à la surface à scanner. La lecture fonctionne mieux sur les surfaces planes.
         </p>
     </div>
     <div class="col-lg-3">
@@ -49,16 +49,34 @@
               </button>
             </div>
 
+            <% if @grpIndicator.nil? %>
+                <%-# We allow manual entry -%>
+                <div class="mgs-bg-scan col-sm-12 mgs-cam">
+                  <button id="startManualButton" type="button" class="btn btn-sm btn-default">
+                    Entrer le numéro de code barre à la main &nbsp; <i class="glyphicon glyphicon-copy"></i>
+                  </button>
+                </div>
+            <% else %>
+                <hr>
+                  <div id="grp-blc-cam" class="col-sm-12">
+                    <div class="t-of-use mgs-med-note-imp">
+                      <i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Tous les codes barres groupés doivent être reconnus et à la même étape pour pouvoir évoluer ensemble. Le grouping est limité à 12.
+                    </div>
+                    <div id="grp-read-fdb">
+                      <hr>
+                      <label>Dernier lu:</label>&nbsp;<i id="grp-last-read" class="monosp-ft-nc"></i>&nbsp;<i id="grp-last-already" class="mgs-red">(déjà lu)</i> <label>Nombre de lecture:</label> <i id="grp-nb-lec">0</i>
+                    </div>
+                    <hr>
+                    <label>Tappez pour supprimer de la liste</label>
+                    <div id="grp-of-bc">
+                    </div>
+                  </div>
+            <% end %>
 
-            <div class="mgs-bg-scan col-sm-12 mgs-cam">
-              <button id="startManualButton" type="button" class="btn btn-sm btn-default">
-                Entrer le numéro de code barre à la main &nbsp; <i class="glyphicon glyphicon-copy"></i>
-              </button>
+            <div id="cam-code-original">
+              <label>Code lecture:</label>
+              <pre><code id="result"></code></pre>
             </div>
-
-
-            <label>Code lecture:</label>
-            <pre><code id="result"></code></pre>
         </div>
 
         <div class="col-lg-3">

@@ -172,7 +172,7 @@ p {
 }
 
 .c-w{
-  
+
 }
 
 .c-b{
@@ -217,6 +217,11 @@ p {
   font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
   font-size: 1.1em;
   color: #3E009E;
+}
+
+.monosp-ft-nc{
+  font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
+  font-size: 0.9em;
 }
 
 .font-mono{
@@ -572,7 +577,23 @@ body.loading .modal {
   color: $main-color;
 }
 
+/* Grouping Cam */
 
+#cam-code-original{
+  display: none;
+}
+
+#grp-blc-cam{
+  margin-top: 20px;
+}
+
+#grp-read-fdb, #grp-last-already{
+  display: none;
+}
+
+.mgs-red{
+  color: #B20000;
+}
 
 /* Manual Cam */
 .manual-el{

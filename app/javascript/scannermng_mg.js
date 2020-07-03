@@ -39,11 +39,20 @@ function mainScanLoaderInCaseOfChange(){
           getGeoL();
       });
       getGeoL();
-      loadCameraRead();
+      loadCameraRead(false);
+  }
+  else if($('#mg-graph-identifier').text() == 'grpgetnext-gr'){
+      //console.log('in getnext-gr');
+
+      $("#mg-check-step-btn").click(function() {
+          getGeoL();
+      });
+      getGeoL();
+      loadCameraRead(true);
   }
   else if($('#mg-graph-identifier').text() == 'checkbc-gr'){
     try {
-      loadCameraRead();
+      loadCameraRead(false);
     }
     catch(err) {
       console.log(err.message);
@@ -277,8 +286,39 @@ function showPosition(position) {
 }
 
 // Camera utils
-function loadCameraRead(){
+// isGrp can be true or false
+function loadCameraRead(isGrp){
   let selectedDeviceId;
+  let listOfBCToHandle = new Array();
+  const maxLecture = 13;
+
+
+
+
+  function removeBarCodeFromList(val){
+    //console.log('in removeBarCodeFromList');
+    for(i=0; i<listOfBCToHandle.length; i++){
+      if(listOfBCToHandle[i] == val){
+        listOfBCToHandle.splice(i);
+        break;
+      }
+    }
+    displayGrpListBtn();
+  }
+
+  function displayGrpListBtn(){
+    let displayListOfAlrdBC = '';
+    let startButton = '';
+    let btnReadGrpBC = '';
+    for(i=0; i<listOfBCToHandle.length; i++){
+      // Start as element zero
+      startButton = '<button type="submit" id="grp-rBC-' + i + '" class="btn btn-default-light btn-lg btn-block grp-all-btn" value="' + listOfBCToHandle[i] + '"';
+      btnReadGrpBC = '><i class="monosp-ft-nc">'+listOfBCToHandle[i]+ '</i></button>'
+      displayListOfAlrdBC = displayListOfAlrdBC + '<br>'+ startButton + btnReadGrpBC;
+    }
+    $('#grp-of-bc').html(displayListOfAlrdBC);
+    $('#grp-nb-lec').html(listOfBCToHandle.length);
+  }
 
   // 1D barcode reader
   //const codeReader = new ZXing.BrowserBarcodeReader();
@@ -405,19 +445,57 @@ function loadCameraRead(){
       // Function description here
       function startScan(){
           codeReader.decodeOnceFromVideoDevice(selectedDeviceId, 'video').then((result) => {
-              console.log(result);
+              //console.log(result);
               document.getElementById('result').textContent = result.text;
 
+              if (!isGrp){
+                  //If we are not GRP we want to go to the check
+                  $("#read-cb").val(result.text);
+                  if(validateMGSCode(result.text)){
+                    $("#read-cb-id").val(decodeMGSCodePartId(result.text));
+                    $("#read-cb-sec").val(decodeMGSCodePartSecure(result.text));
+                  }
 
-              $("#read-cb").val(result.text);
-              if(validateMGSCode(result.text)){
-                $("#read-cb-id").val(decodeMGSCodePartId(result.text));
-                $("#read-cb-sec").val(decodeMGSCodePartSecure(result.text));
+                  $("#mg-checkbc-form").submit();
+
+                  endScan();
+              }
+              else{
+                    //We are GRP so we want to keep scan !
+                    // GRP Marker
+                    endScan();
+
+                    if(listOfBCToHandle.length < maxLecture){
+                        //console.log('Already read ?' + alreadyRead(result.text, listOfBCToHandle));
+                        if (alreadyRead(result.text, listOfBCToHandle)) {
+                          // It exists already
+                          // We do nothing except we feedback
+                          $('#grp-last-read').html(result.text);
+                          $('#grp-last-already').show();
+                        }
+                        else{
+                          // It DOES NOT exist
+                          // Do feedback
+                          $('#grp-read-fdb').show();
+                          $('#grp-last-read').html(result.text);
+                          $('#grp-last-already').hide();
+
+                          // Update list
+                          listOfBCToHandle.push(result.text);
+                          displayGrpListBtn();
+
+                          $( ".grp-all-btn" ).click(function() {
+                            removeBarCodeFromList($(this).val());
+                          });
+                        }
+                    }
+                    else{
+                      //You already reach the max scan
+                    }
+                  startScan();
               }
 
-              $("#mg-checkbc-form").submit();
 
-              endScan();
 
           }).catch((err) => {
               console.error(err);
@@ -430,5 +508,16 @@ function loadCameraRead(){
         document.getElementById('result').textContent = '';
         codeReader.reset();
         console.log('Reset.');
+      }
+
+      function alreadyRead(val, list){
+        let ret = false;
+        for(i=0; i<list.length; i++){
+          if(list[i] == val){
+            return true;
+            break;
+          }
+        }
+        return ret;
       }
 }

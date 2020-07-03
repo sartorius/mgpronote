@@ -22,6 +22,8 @@ Rails.application.routes.draw do
   #Route for Barcode Controller POST checkstep/savebc
 
   get     '/getnext',    to: 'barcode#getnext'
+  get     '/grpgetnext',    to: 'barcode#grpgetnext'
+
   post	  '/save_bc'   => 'barcode#savebc'
   get     '/save_bc' => redirect("/")
 

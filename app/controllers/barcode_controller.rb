@@ -7,6 +7,12 @@ class BarcodeController < ApplicationController
       render 'getnext'
   end
 
+  # Get next grouping action
+  def grpgetnext
+      @grpIndicator = 'Y'
+      render 'grpgetnext'
+  end
+
   # checkstep/savebc
   # Save Next step BC
   # Operation after read BC -- Need to review CLI_ACT_TAG must it create BC?
