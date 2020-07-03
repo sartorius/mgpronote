@@ -290,16 +290,17 @@ function showPosition(position) {
 function loadCameraRead(isGrp){
   let selectedDeviceId;
   let listOfBCToHandle = new Array();
-  const maxLecture = 13;
+  const maxLecture = 12;
 
 
 
 
   function removeBarCodeFromList(val){
-    //console.log('in removeBarCodeFromList');
+    console.log('in removeBarCodeFromList: ' + listOfBCToHandle.length);
+    console.log('val : ' + val);
     for(i=0; i<listOfBCToHandle.length; i++){
       if(listOfBCToHandle[i] == val){
-        listOfBCToHandle.splice(i);
+        listOfBCToHandle.splice(i, 1);
         break;
       }
     }
@@ -323,6 +324,11 @@ function loadCameraRead(isGrp){
     else{
       $('#grp-nb-lec').html(listOfBCToHandle.length + '<strong><i class="mgs-red">&nbsp;(Maximum)</i></strong>');
     }
+
+    //We need to re-create all listener
+    $( ".grp-all-btn" ).click(function() {
+      removeBarCodeFromList($(this).val());
+    });
 
   }
 
@@ -488,11 +494,8 @@ function loadCameraRead(isGrp){
 
                           // Update list
                           listOfBCToHandle.push(result.text);
+                          // Add listener after recreation dom
                           displayGrpListBtn();
-
-                          $( ".grp-all-btn" ).click(function() {
-                            removeBarCodeFromList($(this).val());
-                          });
                         }
                     }
                     else{
