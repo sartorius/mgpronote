@@ -317,7 +317,13 @@ function loadCameraRead(isGrp){
       displayListOfAlrdBC = displayListOfAlrdBC + '<br>'+ startButton + btnReadGrpBC;
     }
     $('#grp-of-bc').html(displayListOfAlrdBC);
-    $('#grp-nb-lec').html(listOfBCToHandle.length);
+    if(listOfBCToHandle.length < maxLecture){
+      $('#grp-nb-lec').html(listOfBCToHandle.length);
+    }
+    else{
+      $('#grp-nb-lec').html(listOfBCToHandle.length + '<strong><i class="mgs-red">&nbsp;(Maximum)</i></strong>';
+    }
+
   }
 
   // 1D barcode reader
