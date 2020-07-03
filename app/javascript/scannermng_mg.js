@@ -321,7 +321,7 @@ function loadCameraRead(isGrp){
       $('#grp-nb-lec').html(listOfBCToHandle.length);
     }
     else{
-      $('#grp-nb-lec').html(listOfBCToHandle.length + '<strong><i class="mgs-red">&nbsp;(Maximum)</i></strong>';
+      $('#grp-nb-lec').html(listOfBCToHandle.length + '<strong><i class="mgs-red">&nbsp;(Maximum)</i></strong>');
     }
 
   }
