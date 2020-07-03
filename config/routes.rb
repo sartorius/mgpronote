@@ -27,6 +27,9 @@ Rails.application.routes.draw do
   post	  '/save_bc'   => 'barcode#savebc'
   get     '/save_bc' => redirect("/")
 
+  post    '/grpsave_bc' => 'barcode#grpsavebc'
+  get     '/grpsave_bc' => redirect("/")
+
   post	  '/save_step'   => 'barcode#savestep'
   get     '/save_step' => redirect("/")
 

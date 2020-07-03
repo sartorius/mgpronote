@@ -154,7 +154,6 @@ select
 
 
 -- SELECT * FROM CLI_ACT_TAG('39287392', 'N');
--- This action is creating the bar code if it does not exist
 -- This retrieve possible steps
 -- This action cannot be zero or one (personal client or reseller)
 DROP FUNCTION IF EXISTS CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT, user_id BIGINT, part_id INT, par_read_barcode VARCHAR(20), par_geo_l VARCHAR(250));
@@ -189,12 +188,14 @@ BEGIN
       SELECT id INTO var_bc_id
         FROM barcode bc
         WHERE bc.id = par_bc_id
+        AND bc.partner_id = part_id
         AND bc.secure = par_secure_id;
     ELSE
       -- We are in external case
       SELECT id INTO var_bc_id
         FROM barcode bc
-        WHERE bc.ext_ref = par_read_barcode;
+        WHERE bc.ext_ref = par_read_barcode
+        AND bc.partner_id = part_id;
 
     END IF;
 
@@ -206,6 +207,7 @@ BEGIN
 
     -- If the BC cannot be found, it is not created.
 
+    -- Note that we can retrieve last status
    RETURN QUERY
    SELECT
     wt.bc_id,
@@ -351,7 +353,8 @@ BEGIN
           p_phone = CASE WHEN $10 = '' THEN NULL ELSE $10 END,
           p_address_note = CASE WHEN $11 = '' THEN NULL ELSE $11 END,
           update_date = CURRENT_TIMESTAMP
-          WHERE id = $1;
+          WHERE id = $1
+          AND owner_id = $8;
     END IF;
     RETURN var_return_code;
 END;

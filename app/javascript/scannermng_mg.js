@@ -50,6 +50,23 @@ function mainScanLoaderInCaseOfChange(){
       getGeoL();
       loadCameraRead(true);
   }
+  else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
+    // We have an error after trying to group evoluate
+    let errFound = parseInt($('#max-err-grp').html());
+    let errNFound = parseInt($('#max-nf-err-grp').html());
+
+    for(i=0; i<errFound; i++){
+      $('#grp-bc-' + i.toString()).html(
+        mgsEncode($('#id-grp-res-' + i.toString()).html(), $('#sec-grp-res-' + i.toString()).html())
+      );
+    }
+    for(i=0; i<errNFound; i++){
+      $('#grp-nf-pure-bc-' + i.toString()).html(
+        mgsEncode($('#id-grp-nf-pure-res-' + i.toString()).html(), $('#sec-grp-nf-pure-res-' + i.toString()).html())
+      );
+    }
+    
+  }
   else if($('#mg-graph-identifier').text() == 'checkbc-gr'){
     try {
       loadCameraRead(false);
@@ -292,12 +309,40 @@ function loadCameraRead(isGrp){
   let listOfBCToHandle = new Array();
   const maxLecture = 12;
 
+  let readyToPExtMGS = new Array();
+  let readyToPPureMGS = new Array();
 
+
+  $("#mg-grp-step-btn").click(function() {
+      console.log("You have clicked on #mg-grp-step-btn");
+      $('#grp-blc-cam').hide();
+      for(i=0; i<listOfBCToHandle.length; i++){
+        //console.log('Val: ' + listOfBCToHandle[i]);
+        if(validateMGSCode(listOfBCToHandle[i])){
+          //console.log('Val is code: ' + listOfBCToHandle[i]);
+          let brokenMGBC = { id: decodeMGSCodePartId(listOfBCToHandle[i]), secure: decodeMGSCodePartSecure(listOfBCToHandle[i]) };
+          readyToPPureMGS.push(brokenMGBC);
+        }
+        else{
+          //console.log('Val is NOT code: ' + listOfBCToHandle[i]);
+          readyToPExtMGS.push(listOfBCToHandle[i]);
+        }
+      }
+      //console.log('readyToPPureMGS: ' + JSON.stringify(readyToPPureMGS));
+      // readyToPPureMGS: [{"id":1,"secure":3301},{"id":1,"secure":3301},{"id":3,"secure":2953},{"id":2,"secure":4352}]
+      //console.log('readyToPExtMGS: ' + JSON.stringify(readyToPExtMGS));
+      //readyToPExtMGS: ["3263851322913","3222475413469","3263851322913","3222475413469"]
+      $('#read-cb-grp-pure').val(JSON.stringify(readyToPPureMGS));
+      $('#read-cb-grp-ext').val(JSON.stringify(readyToPExtMGS));
+
+      //Then we submit all
+      $("#mg-checkbc-form").submit();
+  });
 
 
   function removeBarCodeFromList(val){
-    console.log('in removeBarCodeFromList: ' + listOfBCToHandle.length);
-    console.log('val : ' + val);
+    //console.log('in removeBarCodeFromList: ' + listOfBCToHandle.length);
+    //console.log('val : ' + val);
     for(i=0; i<listOfBCToHandle.length; i++){
       if(listOfBCToHandle[i] == val){
         listOfBCToHandle.splice(i, 1);
@@ -313,7 +358,7 @@ function loadCameraRead(isGrp){
     let btnReadGrpBC = '';
     for(i=0; i<listOfBCToHandle.length; i++){
       // Start as element zero
-      startButton = '<button type="submit" id="grp-rBC-' + i + '" class="btn btn-default-light btn-lg btn-block grp-all-btn" value="' + listOfBCToHandle[i] + '"';
+      startButton = '<button type="submit" id="grp-rBC-' + i + '" class="btn btn-default-light btn-md btn-block grp-all-btn" value="' + listOfBCToHandle[i] + '"';
       btnReadGrpBC = '><i class="monosp-ft-nc">'+listOfBCToHandle[i]+ '</i></button>'
       displayListOfAlrdBC = displayListOfAlrdBC + '<br>'+ startButton + btnReadGrpBC;
     }
@@ -329,6 +374,19 @@ function loadCameraRead(isGrp){
     $( ".grp-all-btn" ).click(function() {
       removeBarCodeFromList($(this).val());
     });
+
+    console.log('listOfBCToHandle.length: ' + listOfBCToHandle.length);
+    // Display submit button
+    if(listOfBCToHandle.length>0){
+      $('#grp-tap-to-del').show();
+      $('#mg-grp-step-btn').show();
+      console.log('listOfBCToHandle.length IN ');
+    }
+    else{
+      $('#grp-tap-to-del').hide();
+      $('#mg-grp-step-btn').hide();
+      console.log('listOfBCToHandle.length OUT ');
+    }
 
   }
 

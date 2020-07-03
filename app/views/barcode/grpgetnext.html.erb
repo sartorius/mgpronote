@@ -12,15 +12,18 @@
 
     </div>
     <div class="col-lg-6">
-        <form action="/save_bc" method="post" id="mg-checkbc-form">
+        <form action="/grpsave_bc" method="post" id="mg-checkbc-form">
+
+          <%-# This button is visibility hidden -%>
           <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-step-btn"
                   value="Marquer Étape"/>
 
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
-          <textarea class="form-control step-hid" rows="1" id="read-cb" name="checkcb" placeholder="code barre" style="resize: none;"></textarea>
-          <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"></textarea>
-          <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"></textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-pure" name="grpcheckcbpure" placeholder="code barre pure" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-ext" name="grpcheckcbext" placeholder="code barre externes" style="resize: none;"></textarea>
+
         </form>
     </div>
     <div class="col-lg-3">

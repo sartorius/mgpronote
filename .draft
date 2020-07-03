@@ -1,28 +1,28 @@
 
 
-<% if @resultSet[0]['tname'].nil? %>
-  Aucun nom n'est encore renseigné
-<% else %>
-  <%= @resultSet[0]['tname'].to_s %>
-<% end %>
-
-
-<% id @emptyResultSet %>
-  <div class="col-lg-12 no-data">
-    Désolé, nous n'avons pas trouvé de code barre &nbsp; <i class="glyphicon glyphicon-inbox"></i>
-  </div>
-<% end %>
-
-
-
-ActionView::Template::Error: Webpacker can't find jspdf.min in /Users/herinirinaratinahirana/ruby2/mgscore_app/public/packs/manifest.json. Possible causes: 1. You want to set webpacker.yml value of compile to true for your environment unless you are using the `webpack -w` or the webpack-dev-server. 2. webpack has not yet re-run to reflect updates. 3. You have misconfigured Webpacker's config/webpacker.yml file. 4. Your webpack configuration is not creating a manifest. Your manifest contains: { "application.js": "/packs/js/application-0d0a200f0cea2d615c72.js", "application.js.map": "/packs/js/application-0d0a200f0cea2d615c72.js.map", "entrypoints": { "application": { "js": [ "/packs/js/application-0d0a200f0cea2d615c72.js" ], "js.map": [ "/packs/js/application-0d0a200f0cea2d615c72.js.map" ] } } }
-
-Parameters: {"client_id"=>"144", "partner_id"=>"2", "auth_token"=>"V7AohmKpY08kY6hMOnjXpFvLZ6fvGipqQ9qudAqblXzHDlKmMV/+aKDRtFGZtw0kZz8xLPFJQplZv+Xp2iQlfg=="}
-  User Load (0.9ms)  SELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2  [["id", 140], ["LIMIT", 1]]
+Parameters: {"authenticity_token"=>"qi8GbXLgzxhtAbDxZCtEBuX0X58rjOsmcwZ1C5aUkgyLlgP0cifw/qtj0Db9Eb2rgVzoZN/HWEe6pnfHEhQdSg==", "stepgeol"=>"N", "grpcheckcbpure"=>"[{\"id\":1,\"secure\":3301},{\"id\":2,\"secure\":4352}]", "grpcheckcbext"=>"[\"3222475413469\",\"3263851322913\"]"}
+  User Load (1.1ms)  SELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2  [["id", 140], ["LIMIT", 1]]
   ↳ app/helpers/sessions_helper.rb:18:in `current_user'
-  SQL (0.8ms)  SELECT id, name, description, COALESCE(to_phone, 'NR') AS pphone, COALESCE(website, 'NR') AS pwebsite FROM ref_partner WHERE id = 2;
-  ↳ app/controllers/application_controller.rb:12:in `get_partner_company_name'
-in createbarcodeforclient <<<<<<<<<<<<<<<140/7c664VfxWLAR9snOAoTcBImqmvQanOH+BTrZUMnNnEo=
+PURE <<<<<<<<<<< [{"id":1,"secure":3301},{"id":2,"secure":4352}]
+EXT <<<<<<<<<<< ["3222475413469","3263851322913"]
 
-B+GhOkUSDDX3IYoZH3Z02NK5w6IbRvQW+Ucq6p9LMqrWpWESVVQrS+vtgg0pnNNdCK4Ik5UzFH9Jd8xZL+cJFw==
-THq9pIlFd61WCcHtJjwv2VyGMfnYp3FWdPHYaVxj+bKdPn2MmQNQ00rFyfkQ1ohchpH6yFbSkT/EwT7a7M/CDw==
+
+SELECT wt.bc_id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, bc.category AS bc_category, rte.act_owner AS rse_act_owner,
+        rte.next_input_needed AS rse_next_input_needed, mw.wkf_id AS wkf_id, mw.id AS line_wkf_id, rtc.step AS current_step,
+		      rte.id AS end_step_id, rte.step AS end_step, rte.description AS desc_end_step
+		      FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id -- mod workflow id is the wf line we use
+							               AND mw.start_id = wt.current_step_id
+				                     JOIN ref_status rtc ON rtc.id = wt.current_step_id
+				                     JOIN ref_status rte ON rte.id = mw.end_id
+                             JOIN barcode bc ON bc.id = wt.bc_id
+		                         WHERE bc.partner_id = 2
+			                       AND (((bc.id, bc.secure) IN (
+				(2, 5185),
+				(3, 9970),
+				(4, 9292)
+			))
+			OR (bc.id IN (5, 7, 8)
+			));
+
+      Pure not found:  SELECT 4 AS id, 9292 AS secure  UNION  SELECT 1 AS id, 6712 AS secure  UNION  SELECT 2 AS id, 5185 AS secure  UNION  SELECT 4 AS id, 8409 AS secure
+      Ext not found:  SELECT  TRIM('3263851322913') AS ext_ref 

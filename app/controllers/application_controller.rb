@@ -47,4 +47,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def gen_dual_not_safe_clause(i, j)
+    return '(' + i + ', '+ j + ')'
+  end
+
 end
