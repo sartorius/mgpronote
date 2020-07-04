@@ -22,5 +22,7 @@ INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'R
 
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur, destinataire final', 'C', 1, '032567876', '48 Rue de la Boétie, 93078 Les Pinsons de la Rivière', 'Box 762, Centre Riviera Malaza Tana 101');
 
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr) VALUES (3, 'Fanny Service Transport', 'Exemple de transporteur 2, destinataire final', 'C', 1, '032567852', '78 Rue de la Gare, 92304 Maison la Foire', 'Box 782, Centre La City Hazobe Tana 101');
+
 -- Need a cross table partner x mod_workflow
 -- Need a cross table client x partner

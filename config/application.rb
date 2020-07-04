@@ -15,7 +15,6 @@ module SampleApp
     # File: config/application.rb
     config.exceptions_app = self.routes
 
-
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
@@ -23,5 +22,11 @@ module SampleApp
     ENV['titlepage'] = 'MG Suivi'
     ENV['MJ_APIKEY_PUBLIC'] = '6532da700924bb9f1c446083039c4566'
     ENV['MJ_APIKEY_PRIVATE'] = '77eaf825c21d0015e6cda0fbaed1d6c7'
+
+    #  0  Nouveau
+    #  6  Pesé
+    # 10  Disponible Client
+    # -1  Terminée
+    # ENV['NECESSARY_EMAIL_NOTIFICATION'] = [0, 6, 10, -1]
   end
 end

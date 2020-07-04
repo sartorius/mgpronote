@@ -79,9 +79,9 @@ class ClientController < ApplicationController
 =end
 
     sql_query = "SELECT u.id AS id, u.name AS name, u.firstname AS firstname, u.email AS email, cpx.has_poc AS poc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, bc.owner_id, count(1) AS totalbc "
-    sql_query += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
+    sql_query += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id AND cpx.partner_id = " + @current_user.partner.to_s + " "
     sql_query += " LEFT JOIN barcode bc on bc.owner_id = u.id "
-    sql_query += " AND cpx.partner_id = " + @current_user.partner.to_s + " "
+    sql_query += " AND cpx.partner_id = " + @current_user.partner.to_s + " AND bc.partner_id = " + @current_user.partner.to_s + " "
     sql_query += " GROUP BY u.id, u.name, u.firstname, u.email, cpx.has_poc, bc.owner_id, cpx.create_date "
     sql_query += " ORDER BY cpx.create_date DESC;"
 

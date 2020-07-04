@@ -65,8 +65,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Mailer
-
-  def sendEmailTest
+  def sendEmailTest(to_addr, firstname_name, cb_code, status)
     Mailjet.configure do |config|
       config.api_key = ENV['MJ_APIKEY_PUBLIC']
       config.secret_key = ENV['MJ_APIKEY_PRIVATE']
@@ -75,17 +74,17 @@ class ApplicationController < ActionController::Base
     variable = Mailjet::Send.create(messages: [{
         'From'=> {
             'Email'=> 'mgsuivi@protonmail.com',
-            'Name'=> 'MG Suivi Notifictions'
+            'Name'=> 'MG Suivi notification'
         },
         'To'=> [
             {
-                'Email'=> 'tsikyharimino@gmail.com',
-                'Name'=> 'passenger 1'
+                'Email'=> to_addr,
+                'Name'=> firstname_name
             }
         ],
-        'Subject'=> 'Nouvelle information concernant votre paquet',
-        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous !',
-        'HTMLPart'=> '<h3>Cher.ère utilisateur.rice, nous avons du nouveau pour vous !'
+        'Subject' => 'MGSuivi: ' + cb_code + ' ' + status,
+        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche.",
+        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche."
     }]
     )
     p variable.attributes['Messages']

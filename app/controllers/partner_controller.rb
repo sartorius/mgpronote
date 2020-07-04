@@ -70,7 +70,7 @@ class PartnerController < ApplicationController
 
   # Get the next step BC
   def dashboard
-    #sendEmailTest
+    #sendEmailTest('ratinahirana@gmail.com', 'Blou Ratinahirana', 'M03200202', 'Arrivé au centre de dépot')
 
     sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
                       " bc.type_pack, bc.ext_ref " +
