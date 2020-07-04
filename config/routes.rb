@@ -64,4 +64,13 @@ Rails.application.routes.draw do
   get     '/seeone'   => redirect("/")
   post	  '/addaddress'   => 'persoresel#addaddress'
 
+  # Dynamic error pages
+  get "/404", to: "errors#not_found", :defaults => { :format => 'html' }
+  get "/422", to: "errors#unacceptable", :defaults => { :format => 'html' }
+  get "/500", to: "errors#internal_error", :defaults => { :format => 'html' }
+  # File: config/routes.rb
+  #if Rails.env.production?
+  #   get '404', :to => 'static_pages#endpage404'
+  #end
+
 end

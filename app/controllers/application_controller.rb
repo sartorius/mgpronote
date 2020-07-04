@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   include SessionsHelper
+  require 'mailjet'
+
 
   private
 
@@ -60,6 +62,34 @@ class ApplicationController < ActionController::Base
 
   def gen_dual_not_safe_clause(i, j)
     return '(' + i + ', '+ j + ')'
+  end
+
+  # Mailer
+
+  def sendEmailTest
+    Mailjet.configure do |config|
+      config.api_key = ENV['MJ_APIKEY_PUBLIC']
+      config.secret_key = ENV['MJ_APIKEY_PRIVATE']
+      config.api_version = "v3.1"
+    end
+    variable = Mailjet::Send.create(messages: [{
+        'From'=> {
+            'Email'=> 'mgsuivi@protonmail.com',
+            'Name'=> 'MG Suivi Notifictions'
+        },
+        'To'=> [
+            {
+                'Email'=> 'tsikyharimino@gmail.com',
+                'Name'=> 'passenger 1'
+            }
+        ],
+        'Subject'=> 'Nouvelle information concernant votre paquet',
+        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous !',
+        'HTMLPart'=> '<h3>Cher.ère utilisateur.rice, nous avons du nouveau pour vous !'
+    }]
+    )
+    p variable.attributes['Messages']
+
   end
 
 end

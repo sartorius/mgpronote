@@ -14,6 +14,8 @@ gem 'webpacker',               '4.2.2'
 gem 'turbolinks',              '5.2.1'
 gem 'jbuilder',                '2.10.0'
 gem 'bootsnap',                '1.4.6', require: false
+# Gemfile
+gem 'mailjet'
 
 group :development, :test do
   gem 'byebug',  '11.1.3', platforms: [:mri, :mingw, :x64_mingw]
