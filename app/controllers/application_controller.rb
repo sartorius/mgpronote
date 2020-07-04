@@ -36,6 +36,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  #Special no whitespace double quote no trim
+  def get_safe_pg_wq_ns_notrim_doublequote(str)
+    if str.nil? then
+      return "NULL"
+    elsif str == ''
+      return "NULL"
+    else
+      return '"' + str.gsub(/"|'|!|>|;|\s/, '') + '"'
+    end
+  end
+
   #Special no whitespace
   def get_safe_pg_number(str)
     if str.nil? then

@@ -14,7 +14,7 @@
       Poids
     </div>
     <div class="mgs-info">
-      <%= @stepweight.to_i %> grammes.
+      <%= number_with_delimiter(@stepweight.to_i, :delimiter => ' ') %> grammes.
     </div>
     <% end %>
   </div>

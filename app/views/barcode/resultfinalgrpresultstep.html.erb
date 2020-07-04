@@ -1,0 +1,37 @@
+<% provide(:title, "Grouper final") %>
+<div id="mg-graph-identifier">grpfinal-gr</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<script>
+  var dataTagToJsonPure = "<%= @list_pure_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+  var dataTagToJsonArrayPure = JSON.parse(dataTagToJsonPure);
+
+  var dataTagToJsonExt = "<%= @list_ext_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+  var dataTagToJsonArrayExt = JSON.parse(dataTagToJsonExt);
+
+</script>
+
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <div class="mgs-note">
+          Les <span class="grp-read-nb"></span> codes barres suivants ont été correctement lu
+        </div>
+        <div id="list-of-read-bc">
+        </div>
+        <div>
+          <label for="exampleFormControlSelect1" class="lbl-opt">L'étape <span><%= @stepTxt %></span> a été enregistrée pour les <span class="grp-read-nb"></span> codes barres</label>
+        </div>
+        <div class="pos-center blc-cancel">
+          <a href="/" id="btn-cnl-nstp" class="btn btn-default btn-lg btn-block">Retour home&nbsp;<i class="glyphicon glyphicon-remove-sign"></i></a>
+        </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

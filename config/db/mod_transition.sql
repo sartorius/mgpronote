@@ -1,6 +1,4 @@
 -- Transition ref
-
-
 CREATE TABLE ref_status (
   id                  SMALLINT      PRIMARY KEY,
   step                VARCHAR(50)   NOT NULL,
@@ -266,6 +264,80 @@ BEGIN
         update_date = CURRENT_TIMESTAMP
         WHERE id = $1;
     END IF;
+
+    COMMIT;
+END;
+$$;
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPSTEP_TAG_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+DROP PROCEDURE IF EXISTS CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
+CREATE OR REPLACE PROCEDURE CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    var_partner SMALLINT;
+BEGIN
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+            SELECT id, wf_id, par_target_step_id, par_geo_l, par_user_id
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = par_target_step_id,
+      update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+    COMMIT;
+END;
+$$;
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPSTEP_TAG_EXT('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+DROP PROCEDURE IF EXISTS CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
+CREATE OR REPLACE PROCEDURE CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    var_partner SMALLINT;
+BEGIN
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+            SELECT id, wf_id, par_target_step_id, par_geo_l, par_user_id
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
+
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = par_target_step_id,
+      update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
 
     COMMIT;
 END;

@@ -31,7 +31,22 @@ function mainScanLoaderInCaseOfChange(){
     });
     getGeoL();
     // Load the step
-    displayNext();
+    displayNext(false);
+  }
+  else if($('#mg-graph-identifier').text() == 'grpsavebc-gr'){
+    // Make sure we geolocalize everyone
+    $("#mg-save-step-btn").click(function() {
+        getGeoL();
+    });
+    getGeoL();
+
+    // button id mg-save-step-btn
+
+    // Load the step
+    displayNext(true);
+  }
+  else if($('#mg-graph-identifier').text() == 'grpfinal-gr'){
+    displayGrpListOfBC();
   }
   else if($('#mg-graph-identifier').text() == 'getnext-gr'){
       //console.log('in getnext-gr');
@@ -51,7 +66,7 @@ function mainScanLoaderInCaseOfChange(){
       loadCameraRead(true);
 
       //DEBUG CHANGE
-      $('#mg-grp-step-btn').show();
+      //$('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -155,7 +170,28 @@ function weightManager(){
   }
 }
 
-function displayNext(){
+function isOdd(num) {return (num % 2) == 1;}
+
+function displayGrpListOfBC(){
+  let htg1 = '<div class="size-med-nc font-mono">';
+  let htg1Alt = '<div class="size-med-nc font-mono bg-pc">';
+  let htg2 = '</div>'
+  $(".grp-read-nb").html(parseInt(dataTagToJsonArrayPure.length) + parseInt(dataTagToJsonArrayExt.length));
+  let diplayList = '';
+  let j = 0;
+
+  for(i=0; i<dataTagToJsonArrayPure.length; i++){
+    diplayList = diplayList + (isOdd(j) ? htg1 : htg1Alt) + mgsEncode(dataTagToJsonArrayPure[i].id, dataTagToJsonArrayPure[i].secure) + htg2;
+    j = j +1;
+  }
+  for(i=0; i<dataTagToJsonArrayExt.length; i++){
+    diplayList = diplayList + (isOdd(j) ? htg1 : htg1Alt) + dataTagToJsonArrayExt[i].toString() + htg2;
+    j = j +1;
+  }
+  $("#list-of-read-bc").html(diplayList);
+}
+
+function displayNext(isGrp){
 
   // Initialize
 
@@ -175,15 +211,41 @@ function displayNext(){
     $("#read-rwfk").val(dataTagToJsonArray[0].rwkf_id);
     $("#read-cb-id").val(dataTagToJsonArray[0].bc_id);
     $('#read-step-txt').val(dataTagToJsonArray[0].end_step);
-    $('#curr-status').html(dataTagToJsonArray[0].curr_step);
 
     //Handle weight action here !
-    weightManager();
+    //Grouping don't do Weight
+    if (!isGrp){
+      console.log('We DO weightManager()');
+      $('#curr-status').html(dataTagToJsonArray[0].curr_step);
+      weightManager();
 
-    if((dataTagToJsonArray[0].curr_inc != null) && (dataTagToJsonArray[0].curr_inc != '')){
-      $('#descr-incident').html(dataTagToJsonArray[0].curr_inc);
-      $('#decl-incident').show();
+      // Handle incident here
+      if((dataTagToJsonArray[0].curr_inc != null) && (dataTagToJsonArray[0].curr_inc != '')){
+        $('#descr-incident').html(dataTagToJsonArray[0].curr_inc);
+        $('#decl-incident').show();
+      }
     }
+    else{
+      /*
+      console.log('We do not do weightManager()');
+      console.log('Length pure: ' + dataTagToJsonArrayPure.length);
+      console.log('dataTagToJsonArrayPure: ' + JSON.stringify(dataTagToJsonArrayPure));
+
+      console.log('Length pure: ' + dataTagToJsonArrayExt.length);
+      console.log('dataTagToJsonArrayExt: ' + JSON.stringify(dataTagToJsonArrayExt));
+      */
+      dataTagToJsonArrayPureId = new Array();
+      for(i=0; i<dataTagToJsonArrayPure.length; i++){
+        dataTagToJsonArrayPureId.push(dataTagToJsonArrayPure[i].id);
+      }
+      // We update the data to be send
+      // Sending couple are useless but I want to get several code display
+      $('#read-cb-grp-pure').val(JSON.stringify(dataTagToJsonArrayPure));
+      $('#read-cb-grp-pure-id').val(JSON.stringify(dataTagToJsonArrayPureId));
+      $('#read-cb-grp-ext').val(JSON.stringify(dataTagToJsonArrayExt));
+      displayGrpListOfBC();
+    }
+
 
     for(var i=0; i<dataTagToJsonArray.length; i++){
         // We check if the next action is owned by partner or not
@@ -326,8 +388,15 @@ function loadCameraRead(isGrp){
       //listOfBCToHandle.push("M0000312V"); // w Address
       //listOfBCToHandle.push("M00001218"); // w Address and incident
       //listOfBCToHandle.push("M00003ALN"); // w Address and incident
-      listOfBCToHandle.push("M0000312V"); // Under Weight
+      //listOfBCToHandle.push("M0000312V"); // Under Weight
+      //listOfBCToHandle.push("M00003RZW"); // Address Delivery
+      //listOfBCToHandle.push("M00001R1A"); // Address Delivery -- eq AZERTY
 
+      //listOfBCToHandle.push("M00004GUX");
+      //listOfBCToHandle.push("M0000430O");
+      //listOfBCToHandle.push("M00003WPJ");
+      //listOfBCToHandle.push("AZERTY5");
+      //stOfBCToHandle.push("AZERTY4");
 
       // 2 pures are KO ***
       //listOfBCToHandle.push("M00000H9A");
@@ -345,7 +414,7 @@ function loadCameraRead(isGrp){
 
 
 
-      console.log("You have clicked on #mg-grp-step-btn");
+      //console.log("You have clicked on #mg-grp-step-btn");
       $('#grp-blc-cam').hide();
       for(i=0; i<listOfBCToHandle.length; i++){
         //console.log('Val: ' + listOfBCToHandle[i]);
@@ -408,7 +477,8 @@ function loadCameraRead(isGrp){
 
     console.log('listOfBCToHandle.length: ' + listOfBCToHandle.length);
     // Display submit button
-    if(listOfBCToHandle.length>0){
+    // We need an action group so it will be available only if we scan at least 2 barecode
+    if(listOfBCToHandle.length>1){
       $('#grp-tap-to-del').show();
       $('#mg-grp-step-btn').show();
       //console.log('listOfBCToHandle.length IN ');

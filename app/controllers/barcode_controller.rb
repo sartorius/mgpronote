@@ -14,17 +14,80 @@ class BarcodeController < ApplicationController
       render 'grpgetnext'
   end
 
+  # Save the grouping action here
+  def grpsavestep
+    #puts '*** PURE <<<<<<<<<<< ' + params[:grpcheckcbpure]
+    #puts '*** PURE ID <<<<<<<<<<< ' + params[:grpcheckcbpureid]
+    #puts '*** EXT <<<<<<<<<<< ' + params[:grpcheckcbext]
+
+    @list_pure_array = JSON.parse(params[:grpcheckcbpure])
+    @list_pure_array_id = JSON.parse(params[:grpcheckcbpureid])
+    @list_ext_array = JSON.parse(params[:grpcheckcbext])
+    @stepTxt = params[:steptxt]
+
+    #puts '--------------------------'
+    #puts '*** PURE inspect <<<<<<<<<<< ' + @list_pure_array.inspect
+    # *** PURE <<<<<<<<<<< [{"id":20,"secure":8473},{"id":19,"secure":536},{"id":18,"secure":2359}]
+    #puts '*** PURE ID inspect <<<<<<<<<<< ' + @list_pure_array_id.inspect
+    # *** PURE ID <<<<<<<<<<< [20,19,18]
+    #puts '*** EXT inspect <<<<<<<<<<< ' + @list_ext_array.inspect
+    # *** EXT <<<<<<<<<<< ["AZERTY5","AZERTY4"]
+
+    # We need to check if the list is not empty
+    # CALL CLI_GRPSTEP_TAG_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+    unless (@list_pure_array_id.empty?) then
+      # Construct the array
+      pure_array_id = ''
+      start_coma = ''
+      for pure_id in @list_pure_array_id do
+        pure_array_id = pure_array_id + start_coma + get_safe_pg_number(pure_id.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      pure_array_id = " '{"+ pure_array_id + "}'::BIGINT[] "
+
+      sql_query_pure_id = "CALL CLI_GRPSTEP_TAG_PURE ("+ pure_array_id +", CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
+      #puts 'Q Pure ID: ' + sql_query_pure_id
+
+      @resultSetCallPureId = ActiveRecord::Base.connection.exec_query(sql_query_pure_id)
+    end
+
+
+    # We need to check if the list is not empty
+    # CALL CLI_GRPSTEP_TAG_EXT('{"AZERTY5","AZERTY4"}'::VARCHAR(35)[], CAST(7 AS SMALLINT), 'N', 140);
+    unless (@list_ext_array.empty?) then
+      # Construct the array
+      ext_array = ''
+      start_coma = ''
+      for ext in @list_ext_array do
+        ext_array = ext_array + start_coma + get_safe_pg_wq_ns_notrim_doublequote(ext.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      ext_array = " '{"+ ext_array + "}'::VARCHAR(35)[] "
+
+      sql_query_ext = "CALL CLI_GRPSTEP_TAG_EXT("+ ext_array +", CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
+      #puts 'Q EXT: ' + sql_query_ext
+
+      @resultSetCallExt = ActiveRecord::Base.connection.exec_query(sql_query_ext)
+    end
+
+    render 'resultfinalgrpresultstep'
+
+  end
+
+
   # GROUPING action retrieving future action and different checks
   def grpsavebc
-    puts 'PURE <<<<<<<<<<< ' + params[:grpcheckcbpure]
-    puts 'EXT <<<<<<<<<<< ' + params[:grpcheckcbext]
+    #puts 'PURE <<<<<<<<<<< ' + params[:grpcheckcbpure]
+    #puts 'EXT <<<<<<<<<<< ' + params[:grpcheckcbext]
 
-    list_pure_array = JSON.parse(params[:grpcheckcbpure])
-    list_ext_array = JSON.parse(params[:grpcheckcbext])
+    @list_pure_array = JSON.parse(params[:grpcheckcbpure])
+    @list_ext_array = JSON.parse(params[:grpcheckcbext])
 
-    puts '--------------------------'
-    puts 'PURE Size <<<<<<<<<<< ' + list_pure_array.inspect
-    puts 'EXT Size <<<<<<<<<<< ' + list_ext_array.inspect
+    #puts '--------------------------'
+    #puts 'PURE Size <<<<<<<<<<< ' + @list_pure_array.inspect
+    #puts 'EXT Size <<<<<<<<<<< ' + @list_ext_array.inspect
 
 
     # Pure is the list the array with only pure MGS number
@@ -32,7 +95,7 @@ class BarcodeController < ApplicationController
     # PURE <<<<<<<<<<< [{"id":1,"secure":3301},{"id":2,"secure":4352}]
     pure_clause = ''
     start_coma = ''
-    for pure_array in list_pure_array do
+    for pure_array in @list_pure_array do
       # puts 'pure_array id: ' + get_safe_pg_number(pure_array["id"].to_s) + '/secure: ' + get_safe_pg_number(pure_array["secure"].to_s)
 
       pure_clause = pure_clause + start_coma + gen_dual_not_safe_clause(get_safe_pg_number(pure_array["id"].to_s), get_safe_pg_number(pure_array["secure"].to_s))
@@ -43,22 +106,18 @@ class BarcodeController < ApplicationController
     # EXT <<<<<<<<<<< ["3222475413469","3263851322913"]
     ext_clause = ''
     start_coma = ''
-    for ext_array in list_ext_array do
+    for ext_array in @list_ext_array do
       # puts 'ext_array value: ' + get_safe_pg_wq_ns(ext_array.to_s)
       ext_clause = ext_clause + start_coma + get_safe_pg_wq_ns(ext_array.to_s)
       start_coma = ', '
     end
 
     # Debug
-    # puts 'pure_clause <<<<<<<<<<< ' + list_pure_array.inspect
-    # puts 'ext_clause <<<<<<<<<<< ' + list_ext_array.inspect
+    # puts 'pure_clause <<<<<<<<<<< ' + @list_pure_array.inspect
+    # puts 'ext_clause <<<<<<<<<<< ' + @list_ext_array.inspect
 
 
-    # This is general Q
-    # Not used right now we do check before
-    sql_query_col = "SELECT wt.bc_id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, bc.category AS bc_category, rte.act_owner AS rse_act_owner, " +
-                    " rte.next_input_needed AS rse_next_input_needed, mw.wkf_id AS wkf_id, mw.id AS line_wkf_id, rtc.step AS current_step, " +
-    		            " rte.id AS end_step_id, rte.step AS end_step, rte.description AS desc_end_step "
+
 
     sql_query_join = " FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id " +
     							               " AND mw.start_id = wt.current_step_id " +
@@ -69,25 +128,25 @@ class BarcodeController < ApplicationController
     count_of_list_pure_and_ext = 0
     # We need to check the content of the received list
     # Cut Qs is matchin only the list of PURE and EXT
-    if (list_pure_array.empty?) then
-      puts '>> 1'
+    if (@list_pure_array.empty?) then
+      #puts '>> 1'
       # No Pure
       sql_query_where_cut =        " AND (bc.ext_ref IN (" + ext_clause + ") " + ");"
-      count_of_list_pure_and_ext = list_ext_array.length
+      count_of_list_pure_and_ext = @list_ext_array.length
 
-    elsif (list_ext_array.empty?)
-      puts '>> 2'
+    elsif (@list_ext_array.empty?)
+      #puts '>> 2'
       # No Ext
       sql_query_where_cut =        " AND ((bc.id, bc.secure) IN ( " + pure_clause  + ' )) ' + " ;"
-      count_of_list_pure_and_ext = list_pure_array.length
+      count_of_list_pure_and_ext = @list_pure_array.length
 
     else
-      puts '>> 3'
+      #puts '>> 3'
       # Both
       sql_query_where_cut =        " AND (((bc.id, bc.secure) IN ( " + pure_clause  + ' )) ' +
       			                       " OR (bc.ext_ref IN (" + ext_clause + ") " + "));"
 
-      count_of_list_pure_and_ext = list_pure_array.length + list_ext_array.length
+      count_of_list_pure_and_ext = @list_pure_array.length + @list_ext_array.length
     end
 
     # Check Qs
@@ -98,9 +157,6 @@ class BarcodeController < ApplicationController
     # This Q Check there is no incident (Condition: NO_INCIDENT)
     sql_query_ck_col_distinct = "SELECT DISTINCT bc.under_incident, bc.status, bc.wf_id FROM barcode bc "
 
-    # Clause with wk_tag table
-    sql_query_where =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
-                                 " AND bc.status = wt.current_step_id " + sql_query_where_cut
 
     # Clause w/ barcode table only
     sql_query_ck_where_bc_table_only = " WHERE bc.partner_id = " + @current_user.partner.to_s + sql_query_where_cut
@@ -123,6 +179,7 @@ class BarcodeController < ApplicationController
     # Control variables
     need_to_feedback_not_found = false;
     need_to_feedback_not_all_the_same = false;
+    # This display if all are under incident
     @need_to_feedback_incident_exists = false;
     @need_to_feedback_delivery_pickup = false;
     @need_to_feedback_next_weight = false;
@@ -132,7 +189,7 @@ class BarcodeController < ApplicationController
 
     #If we found none
     if @resultSetCheckCount[0]['mg_count'].to_i == 0 then
-      puts 'Xroad 1 - we found: ' + @resultSetCheckCount[0]['mg_count'].to_s
+      #puts 'Xroad 1 - we found: ' + @resultSetCheckCount[0]['mg_count'].to_s
       all_check_are_passed = false;
 
       # Nothing is found
@@ -142,8 +199,8 @@ class BarcodeController < ApplicationController
 
     # If we found less than expected
     if @resultSetCheckCount[0]['mg_count'].to_i < count_of_list_pure_and_ext then
-      puts 'Xroad 2 - we found: ' + @resultSetCheckCount[0]['mg_count'].to_s
-      puts 'Xroad 2 - versus: ' + count_of_list_pure_and_ext.to_s
+      #puts 'Xroad 2 - we found: ' + @resultSetCheckCount[0]['mg_count'].to_s
+      #puts 'Xroad 2 - versus: ' + count_of_list_pure_and_ext.to_s
       all_check_are_passed = false;
 
       # Some have not been found
@@ -154,7 +211,7 @@ class BarcodeController < ApplicationController
     # We check here if they are all the same or not
     # If they are all the same the distinc retrieve only one line
     if @resultSetCheckOne.length > 1 then
-      puts 'Xroad 3 - we found: ' + @resultSetCheckOne.length.to_s
+      #puts 'Xroad 3 - we found: ' + @resultSetCheckOne.length.to_s
       all_check_are_passed = false;
 
       # We have more than one line which is not possible that means the barcode are not the same
@@ -165,7 +222,7 @@ class BarcodeController < ApplicationController
     # We need to check if incident exists
     # If the result is empty we should not go in here
     if (!@resultSetCheckOne.empty?) && (@resultSetCheckOne[0]['under_incident'].to_s == 'true') then
-      puts 'Xroad 4 - we found: ' + @resultSetCheckOne[0]['under_incident'].to_s
+      #puts 'Xroad 4 - we found: ' + @resultSetCheckOne[0]['under_incident'].to_s
       all_check_are_passed = false;
 
       # This is important if the result retrieve only one line (means all are the same)
@@ -194,7 +251,7 @@ class BarcodeController < ApplicationController
         # 2 is for Delivery Reception
         # 4 is for Pickup Enlèvement
         if @resultSetCheckDeliveryPickup.length > 2 then
-          puts 'Xroad 21 - we found: ' + @resultSetCheckDeliveryPickup.length.to_s
+          #puts 'Xroad 21 - we found: ' + @resultSetCheckDeliveryPickup.length.to_s
           all_check_are_passed = false;
 
           # We have more than one line which is not possible that means the barcode are not the same
@@ -223,7 +280,7 @@ class BarcodeController < ApplicationController
         # 2 is for Delivery Reception
         # 4 is for Pickup Enlèvement
         if @resultSetCheckWeight.length > 0 then
-          puts 'Xroad 31 - we found: ' + @resultSetCheckWeight.length.to_s
+          #puts 'Xroad 31 - we found: ' + @resultSetCheckWeight.length.to_s
           all_check_are_passed = false;
 
           # We have more than one line which is not possible that means the barcode are not the same
@@ -241,19 +298,31 @@ class BarcodeController < ApplicationController
     # Then we go on if else management
 
     if all_check_are_passed then
-      puts 'all_check_are_passed : EVERYTHING IS OK HERE'
+      #puts 'all_check_are_passed : EVERYTHING IS OK HERE'
+
+
+      # This is general Q
+      # We case type pack to avoid duplicate lines when actually only one end step is possible
+      # Exception delivery pickup is handled before
+      sql_query_col = " SELECT DISTINCT 0 AS bc_id,  bc.under_incident AS curr_inc, CASE WHEN rte.id IN (2, 4) THEN bc.type_pack ELSE 'N' END AS bc_type_pack, " +
+                      " bc.category AS bc_category, rte.act_owner AS rse_act_owner,  rte.next_input_needed AS rse_next_input_needed, mw.wkf_id AS rwkf_id, " +
+                      " mw.id AS mwkf_id, rtc.step AS curr_step,  rte.id AS end_step_id, rte.step AS end_step, rte.description AS end_step_desc"
+
+      # Clause with wk_tag table
+      sql_query_where =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
+                                   " AND bc.status = wt.current_step_id " + sql_query_where_cut
+
       # Everything is good here ! Enjoy
       # We need to access database for good results !
       sql_query_big_one = sql_query_col + sql_query_join + sql_query_where
-      puts 'Big one query: ' + sql_query_big_one.to_s
+      #puts 'Big one query: ' + sql_query_big_one.to_s
 
-      # Handle the delivery vs pickup exception here !
+      # We retrieve actually next steps here !
+      # Close to the end
+      # Aja aja ! Fighting
+      # The unique, the only one the best : resultSet !
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query_big_one)
 
-      #SELECT DISTINCT bc.type_pack AS bc_type_pack, rte.id AS end_step_id
-        #FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id  AND mw.start_id = wt.current_step_id  JOIN ref_status rtc ON rtc.id = wt.current_step_id  JOIN ref_status rte ON rte.id = mw.end_id  JOIN barcode bc ON bc.id = wt.bc_id  WHERE bc.partner_id = 2 AND bc.type_pack IN ('D', 'P') AND rte.id IN (2, 4)  AND bc.status = wt.current_step_id  AND (((bc.id, bc.secure) IN ( (14, 1367) ))  OR (bc.ext_ref IN ( TRIM('AZERTY')) ));
-
-      # Handle Weight Exception !
-      # If we end on weight we have to discard and redirect to error
 
 
       render 'resultgrpgetnext'
@@ -261,7 +330,7 @@ class BarcodeController < ApplicationController
       # We need to get feedback
       # We need to access database for feedback !
       if need_to_feedback_not_all_the_same || @need_to_feedback_incident_exists || @need_to_feedback_delivery_pickup || @need_to_feedback_next_weight then
-        puts 'Xroad 3 & 4 feedback'
+        #puts 'Xroad 3 & 4 feedback'
         # We go on feedback mode here
         # We fill the result set for feedback
         debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
@@ -275,7 +344,7 @@ class BarcodeController < ApplicationController
       end
       # We need to tell the user which are not found
       if need_to_feedback_not_found then
-          puts 'Xroad 1 & 2 feedback'
+          #puts 'Xroad 1 & 2 feedback'
 
           @pureResultSetNotFound = 0
           @extResultSetNotFound = 0
@@ -285,7 +354,7 @@ class BarcodeController < ApplicationController
           # Here we need to identify missing lines
           pure_union = ''
           start_union = ''
-          for pure_array in list_pure_array do
+          for pure_array in @list_pure_array do
 
             pure_union = pure_union + start_union + gen_union_pure_for_except_not_safe(get_safe_pg_number(pure_array["id"].to_s), get_safe_pg_number(pure_array["secure"].to_s))
             start_union = ' UNION '
@@ -293,18 +362,18 @@ class BarcodeController < ApplicationController
 
           ext_union = ''
           start_union = ''
-          for ext_array in list_ext_array do
+          for ext_array in @list_ext_array do
 
             ext_union = ext_union + start_union + gen_union_ext_for_except_not_safe(get_safe_pg_wq_ns(ext_array.to_s))
             start_union = ' UNION '
           end
 
-          puts 'DEBUG: Pure not found: ' + pure_union
-          puts 'DEBUG: Ext not found: ' + ext_union
+          #puts 'DEBUG: Pure not found: ' + pure_union
+          #puts 'DEBUG: Ext not found: ' + ext_union
 
           # Missing line list
           # Be carefull if sometimes pure and not found are empty list
-          if list_pure_array.length == 0 then
+          if @list_pure_array.length == 0 then
             # We have no missing pure no need to check
             @pureResultSetNotFound = Array.new
           else
@@ -312,7 +381,7 @@ class BarcodeController < ApplicationController
             @pureResultSetNotFound = ActiveRecord::Base.connection.exec_query(sql_query_not_found_pure)
           end
 
-          if list_ext_array.length == 0 then
+          if @list_ext_array.length == 0 then
             # We have no missing ext no need to check
             @extResultSetNotFound = Array.new
           else

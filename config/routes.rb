@@ -30,6 +30,9 @@ Rails.application.routes.draw do
   post    '/grpsave_bc' => 'barcode#grpsavebc'
   get     '/grpsave_bc' => redirect("/")
 
+  post    '/grpsave_step' => 'barcode#grpsavestep'
+  get     '/grpsave_step' => 'barcode#grpsavestep'
+
   post	  '/save_step'   => 'barcode#savestep'
   get     '/save_step' => redirect("/")
 
