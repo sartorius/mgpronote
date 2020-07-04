@@ -196,7 +196,7 @@ function displayNext(){
         }
         // Now we need to treat differently 2 and 4 which are specific
         // 2 is for Reception for D as delivery
-        // 4 is for enlèvement for P as pickup
+        // 4 is for Pickup for P as pickup
         // We need to discard one of them
         if ((parseInt(dataTagToJsonArray[i].end_step_id) == 2) &&
               (dataTagToJsonArray[i].bc_type_pack == 'P')){
@@ -326,6 +326,8 @@ function loadCameraRead(isGrp){
       //listOfBCToHandle.push("M0000312V"); // w Address
       //listOfBCToHandle.push("M00001218"); // w Address and incident
       //listOfBCToHandle.push("M00003ALN"); // w Address and incident
+      listOfBCToHandle.push("M0000312V"); // Under Weight
+
 
       // 2 pures are KO ***
       //listOfBCToHandle.push("M00000H9A");
@@ -334,6 +336,7 @@ function loadCameraRead(isGrp){
       // 2 ext are OK ***
       //listOfBCToHandle.push("AZERTY"); // w Address without incident
       //listOfBCToHandle.push("AZERTY2");
+      //listOfBCToHandle.push("AZERTY3"); // Under weight
 
       // 3 ext are KO ***
       //listOfBCToHandle.push("KJDIZODZJOIJDIZOHHIOZ");

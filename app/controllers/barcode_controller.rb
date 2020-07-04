@@ -115,10 +115,17 @@ class BarcodeController < ApplicationController
     sql_query_check_count = sql_query_count + sql_query_ck_where_bc_table_only
     @resultSetCheckCount = ActiveRecord::Base.connection.exec_query(sql_query_check_count)
 
+
+
+
+
+
     # Control variables
     need_to_feedback_not_found = false;
     need_to_feedback_not_all_the_same = false;
-    need_to_feedback_incident_exists = false;
+    @need_to_feedback_incident_exists = false;
+    @need_to_feedback_delivery_pickup = false;
+    @need_to_feedback_next_weight = false;
 
     all_check_are_passed = true;
 
@@ -163,8 +170,70 @@ class BarcodeController < ApplicationController
 
       # This is important if the result retrieve only one line (means all are the same)
       # But all are under incident then we need to tells the user that we have an issue.
-      need_to_feedback_incident_exists = true;
+      @need_to_feedback_incident_exists = true;
     end
+
+
+    # Delivery Pickup Exception
+    # We will avoid to goes to DB if previous check are KO
+    # We go on category 2 check
+    if all_check_are_passed then
+
+        # This Q check the column with specific where clause
+        # Need to return 2 lines max
+        sql_query_ck_delivery_pickup_col = ' SELECT DISTINCT bc.type_pack AS bc_type_pack, rte.id AS end_step_id '
+        # Clause with wk_tag table
+        sql_query_where_ck_delivery_pickup =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
+                                              " AND bc.type_pack IN ('D', 'P') AND rte.id IN (2, 4) " +
+                                              " AND bc.status = wt.current_step_id " + sql_query_where_cut
+
+        sql_query_big_ck_delivery_pickup = sql_query_ck_delivery_pickup_col + sql_query_join + sql_query_where_ck_delivery_pickup
+        @resultSetCheckDeliveryPickup = ActiveRecord::Base.connection.exec_query(sql_query_big_ck_delivery_pickup)
+
+        # We check here if we have mix Delivery (D) and Pickup (P) with next steps 2 or 4
+        # 2 is for Delivery Reception
+        # 4 is for Pickup Enlèvement
+        if @resultSetCheckDeliveryPickup.length > 2 then
+          puts 'Xroad 21 - we found: ' + @resultSetCheckDeliveryPickup.length.to_s
+          all_check_are_passed = false;
+
+          # We have more than one line which is not possible that means the barcode are not the same
+          @need_to_feedback_delivery_pickup = true;
+        end
+
+    end
+
+    # Weight Exception
+    # We will avoid to goes to DB if previous check are KO
+    # We go on category 3 check
+    if all_check_are_passed then
+
+        # This Q check the column with specific where clause
+        # Need to return zero lines max
+        sql_query_ck_weight_col = ' SELECT rte.id AS end_step_id '
+        # Clause with wk_tag table
+        sql_query_where_ck_weight =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
+                                              " AND rte.id IN (6) " +
+                                              " AND bc.status = wt.current_step_id " + sql_query_where_cut
+
+        sql_query_big_ck_weight = sql_query_ck_weight_col + sql_query_join + sql_query_where_ck_weight
+        @resultSetCheckWeight = ActiveRecord::Base.connection.exec_query(sql_query_big_ck_weight)
+
+        # We check here if we have mix Delivery (D) and Pickup (P) with next steps 2 or 4
+        # 2 is for Delivery Reception
+        # 4 is for Pickup Enlèvement
+        if @resultSetCheckWeight.length > 0 then
+          puts 'Xroad 31 - we found: ' + @resultSetCheckWeight.length.to_s
+          all_check_are_passed = false;
+
+          # We have more than one line which is not possible that means the barcode are not the same
+          @need_to_feedback_next_weight = true;
+        end
+
+    end
+
+
+
 
 
     ##### FROM HERE we need to pass or feedback
@@ -176,18 +245,26 @@ class BarcodeController < ApplicationController
       # Everything is good here ! Enjoy
       # We need to access database for good results !
       sql_query_big_one = sql_query_col + sql_query_join + sql_query_where
+      puts 'Big one query: ' + sql_query_big_one.to_s
+
+      # Handle the delivery vs pickup exception here !
+
+      #SELECT DISTINCT bc.type_pack AS bc_type_pack, rte.id AS end_step_id
+        #FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id  AND mw.start_id = wt.current_step_id  JOIN ref_status rtc ON rtc.id = wt.current_step_id  JOIN ref_status rte ON rte.id = mw.end_id  JOIN barcode bc ON bc.id = wt.bc_id  WHERE bc.partner_id = 2 AND bc.type_pack IN ('D', 'P') AND rte.id IN (2, 4)  AND bc.status = wt.current_step_id  AND (((bc.id, bc.secure) IN ( (14, 1367) ))  OR (bc.ext_ref IN ( TRIM('AZERTY')) ));
 
       # Handle Weight Exception !
-      # If we end on weight we have to discard
+      # If we end on weight we have to discard and redirect to error
+
+
       render 'resultgrpgetnext'
     else
       # We need to get feedback
       # We need to access database for feedback !
-      if need_to_feedback_not_all_the_same || need_to_feedback_incident_exists then
+      if need_to_feedback_not_all_the_same || @need_to_feedback_incident_exists || @need_to_feedback_delivery_pickup || @need_to_feedback_next_weight then
         puts 'Xroad 3 & 4 feedback'
         # We go on feedback mode here
         # We fill the result set for feedback
-        debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
+        debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
         debug_sql_query_ck_col_from = " FROM barcode bc JOIN ref_status rs ON rs.id = bc.status JOIN ref_workflow rw on rw.id = bc.wf_id "
         # We still use the
         debug_sql_query_check_distinct = debug_sql_query_ck_col + debug_sql_query_ck_col_from  + sql_query_ck_where_bc_table_only

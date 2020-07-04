@@ -208,6 +208,7 @@ BEGIN
     -- If the BC cannot be found, it is not created.
 
     -- Note that we can retrieve last status
+    -- /!\ Alias column are given in hearder
    RETURN QUERY
    SELECT
     wt.bc_id,

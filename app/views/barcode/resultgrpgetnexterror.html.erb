@@ -19,7 +19,15 @@
         Pour évoluer ensemble, ces codes barres doivent <strong>tous</strong> être :<br>
         <strong>Reconnus, sans incident en cours, de même status et de même workflow&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
         <hr>
-        Notez que les codes barres avec incident doivent évoluer un par un.
+        <% if @need_to_feedback_incident_exists %>
+          <br>Un des codes barres ci-dessous est en incident <i class="glyphicon glyphicon-info-sign"></i>
+        <% end %>
+        <% if @need_to_feedback_delivery_pickup %>
+          <br>Un enlèvement et une réception ne peuvent être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+        <% end %>
+        <% if @need_to_feedback_next_weight %>
+          <br>La prochaine étape obligatoire est la pesée. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+        <% end %>
       </div>
     </div>
     <div class="col-lg-3">
@@ -50,6 +58,14 @@
               <strong>Incident en cours: <i class="mgs-red">Oui</i></strong><br>
             <% end %>
 
+            <% if @need_to_feedback_delivery_pickup %>
+              <% if "#{result['bc_type_pack']}" == 'D' %>
+                <strong>Prochaine action possible: <i class="mgs-red">Réception</i></strong><br>
+              <% else %>
+                <strong>Prochaine action possible: <i class="mgs-red">Enlèvement</i></strong><br>
+              <% end %>
+            <% end %>
+
             <% unless "#{result['ext_ref']}" == '' %>
               <strong>Reférence externe: </strong><i class="monosp-ft-nc"><%= "#{result['ext_ref']}" %></i><br>
             <% end %>
@@ -69,7 +85,7 @@
     <div class="col-lg-3">
     </div>
     <div class="col-lg-6">
-      <div class="crt-block">Non trouvé(s)&nbsp;<i class="glyphicon glyphicon-barcode"></i></div>
+      <div class="crt-block">Non reconnu&nbsp;<i class="glyphicon glyphicon-barcode"></i></div>
       <div class="t-of-use mgs-med-note-imp">
         Les codes barres suivants sont manquants :<br>
         <hr>
