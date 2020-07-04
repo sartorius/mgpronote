@@ -49,6 +49,9 @@ function mainScanLoaderInCaseOfChange(){
       });
       getGeoL();
       loadCameraRead(true);
+
+      //DEBUG CHANGE
+      $('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -65,7 +68,7 @@ function mainScanLoaderInCaseOfChange(){
         mgsEncode($('#id-grp-nf-pure-res-' + i.toString()).html(), $('#sec-grp-nf-pure-res-' + i.toString()).html())
       );
     }
-    
+
   }
   else if($('#mg-graph-identifier').text() == 'checkbc-gr'){
     try {
@@ -314,6 +317,31 @@ function loadCameraRead(isGrp){
 
 
   $("#mg-grp-step-btn").click(function() {
+
+      // DEBUG CHANGE
+      // 4 pures are OK ***
+      //listOfBCToHandle.push("M00000CW8");
+      //listOfBCToHandle.push("M00000JFL");
+      //listOfBCToHandle.push("M000012T2");
+      //listOfBCToHandle.push("M0000312V"); // w Address
+      //listOfBCToHandle.push("M00001218"); // w Address and incident
+      //listOfBCToHandle.push("M00003ALN"); // w Address and incident
+
+      // 2 pures are KO ***
+      //listOfBCToHandle.push("M00000H9A");
+      //listOfBCToHandle.push("M00001N18");
+
+      // 2 ext are OK ***
+      //listOfBCToHandle.push("AZERTY"); // w Address without incident
+      //listOfBCToHandle.push("AZERTY2");
+
+      // 3 ext are KO ***
+      //listOfBCToHandle.push("KJDIZODZJOIJDIZOHHIOZ");
+      //listOfBCToHandle.push("2187287162871627HDJSHDJSHDS");
+      //listOfBCToHandle.push("898322ISUDSIUDNXJNISUSXUS89898989");
+
+
+
       console.log("You have clicked on #mg-grp-step-btn");
       $('#grp-blc-cam').hide();
       for(i=0; i<listOfBCToHandle.length; i++){
@@ -380,12 +408,12 @@ function loadCameraRead(isGrp){
     if(listOfBCToHandle.length>0){
       $('#grp-tap-to-del').show();
       $('#mg-grp-step-btn').show();
-      console.log('listOfBCToHandle.length IN ');
+      //console.log('listOfBCToHandle.length IN ');
     }
     else{
       $('#grp-tap-to-del').hide();
       $('#mg-grp-step-btn').hide();
-      console.log('listOfBCToHandle.length OUT ');
+      //console.log('listOfBCToHandle.length OUT ');
     }
 
   }

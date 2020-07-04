@@ -14,7 +14,7 @@ class BarcodeController < ApplicationController
       render 'grpgetnext'
   end
 
-
+  # GROUPING action retrieving future action and different checks
   def grpsavebc
     puts 'PURE <<<<<<<<<<< ' + params[:grpcheckcbpure]
     puts 'EXT <<<<<<<<<<< ' + params[:grpcheckcbext]
@@ -27,6 +27,9 @@ class BarcodeController < ApplicationController
     puts 'EXT Size <<<<<<<<<<< ' + list_ext_array.inspect
 
 
+    # Pure is the list the array with only pure MGS number
+    # The list contains (id, secure)
+    # PURE <<<<<<<<<<< [{"id":1,"secure":3301},{"id":2,"secure":4352}]
     pure_clause = ''
     start_coma = ''
     for pure_array in list_pure_array do
@@ -36,6 +39,8 @@ class BarcodeController < ApplicationController
       start_coma = ', '
     end
 
+    # This contains only external preference
+    # EXT <<<<<<<<<<< ["3222475413469","3263851322913"]
     ext_clause = ''
     start_coma = ''
     for ext_array in list_ext_array do
@@ -44,16 +49,16 @@ class BarcodeController < ApplicationController
       start_coma = ', '
     end
 
-
+    # Debug
     # puts 'pure_clause <<<<<<<<<<< ' + list_pure_array.inspect
     # puts 'ext_clause <<<<<<<<<<< ' + list_ext_array.inspect
 
 
+    # This is general Q
+    # Not used right now we do check before
     sql_query_col = "SELECT wt.bc_id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, bc.category AS bc_category, rte.act_owner AS rse_act_owner, " +
                     " rte.next_input_needed AS rse_next_input_needed, mw.wkf_id AS wkf_id, mw.id AS line_wkf_id, rtc.step AS current_step, " +
     		            " rte.id AS end_step_id, rte.step AS end_step, rte.description AS desc_end_step "
-
-
 
     sql_query_join = " FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id " +
     							               " AND mw.start_id = wt.current_step_id " +
@@ -61,105 +66,191 @@ class BarcodeController < ApplicationController
     				                     " JOIN ref_status rte ON rte.id = mw.end_id " +
                                  " JOIN barcode bc ON bc.id = wt.bc_id "
 
-
+    count_of_list_pure_and_ext = 0
+    # We need to check the content of the received list
+    # Cut Qs is matchin only the list of PURE and EXT
     if (list_pure_array.empty?) then
       puts '>> 1'
       # No Pure
       sql_query_where_cut =        " AND (bc.ext_ref IN (" + ext_clause + ") " + ");"
+      count_of_list_pure_and_ext = list_ext_array.length
 
     elsif (list_ext_array.empty?)
       puts '>> 2'
       # No Ext
       sql_query_where_cut =        " AND ((bc.id, bc.secure) IN ( " + pure_clause  + ' )) ' + " ;"
+      count_of_list_pure_and_ext = list_pure_array.length
+
     else
       puts '>> 3'
+      # Both
       sql_query_where_cut =        " AND (((bc.id, bc.secure) IN ( " + pure_clause  + ' )) ' +
       			                       " OR (bc.ext_ref IN (" + ext_clause + ") " + "));"
 
+      count_of_list_pure_and_ext = list_pure_array.length + list_ext_array.length
     end
 
+    # Check Qs
+    # This Q will retrieve the count of all FOUND elements (Condition: ALL_FOUND)
     sql_query_count = "SELECT COUNT(1) AS mg_count FROM barcode bc "
 
+    # This Q will retrieve all distinct parameters (Condition: ALL_SAME_STATUS_AND_WF)
+    # This Q Check there is no incident (Condition: NO_INCIDENT)
     sql_query_ck_col_distinct = "SELECT DISTINCT bc.under_incident, bc.status, bc.wf_id FROM barcode bc "
 
-    #Get transition
-    sql_query_where =             " WHERE bc.partner_id = " + @current_user.partner.to_s +
+    # Clause with wk_tag table
+    sql_query_where =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
                                  " AND bc.status = wt.current_step_id " + sql_query_where_cut
 
-    sql_query_ck_where =         " WHERE bc.partner_id = " + @current_user.partner.to_s + sql_query_where_cut
+    # Clause w/ barcode table only
+    sql_query_ck_where_bc_table_only = " WHERE bc.partner_id = " + @current_user.partner.to_s + sql_query_where_cut
 
-    # This query check there is no incident and only one status
-    sql_query_check_one = sql_query_ck_col_distinct + sql_query_ck_where
+    # This Q check there is no incident and only one status
     # We need to check if more than one row is returned and if there is no incident
+    sql_query_check_distinct = sql_query_ck_col_distinct + sql_query_ck_where_bc_table_only
+    @resultSetCheckOne = ActiveRecord::Base.connection.exec_query(sql_query_check_distinct)
 
-    @resultSetCheckOne = ActiveRecord::Base.connection.exec_query(sql_query_check_one)
-    sql_query_check_count = sql_query_count + sql_query_ck_where
-
-
+    # This Q will check the condition ALL_FOUND
+    # We count the number of barcode we found
+    sql_query_check_count = sql_query_count + sql_query_ck_where_bc_table_only
     @resultSetCheckCount = ActiveRecord::Base.connection.exec_query(sql_query_check_count)
 
-    #If all are under incident or different we raise an error.
-    if (@resultSetCheckOne.length > 1) || (@resultSetCheckOne[0]['under_incident'].to_s == 'true') || (@resultSetCheckCount[0]['mg_count'].to_i != @resultSetCheckOne.length) then
-      puts 'There are more than one status or one incident or several WF'
-      # We go on feedback mode here
-      debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
-      debug_sql_query_ck_col_from = " FROM barcode bc JOIN ref_status rs ON rs.id = bc.status JOIN ref_workflow rw on rw.id = bc.wf_id "
-      # We still use the
-      debug_sql_query_check_one = debug_sql_query_ck_col + debug_sql_query_ck_col_from  + sql_query_ck_where
+    # Control variables
+    need_to_feedback_not_found = false;
+    need_to_feedback_not_all_the_same = false;
+    need_to_feedback_incident_exists = false;
 
-      @debugResultSetCheckOne = ActiveRecord::Base.connection.exec_query(debug_sql_query_check_one)
+    all_check_are_passed = true;
 
 
-      @pureResultSetNotFound = 0
-      @extResultSetNotFound = 0
-      unless (@resultSetCheckCount[0]['mg_count'].to_i == @resultSetCheckOne.length)
+    #If we found none
+    if @resultSetCheckCount[0]['mg_count'].to_i == 0 then
+      puts 'Xroad 1 - we found: ' + @resultSetCheckCount[0]['mg_count'].to_s
+      all_check_are_passed = false;
 
-        # gen_union_pure_for_except_not_safe
-        # gen_union_ext_for_except_not_safe
-        # Here we need to identify missing lines
-        pure_union = ''
-        start_union = ''
-        for pure_array in list_pure_array do
+      # Nothing is found
+      need_to_feedback_not_found = true;
+    end
 
-          pure_union = pure_union + start_union + gen_union_pure_for_except_not_safe(get_safe_pg_number(pure_array["id"].to_s), get_safe_pg_number(pure_array["secure"].to_s))
-          start_union = ' UNION '
-        end
 
-        ext_union = ''
-        start_union = ''
-        for ext_array in list_ext_array do
+    # If we found less than expected
+    if @resultSetCheckCount[0]['mg_count'].to_i < count_of_list_pure_and_ext then
+      puts 'Xroad 2 - we found: ' + @resultSetCheckCount[0]['mg_count'].to_s
+      puts 'Xroad 2 - versus: ' + count_of_list_pure_and_ext.to_s
+      all_check_are_passed = false;
 
-          ext_union = ext_union + start_union + gen_union_ext_for_except_not_safe(get_safe_pg_wq_ns(ext_array.to_s))
-          start_union = ' UNION '
-        end
+      # Some have not been found
+      need_to_feedback_not_found = true;
+    end
 
-        puts 'Pure not found: ' + pure_union
-        puts 'Ext not found: ' + ext_union
 
-        sql_query_not_found_pure = pure_union + ' EXCEPT SELECT bc.id AS id, bc.secure AS secure FROM barcode bc ' + sql_query_ck_where
-        sql_query_not_found_ext = ext_union + ' EXCEPT SELECT bc.ext_ref AS ext_ref FROM barcode bc ' + sql_query_ck_where
+    # We check here if they are all the same or not
+    # If they are all the same the distinc retrieve only one line
+    if @resultSetCheckOne.length > 1 then
+      puts 'Xroad 3 - we found: ' + @resultSetCheckOne.length.to_s
+      all_check_are_passed = false;
 
-        # Missing line list
+      # We have more than one line which is not possible that means the barcode are not the same
+      need_to_feedback_not_all_the_same = true;
+    end
 
-        @pureResultSetNotFound = ActiveRecord::Base.connection.exec_query(sql_query_not_found_pure)
-        @extResultSetNotFound = ActiveRecord::Base.connection.exec_query(sql_query_not_found_ext)
+
+    # We need to check if incident exists
+    # If the result is empty we should not go in here
+    if (!@resultSetCheckOne.empty?) && (@resultSetCheckOne[0]['under_incident'].to_s == 'true') then
+      puts 'Xroad 4 - we found: ' + @resultSetCheckOne[0]['under_incident'].to_s
+      all_check_are_passed = false;
+
+      # This is important if the result retrieve only one line (means all are the same)
+      # But all are under incident then we need to tells the user that we have an issue.
+      need_to_feedback_incident_exists = true;
+    end
+
+
+    ##### FROM HERE we need to pass or feedback
+    # The variable need_to_feedback_not_all_the_same tells us if pass or not
+    # Then we go on if else management
+
+    if all_check_are_passed then
+      puts 'all_check_are_passed : EVERYTHING IS OK HERE'
+      # Everything is good here ! Enjoy
+      # We need to access database for good results !
+      sql_query_big_one = sql_query_col + sql_query_join + sql_query_where
+
+      # Handle Weight Exception !
+      # If we end on weight we have to discard
+      render 'resultgrpgetnext'
+    else
+      # We need to get feedback
+      # We need to access database for feedback !
+      if need_to_feedback_not_all_the_same || need_to_feedback_incident_exists then
+        puts 'Xroad 3 & 4 feedback'
+        # We go on feedback mode here
+        # We fill the result set for feedback
+        debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
+        debug_sql_query_ck_col_from = " FROM barcode bc JOIN ref_status rs ON rs.id = bc.status JOIN ref_workflow rw on rw.id = bc.wf_id "
+        # We still use the
+        debug_sql_query_check_distinct = debug_sql_query_ck_col + debug_sql_query_ck_col_from  + sql_query_ck_where_bc_table_only
+        @debugResultSetCheckOne = ActiveRecord::Base.connection.exec_query(debug_sql_query_check_distinct)
+      else
+        # We need to instanciate because the view will iterate
+        @debugResultSetCheckOne = Array.new
+      end
+      # We need to tell the user which are not found
+      if need_to_feedback_not_found then
+          puts 'Xroad 1 & 2 feedback'
+
+          @pureResultSetNotFound = 0
+          @extResultSetNotFound = 0
+
+          # gen_union_pure_for_except_not_safe
+          # gen_union_ext_for_except_not_safe
+          # Here we need to identify missing lines
+          pure_union = ''
+          start_union = ''
+          for pure_array in list_pure_array do
+
+            pure_union = pure_union + start_union + gen_union_pure_for_except_not_safe(get_safe_pg_number(pure_array["id"].to_s), get_safe_pg_number(pure_array["secure"].to_s))
+            start_union = ' UNION '
+          end
+
+          ext_union = ''
+          start_union = ''
+          for ext_array in list_ext_array do
+
+            ext_union = ext_union + start_union + gen_union_ext_for_except_not_safe(get_safe_pg_wq_ns(ext_array.to_s))
+            start_union = ' UNION '
+          end
+
+          puts 'DEBUG: Pure not found: ' + pure_union
+          puts 'DEBUG: Ext not found: ' + ext_union
+
+          # Missing line list
+          # Be carefull if sometimes pure and not found are empty list
+          if list_pure_array.length == 0 then
+            # We have no missing pure no need to check
+            @pureResultSetNotFound = Array.new
+          else
+            sql_query_not_found_pure = pure_union + ' EXCEPT SELECT bc.id AS id, bc.secure AS secure FROM barcode bc ' + sql_query_ck_where_bc_table_only
+            @pureResultSetNotFound = ActiveRecord::Base.connection.exec_query(sql_query_not_found_pure)
+          end
+
+          if list_ext_array.length == 0 then
+            # We have no missing ext no need to check
+            @extResultSetNotFound = Array.new
+          else
+            sql_query_not_found_ext = ext_union + ' EXCEPT SELECT bc.ext_ref AS ext_ref FROM barcode bc ' + sql_query_ck_where_bc_table_only
+            @extResultSetNotFound = ActiveRecord::Base.connection.exec_query(sql_query_not_found_ext)
+          end
+
+
+
 
       end
 
       # Then we render to tell the user that something is KO
       render 'resultgrpgetnexterror'
-
-    else
-      puts 'Everything seems to be OK to grp evolution'
-
-      redirect_to accessrightserror_path
     end
-
-
-    sql_query_big_one = sql_query_col + sql_query_join + sql_query_where
-
-
-    #Handle Weight !
 
   end
 

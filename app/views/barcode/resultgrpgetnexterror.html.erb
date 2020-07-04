@@ -1,4 +1,4 @@
-<% provide(:title, "Group next") %>
+<% provide(:title, "Grouper next") %>
 <div id="mg-graph-identifier">grpnexterr-gr</div>
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
@@ -11,15 +11,15 @@
     <div class="col-lg-6">
 			<div class="mgs-read-bc">
 				<h1>
-					Évolution groupée impossible
+					Grouper impossible
 				</h1>
 			</div>
-      <div class="crt-block">Règle non respectée <i class="glyphicon glyphicon-remove"></i></div>
+      <div class="crt-block">Règles à respecter&nbsp;<i class="glyphicon glyphicon-remove"></i></div>
       <div class="t-of-use mgs-med-note-imp">
         Pour évoluer ensemble, ces codes barres doivent <strong>tous</strong> être :<br>
         <strong>Reconnus, sans incident en cours, de même status et de même workflow&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
         <hr>
-        Notez que les paquets avec incident doivent évoluer un par un.
+        Notez que les codes barres avec incident doivent évoluer un par un.
       </div>
     </div>
     <div class="col-lg-3">
@@ -47,7 +47,7 @@
             <% if "#{result['under_incident']}" == 'false' %>
               <strong>Incident en cours: </strong>Non<br>
             <% else %>
-              <strong>Incident en cours: </strong><i class="mgs-red">Oui</i><br>
+              <strong>Incident en cours: <i class="mgs-red">Oui</i></strong><br>
             <% end %>
 
             <% unless "#{result['ext_ref']}" == '' %>
@@ -69,7 +69,7 @@
     <div class="col-lg-3">
     </div>
     <div class="col-lg-6">
-      <div class="crt-block">Non trouvé(s) <i class="glyphicon glyphicon-barcode"></i></div>
+      <div class="crt-block">Non trouvé(s)&nbsp;<i class="glyphicon glyphicon-barcode"></i></div>
       <div class="t-of-use mgs-med-note-imp">
         Les codes barres suivants sont manquants :<br>
         <hr>
