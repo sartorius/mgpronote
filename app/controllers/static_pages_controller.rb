@@ -14,10 +14,6 @@ class StaticPagesController < ApplicationController
   def readbc
   end
 
-  def endpage404
-    
-  end
-
 
   def pricing
     render 'pricing'
