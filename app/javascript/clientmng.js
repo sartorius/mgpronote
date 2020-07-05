@@ -18,7 +18,7 @@ function mainClientLoaderInCaseOfChange(){
       runjsClientGrid();
       //Button Barcode creator
       $( ".bc-crt-clt" ).click(function() {
-        createBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'));
+        createBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
       });
       //Button Authorize
       $( ".bc-auth-clt" ).click(function() {
@@ -48,12 +48,13 @@ function mainClientLoaderInCaseOfChange(){
 }
 
 //Inner variable declaration !
-function createBarCodeFor(name, id, o){
+function createBarCodeFor(name, id, o, email){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
   //console.log('Here is o: ' + o);
   $('#nm-t-cf').html(name + '#' + id + ((o == 'D') ? ' pour une <strong>réception</strong>' : ' pour un <strong>enlèvement</strong>'));
   $('#crt-cb-param').html(id);
   $('#crt-cb-order').html(o);
+  $('#crt-cb-email').html(email);
   $('#mgs-dialog').show(100);
   //console.log('createBarCodeFor');
 }
@@ -87,9 +88,11 @@ function addbarCodeJson(clientId){
 function confirmedBarCodeFor(){
   //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
   let clientId = $('#crt-cb-param').html();
+  let clientEmail = $('#crt-cb-email').html();
   $.ajax('/createbarcodeforclient', {
       type: 'POST',  // http method
       data: { client_id: clientId,
+              client_email: clientEmail,
               partner_id: $('#cur-part-id').html(),
               auth_token: $('#auth-token-s').val(),
               order: $('#crt-cb-order').html(),
@@ -162,7 +165,7 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-home"></i>' + '</button>';
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-home"></i>' + '</button>';
               }
             },
             {
@@ -172,7 +175,7 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-arrow-up"></i>' + '</button>';
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-arrow-up"></i>' + '</button>';
               }
             },
             {

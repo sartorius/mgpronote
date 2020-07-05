@@ -34,8 +34,8 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VAL
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N', 'P');
 -- INSERT INTO ref_status (id, step, description, next_input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis. Prêt à être enlevé', 'Y');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', TRUE);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P', TRUE);
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P');
