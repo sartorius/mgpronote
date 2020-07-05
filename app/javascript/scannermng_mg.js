@@ -66,7 +66,7 @@ function mainScanLoaderInCaseOfChange(){
       loadCameraRead(true);
 
       //DEBUG CHANGE keep for test
-      $('#mg-grp-step-btn').show();
+      //$('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -382,8 +382,9 @@ function loadCameraRead(isGrp){
 
       // DEBUG CHANGE
       // 4 pures are OK ***
-      listOfBCToHandle.push("QSDFG");
-      listOfBCToHandle.push("M00005JWY");
+      //listOfBCToHandle.push("AZERTY4");
+      //listOfBCToHandle.push("M00003WPJ");
+      //listOfBCToHandle.push("M00004GUX");
       //listOfBCToHandle.push("M000055Y2");
       //listOfBCToHandle.push("M00004YAK"); // w Address
       //listOfBCToHandle.push("M00001218"); // w Address and incident

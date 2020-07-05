@@ -28,7 +28,7 @@
           <label for="exampleFormControlSelect1" class="lbl-opt">L'étape #<span><%= @stepTxt %></span> a été enregistrée pour les <span class="grp-read-nb"></span> codes barres</label>
         </div>
 
-				<% unless (@resultSetCallExt.nil? && resultSetCallPureId.nil?) || (@resultSetCallExt.empty? && resultSetCallPureId.empty?)   %>
+				<% unless (@resultSetCallExt.nil? && @resultSetCallPureId.nil?) || (@resultSetCallExt.empty? && @resultSetCallPureId.empty?)   %>
 					<hr>
 					<div class="mgs-info">
 						<i class="glyphicon glyphicon-envelope"></i>&nbsp;Une notification par email a été envoyée au(x) client(s).
