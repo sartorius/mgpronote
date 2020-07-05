@@ -7,22 +7,14 @@ PURE <<<<<<<<<<< [{"id":1,"secure":3301},{"id":2,"secure":4352}]
 EXT <<<<<<<<<<< ["3222475413469","3263851322913"]
 
 
-SELECT wt.bc_id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, bc.category AS bc_category, rte.act_owner AS rse_act_owner,
-        rte.next_input_needed AS rse_next_input_needed, mw.wkf_id AS wkf_id, mw.id AS line_wkf_id, rtc.step AS current_step,
-		      rte.id AS end_step_id, rte.step AS end_step, rte.description AS desc_end_step
-		      FROM mod_workflow mw JOIN wk_tag wt ON mw.wkf_id = wt.mwkf_id -- mod workflow id is the wf line we use
-							               AND mw.start_id = wt.current_step_id
-				                     JOIN ref_status rtc ON rtc.id = wt.current_step_id
-				                     JOIN ref_status rte ON rte.id = mw.end_id
-                             JOIN barcode bc ON bc.id = wt.bc_id
-		                         WHERE bc.partner_id = 2
-			                       AND (((bc.id, bc.secure) IN (
-				(2, 5185),
-				(3, 9970),
-				(4, 9292)
-			))
-			OR (bc.id IN (5, 7, 8)
-			));
+CLI_GRPSTEP_TAG_EXT
+CLI_GRPSTEP_TAG_PURE
 
-      Pure not found:  SELECT 4 AS id, 9292 AS secure  UNION  SELECT 1 AS id, 6712 AS secure  UNION  SELECT 2 AS id, 5185 AS secure  UNION  SELECT 4 AS id, 8409 AS secure
-      Ext not found:  SELECT  TRIM('3263851322913') AS ext_ref 
+OK CLI_STEP_TAG
+CLI_COM_TAG
+
+
+DROP PROCEDURE IF EXISTS CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
+DROP PROCEDURE IF EXISTS CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
+DROP PROCEDURE IF EXISTS CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250));
+DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);

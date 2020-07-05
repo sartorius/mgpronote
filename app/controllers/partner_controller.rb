@@ -80,7 +80,7 @@ class PartnerController < ApplicationController
                       " JOIN users uo ON uo.id = bc.owner_id " +
                       " WHERE u.id = " + @current_user.id.to_s +
                       # End partner check
-                      " ORDER BY bc.id ASC;"
+                      " ORDER BY bc.id ASC LIMIT "+ ENV['SQL_LIMIT_LG'] +";"
 
 
     begin

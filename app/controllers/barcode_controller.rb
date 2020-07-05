@@ -15,6 +15,7 @@ class BarcodeController < ApplicationController
   end
 
   # Save the grouping action here
+  # We actually save the last step here and notify
   def grpsavestep
     #puts '*** PURE <<<<<<<<<<< ' + params[:grpcheckcbpure]
     #puts '*** PURE ID <<<<<<<<<<< ' + params[:grpcheckcbpureid]
@@ -46,10 +47,24 @@ class BarcodeController < ApplicationController
       # Finalize
       pure_array_id = " '{"+ pure_array_id + "}'::BIGINT[] "
 
-      sql_query_pure_id = "CALL CLI_GRPSTEP_TAG_PURE ("+ pure_array_id +", CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
+      sql_query_pure_id = "SELECT * FROM CLI_GRPSTEP_TAG_PURE ("+ pure_array_id +", CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
       #puts 'Q Pure ID: ' + sql_query_pure_id
 
       @resultSetCallPureId = ActiveRecord::Base.connection.exec_query(sql_query_pure_id)
+
+
+      # This retrieve notification
+      puts 'Query has been launched correctly'
+      @resultSetCallPureId.each do |notification|
+        # conveniently, row is a hash
+        # the keys are the fields, as you'd expect
+        # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
+        # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
+        # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
+        # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        puts 'Notif Pure: ' + notification.inspect
+      end
+
     end
 
 
@@ -66,10 +81,22 @@ class BarcodeController < ApplicationController
       # Finalize
       ext_array = " '{"+ ext_array + "}'::VARCHAR(35)[] "
 
-      sql_query_ext = "CALL CLI_GRPSTEP_TAG_EXT("+ ext_array +", CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
+      sql_query_ext = "SELECT * FROM CLI_GRPSTEP_TAG_EXT("+ ext_array +", CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " + @current_user.id.to_s + ");"
       #puts 'Q EXT: ' + sql_query_ext
 
       @resultSetCallExt = ActiveRecord::Base.connection.exec_query(sql_query_ext)
+
+      # This retrieve notification
+      puts 'Query has been launched correctly'
+      @resultSetCallExt.each do |notification|
+        # conveniently, row is a hash
+        # the keys are the fields, as you'd expect
+        # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
+        # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
+        # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
+        # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        puts 'Notif Ext: ' + notification.inspect
+      end
     end
 
     render 'resultfinalgrpresultstep'
@@ -445,6 +472,7 @@ class BarcodeController < ApplicationController
   end
 
 
+  # We actually save the last step here and notify
   def savestep
 
     @incidentDeclared = 'N'
@@ -454,7 +482,7 @@ class BarcodeController < ApplicationController
 
 
           # We are not in incident case
-          sql_query = "CALL CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " +
+          sql_query = "SELECT * FROM CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " +
                           @current_user.id.to_s + ", " + get_safe_pg_number(params[:stepweight]) + ");"
           #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
 
@@ -468,7 +496,7 @@ class BarcodeController < ApplicationController
 
     else
         # We are in incident case
-        sql_query = "CALL CLI_COM_TAG ("+ params[:stepcbid] +", " + @current_user.id.to_s + ", " + get_safe_pg_wq(params[:stepcomment]) + ");"
+        sql_query = "SELECT * FROM CLI_COM_TAG ("+ params[:stepcbid] +", " + @current_user.id.to_s + ", " + get_safe_pg_wq(params[:stepcomment]) + ");"
         @incidentDeclared = 'Y'
         @comment = params[:stepcomment]
     end
@@ -476,7 +504,19 @@ class BarcodeController < ApplicationController
 
     begin
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
-      ActiveRecord::Base.connection.execute(sql_query)
+      @notificationResultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+
+      puts 'Query has been launched correctly'
+      @notificationResultSet.each do |notification|
+        # conveniently, row is a hash
+        # the keys are the fields, as you'd expect
+        # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
+        # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
+        # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
+        # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        puts 'Notif: ' + notification.inspect
+      end
+
       @returnmessage = "L'opération a été correctement enregistrée"
       render 'resultsavestep'
     end

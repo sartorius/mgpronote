@@ -8,21 +8,40 @@ CREATE TABLE ref_status (
   -- P Partner
   -- Q Personal Reseller
   act_owner           CHAR(1)       NOT NULL,
+  need_to_notify      BOOLEAN       DEFAULT FALSE,
+  -- if need to notify and txt is null, use description
+  txt_to_notify       VARCHAR(250),
   create_date         TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'Y', 'P');
+/*
+
+ALTER TABLE ref_status ADD COLUMN need_to_notify BOOLEAN DEFAULT FALSE;
+UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 0, 6, 10);
+
+ALTER TABLE ref_status ADD COLUMN txt_to_notify VARCHAR(250);
+UPDATE ref_status SET txt_to_notify = 'Vous venez de recevoir une référence paquet. Vous avez une action à faire: renseigner le.la réceptionneur.euse, veuillez vous connecter pour effectuer cette action.' WHERE id IN (0);
+UPDATE ref_status SET description = 'Le poids a été validé.' WHERE id IN (6);
+
+*/
+
+
+
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'Y', 'P', TRUE);
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (1, 'Adressé', 'Les informations du réceptionneur.euse ont été saisis, avec information enlèvement si nécessaires.', 'N', 'Q');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N', 'P');
 -- INSERT INTO ref_status (id, step, description, next_input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis. Prêt à être enlevé', 'Y');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (6, 'Pesé', 'Le poids ont été validé.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', TRUE);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE);
+
+UPDATE ref_status SET txt_to_notify = 'Vous venez de recevoir une référence paquet. Vous avez une action à faire: renseigner le.la réceptionneur.euse, veuillez vous connecter pour effectuer cette action.' WHERE id IN (0);
 
 
 CREATE TABLE ref_workflow (
@@ -237,9 +256,18 @@ $func$  LANGUAGE plpgsql;
 -- CALL stored_procedure_name(parameter_list);
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
-DROP PROCEDURE IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);
-CREATE OR REPLACE PROCEDURE CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
-LANGUAGE plpgsql
+-- Change to a function to get notification
+-- CREATE OR REPLACE FUNCTION CLI_ACT_TAG
+DROP FUNCTION IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);
+CREATE OR REPLACE FUNCTION CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(250))
+                -- Do the return at the end xxx
 AS $$
 BEGIN
     -- Do the INSERT
@@ -265,89 +293,35 @@ BEGIN
         WHERE id = $1;
     END IF;
 
-    COMMIT;
-END;
-$$;
-
--- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
--- CALL stored_procedure_name(parameter_list);
--- CALL CLI_GRPSTEP_TAG_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
-DROP PROCEDURE IF EXISTS CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
-CREATE OR REPLACE PROCEDURE CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    var_partner SMALLINT;
-BEGIN
-    var_partner := -1;
-    SELECT partner INTO var_partner
-      FROM users u
-      WHERE u.id = par_user_id;
-
-    -- Do the INSERT
-    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
-    -- select * from ref_status rs
-    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
-    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
-            SELECT id, wf_id, par_target_step_id, par_geo_l, par_user_id
-            FROM barcode
-            WHERE partner_id = var_partner
-            AND id IN (SELECT(UNNEST((par_bc_id_arr))));
-
-
-    -- We update the barcode with last status
-    UPDATE barcode
-      SET status = par_target_step_id,
-      update_date = CURRENT_TIMESTAMP
-      WHERE partner_id = var_partner
-      AND id IN (SELECT(UNNEST((par_bc_id_arr))));
-
-    COMMIT;
-END;
-$$;
-
--- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
--- CALL stored_procedure_name(parameter_list);
--- CALL CLI_GRPSTEP_TAG_EXT('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
-DROP PROCEDURE IF EXISTS CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
-CREATE OR REPLACE PROCEDURE CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    var_partner SMALLINT;
-BEGIN
-    var_partner := -1;
-    SELECT partner INTO var_partner
-      FROM users u
-      WHERE u.id = par_user_id;
-
-    -- Do the INSERT
-    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
-    -- select * from ref_status rs
-    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
-    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
-            SELECT id, wf_id, par_target_step_id, par_geo_l, par_user_id
-            FROM barcode
-            WHERE partner_id = var_partner
-            AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
-
-
-    -- We update the barcode with last status
-    UPDATE barcode
-      SET status = par_target_step_id,
-      update_date = CURRENT_TIMESTAMP
-      WHERE partner_id = var_partner
-      AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
-
-    COMMIT;
-END;
-$$;
+    RETURN QUERY
+    SELECT
+        bc.id,
+        bc.secure,
+        u.name,
+        u.firstname,
+        u.email,
+        rs.step,
+        CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END
+        FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                        JOIN ref_status rs ON rs.id = bc.status
+                        WHERE bc.id = $1
+                        -- Make sure we retrieve only when we need to notify
+                        AND need_to_notify = TRUE;
+END
+$$ LANGUAGE plpgsql;
 
 -- This will not change the step but add a comment
 -- Parameters are BC ID/USER ID/Comment
-DROP PROCEDURE IF EXISTS CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250));
-CREATE OR REPLACE PROCEDURE CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250))
-LANGUAGE plpgsql
+DROP FUNCTION IF EXISTS CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250));
+CREATE OR REPLACE FUNCTION CLI_COM_TAG(BIGINT, BIGINT, VARCHAR(250))
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(300))
+                -- Do the return at the end xxx
 AS $$
 DECLARE
   var_last_wk_tag     BIGINT;
@@ -378,10 +352,135 @@ BEGIN
         WHERE id = $1;
     END IF;
 
+    RETURN QUERY
+    SELECT
+        bc.id,
+        bc.secure,
+        u.name,
+        u.firstname,
+        u.email,
+        CAST ('Incident' AS VARCHAR(50)),
+        CAST ('Un incident a été relevé: ' || $3 AS VARCHAR(300))
+        FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                        WHERE bc.id = $1;
 
-    COMMIT;
-END;
-$$;
+END
+$$ LANGUAGE plpgsql;
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPSTEP_TAG_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+DROP FUNCTION IF EXISTS CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
+CREATE OR REPLACE FUNCTION CLI_GRPSTEP_TAG_PURE(par_bc_id_arr BIGINT[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(300))
+                -- Do the return at the end xxx
+AS $$
+DECLARE
+    var_partner SMALLINT;
+BEGIN
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+            SELECT id, wf_id, par_target_step_id, par_geo_l, par_user_id
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = par_target_step_id,
+      update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+    RETURN QUERY
+      SELECT
+          bc.id,
+          bc.secure,
+          u.name,
+          u.firstname,
+          u.email,
+          rs.step,
+          CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END
+          FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                          JOIN ref_status rs ON rs.id = bc.status
+                          WHERE bc.id IN (SELECT(UNNEST((par_bc_id_arr))))
+                          -- Make sure we retrieve only when we need to notify
+                          AND need_to_notify = TRUE;
+END
+$$ LANGUAGE plpgsql;
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPSTEP_TAG_EXT('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+DROP FUNCTION IF EXISTS CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT);
+CREATE OR REPLACE FUNCTION CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(300))
+                -- Do the return at the end xxx
+AS $$
+DECLARE
+    var_partner SMALLINT;
+BEGIN
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+            SELECT id, wf_id, par_target_step_id, par_geo_l, par_user_id
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
+
+
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET status = par_target_step_id,
+      update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
+
+    RETURN QUERY
+      SELECT
+          bc.id,
+          bc.secure,
+          u.name,
+          u.firstname,
+          u.email,
+          rs.step,
+          CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END
+          FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                          JOIN ref_status rs ON rs.id = bc.status
+                          WHERE bc.ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))))
+                          -- Make sure we retrieve only when we need to notify
+                          AND need_to_notify = TRUE;
+
+END
+$$ LANGUAGE plpgsql;
 
 
 -- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!

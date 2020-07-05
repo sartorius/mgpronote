@@ -18,6 +18,13 @@
     <% else %>
         <%= render 'barcode/resultsavestepwithincident' %>
     <% end %>
+
+		<% unless @notificationResultSet.nil? || @notificationResultSet.empty?  %>
+			<hr>
+			<div class="mgs-info">
+				<i class="glyphicon glyphicon-envelope"></i>&nbsp;Le.la client.e a reçu une notification par email.
+			</div>
+		<% end %>
   </div>
   <div class="col-lg-3">
   </div>

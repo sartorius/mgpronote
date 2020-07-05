@@ -64,8 +64,31 @@ class ApplicationController < ActionController::Base
     return '(' + i + ', '+ j + ')'
   end
 
+  # Be careful this method exists on JS
+  # as pure unhappy duplicate code
+  def encodeMGS(id, sec)
+    # Here is JS content
+    # let lidPlusSec = parseInt(lid.toString() + mgspad(sec, 4).toString());
+    # return 'M' + mgspad(lidPlusSec.toString(36), 8).toUpperCase();
+
+    # Convert base
+    # 12345.to_s(36)
+    # => "9ix"
+    # "9ix".to_i(36)
+    # => 12345
+
+    # Padding zero
+    # puts 1.to_s.rjust(3, "0")
+    #=> 001
+    # puts 10.to_s.rjust(3, "0")
+    #=> 010
+    # puts 100.to_s.rjust(3, "0")
+    #=> 100
+
+  end
+
   # Mailer
-  def sendEmailTest(to_addr, firstname_name, cb_code, status)
+  def sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
     Mailjet.configure do |config|
       config.api_key = ENV['MJ_APIKEY_PUBLIC']
       config.secret_key = ENV['MJ_APIKEY_PRIVATE']
@@ -83,8 +106,8 @@ class ApplicationController < ActionController::Base
             }
         ],
         'Subject' => 'MGSuivi: ' + cb_code + ' ' + status,
-        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche.",
-        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche."
+        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche.",
+        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche."
     }]
     )
     p variable.attributes['Messages']

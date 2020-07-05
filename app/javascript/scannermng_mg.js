@@ -65,8 +65,8 @@ function mainScanLoaderInCaseOfChange(){
       getGeoL();
       loadCameraRead(true);
 
-      //DEBUG CHANGE
-      //$('#mg-grp-step-btn').show();
+      //DEBUG CHANGE keep for test
+      $('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -382,10 +382,10 @@ function loadCameraRead(isGrp){
 
       // DEBUG CHANGE
       // 4 pures are OK ***
-      //listOfBCToHandle.push("M00000CW8");
-      //listOfBCToHandle.push("M00000JFL");
-      //listOfBCToHandle.push("M000012T2");
-      //listOfBCToHandle.push("M0000312V"); // w Address
+      listOfBCToHandle.push("QSDFG");
+      listOfBCToHandle.push("M00005JWY");
+      //listOfBCToHandle.push("M000055Y2");
+      //listOfBCToHandle.push("M00004YAK"); // w Address
       //listOfBCToHandle.push("M00001218"); // w Address and incident
       //listOfBCToHandle.push("M00003ALN"); // w Address and incident
       //listOfBCToHandle.push("M0000312V"); // Under Weight
@@ -396,21 +396,6 @@ function loadCameraRead(isGrp){
       //listOfBCToHandle.push("M0000430O");
       //listOfBCToHandle.push("M00003WPJ");
       //listOfBCToHandle.push("AZERTY5");
-      //stOfBCToHandle.push("AZERTY4");
-
-      // 2 pures are KO ***
-      //listOfBCToHandle.push("M00000H9A");
-      //listOfBCToHandle.push("M00001N18");
-
-      // 2 ext are OK ***
-      //listOfBCToHandle.push("AZERTY"); // w Address without incident
-      //listOfBCToHandle.push("AZERTY2");
-      //listOfBCToHandle.push("AZERTY3"); // Under weight
-
-      // 3 ext are KO ***
-      //listOfBCToHandle.push("KJDIZODZJOIJDIZOHHIOZ");
-      //listOfBCToHandle.push("2187287162871627HDJSHDJSHDS");
-      //listOfBCToHandle.push("898322ISUDSIUDNXJNISUSXUS89898989");
 
 
 

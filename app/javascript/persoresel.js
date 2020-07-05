@@ -95,7 +95,15 @@ function runjsPersoreselGrid(){
             //Default width is auto
             { name: "part_name", title: "Nom partenaire", type: "text", headercss: "h-jsG-l" },
             { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
-            { name: "diff_days", title: '<i class="glyphicon glyphicon-time"></i>', type: "number", width: 3, headercss: "h-jsG-c" }
+            { name: "diff_days",
+              title: '<i class="glyphicon glyphicon-time"></i>',
+              type: "number",
+              width: 3,
+              headercss: "h-jsG-c",
+              itemTemplate: function(value, item) {
+                return '<p class="center">' + value + '</p>';
+              }
+            }
 
         ]
     });

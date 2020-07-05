@@ -83,7 +83,7 @@ class ClientController < ApplicationController
     sql_query += " LEFT JOIN barcode bc on bc.owner_id = u.id "
     sql_query += " AND cpx.partner_id = " + @current_user.partner.to_s + " AND bc.partner_id = " + @current_user.partner.to_s + " "
     sql_query += " GROUP BY u.id, u.name, u.firstname, u.email, cpx.has_poc, bc.owner_id, cpx.create_date "
-    sql_query += " ORDER BY cpx.create_date DESC;"
+    sql_query += " ORDER BY cpx.create_date DESC LIMIT "+ ENV['SQL_LIMIT_MD'] +";"
 
     begin
 
