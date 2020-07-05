@@ -1,0 +1,70 @@
+<div class="row mgs-title">
+  <div class="col-lg-12 monosp-ft-title">
+    <span id="bc-seeone"><%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %></span>
+  </div>
+</div>
+
+<div class="row usr-block">
+  <div class="col-md-4">
+    <div class="crt-block">Client</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations sur vous.
+    </div>
+    <label>Nom prénom</label>
+    <div class="field-md">
+      <%= @user.name + ' ' + @user.firstname %>
+    </div>
+    <div class="crt-block">Contact</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations utiles pour vous contacter.
+    </div>
+    <label>Email</label>
+    <div class="field-md">
+      <%= @user.email %>
+    </div>
+    <label>Profil</label>
+    <div class="field-md">
+      <% if @user.partner == 0 %>
+        Particulier
+      <% elsif @user.partner == 1 %>
+        Entreprise
+      <% else %>
+        Partenaire <% if @user.incharge? %>et <strong>en charge</strong><% end %>
+      <% end %>
+    </div>
+    <label>Téléphone</label>
+    <div class="field-md">
+      <%= @user.phone %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="crt-block">Référence client</div>
+    <div class="t-of-use mgs-med-note-imp">
+      Cette référence doit être rajoutée dans le champs adresse de <strong>tous</strong> les colis que vous faîtes livrer chez le partenaire.<br>
+      <br><strong>Cette action permet au partenaire de vous identifier rapidement et efficacement comme le propriétaire du colis&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+      <hr>
+    </div>
+    <label>Votre référence</label>
+    <div class="field-md">
+      <%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="crt-block">Utilisation</div>
+    <div class="t-of-use mgs-med-note">
+      Si vous deviez faire livrer votre colis à l'adresse suivante :<br>
+      Mada Colis Transport<br>
+      15 RUE DE LA GARE<br>
+      93170 BAGNOLET<br>
+    </div>
+    <div class="crt-block">&nbsp;</div>
+    <div class="t-of-use mgs-med-note-imp">
+      Vous devez entrer l'adresse suivante :<br>
+      Mada Colis Transport/<%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %><br>
+      15 RUE DE LA GARE<br>
+      93170 BAGNOLET<br>
+      <hr>
+    </div>
+
+  </div>
+</div>

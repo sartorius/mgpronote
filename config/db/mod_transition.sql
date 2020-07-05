@@ -25,6 +25,7 @@ UPDATE ref_status SET description = 'Le poids a été validé.' WHERE id IN (6);
 
 */
 
+UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
 
 
 

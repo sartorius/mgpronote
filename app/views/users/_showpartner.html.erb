@@ -1,0 +1,49 @@
+<div class="row usr-block">
+  <div class="col-md-6">
+    <div class="crt-block">Client</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations sur vous.
+    </div>
+    <label>Nom prénom</label>
+    <div class="field-md">
+      <%= @user.name + ' ' + @user.firstname %>
+    </div>
+    <div class="crt-block">Contact</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations utiles pour vous contacter.
+    </div>
+    <label>Email</label>
+    <div class="field-md">
+      <%= @user.email %>
+    </div>
+    <label>Téléphone</label>
+    <div class="field-md">
+      <%= @user.phone %>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="crt-block">Compte</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations sur vous.
+    </div>
+    <label>Profil</label>
+    <div class="field-md">
+      <% if @user.partner == 0 %>
+        Particulier
+      <% elsif @user.partner == 1 %>
+        Entreprise
+      <% else %>
+        Partenaire <% if @user.incharge? %>et <strong>en charge</strong><% end %>
+      <% end %>
+    </div>
+    <hr>
+    <label>Compagnie</label>
+    <div class="field-md">
+      <%= @resultSetCompany[0][1].to_s %>
+    </div>
+    <label>Compagnie description</label>
+    <div class="field-md">
+      <%= @resultSetCompany[0][2].to_s %>
+    </div>
+  </div>
+</div>

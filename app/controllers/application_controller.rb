@@ -3,6 +3,9 @@ class ApplicationController < ActionController::Base
   require 'mailjet'
 
 
+
+
+
   private
 
   def get_partner_company_name
@@ -86,6 +89,8 @@ class ApplicationController < ActionController::Base
     #=> 100
 
   end
+
+
 
   # Mailer
   def sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)

@@ -1,49 +1,14 @@
 <% provide(:title, @user.name) %>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
 
-<div class="row usr-block">
-  <div class="col-md-4">
-  </div>
-  <div class="col-md-4">
-    <label>Nom</label>
-    <div class="field-big">
-      <%= @user.name %>
-    </div>
-    <label>Prénom</label>
-    <div class="field-big">
-      <%= @user.firstname %>
-    </div>
-    <hr>
-    <label>Email</label>
-    <div class="field-md">
-      <%= @user.email %>
-    </div>
-    <label>Profil</label>
-    <div class="field-md">
-      <% if @user.partner == 0 %>
-        Particulier
-      <% elsif @user.partner == 1 %>
-        Revendeur
-      <% else %>
-        Partenaire <% if @user.incharge? %>et <strong>en charge</strong><% end %>
-      <% end %>
-    </div>
-    <label>Téléphone</label>
-    <div class="field-md">
-      <%= @user.phone %>
-    </div>
-    <hr>
-    <label>Compagnie</label>
-    <div class="field-md">
-      <%= @resultSetCompany[0][0].to_s %>
-    </div>
-    <label>Compagnie description</label>
-    <div class="field-md">
-      <%= @resultSetCompany[0][1].to_s %>
-    </div>
-  </div>
-  <div class="col-md-4">
-  </div>
-</div>
+<% if @resultSetCompany[0][0].to_i < 2 %>
+    <%= render 'users/showclient' %>
+<% else %>
+    <%= render 'users/showpartner' %>
+<% end %>
+
 <div class="row">
   <div class="col-md-4">
   </div>

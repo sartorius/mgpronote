@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_26_154703) do
+ActiveRecord::Schema.define(version: 2020_07_05_142409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,14 +37,34 @@ ActiveRecord::Schema.define(version: 2020_06_26_154703) do
   end
 
   create_table "barcode", force: :cascade do |t|
-    t.string "ref_tag", limit: 20, null: false
+    t.string "ref_tag", limit: 25
     t.integer "secure", limit: 2, null: false
     t.integer "secret_code", limit: 2, null: false
+    t.integer "wf_id", limit: 2, default: 1
     t.integer "status", limit: 2, default: 0
-    t.string "to_email", limit: 200
+    t.boolean "under_incident", default: false
+    t.integer "weight_in_gr"
+    t.string "category", limit: 1, default: "A"
+    t.string "type_pack", limit: 1, default: "D"
+    t.integer "partner_id", null: false
+    t.bigint "creator_id", null: false
+    t.bigint "owner_id", null: false
+    t.string "ext_ref", limit: 35
     t.string "to_name", limit: 50
-    t.string "to_fname", limit: 50
+    t.string "to_firstname", limit: 50
     t.string "to_phone", limit: 50
+    t.string "p_name_firstname", limit: 50
+    t.string "p_phone", limit: 50
+    t.string "p_address_note", limit: 250
+    t.datetime "update_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.index ["ext_ref"], name: "barcode_ext_ref_key", unique: true
+  end
+
+  create_table "client_partner_xref", primary_key: ["client_id", "partner_id"], force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.integer "partner_id", limit: 2, null: false
+    t.boolean "has_poc", default: false
     t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
   end
 
@@ -64,11 +84,27 @@ ActiveRecord::Schema.define(version: 2020_06_26_154703) do
     t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
   end
 
+  create_table "ref_partner", id: :integer, limit: 2, default: nil, force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "description", limit: 250, null: false
+    t.string "to_phone", limit: 20
+    t.string "type", limit: 1, default: "P"
+    t.string "website", limit: 500
+    t.string "delivery_addr", limit: 500
+    t.string "pickup_addr", limit: 500
+    t.integer "main_wf_id", limit: 2, default: 1
+    t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.string "pickup_phone", limit: 20
+  end
+
   create_table "ref_status", id: :integer, limit: 2, default: nil, force: :cascade do |t|
     t.string "step", limit: 50, null: false
     t.string "description", limit: 250, null: false
-    t.string "input_needed", limit: 1, null: false
+    t.string "next_input_needed", limit: 1, null: false
+    t.string "act_owner", limit: 1, null: false
     t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.boolean "need_to_notify", default: false
+    t.string "txt_to_notify", limit: 250
   end
 
   create_table "ref_workflow", id: :integer, limit: 2, default: nil, force: :cascade do |t|
@@ -85,13 +121,6 @@ ActiveRecord::Schema.define(version: 2020_06_26_154703) do
     t.index ["followed_id"], name: "index_relationships_on_followed_id"
     t.index ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
     t.index ["follower_id"], name: "index_relationships_on_follower_id"
-  end
-
-  create_table "tag", force: :cascade do |t|
-    t.string "bc", limit: 50, null: false
-    t.string "step", limit: 100, null: false
-    t.string "geo", limit: 200, null: false
-    t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
   end
 
   create_table "users", force: :cascade do |t|
@@ -112,11 +141,13 @@ ActiveRecord::Schema.define(version: 2020_06_26_154703) do
     t.boolean "incharge", default: false
     t.integer "client_score", default: 0
     t.string "phone"
+    t.integer "client_ref"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "wk_tag", force: :cascade do |t|
     t.bigint "bc_id", null: false
+    t.bigint "user_id", null: false
     t.integer "mwkf_id", limit: 2, null: false
     t.integer "current_step_id", limit: 2, null: false
     t.string "geo_l", limit: 250, default: "N"
@@ -124,9 +155,10 @@ ActiveRecord::Schema.define(version: 2020_06_26_154703) do
     t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
   end
 
-  create_table "wk_tag_com", force: :cascade do |t|
-    t.bigint "wk_tag_id", null: false
+  create_table "wk_tag_com", primary_key: "wk_tag_id", id: :bigint, default: nil, force: :cascade do |t|
+    t.bigint "user_id"
     t.string "comment", limit: 500
+    t.datetime "create_date", default: -> { "CURRENT_TIMESTAMP" }
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -134,8 +166,4 @@ ActiveRecord::Schema.define(version: 2020_06_26_154703) do
   add_foreign_key "mod_workflow", "ref_status", column: "end_id", name: "mod_workflow_end_id_fkey"
   add_foreign_key "mod_workflow", "ref_status", column: "start_id", name: "mod_workflow_start_id_fkey"
   add_foreign_key "mod_workflow", "ref_workflow", column: "wkf_id", name: "mod_workflow_wkf_id_fkey"
-  add_foreign_key "wk_tag", "barcode", column: "bc_id", name: "wk_tag_bc_id_fkey"
-  add_foreign_key "wk_tag", "mod_workflow", column: "mwkf_id", name: "wk_tag_mwkf_id_fkey"
-  add_foreign_key "wk_tag", "ref_status", column: "current_step_id", name: "wk_tag_current_step_id_fkey"
-  add_foreign_key "wk_tag_com", "wk_tag", name: "wk_tag_com_wk_tag_id_fkey"
 end

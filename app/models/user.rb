@@ -46,6 +46,10 @@ class User < ApplicationRecord
   def activate
     update_attribute(:activated,    true)
     update_attribute(:activated_at, Time.zone.now)
+
+    # I create the unique client code here
+    sql_query = " UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT) WHERE id = " + self.id.to_s + " ;"
+    ActiveRecord::Base.connection.exec_query(sql_query);
   end
 
   # Sends activation email.
