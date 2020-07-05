@@ -12,6 +12,8 @@
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+		// We init here the filter value
+		var filteredDataTagToJsonArray = dataTagToJsonArray;
   </script>
 <% end %>
 <%= render 'layouts/dirtycsv' %>
@@ -25,8 +27,38 @@
     <h1>Manager</h1>
   </div>
 </div>
+
+<%-# We display the filter only if there is data to filter -%>
+<% unless @emptyResultSet %>
+		<div class="row filter-banner" id="filter-block">
+			<div class="col-sm-2 fil-el">
+				<button id="print-dash" type="button" class="btn btn-md btn-block btn-default">
+					Générer PDF &nbsp; <i class="glyphicon glyphicon-print"></i>
+				</button>
+		  </div>
+			<div class="col-sm-1 fil-el">
+				<button id="re-init-print-dash" type="button" class="btn btn-md btn-block btn-default">
+					<i class="glyphicon glyphicon-remove"></i>
+				</button>
+			</div>
+
+			<div class="col-sm-5 fil-el-txt">
+				<span><i id='nb-el-dash'></i>&nbsp;trouvé(s)</span>
+			</div>
+			<div class="col-sm-3 fil-el">
+				<textarea class="form-control" rows="1" id="filter-all" placeholder="Filtrez min. 3 caractères" style="resize: none;"></textarea>
+		  </div>
+			<div class="col-sm-1 fil-el">
+				<button id="re-init-dash" type="button" class="btn btn-md btn-block btn-default">
+					<i class="glyphicon glyphicon-refresh"></i>
+				</button>
+
+			</div>
+		</div>
+<% end %>
+
 <div class="mgs-note mgs-note-mrg-grid">
-  Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+  Cet écran est optimisé pour une utilisation ordinateur ou tablette. <% unless @maxRowParamLG.nil? %><%= @maxRowParamLG.to_s %><% end %>
 </div>
 <% if @emptyResultSet %>
   <div class="col-sm-12 no-data">

@@ -6,7 +6,7 @@ $(document).on('turbolinks:load', function() {
 
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
-    runjsPartnerGrid();
+    initDataTagToJsonArrayDashboard();
     $( "#mgs-dash-print-csv" ).click(function() {
       generatePartDashCSV();
     });
@@ -152,13 +152,90 @@ function goToPartBarcode(lid, lsec){
   $("#mg-checkbc-form").submit();
 }
 
+function clearDataPartner(){
+  filteredDataTagToJsonArray = dataTagToJsonArray;
+  runjsPartnerGrid();
+};
+
+function filterData(){
+  if(($('#filter-all').val().length > 2) && ($('#filter-all').val().length < 35)){
+    //console.log('We need to filter !' + $('#filter-all').val());
+    filteredDataTagToJsonArray = dataTagToJsonArray.filter(function (el) {
+                                      return el.raw_data.includes($('#filter-all').val().toUpperCase())
+                                  });
+    runjsPartnerGrid();
+    /*
+    console.log('size jsonArray: ' + dataTagToJsonArray.length);
+    console.log('size of filter Njara: ' +
+              dataTagToJsonArray.filter(function (el) {
+                  return el.oname == 'De la Cannelle'
+              }).length)
+    */
+  }
+  else if(($('#filter-all').val().length < 3)) {
+    // We clear data
+    clearDataPartner();
+  }
+  else{
+    // DO nothing
+  }
+}
+
+// This function is used to encode only
+function initDataTagToJsonArrayDashboard(){
+  if(dataTagToJsonArray.length > 0){
+    for(i=0; i<dataTagToJsonArray.length; i++){
+      dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
+      // We concatenate the data
+      dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].raw_data + dataTagToJsonArray[i].ref_tag;
+    }
+
+    //DEBUG
+    /**** We do a load test here ! ****/
+    /**** We do a load test here ! ****/
+    /**** We do a load test here ! ****/
+    /* AFTER Test we can go up to 2700 records / I have heard that 5K may be the max / Even the Excel work */
+    /*
+
+    var loadTestJSONArray = new Array();
+    let j = 0;
+    for(k=0; k<100; k++){
+
+      for(i=0; i<dataTagToJsonArray.length; i++){
+        //dataTagToJsonArray[i].id = j;
+        loadTestJSONArray.push(dataTagToJsonArray[i]);
+        j++;
+      }
+    }
+    console.log('We have this data: ' + j);
+    dataTagToJsonArray = loadTestJSONArray;
+    filteredDataTagToJsonArray = dataTagToJsonArray;
+    */
+
+    /**** We do a load test here ! ****/
+    /**** We do a load test here ! ****/
+    /**** We do a load test here ! ****/
+
+    $('#filter-all').keyup(function() {
+      filterData();
+    });
+
+    $('#re-init-dash').click(function() {
+      $('#filter-all').val('');
+      clearDataPartner();
+    });
+
+  }
+  /* THE INIT HAS BEEN DONE IN ERB */
+  // filteredDataTagToJsonArray = dataTagToJsonArray;
+  runjsPartnerGrid();
+}
+
 /* JS GRID */
 function runjsPartnerGrid(){
-  for(i=0; i<dataTagToJsonArray.length; i++){
-    dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
-  }
-
   if(dataTagToJsonArray.length > 0){
+    //Set the number of data
+    $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
     $("#jsGrid").jsGrid({
         height: "auto",
         width: "100%",
@@ -170,7 +247,7 @@ function runjsPartnerGrid(){
           goToPartBarcode(args.item.id, args.item.secure)
         },
 
-        data: dataTagToJsonArray,
+        data: filteredDataTagToJsonArray,
 
         fields: [
             { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
@@ -226,6 +303,13 @@ function runjsPartnerGrid(){
   else{
     $("#jsGrid").hide();
   }
+  /*
+  console.log('size jsonArray: ' + dataTagToJsonArray.length);
+  console.log('size of filter De la Cannelle: ' +
+            dataTagToJsonArray.filter(function (el) {
+                return el.raw_data.includes('De la Cannelle')
+            }).length)
+            */
 }
 
 

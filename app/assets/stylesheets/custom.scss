@@ -601,6 +601,23 @@ body.loading .modal {
   color: $main-color;
 }
 
+/* Dasboard Filter */
+
+.filter-banner{
+  min-height: 70px;
+  background-color: $main-color-light;
+  margin-bottom: 20px;
+}
+
+.fil-el{
+  padding-top: 20px;
+}
+
+.fil-el-txt{
+  padding-top: 25px;
+  font-size: 1.2em;
+}
+
 /* Grouping Cam */
 
 #cam-code-original{

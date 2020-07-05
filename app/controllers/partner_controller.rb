@@ -72,15 +72,20 @@ class PartnerController < ApplicationController
   def dashboard
     #sendEmailTest('ratinahirana@gmail.com', 'Blou Ratinahirana', 'M03200202', 'Arrivé au centre de dépot')
 
-    sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      " bc.type_pack, bc.ext_ref " +
+    sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, " +
+                      " uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
+                      " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
+                      " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
+                      " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
+                      " bc.type_pack, bc.ext_ref, " +
+                      " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step)) AS raw_data " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +
                       " JOIN users uo ON uo.id = bc.owner_id " +
                       " WHERE u.id = " + @current_user.id.to_s +
                       # End partner check
-                      " ORDER BY bc.id ASC LIMIT "+ ENV['SQL_LIMIT_LG'] +";"
+                      " ORDER BY bc.id DESC LIMIT "+ ENV['SQL_LIMIT_LG'] +";"
 
 
     begin
@@ -89,6 +94,8 @@ class PartnerController < ApplicationController
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
+
+      @maxRowParamLG = " Cet écran récupère un maximum de " + ENV['SQL_LIMIT_LG'].to_s + " références. Si vous avez besoin de plus contactez-nous avec le code UPG678."
 
       render 'dashboard'
     end
