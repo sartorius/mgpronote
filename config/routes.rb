@@ -63,6 +63,8 @@ Rails.application.routes.draw do
   post	  '/seeone'   => 'persoresel#seeone'
   get     '/seeone'   => redirect("/")
   post	  '/addaddress'   => 'persoresel#addaddress'
+  post	  '/addadditinnal'   => 'persoresel#addadditinnal'
+
 
   # File: config/routes.rb
   if Rails.env.production?

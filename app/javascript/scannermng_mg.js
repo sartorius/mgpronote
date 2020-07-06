@@ -249,11 +249,14 @@ function displayNext(isGrp){
 
     for(var i=0; i<dataTagToJsonArray.length; i++){
         // We check if the next action is owned by partner or not
+        // Be careful on Act Owner P (partner) versus type D and P (pickup)
         if(dataTagToJsonArray[i].rse_act_owner != 'P'){
+          // Then the next option is disabled
           curNsp2 = nsp2Disabled;
           disabledCounter++;
         }
         else{
+          // Next option is possible as it is P
           curNsp2 = nsp2;
         }
         // Now we need to treat differently 2 and 4 which are specific
@@ -268,6 +271,7 @@ function displayNext(isGrp){
                 needReInitReadStepTxt = true;
                 console.log('needReInitReadStepTxt true');
               }
+              disabledCounter++;
         }
         else if ((parseInt(dataTagToJsonArray[i].end_step_id) == 4) &&
               (dataTagToJsonArray[i].bc_type_pack == 'D')) {
@@ -277,6 +281,7 @@ function displayNext(isGrp){
                 needReInitReadStepTxt = true;
                 console.log('needReInitReadStepTxt true');
               }
+              disabledCounter++;
         }
         else {
           nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + curNsp2 + dataTagToJsonArray[i].end_step + nsp3;

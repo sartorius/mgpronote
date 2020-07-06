@@ -1,0 +1,48 @@
+<div class="crt-block-input">
+  Les informations suivantes sont optionnelles mais peuvent aider au bon fonctionnement de votre suivi.
+</div>
+<form action="/addadditinnal" method="post" id="mg-additional-inf">
+
+      <div class="crt-block">Une description additionnelle</div>
+      <div class="t-of-use mgs-med-note-imp">
+        Vous pouvez indiquer le site vendeur ou le type de marchandise s'il s'agit de vêtements, de produit mécanique ou information.<br>
+        <strong>Le but étant toujours de mieux identifier votre colis.</strong>
+        <strong>Sachez que certains vendeur expédie des paquets anonymisés ou avec le nom d'une de leur filiale&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+      </div>
+      <textarea class="form-control" rows="1" id="mg-add-descr" name="mgadddescription" placeholder="Description additionnelle (optionel)" style="resize: none;"></textarea>
+      <hr>
+      <div class="crt-block">Numéro de suivi externe</div>
+      <div class="t-of-use mgs-med-note-imp">
+        Amazon, Colissimo, Chronopost, DPD, UPS, DHL, le site marchand peut vous donner un numéro de suivi. NB: les espaces seront supprimés.<br>
+        <strong>Nous vous invitons fortement à le renseigner ici pour faciliter votre suivi. </strong>
+        <strong>Veillez bien à copier coller l'information pour éviter tout risque d'erreur&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+      </div>
+      <textarea class="form-control" rows="1" id="mg-add-ext-ref" name="mgaddextref" placeholder="Numéro de suivi externe (optionel)" style="resize: none;"></textarea>
+
+
+      <hr>
+      <div class="t-of-use mgs-med-note">
+        Nom de la personne qui viendra récupérer le colis <strong>si ça n'est pas vous</strong>.
+      </div>
+      <textarea class="form-control" rows="1" id="mg-add-tname" name="mgaddtname" placeholder="Nom (optionel)" style="resize: none;"></textarea>
+      <textarea class="form-control" rows="1" id="mg-add-tfname" name="mgaddtfname" placeholder="Prénom (optionel)" style="resize: none;"></textarea>
+      <textarea class="form-control" rows="1" id="mg-add-tphone" name="mgaddtphone" placeholder="Téléphone (optionel)" style="resize: none;"></textarea>
+
+
+
+      <textarea class="form-control step-hid" rows="1" id="read-steprwf-id" name="steprwfid" placeholder="Workflow id" style="resize: none;">1</textarea>
+
+
+
+      <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="save-addr-sub"
+              value="Valider"/>
+
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash">Annuler&nbsp;<i class="glyphicon glyphicon-remove-circle"></i></a>
+
+      <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"><%= @resultSet[0]['id'].to_s %></textarea>
+
+      <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"><%= @resultSet[0]['secure'].to_s %></textarea>
+      <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
+
+</form>

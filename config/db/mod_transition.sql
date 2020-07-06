@@ -22,7 +22,7 @@ UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 0, 6, 10);
 ALTER TABLE ref_status ADD COLUMN txt_to_notify VARCHAR(250);
 UPDATE ref_status SET txt_to_notify = 'Vous venez de recevoir une référence paquet. Vous avez une action à faire: renseigner le.la réceptionneur.euse, veuillez vous connecter pour effectuer cette action.' WHERE id IN (0);
 UPDATE ref_status SET description = 'Le poids a été validé.' WHERE id IN (6);
-
+M000055Y2/M00004YAK
 */
 
 UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
@@ -30,19 +30,23 @@ UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
 
 
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (0, 'Nouveau', 'Ce code barre vient d''être créé.', 'Y', 'P', TRUE);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (1, 'Adressé', 'Les informations du réceptionneur.euse ont été saisis, avec information enlèvement si nécessaires.', 'N', 'Q');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (2, 'Reception', 'Le paquet a été réceptionné.', 'N', 'P');
--- INSERT INTO ref_status (id, step, description, next_input_needed) VALUES (3, 'Adressé enlèvement', 'Les informations de l''enlèvement ont été saisis. Prêt à être enlevé', 'Y');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (0, 'En attente de réception', 'Ce suivi vient d''être créé.', 'Y', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (1, 'Adressé enlèvement', 'Les informations l''adresse et le contact de l''enlèvement ont été saisis.', 'N', 'Q');
+-- Make sure the status 4 is specific
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (5, 'Dépôt stock Paris', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P');
+-- Make sure the status 2 is specific
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (2, 'Livraison au local partenaire', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P', TRUE);
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE);
 
-UPDATE ref_status SET txt_to_notify = 'Vous venez de recevoir une référence paquet. Vous avez une action à faire: renseigner le.la réceptionneur.euse, veuillez vous connecter pour effectuer cette action.' WHERE id IN (0);
+-- Particular case of pickup but it is as well created from screen
+
+UPDATE ref_status SET need_to_notify = FALSE, txt_to_notify = 'Cas d''un enlèvement, vous devez renseigner le contact et l''adresse.' WHERE id IN (0);
+
+
 
 
 CREATE TABLE ref_workflow (
@@ -64,18 +68,35 @@ CREATE TABLE mod_workflow (
 );
 
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 1);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 2);
+-- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 2); -- remove
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 4);
 -- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 4);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 4, 5);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 2, 5);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 5, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 2, 6);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 7);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 8);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 8, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
+
+UPDATE mod_workflow SET start_id = 0, end_id = 5 WHERE start_id = 2 AND end_id = 5;
+DELETE FROM mod_workflow WHERE start_id = 1 AND end_id = 2;
+DELETE FROM ref_status WHERE id = 2;
+
+
+/*
+-- Finally updated to 2 review of workflow #revwf
+UPDATE mod_workflow SET start_id = 0, end_id = -1 WHERE start_id = 0 AND end_id = 5;
+UPDATE mod_workflow SET start_id = 4, end_id = -1 WHERE start_id = 4 AND end_id = 5;
+UPDATE mod_workflow SET start_id = -1, end_id = 6 WHERE start_id = 5 AND end_id = 6;
+UPDATE ref_status SET id = 2 WHERE id = 5;
+UPDATE mod_workflow SET start_id = 0, end_id = 2 WHERE start_id = 0 AND end_id = -1;
+UPDATE mod_workflow SET start_id = 4, end_id = 2 WHERE start_id = 4 AND end_id = -1;
+UPDATE mod_workflow SET start_id = 2, end_id = 6 WHERE start_id = -1 AND end_id = 6;
+*/
+
 
 /*
 select rw.code, rfs.step, rfe.step
@@ -98,6 +119,8 @@ CREATE TABLE barcode(
   wf_id                 SMALLINT       DEFAULT 1,
   status                SMALLINT       DEFAULT 0,
   under_incident        BOOLEAN        DEFAULT FALSE,
+  -- Short description such as Informatique or Zara or something else
+  description           VARCHAR(250),
   -- in grams
   weight_in_gr          INT,
   -- delivery particularity
@@ -113,10 +136,11 @@ CREATE TABLE barcode(
   -- used to be REFERENCES users(id);
   owner_id              BIGINT         NOT NULL,
   ext_ref               VARCHAR(35)    UNIQUE,
-  -- If someone else need to come for pick up
+  -- to if someone else come to retrieve at final step details
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
+  -- If someone else need to come for pick up/enlèvement
   p_name_firstname      VARCHAR(50),
   p_phone               VARCHAR(50),
   p_address_note        VARCHAR(250),
@@ -125,7 +149,7 @@ CREATE TABLE barcode(
 );
 
 -- INSERT INTO barcode (ref_tag, secure, secret_code) VALUES ('000000000', FLOOR(random() * 9999 + 1)::INT, FLOOR(random() * 9999 + 1)::INT);
-
+-- ALTER TABLE barcode ADD COLUMN description           VARCHAR(250);
 
 CREATE TABLE wk_tag(
   id                    BIGSERIAL      PRIMARY KEY,
@@ -518,10 +542,12 @@ BEGIN
         -- We update the barcode with last status
         UPDATE barcode
           SET status = 1,
+
           ext_ref = CASE WHEN $4 = '' THEN NULL ELSE $4 END,
           to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
           to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
           to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
+          
           p_name_firstname = CASE WHEN $9 = '' THEN NULL ELSE $9 END,
           p_phone = CASE WHEN $10 = '' THEN NULL ELSE $10 END,
           p_address_note = CASE WHEN $11 = '' THEN NULL ELSE $11 END,

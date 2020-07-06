@@ -22,22 +22,6 @@
     <div class="field-md">
       <%= @resultSet[0]['part_name'].to_s %>
     </div>
-    <div class="crt-block">Livraison chez le partenaire</div>
-    <div class="t-of-use mgs-med-note">
-      Si vous avez décidé de faire livrer votre colis chez notre partenaire, vous devez le faire aux informations suivantes.
-    </div>
-    <label>À quelle adresse faire livrer votre colis ?</label><br>
-    <div class="field-md">
-      <%= @resultSet[0]['delivery_addr'].to_s %>
-    </div>
-    <div class="t-of-use mgs-med-note-imp">
-      <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Astuce importante</strong>&nbsp;lorsque vous commandez, dans le champs adresse, indiquez la référence <strong><i id="bc-ref-del" class="font-mono"></i></strong>.
-      Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
-      <hr>
-      Exemple:<br>
-      Andry RAKOTO - <strong><i id="del-add-ex" class="font-mono"></i></strong> <br>
-      <%= @resultSet[0]['delivery_addr'].to_s %>
-    </div>
     <div class="crt-block">Création</div>
 
     <label>Code barre créé par</label><br>
@@ -92,8 +76,26 @@
 
 
 
+
   </div>
   <div class="col-sm-4">
+    <div class="crt-block">Livraison chez le partenaire</div>
+    <div class="t-of-use mgs-med-note">
+      Si vous avez décidé de faire livrer votre colis chez notre partenaire, vous devez le faire à l'adresse suivante.
+    </div>
+    <label>À quelle adresse faire livrer votre colis ?</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['delivery_addr'].split('@')[0] %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %><br>
+      <%= @resultSet[0]['delivery_addr'].split('@')[1] %>
+    </div>
+    <div class="t-of-use mgs-med-note-imp">
+      <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
+       votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong>.
+      Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
+      <strong>Chaque client a son code de référence unique et il ne doit pas être partagé.</strong>
+    </div>
+
+
     <div class="crt-block">Réception</div>
     <div class="t-of-use mgs-med-note">
       Information concernant la réception.

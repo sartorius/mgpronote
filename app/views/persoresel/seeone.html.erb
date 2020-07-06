@@ -25,21 +25,35 @@
     <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
     <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
   </div>
+	<div class="col-lg-12 monosp-ft-title-mini">
+    appartenant à <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %>
+  </div>
 </div>
 <div class="mgs-note mgs-note-mrg-grid">
   Cet écran est optimisé pour une utilisation ordinateur ou tablette.
 </div>
 
-<% if @resultSet[0]['step_id'] == 0 %>
+<% if (@resultSet[0]['step_id'] == 0) && (@resultSet[0]['type_pack'] == 'P') %>
     <div class="row">
       <div class="col-sm-3">
       </div>
       <div class="col-sm-6">
-        <%= render 'persoresel/nouveautoadresse' %>
+				<%= render 'persoresel/wfrtopickup' %>
       </div>
       <div class="col-sm-3">
       </div>
     </div>
-    <hr>
 <% end %>
+
+
+<div class="row" id="add-inf-blc">
+  <div class="col-sm-3">
+  </div>
+  <div class="col-sm-6">
+		<%= render 'persoresel/additionnalinformation' %>
+  </div>
+  <div class="col-sm-3">
+  </div>
+</div>
+<hr>
 <%= render 'persoresel/mainseeone' %>

@@ -265,6 +265,14 @@ p {
   text-align: center;
 }
 
+.monosp-ft-title-mini{
+  font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
+  font-size: 1em;
+  color: $main-color;
+  text-align: center;
+  margin-top: 0.5em;
+}
+
 #no-next-step{
   display: none;
 }
@@ -482,7 +490,8 @@ body.loading .modal {
 
 .mgs-med-note{
   text-align: justify;
-  color: #b3b3b3;
+  //color: #b3b3b3;
+  color: #9e8ca7;
   font-size: 0.9em;
   margin-top: 15px;
   margin-bottom: 10px;
@@ -505,7 +514,8 @@ body.loading .modal {
 }
 
 .crt-block{
-  color: #CBCBCB;
+  //color: #CBCBCB;
+  color: #9e8ca7;
   font-size: 1.5em;
   margin-top: 20px;
   font-weight: bold;
@@ -748,6 +758,11 @@ body.loading .modal {
   margin-top: 1.5em;
   color: $main-color;
 
+}
+
+/* See One */
+#add-inf-blc{
+  display: none;
 }
 
 /* Lorem */

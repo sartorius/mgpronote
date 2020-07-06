@@ -2,12 +2,23 @@ class PersoreselController < ApplicationController
   before_action :mgs_logged_in_user
 
 
+  def addadditinnal
+    sql_query = " UPDATE barcode SET ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) +
+                  ", to_name = " + get_safe_pg_wq(params[:mgaddtname]) +
+                  ", to_firstname = " + get_safe_pg_wq(params[:mgaddtfname]) +
+                  ", description = " + get_safe_pg_wq(params[:mgadddescription]) +
+                  ", to_phone = " + get_safe_pg_wq(params[:mgaddtphone]) +
+                  " WHERE id = " + params[:checkcbid] + " AND owner_id = " + @current_user.id.to_s + ";"
+    flash.now[:success] = "La mise à jour des informations additionnels a été correctement effectué"
+    seeone
+  end
+
   def addaddress
     #We do the transaction here then we go on seeone
 
 
     sql_query = "SELECT * FROM CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " +
-                " " + get_safe_pg_wq_ns(params[:mgaddextref]) + ", " + get_safe_pg_wq(params[:mgaddtname]) + ", " + get_safe_pg_wq(params[:mgaddtfname]) + ", " + get_safe_pg_wq(params[:mgaddtphone]) + ", " +
+                " NULL, NULL, NULL, NULL, " +
                 @current_user.id.to_s + ", " + get_safe_pg_wq(params[:mgaddpknm]) + ", " + get_safe_pg_wq(params[:mgaddpkph]) + ", " + get_safe_pg_wq(params[:mgaddpkadd]) + ");"
 
     puts 'sql_query: ' + sql_query
@@ -42,7 +53,7 @@ class PersoreselController < ApplicationController
                     " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
-                		" uo.name AS oname, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
+                		" uo.id AS oid, uo.name AS oname, uo.client_ref AS oclient_ref, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.email AS cemail, uc.phone AS cphone " +
                 		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +
                   		"JOIN ref_status rs ON rs.id = bc.status " +
@@ -53,7 +64,7 @@ class PersoreselController < ApplicationController
                   		" AND bc.owner_id = " + @current_user.id.to_s + ";"
 
     begin
-
+      
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
