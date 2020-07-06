@@ -15,7 +15,7 @@ class ClientController < ApplicationController
 
       if @resultSet[0]['cli_crt_bc'].to_i > 0 then
         render plain: 'ok'
-      elsif @resultSet[0]['cli_add_clt'].to_i == -2 then
+      elsif @resultSet[0]['cli_crt_bc'].to_i == -2 then
         render plain: '-nar'
       end
     else

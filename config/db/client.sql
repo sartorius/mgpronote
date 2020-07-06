@@ -83,11 +83,14 @@ CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGIN
                -- Do the return at the end
 $func$
 DECLARE
-  var_partner_id      SMALLINT;
-  var_can_crt         BOOLEAN;
-  var_bc_id           BIGINT;
-  var_ref_tag         VARCHAR(25);
-  var_secure          SMALLINT;
+  var_partner_id                    SMALLINT;
+  var_can_crt                       BOOLEAN;
+  var_reach_limit                   BOOLEAN;
+  var_bc_id                         BIGINT;
+  var_ref_tag                       VARCHAR(25);
+  var_secure                        SMALLINT;
+  var_count_client_created          SMALLINT;
+  var_max_bc_clt                    SMALLINT;
 
   var_result          BIGINT;
   var_result_exists   SMALLINT;
@@ -111,6 +114,24 @@ BEGIN
         WHERE cpx.client_id = par_creator_id
         AND cpx.partner_id = par_partner_id;
 
+      -- We need to check the limit
+      var_count_client_created := 0;
+      SELECT COUNT(1) INTO var_count_client_created
+        FROM barcode bc
+        WHERE bc.create_date > NOW() - INTERVAL '7 DAY'
+        AND bc.creator_id = par_creator_id;
+
+      SELECT max_bc_clt INTO var_max_bc_clt
+          FROM ref_partner rp
+          WHERE rp.id = par_partner_id;
+
+      var_reach_limit := FALSE;
+
+      IF var_count_client_created > var_max_bc_clt THEN
+        var_reach_limit := TRUE;
+        var_can_crt := FALSE;
+      END IF;
+
     ELSE
       var_can_crt := TRUE;
     END IF;
@@ -124,6 +145,9 @@ BEGIN
       INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, 0, par_creator_id);
 
       var_result := var_bc_id;
+    ELSIF var_reach_limit = TRUE THEN
+      -- The creator has no right to create more bc
+      var_result := -3;
     ELSE
       -- The creator has no right to create bc
       var_result := -2;

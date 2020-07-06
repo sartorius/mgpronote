@@ -18,6 +18,9 @@ class PersoreselController < ApplicationController
       puts '>>> ' + @resultSet[0]['cli_crt_bc'].to_s
       if @resultSet[0]['cli_crt_bc'].to_i > 0 then
         render plain: 'ok'
+      elsif @resultSet[0]['cli_crt_bc'].to_i == -3 then
+
+        render plain: 'max'
       elsif @resultSet[0]['cli_crt_bc'].to_i == -2 then
 
         render plain: 'poc'

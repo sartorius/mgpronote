@@ -15,7 +15,7 @@ CREATE TABLE ref_partner (
   pickup_phone                  VARCHAR(20),
   -- Paris Workflow id
   main_wf_id        SMALLINT        DEFAULT 1,
-  max_bc_clt_day    SMALLINT        DEFAULT 3,
+  max_bc_clt        SMALLINT        DEFAULT 5,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

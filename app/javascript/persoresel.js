@@ -256,8 +256,11 @@ function confirmedBarCodeFor(){
             $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
             addbarCodeJson(partnerId);
           }
+          else if (xhr.responseText ==  'max'){
+            $('#msg-feedback').html("Navré ! Vous avez dépassé le maximum de création sur 7 jours. Veuillez contacter votre partenaire pour qu'il vous en crée. L'opération a retourné un erreur réseau FORG988-" + xhr.responseText);
+          }
           else if (xhr.responseText ==  'poc'){
-            $('#msg-feedback').html("Navré ! Veuillez vérifier vos droits de création avec ce partenaire. L'opération a retourné un erreur réseau FORG988-" + xhr.responseText);
+            $('#msg-feedback').html("Navré ! Veuillez vérifier vos droits de création avec ce partenaire. L'opération a retourné un erreur réseau FOSG328-" + xhr.responseText);
           }else{
             $('#msg-feedback').html("Navré ! L'opération a retourné un erreur réseau FORG763-" + xhr.responseText);
           }
