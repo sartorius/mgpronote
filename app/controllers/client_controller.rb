@@ -17,7 +17,10 @@ class ClientController < ApplicationController
         render plain: 'ok'
       elsif @resultSet[0]['cli_crt_bc'].to_i == -2 then
         render plain: '-nar'
+      else
+        render plain: 'unk'
       end
+
     else
       #Do nothing
       render plain: 'ko'
@@ -51,6 +54,8 @@ class ClientController < ApplicationController
       end
 
       load_clients
+
+      @getAuthToken = mgs_form_authenticity_token.to_s
       render 'clientmng'
     end
     rescue Exception => exc

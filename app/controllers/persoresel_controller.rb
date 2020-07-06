@@ -51,6 +51,8 @@ class PersoreselController < ApplicationController
     rescue Exception => exc
        flash.now[:danger] = "Une erreur est survenue #{exec.message}"
 
+       @getAuthToken = mgs_form_authenticity_token.to_s
+
     render 'getmypartnerlist'
   end
 

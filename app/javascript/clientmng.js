@@ -105,8 +105,12 @@ function confirmedBarCodeFor(){
             $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
             addbarCodeJson(clientId);
           }
+          else if(xhr.responseText == 'unk'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau FOZE903-" + xhr.responseText);
+            addbarCodeJson(clientId);
+          }
           else{
-            $('#msg-feedback').html("Navré ! L'opération a retourné un erreur réseau FORG283-" + xhr.responseText);
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau FORG283-" + xhr.responseText);
           }
           displaySuccessDialog();
       },
