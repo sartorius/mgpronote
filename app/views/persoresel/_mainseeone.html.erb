@@ -33,7 +33,7 @@
     <% if @screenClient %>
 
       <button id="disp-add-info" type="button" class="btn btn-md btn-block btn-default">
-        Information additionnel&nbsp; <i class="glyphicon glyphicon-th"></i>
+        Gérer information additionnel&nbsp; <i class="glyphicon glyphicon-th"></i>
       </button>
     <% end %>
     <div class="crt-block">Création</div>
@@ -127,20 +127,20 @@
     <% if (@resultSet[0]['tname'].nil?) || (@resultSet[0]['tname'] == @resultSet[0]['oname']) %>
       <label>Receptionneur.euse</label><br>
       <div class="field-md">
-        <%= @resultSet[0]['oname'].to_s %>&nbsp;<%= @resultSet[0]['ofirstname'].to_s %>
+        <i id='alr-rec-name'><%= @resultSet[0]['oname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['ofirstname'].to_s %></i>
       </div>
       <label>Téléphone</label><br>
       <div class="field-md">
-        <%= @resultSet[0]['ophone'].to_s %>
+        <i id='alr-rec-phone'><%= @resultSet[0]['ophone'].to_s %></i>
       </div>
     <% else %>
       <label>Receptionneur.euse</label><br>
       <div class="field-md">
-        <%= @resultSet[0]['tname'].to_s %>&nbsp;<%= @resultSet[0]['tfirstname'].to_s %>
+        <i id='alr-rec-name'><%= @resultSet[0]['tname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['tfirstname'].to_s %></i>
       </div>
       <label>Téléphone</label><br>
       <div class="field-md">
-        <%= @resultSet[0]['tphone'].to_s %>
+        <i id='alr-rec-phone'><%= @resultSet[0]['tphone'].to_s %></i>
       </div>
     <% end %>
 

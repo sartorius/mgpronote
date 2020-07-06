@@ -18,6 +18,10 @@ function mainClientLoaderInCaseOfChange(){
         $("#mg-add-ext-ref").val($('#alr-ref-ext').html());
         $("#mg-add-descr").val($('#alr-descr').html());
 
+        $("#mg-add-tname").val($('#alr-rec-name').html());
+        $("#mg-add-tfname").val($('#alr-rec-fname').html());
+        $("#mg-add-tphone").val($('#alr-rec-phone').html());
+
       });
       $( "#disp-cnl-inf" ).click(function() {
         $("#add-inf-blc").hide(400);

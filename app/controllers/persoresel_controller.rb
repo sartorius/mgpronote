@@ -4,7 +4,8 @@ class PersoreselController < ApplicationController
 
   def addadditionnal
 
-    sql_query_check_ext_ref = "SELECT COUNT(1) AS mg_count FROM barcode WHERE ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) + ";"
+    sql_query_check_ext_ref = "SELECT COUNT(1) AS mg_count FROM barcode WHERE ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) +
+                                " AND id NOT IN (" + params[:checkcbid] + ");"
 
     @resultSetCheckCount = ActiveRecord::Base.connection.exec_query(sql_query_check_ext_ref)
 
