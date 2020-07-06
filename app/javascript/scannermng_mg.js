@@ -14,6 +14,11 @@ function mainScanLoaderInCaseOfChange(){
         $("#mg-save-step-btn").val('Enregistrer incident');
         $("#btn-step-inc").hide();
         $("#btn-step-inc-cnl").show(400);
+
+        //Weight need to be hide
+        //M0000634S
+        weightManagerDisable();
+
     });
     //inverse
     $("#btn-step-inc-cnl").click(function() {
@@ -24,6 +29,8 @@ function mainScanLoaderInCaseOfChange(){
         $("#btn-step-inc").show(400);
         //We need to clean the step comment
         $("#stpcmt").val('');
+        //Call Weight manager if needed
+        weightManager();
     });
 
     $("#mg-save-step-btn").click(function() {
@@ -95,13 +102,7 @@ function mainScanLoaderInCaseOfChange(){
     }
   }
   else if($('#mg-graph-identifier').text() == 'checktag-gr'){
-    try {
-      loadBCTag();
-    }
-    catch(err) {
-      console.log(err.message);
-      customLogErr(err.message);
-    }
+    loadBCTag();
   }
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
     $("#save-addr-sub").click(function() {
@@ -157,6 +158,13 @@ function verityWeightFormRef(){
   }
 }
 
+//Need to promote to generic utils forced?
+function mgsEncodeClientRef(fname, lid, ref){
+  let lidPlusSec = parseInt(lid.toString() + mgspad(ref, 3).toString()).toString(35);
+  let fnameCode = (fname.length == 1) ? fname.substring(0, 1)+'X' : fname.substring(0, 2);
+  return fnameCode.toUpperCase() + '-' + lidPlusSec.replace(/o/g,"Z").replace(/O/g,"Z").toUpperCase();
+}
+
 function weightManager(){
   //Weight Manager
   //We are trying to check weight
@@ -167,6 +175,13 @@ function weightManager(){
     $( "#stpweight" ).keyup(function() {
       verityWeightFormRef();
     });
+  }
+}
+// Need to be called in case of incident on off
+function weightManagerDisable(){
+  if(dataTagToJsonArray[0].end_step_id == 6){
+    $('#blk-weight').hide();
+    $('#mg-save-step-btn').show();
   }
 }
 
@@ -334,11 +349,11 @@ function loadBCTag(){
             resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="glyphicon glyphicon-eye-open"></i></a>';
           }
           resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
-          resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-barcode"></i> Opéré par ' + dataTagToJsonArray[i].name + ' ' + dataTagToJsonArray[i].firstname + "</span><br>";
+          resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-barcode"></i> Opéré par ' + mgsEncodeClientRef(dataTagToJsonArray[i].firstname, dataTagToJsonArray[i].uid, dataTagToJsonArray[i].uclient_ref) + "</span><br>";
 
           if (((dataTagToJsonArray[i].com != null)) &&
                   (dataTagToJsonArray[i].com != '')) {
-            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="glyphicon glyphicon-barcode"></i>&nbsp;Taggué par: ' + dataTagToJsonArray[i].ucomname + ' ' + dataTagToJsonArray[i].ucomfirstname + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
+            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="glyphicon glyphicon-barcode"></i>&nbsp;Taggué par: ' + mgsEncodeClientRef(dataTagToJsonArray[i].ucomfirstname, dataTagToJsonArray[i].ucomid, dataTagToJsonArray[i].ucomclient_ref) + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
           }
           resulTag = resulTag + "<hr>";
     }

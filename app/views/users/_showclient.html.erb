@@ -50,7 +50,7 @@
     </div>
   </div>
   <div class="col-md-4">
-    <div class="crt-block">Utilisation</div>
+    <div class="crt-block">Utilisez votre référence client</div>
     <div class="t-of-use mgs-med-note">
       Si vous deviez faire livrer votre colis à l'adresse suivante :<br>
       Mada Colis Transport<br>
@@ -60,7 +60,7 @@
     <div class="crt-block">&nbsp;</div>
     <div class="t-of-use mgs-med-note-imp">
       Vous devez entrer l'adresse suivante :<br>
-      Mada Colis Transport/<%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %><br>
+      Mada Colis Transport - <%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %><br>
       15 RUE DE LA GARE<br>
       93170 BAGNOLET<br>
       <hr>
