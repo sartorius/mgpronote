@@ -41,6 +41,14 @@
         Partenaire <% if @user.incharge? %>et <strong>en charge</strong><% end %>
       <% end %>
     </div>
+    <div class="crt-block">Traçabilité anonymisée</div>
+    <div class="t-of-use mgs-med-note">
+      Toute la traçabilité publique que vous allez effectuer sera sous cette référence. Les clients ont également une référence unique et anonyme.
+    </div>
+    <label>Référence MG Suivi</label>
+    <div class="field-md">
+      <span id="bc-seeone"><%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %></span>
+    </div>
     <hr>
     <label>Compagnie</label>
     <div class="field-md">

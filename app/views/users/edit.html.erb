@@ -7,6 +7,10 @@
       <%= render 'shared/error_messages' %>
 
       <div class="crt-block">Paramètres modifiables</div>
+      <div class="t-of-use mgs-med-note-imp">
+        Le nom et le prénom ne sont pas modifiables automatiquement parce que votre référence unique est basée dessus.<br>
+        <strong>Si vous constatez une erreur sur votre nom et prénom<br> contactez-nous avec le code CNH823 pour le changer.&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+      </div>
       <div class="t-of-use mgs-med-note">
         Le transporteur peut être amené à vous contacter par téléphone pour vous remettre votre colis.
       </div>
@@ -14,11 +18,17 @@
       <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
       <%= f.text_field :phone, class: 'form-control crt-fill-form', id: 'crt-phone' %>
 
-      <label>Vous êtes</label>
-      <%= select(:user, :partner, [['Particulier', 0], ['Revendeur', 1]], class: 'form-control') %>
-      
+      <% unless @user.partner == 2 %>
+        <label>Vous êtes</label>
+        <%= select(:user, :partner, [['Particulier', 0], ['Entreprise', 1]], class: 'form-control') %>
+      <% end %>
+
       <%= f.submit "Sauvegarder", class: "btn btn-default btn-block", id: "edit-submit" %>
     <% end %>
+
+    <div class="pos-center blc-cancel">
+      <a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="glyphicon glyphicon-remove-sign"></i></a>
+    </div>
 
   </div>
 </div>

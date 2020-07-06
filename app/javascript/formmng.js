@@ -58,6 +58,9 @@ function listenEditFormCreate(){
   $( ".crt-fill-form" ).keyup(function() {
     verityEditFieldFormRef();
   });
+  $("#crt-submit").click(function() {
+    $('#mg-add-pk-name').val(capitalizeFirstLetter($('#mg-add-pk-name').val()));
+  });
 }
 
 function listenPwdEditFormCreate(){
