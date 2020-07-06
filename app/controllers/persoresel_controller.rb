@@ -2,24 +2,39 @@ class PersoreselController < ApplicationController
   before_action :mgs_logged_in_user
 
 
-  def addadditinnal
-    sql_query = " UPDATE barcode SET ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) +
-                  ", to_name = " + get_safe_pg_wq(params[:mgaddtname]) +
-                  ", to_firstname = " + get_safe_pg_wq(params[:mgaddtfname]) +
-                  ", description = " + get_safe_pg_wq(params[:mgadddescription]) +
-                  ", to_phone = " + get_safe_pg_wq(params[:mgaddtphone]) +
-                  " WHERE id = " + params[:checkcbid] + " AND owner_id = " + @current_user.id.to_s + ";"
-    flash.now[:success] = "La mise à jour des informations additionnels a été correctement effectué"
+  def addadditionnal
+
+    sql_query_check_ext_ref = "SELECT COUNT(1) AS mg_count FROM barcode WHERE ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) + ";"
+
+    @resultSetCheckCount = ActiveRecord::Base.connection.exec_query(sql_query_check_ext_ref)
+
+    if @resultSetCheckCount[0]['mg_count'].to_i == 0 then
+        sql_query = " UPDATE barcode SET ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) +
+                      ", to_name = " + get_safe_pg_wq(params[:mgaddtname]) +
+                      ", to_firstname = " + get_safe_pg_wq(params[:mgaddtfname]) +
+                      ", description = " + get_safe_pg_wq(params[:mgadddescription]) +
+                      ", to_phone = " + get_safe_pg_wq(params[:mgaddtphone]) +
+                      " WHERE id = " + params[:checkcbid] + " AND owner_id = " + @current_user.id.to_s + ";"
+
+        ActiveRecord::Base.connection.exec_query(sql_query)
+
+        flash.now[:success] = "La mise à jour des informations additionnels a été correctement effectué"
+
+    else
+      message  = "Il semble que la référence externe a déjà été enregistrée par quelqu'un d'autre. Veuillez la re-vérifier."
+      message += "Si vous pensez qu'il s'agit d'une erreur, il s'agit d'un code YZJ90, contactez-nous. Nous sommes navrés pour la gêne occasionée."
+      flash.now[:danger] = message
+    end
+
     seeone
   end
 
   def addaddress
     #We do the transaction here then we go on seeone
+    puts 'You are in see one'
 
+    sql_query = "SELECT * FROM CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " + " NULL, NULL, NULL, NULL, " + @current_user.id.to_s + ", " + get_safe_pg_wq(params[:mgaddpknm]) + ", " + get_safe_pg_wq(params[:mgaddpkph]) + ", " + get_safe_pg_wq(params[:mgaddpkadd]) + ");"
 
-    sql_query = "SELECT * FROM CLI_STEP_ADDR_TAG ("+ params[:checkcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), TRIM('"+ params[:stepgeol] + "'), " +
-                " NULL, NULL, NULL, NULL, " +
-                @current_user.id.to_s + ", " + get_safe_pg_wq(params[:mgaddpknm]) + ", " + get_safe_pg_wq(params[:mgaddpkph]) + ", " + get_safe_pg_wq(params[:mgaddpkadd]) + ");"
 
     puts 'sql_query: ' + sql_query
 
@@ -27,14 +42,8 @@ class PersoreselController < ApplicationController
 
       @resultSetFunc = ActiveRecord::Base.connection.exec_query(sql_query)
 
-      if @resultSetFunc[0]['cli_step_addr_tag'].to_s == '0' then
-        message  = "Les informations ont été correctement enregistrés."
-        flash.now[:success] = message
-      else
-        message  = "Il semble que la référence externe a déjà été enregistrée par quelqu'un d'autre. Veuillez la re-vérifier."
-        message += "Si vous pensez qu'il s'agit d'une erreur, il s'agit d'un code YZJ90, contactez-nous. Nous sommes navrés pour la gêne occasionée."
-        flash.now[:danger] = message
-      end
+      message  = "Les informations ont été correctement enregistrés."
+      flash.now[:success] = message
 
       seeone
     end
@@ -49,7 +58,7 @@ class PersoreselController < ApplicationController
 
   def seeone
     sql_query = "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
-                		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.delivery_addr, rp.pickup_addr, rp.name AS part_name,  " +
+                		" bc.to_phone AS tphone, bc.description as bcdescription, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.delivery_addr, rp.pickup_addr, rp.name AS part_name,  " +
                     " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
@@ -64,11 +73,13 @@ class PersoreselController < ApplicationController
                   		" AND bc.owner_id = " + @current_user.id.to_s + ";"
 
     begin
-      
+
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
+
+      @screenClient = true
 
       render 'seeone'
     end

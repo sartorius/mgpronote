@@ -15,13 +15,27 @@
     <% if !(@resultSet[0]['ext_ref'].nil?) %>
         <label>Référence externe</label><br>
         <div class="field-md">
-          <%= @resultSet[0]['ext_ref'].to_s %>
+          <i id='alr-ref-ext'><%= @resultSet[0]['ext_ref'].to_s %></i>
         </div>
     <% end %>
+
+    <% if !(@resultSet[0]['bcdescription'].nil?) %>
+        <label>Description du contenu du suivi</label><br>
+        <div class="field-md">
+          <i id='alr-descr'><%= @resultSet[0]['bcdescription'].to_s %></i>
+        </div>
+    <% end %>
+
     <label>Partenaire</label><br>
     <div class="field-md">
       <%= @resultSet[0]['part_name'].to_s %>
     </div>
+    <% if @screenClient %>
+
+      <button id="disp-add-info" type="button" class="btn btn-md btn-block btn-default">
+        Information additionnel&nbsp; <i class="glyphicon glyphicon-th"></i>
+      </button>
+    <% end %>
     <div class="crt-block">Création</div>
 
     <label>Code barre créé par</label><br>

@@ -28,7 +28,8 @@
       <a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash">Annuler&nbsp;<i class="glyphicon glyphicon-remove-circle"></i></a>
 
       <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"><%= @resultSet[0]['id'].to_s %></textarea>
-
+      <textarea class="form-control step-hid" rows="1" id="read-steprwf-id" name="steprwfid" placeholder="Workflow id" style="resize: none;">1</textarea>
+      
       <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"><%= @resultSet[0]['secure'].to_s %></textarea>
       <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
 

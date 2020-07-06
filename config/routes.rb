@@ -63,7 +63,7 @@ Rails.application.routes.draw do
   post	  '/seeone'   => 'persoresel#seeone'
   get     '/seeone'   => redirect("/")
   post	  '/addaddress'   => 'persoresel#addaddress'
-  post	  '/addadditinnal'   => 'persoresel#addadditinnal'
+  post	  '/addadditionnal'   => 'persoresel#addadditionnal'
 
 
   # File: config/routes.rb

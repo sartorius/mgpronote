@@ -13,6 +13,15 @@ function mainClientLoaderInCaseOfChange(){
 
       $('#bc-seeone').html(readBCSeeOne);
 
+      $( "#disp-add-info" ).click(function() {
+        $("#add-inf-blc").show(400);
+        $("#mg-add-ext-ref").val($('#alr-ref-ext').html());
+        $("#mg-add-descr").val($('#alr-descr').html());
+
+      });
+      $( "#disp-cnl-inf" ).click(function() {
+        $("#add-inf-blc").hide(400);
+      });
 
 
       // In case of pickup

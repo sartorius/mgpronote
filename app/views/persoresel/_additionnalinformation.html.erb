@@ -1,7 +1,7 @@
 <div class="crt-block-input">
   Les informations suivantes sont optionnelles mais peuvent aider au bon fonctionnement de votre suivi.
 </div>
-<form action="/addadditinnal" method="post" id="mg-additional-inf">
+<form action="/addadditionnal" method="post" id="mg-additional-inf">
 
       <div class="crt-block">Une description additionnelle</div>
       <div class="t-of-use mgs-med-note-imp">
@@ -38,7 +38,9 @@
               value="Valider"/>
 
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      <a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash">Annuler&nbsp;<i class="glyphicon glyphicon-remove-circle"></i></a>
+      <button id="disp-cnl-inf" type="button" class="cancel-btn btn btn-default-light btn-sm btn-block">
+        Annuler&nbsp;<i class="glyphicon glyphicon-remove-circle"></i>
+      </button>
 
       <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"><%= @resultSet[0]['id'].to_s %></textarea>
 
