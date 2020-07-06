@@ -8,6 +8,27 @@ function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'peredash-gr'){
       runjsPersoreselGrid();
   }
+  else if($('#mg-graph-identifier').text() == 'persom-gr'){
+      runjsPartnerListGrid();
+      //Button Barcode creator
+      $( ".bc-crt-clt" ).click(function() {
+        createBarCodeFor($(this).data('partner_name'), $(this).val(), $(this).data('order'));
+      });
+
+      $("#crt-cb-clt-ds").click(function() {
+        $('#mgs-dialog').hide(100);
+      });
+
+      // Confirmation button is here
+      $("#crt-cb-clt-cf").click(function() {
+        confirmedBarCodeFor();
+      });
+
+      $("#close-feeback").click(function() {
+        //console.log('$("#close-feeback").click');
+        $('#mgs-dialog-feedback').hide(100);
+      });
+  }
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
       let readBCSeeOne = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
 
@@ -174,5 +195,132 @@ function verityFieldPickup(){
   else{
       $("#save-addr-sub").prop('disabled', true);
       $("#save-addr-sub").hide(500);
+  }
+}
+
+
+/*******************************************************************************************************/
+/*******************************************************************************************************/
+/*******************************************************************************************************/
+/*******************************************************************************************************/
+function addbarCodeJson(partnerId){
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(dataTagToJsonArray[i].id == partnerId){
+      dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) + 1;
+      //console.log('read value: ' + dataTagToJsonArray[i].totalbc);
+      //console.log('updated value: ' + parseInt(dataTagToJsonArray[i].totalbc) + 1);
+      $('#totalbc-'+partnerId).html(dataTagToJsonArray[i].totalbc);
+      break;
+    }
+  }
+}
+
+
+function displaySuccessDialog(){
+  $('#mgs-dialog-feedback').show(100);
+  $('#mgs-dialog').hide(100);
+}
+
+function displayErrorDialog(){
+  $('#close-feeback').removeClass('mgs-dialog-fdb-success');
+  $('#close-feeback').addClass('mgs-dialog-fdb-error');
+  $('#mgs-dialog-feedback').show(100);
+  $('#mgs-dialog').hide(100);
+}
+
+//Inner variable declaration !
+function createBarCodeFor(pName, id, o){
+  //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
+  //console.log('Here is o: ' + o);
+  // The value here is the partner id
+  $('#nm-t-cf').html(pName + '#' + id + ((o == 'D') ? ' pour une <strong>réception</strong>' : ' pour un <strong>enlèvement</strong>'));
+  // Parameters in dialog !
+
+  $('#crt-cb-param').html(id);
+  $('#crt-cb-order').html(o);
+  $('#mgs-dialog').show(100);
+}
+
+function confirmedBarCodeFor(){
+  //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
+  let partnerId = parseInt($('#crt-cb-param').html());
+  $.ajax('/createbarcodebyclient', {
+      type: 'POST',  // http method
+      data: { partner_id: partnerId,
+              auth_token: $('#auth-token-s').val(),
+              order: $('#crt-cb-order').html(),
+      },  // data to submit
+      success: function (data, status, xhr) {
+          //console.log('answer: ' + xhr.responseText);
+          if(xhr.responseText == 'ok'){
+            $('#msg-feedback').html("Super ! L'opération s'est déroulée correctment");
+            addbarCodeJson(partnerId);
+          }
+          else if (xhr.responseText ==  'poc'){
+            $('#msg-feedback').html("Navré ! Veuillez vérifier vos droits de création avec ce partenaire. L'opération a retourné un erreur réseau FORG988-" + xhr.responseText);
+          }else{
+            $('#msg-feedback').html("Navré ! L'opération a retourné un erreur réseau FORG763-" + xhr.responseText);
+          }
+          displaySuccessDialog();
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-feedback').html("Navré ! Une erreur POE6728 est survenue");
+          displayErrorDialog();
+      }
+  });
+}
+
+
+
+/* JS GRID CLIENT LIST */
+function runjsPartnerListGrid(){
+  if(dataTagToJsonArray.length > 0){
+    $("#jsGridPartnerList").jsGrid({
+        height: "auto",
+        width: "100%",
+
+        sorting: true,
+        paging: true,
+
+        data: dataTagToJsonArray,
+
+        fields: [
+            { name: "rp_name", title: "Partenaire", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
+            { name: "rp_desc", title: "Description", type: "text", align: "right", width: 100, headercss: "h-jsG-r" },
+            { name: "since", title: "Inscrit depuis", type: "text", align: "right", headercss: "h-jsG-r" },
+            { name: "totalbc",
+              title: '<i class="glyphicon glyphicon-list-alt"></i>',
+              type: "number",
+              width: 18,
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return '<i id="totalbc-' + item.id + '">' + value + '</i>';
+              }
+            },
+            {
+              name: "id",
+              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              type: "string",
+              align: "left",
+              width: 25,
+              itemTemplate: function(value, item) {
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-home"></i>' + '</button>';
+              }
+            },
+            {
+              name: "id",
+              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              type: "string",
+              align: "left",
+              width: 25,
+              itemTemplate: function(value, item) {
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-arrow-up"></i>' + '</button>';
+              }
+            }
+        ]
+    });
+  }
+  else{
+    $("#jsGridPartnerList").hide();
   }
 }

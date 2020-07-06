@@ -25,6 +25,7 @@ function mainClientLoaderInCaseOfChange(){
         authorizeClientToCreateBC($(this));
       });
 
+      // Confirmation button is here
       $("#crt-cb-clt-cf").click(function() {
         confirmedBarCodeFor();
       });
@@ -52,6 +53,7 @@ function createBarCodeFor(name, id, o, email){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
   //console.log('Here is o: ' + o);
   $('#nm-t-cf').html(name + '#' + id + ((o == 'D') ? ' pour une <strong>réception</strong>' : ' pour un <strong>enlèvement</strong>'));
+  // Parameters in dialog !
   $('#crt-cb-param').html(id);
   $('#crt-cb-order').html(o);
   $('#crt-cb-email').html(email);

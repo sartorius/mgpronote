@@ -2,6 +2,55 @@ class PersoreselController < ApplicationController
   before_action :mgs_logged_in_user
 
 
+
+  def createbarcodebyclient
+
+    # Check the session
+    if params[:auth_token] == session[:_mgs_csrf_token].to_s then
+
+
+      sql_query = "SELECT * FROM CLI_CRT_BC(" +
+                    @current_user.id.to_s + ", "+
+                    @current_user.id.to_s + ", CAST(" + params[:partner_id] +
+                    " AS SMALLINT), TRIM('" + params[:order] + "'));"
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+
+      puts '>>> ' + @resultSet[0]['cli_crt_bc'].to_s
+      if @resultSet[0]['cli_crt_bc'].to_i > 0 then
+        render plain: 'ok'
+      elsif @resultSet[0]['cli_crt_bc'].to_i == -2 then
+
+        render plain: 'poc'
+      else
+        render plain: 'unk'
+      end
+    else
+      #Do nothing
+      render plain: 'ko'
+    end
+  end
+
+
+  def getmypartnerlist
+    sql_query = "SELECT rp.id AS id, rp.name AS rp_name, rp.description AS rp_desc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, count(1) AS totalbc "
+    sql_query += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
+    sql_query += " JOIN ref_partner rp on rp.id = cpx.partner_id "
+    sql_query += " AND cpx.client_id = " + @current_user.id.to_s
+    sql_query += " JOIN barcode bc ON bc.owner_id = u.id AND bc.partner_id = rp.id "
+    sql_query += " GROUP BY rp.id, rp.name, rp.description, cpx.create_date "
+    sql_query += " ORDER BY cpx.create_date DESC;"
+
+    begin
+
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+      @emptyResultSet = @resultSet.empty?
+    end
+    rescue Exception => exc
+       flash.now[:danger] = "Une erreur est survenue #{exec.message}"
+
+    render 'getmypartnerlist'
+  end
+
   def addadditionnal
 
     sql_query_check_ext_ref = "SELECT COUNT(1) AS mg_count FROM barcode WHERE ext_ref = " + get_safe_pg_wq_ns(params[:mgaddextref]) +

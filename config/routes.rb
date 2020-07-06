@@ -64,6 +64,8 @@ Rails.application.routes.draw do
   get     '/seeone'   => redirect("/")
   post	  '/addaddress'   => 'persoresel#addaddress'
   post	  '/addadditionnal'   => 'persoresel#addadditionnal'
+  get     '/getmypartnerlist',    to: 'persoresel#getmypartnerlist'
+  post    '/createbarcodebyclient',    to: 'persoresel#createbarcodebyclient'
 
 
   # File: config/routes.rb

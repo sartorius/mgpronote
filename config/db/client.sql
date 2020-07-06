@@ -3,7 +3,7 @@ CREATE TABLE client_partner_xref (
   client_id     BIGINT,
   partner_id    SMALLINT,
   -- has power of creation of BC
-  has_poc   BOOLEAN  DEFAULT  FALSE,
+  has_poc   BOOLEAN  DEFAULT  TRUE,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (client_id, partner_id)
 );

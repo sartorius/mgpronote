@@ -1,0 +1,62 @@
+<% provide(:title, "Liste partenaire") %>
+<div id="mg-graph-identifier">persom-gr</div>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+<% end %>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Liste des partenaires</h1>
+    <h2>chez qui vous pouvez créer un suivi</h2>
+  </div>
+</div>
+
+<%= render 'layouts/dashboarddialog' %>
+<input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
+
+<div class="mgs-note mgs-note-mrg-grid">
+  Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+</div>
+<% if @emptyResultSet %>
+  <div class="col-sm-12 no-data">
+    Désolé, Aucun partenaire transporteur n'a encore ajouté votre compte. Veuillez contacter le partenaire avec qui vous êtes en contact pour qu'il vous ajoute.<br>
+    Si vous n'êtes en contact avec aucun partenaire, vous pouvez contacter la liste des partenaires qui nous font confiance.
+  </div>
+<% end %>
+
+<% if !@emptyResultSet %>
+	<div class="row">
+	  <div class="col-sm-12">
+	    <div id="jsGridPartnerList">
+	    </div>
+	  </div>
+	</div>
+	<br><br>
+	<div class="row">
+	  <div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-sm-12 mgs-med-note">
+			<hr>
+			Le &nbsp; <i class="c-w glyphicon glyphicon-home"></i> &nbsp;indique que vous créez un code barre pour une réception au local du transporteur.<br>
+			Le &nbsp; <i class="c-b glyphicon glyphicon-arrow-up"></i> &nbsp;indique que vous créez un code barre pour un enlèvement chez un de vos contact particuliers.<br>
+			La &nbsp; <i class="glyphicon glyphicon-list-alt"></i> &nbsp;indique le nombre de code barre que vous avez chez ce partenaire actuellement.<br>
+		</div>
+	</div>
+<% end %>
