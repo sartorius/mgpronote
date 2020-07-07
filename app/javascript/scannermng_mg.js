@@ -275,21 +275,11 @@ function displayNext(isGrp){
           curNsp2 = nsp2;
         }
         // Now we need to treat differently 2 and 4 which are specific
-        // 2 is for Reception for D as delivery
-        // 4 is for Pickup for P as pickup
+        // Step 2 cannot be pickup
         // We need to discard one of them
         if ((parseInt(dataTagToJsonArray[i].end_step_id) == 2) &&
+              parseInt((dataTagToJsonArray[i].curr_step_id) == 0) &&
               (dataTagToJsonArray[i].bc_type_pack == 'P')){
-              // This is not possible we do nothing
-              if(i == 0){
-                // We need to re-initialize the text
-                needReInitReadStepTxt = true;
-                console.log('needReInitReadStepTxt true');
-              }
-              disabledCounter++;
-        }
-        else if ((parseInt(dataTagToJsonArray[i].end_step_id) == 4) &&
-              (dataTagToJsonArray[i].bc_type_pack == 'D')) {
               // This is not possible we do nothing
               if(i == 0){
                 // We need to re-initialize the text

@@ -208,6 +208,7 @@ CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT,
                   rse_next_input_needed   CHAR(1),
                   rwkf_id                 SMALLINT,
                   mwkf_id                 INT,
+                  curr_step_id            SMALLINT,
                   curr_step               VARCHAR(50),
                   end_step_id             SMALLINT,
                   end_step                VARCHAR(50),
@@ -261,6 +262,7 @@ BEGIN
     rte.next_input_needed AS rse_next_input_needed,
     mw.wkf_id, -- here is PA
     mw.id,
+    rtc.id,
     rtc.step,
 		rte.id,
 		rte.step,
@@ -547,7 +549,7 @@ BEGIN
           to_name = CASE WHEN $5 = '' THEN NULL ELSE $5 END,
           to_firstname = CASE WHEN $6 = '' THEN NULL ELSE $6 END,
           to_phone = CASE WHEN $7 = '' THEN NULL ELSE $7 END,
-          
+
           p_name_firstname = CASE WHEN $9 = '' THEN NULL ELSE $9 END,
           p_phone = CASE WHEN $10 = '' THEN NULL ELSE $10 END,
           p_address_note = CASE WHEN $11 = '' THEN NULL ELSE $11 END,
