@@ -87,6 +87,13 @@ class ApplicationController < ActionController::Base
     #=> 010
     # puts 100.to_s.rjust(3, "0")
     #=> 100
+    # n1 = sec.to_s.rjust(4, '0')
+    # puts 'encodeMGS n1:' + n1
+    # n2 = (id.to_s + n1).to_i
+    # puts 'encodeMGS n2:' + n2.to_s
+    # n3 = n2.to_s(36).rjust(8, '0')
+    # puts 'encodeMGS n3:' + n3
+    return ('M' + (id.to_s + sec.to_s.rjust(4, '0')).to_i.to_s(36).rjust(8, '0')).upcase
 
   end
 

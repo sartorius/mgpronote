@@ -63,8 +63,14 @@ class BarcodeController < ApplicationController
         # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
         # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
         # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
         @do_we_need_grp_notify = true;
-        puts 'Notif Pure: ' + notification.inspect
+        # puts 'Notif Pure: ' + notification.inspect
+        sendEmailNotification(notification['to_addr'].to_s,
+                                notification['firstname'].to_s,
+                                encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
+                                notification['step'].to_s,
+                                notification['msg'].to_s)
       end
 
     end
@@ -97,8 +103,14 @@ class BarcodeController < ApplicationController
         # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
         # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
         # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
         @do_we_need_grp_notify = true;
-        puts 'Notif Ext: ' + notification.inspect
+        # puts 'Notif Ext: ' + notification.inspect
+        sendEmailNotification(notification['to_addr'].to_s,
+                                notification['firstname'].to_s,
+                                encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
+                                notification['step'].to_s,
+                                notification['msg'].to_s)
       end
     end
 
@@ -517,15 +529,20 @@ class BarcodeController < ApplicationController
         # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
         # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
         # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
-        puts 'Notif: ' + notification.inspect
+        # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
+        # Notif Pure: {"bc_id"=>41, "bc_sec"=>9710, "name"=>"De la Cannelle", "firstname"=>"Tsiky", "to_addr"=>"tsiky.d@gmail.com", "step"=>"Arrivé Tana", "msg"=>"Le paquet est arrivé à Tana. Il est en formalité entrée de territoire."}
+        # puts 'Notif for: ' + encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s)
+        # puts 'Notif: ' + notification.inspect
+        sendEmailNotification(notification['to_addr'].to_s,
+                                notification['firstname'].to_s,
+                                encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
+                                notification['step'].to_s,
+                                notification['msg'].to_s)
       end
 
       @returnmessage = "L'opération a été correctement enregistrée"
       render 'resultsavestep'
     end
-    rescue Exception => exc
-       @returnmessage = "Une erreur est survenue #{exec.message}"
-       render 'resultsavestep'
   end
 
 

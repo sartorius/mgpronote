@@ -49,7 +49,7 @@ UPDATE ref_status SET need_to_notify = FALSE, txt_to_notify = 'Cas d''un enlève
 UPDATE ref_status SET need_to_notify = TRUE;
 
 UPDATE ref_status SET need_to_notify = FALSE;
-UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 6, 10, 4, 2);
+UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 2, 6, 10);
 
 
 
