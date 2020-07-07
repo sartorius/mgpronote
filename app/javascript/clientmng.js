@@ -7,15 +7,8 @@ $(document).on('turbolinks:load', function() {
 function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'cltmng-gr'){
 
-      //Initalize JSON Array
-      for(i=0; i<dataTagToJsonArray.length; i++){
-        //console.log('dataTagToJsonArray[i].owner_id: ' + i + '/' + dataTagToJsonArray[i].owner_id);
-        if(dataTagToJsonArray[i].owner_id == null){
-          dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
-        }
-      }
-
-      runjsClientGrid();
+      // Initalize
+      initDataTagToJsonArrayDashboard();
 
 
       // Confirmation button is here
@@ -59,6 +52,9 @@ function revokeClientPOCMng(name, id, o, email){
   $('#crt-cb-order').html(o);
   $('#crt-cb-email').html(email);
   $('#mgs-dialog').show(100);
+  $('html, body').animate({
+              scrollTop: $("#mg-graph-identifier").offset().top
+          }, 400);
 
 }
 
@@ -73,6 +69,9 @@ function createBarCodeFor(name, id, o, email){
   $('#crt-cb-order').html(o);
   $('#crt-cb-email').html(email);
   $('#mgs-dialog').show(100);
+  $('html, body').animate({
+              scrollTop: $("#mg-graph-identifier").offset().top
+          }, 400);
   //console.log('createBarCodeFor');
 }
 
@@ -181,32 +180,129 @@ function confirmedMngClientToCreateBC(){
 }
 
 
+/** Filter utils **/
+function clearDataPartner(){
+  filteredDataTagToJsonArray = Array.from(dataTagToJsonArray);
+  runjsClientGrid();
+};
+
+function filterData(){
+  if(($('#filter-all').val().length > 2) && ($('#filter-all').val().length < 35)){
+    filteredDataTagToJsonArray = dataTagToJsonArray.filter(function (el) {
+                                      return el.raw_data.includes($('#filter-all').val().toUpperCase())
+                                  });
+    runjsClientGrid();
+  }
+  else if(($('#filter-all').val().length < 3)) {
+    // We clear data
+    clearDataPartner();
+  }
+  else{
+    // DO nothing
+  }
+}
+
+
+// This function is used to encode only
+function initDataTagToJsonArrayDashboard(){
+  if(dataTagToJsonArray.length > 0){
+
+    $('#filter-all').keyup(function() {
+      filterData();
+    });
+
+    $('#re-init-dash').click(function() {
+      $('#filter-all').val('');
+      clearDataPartner();
+    });
+
+  }
+  /* THE INIT HAS BEEN DONE IN ERB */
+  // filteredDataTagToJsonArray = dataTagToJsonArray;
+  runjsClientGrid();
+}
+
+
 /* JS GRID */
 function runjsClientGrid(){
+  $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
   if(dataTagToJsonArray.length > 0){
+
     $("#jsGrid").jsGrid({
         height: "auto",
         width: "100%",
-
         sorting: true,
         paging: true,
+        rowClick: function(args){
+          var $target = $(args.event.target);
+          if($target.closest(".d-bc-crt-clt").length) {
+             //Do something
+             createBarCodeFor((args.item.name + ' ' + args.item.firstname),
+                                args.item.id,
+                                'D',
+                                args.item.email);
+          }
+          else if($target.closest(".p-bc-crt-clt").length) {
+             //Do something
+             createBarCodeFor((args.item.name + ' ' + args.item.firstname),
+                                args.item.id,
+                                'P',
+                                args.item.email);
+          }
+          else if($target.closest(".btn-rvk-mng").length) {
+             //Do something
+             //console.log('button revok');
+             revokeClientPOCMng((args.item.name + ' ' + args.item.firstname),
+                                  args.item.id,
+                                  (args.item.poc ? 'FALSE' : 'TRUE'),
+                                  args.item.email);
+          }
+          else{
+            //Do nothing we did not recognize the order
+            console.log('button not recognized');
+          }
+        },
 
-        data: dataTagToJsonArray,
+        data: filteredDataTagToJsonArray,
 
         fields: [
             { name: "id", title: "#", type: "number", width: 18 , headercss: "h-jsG-r" },
-            { name: "client_ref",
+            { name: "enc_client_ref",
               title: 'Reférence',
               type: "text",
               width: 38,
-              headercss: "h-jsG-l",
+              headercss: "h-jsG-l"
+            },
+            { name: "name",
+              title: "Nom",
+              type: "text",
+              filtering: true,
+              align: "right",
+              width: 50,
+              headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
-                return mgsEncodeClientRef(item.firstname, item.id, value);
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
               }
             },
-            { name: "name", title: "Nom", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
-            { name: "firstname", title: "Prénom", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
-            { name: "email", title: "Email", type: "text", align: "right", headercss: "h-jsG-r" },
+            { name: "firstname",
+              title: "Prénom",
+              type: "text",
+              align: "right",
+              width: 50,
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+              }
+            },
+            { name: "email",
+              title: "Email",
+              type: "text",
+              align: "right",
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
+              }
+            },
             { name: "totalbc",
               title: '<i class="glyphicon glyphicon-list-alt"></i>',
               type: "number",
@@ -226,7 +322,7 @@ function runjsClientGrid(){
               }
             },
             //Default width is auto
-            { name: "since", title: "Client.e depuis le", type: "text", width: 40, align: "right", headercss: "h-jsG-r" },
+            { name: "since", title: "Client.e depuis le", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
             {
               name: "id",
               title: '<i class="glyphicon glyphicon-barcode"></i>',
@@ -234,7 +330,7 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
               }
             },
             {
@@ -244,7 +340,7 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
               }
             },
             {
@@ -258,15 +354,6 @@ function runjsClientGrid(){
               }
             }
         ]
-    });
-    //Button Barcode creator
-    $( ".bc-crt-clt" ).click(function() {
-      createBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
-    });
-
-    //After the grid creation we do the listener Here
-    $( ".btn-rvk-mng" ).click(function() {
-      revokeClientPOCMng($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
     });
   }
   else{

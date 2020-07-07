@@ -12,6 +12,22 @@
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+		//Initalize JSON Array
+		for(i=0; i<dataTagToJsonArray.length; i++){
+			dataTagToJsonArray[i].enc_client_ref = mgsEncodeClientRef(dataTagToJsonArray[i].firstname, dataTagToJsonArray[i].id, dataTagToJsonArray[i].client_ref);
+			dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].name.toUpperCase() +
+																				dataTagToJsonArray[i].firstname.toUpperCase() +
+																				dataTagToJsonArray[i].email.toUpperCase() +
+																				dataTagToJsonArray[i].enc_client_ref.toUpperCase();
+
+			if(dataTagToJsonArray[i].owner_id == null){
+				dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
+			}
+		}
+		console.log('Count 2: ' + dataTagToJsonArray.length);
+		// We init here the filter value
+		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
+		console.log('Count 1: ' + filteredDataTagToJsonArray.length);
   </script>
 <% end %>
 <%= render 'layouts/dirtycsv' %>
@@ -26,8 +42,32 @@
 <%= render 'layouts/dashboarddialog' %>
 <input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
 
+<%-# We display the filter only if there is data to filter -%>
+<% unless @emptyResultSet %>
+		<div class="row filter-banner" id="filter-block">
+
+
+			<div class="col-sm-2 fil-el-txt">
+				&nbsp;<span><i id='nb-el-dash'>0</i>&nbsp;trouvé(s)</span>
+			</div>
+			<div class="col-sm-6">
+		  </div>
+
+			<div class="col-sm-3 fil-el">
+				<textarea class="form-control" rows="1" id="filter-all" placeholder="Filtrez min. 3 caractères" style="resize: none;"></textarea>
+		  </div>
+			<div class="col-sm-1 fil-el">
+				<button id="re-init-dash" type="button" class="btn btn-md btn-block btn-default">
+					<i class="glyphicon glyphicon-refresh"></i>
+				</button>
+
+			</div>
+		</div>
+<% end %>
+
+
 <div class="mgs-note mgs-note-mrg-grid">
-  Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+  Cet écran est optimisé pour une utilisation ordinateur ou tablette.<% unless @maxRowParamMD.nil? %><%= @maxRowParamMD.to_s %><% end %>
 </div>
 <% if @emptyResultSet %>
   <div class="col-sm-12 no-data">
