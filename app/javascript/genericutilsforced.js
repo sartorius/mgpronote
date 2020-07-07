@@ -1,4 +1,10 @@
 // minify here : https://javascript-minifier.com
+const STR_LENGTH_XS = 3;
+const STR_LENGTH_SM = 5;
+const STR_LENGTH_MD = 10;
+const STR_LENGTH_LG = 15;
+const STR_LENGTH_XL = 20;
+const STR_LENGTH_XXL = 25;
 
 //Decode barcode
 function validateMGSCode(codeTest){

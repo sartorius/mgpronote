@@ -254,7 +254,6 @@ function printMngOrder(id, order){
 function runjsPartnerGrid(){
 
 
-
   if(dataTagToJsonArray.length > 0){
     //Set the number of data
     $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
@@ -293,7 +292,7 @@ function runjsPartnerGrid(){
               title: "Référence",
               type: "text",
               align: "right",
-              width: 40,
+              width: 60,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
                 return '<i class="monosp-ft">' + value + '</i>';
@@ -319,7 +318,7 @@ function runjsPartnerGrid(){
               width: 35,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
-                return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value) + '</i>';
+                return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD)) + '</i>';
               }
             },
             { name: "oclient_ref",
@@ -331,8 +330,42 @@ function runjsPartnerGrid(){
                 return mgsEncodeClientRef(item.ofirstname, item.oid, value);
               }
             },
-            { name: "oname", title: "Nom", type: "text", width: 70, headercss: "h-jsG-l" },
-            { name: "ofirstname", title: "Prénom", type: "text", width: 25, headercss: "h-jsG-l" },
+            {
+              name: "oname",
+              title: "Nom",
+              type: "text",
+              width: 40,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                return value.substring(0, STR_LENGTH_LG);
+              }
+            },
+            {
+              name: "ofirstname",
+              title: "Prénom",
+              type: "text",
+              width: 25,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                // print U is for Unpring
+                // print P is for Print
+                // onclick="printMngOrder(' + value + ', "' + item.print + '")"
+                return value.substring(0, STR_LENGTH_SM);
+              }
+            },
+            {
+              name: "bcdescription",
+              title: "Description",
+              type: "text",
+              width: 40,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                // print U is for Unpring
+                // print P is for Print
+                // onclick="printMngOrder(' + value + ', "' + item.print + '")"
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
+              }
+            },
             {
               name: "id",
               title: '<i class="glyphicon glyphicon-print"></i>',
