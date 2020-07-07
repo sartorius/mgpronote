@@ -36,6 +36,11 @@ function mainClientLoaderInCaseOfChange(){
 
       $( "#disp-add-info" ).click(function() {
         $("#add-inf-blc").show(400);
+        // To animate to scroll to the element
+        $('html, body').animate({
+                    scrollTop: $("#add-inf-blc").offset().top
+                }, 400);
+
         $("#mg-add-ext-ref").val($('#alr-ref-ext').html());
         $("#mg-add-descr").val($('#alr-descr').html());
 

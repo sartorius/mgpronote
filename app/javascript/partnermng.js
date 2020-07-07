@@ -292,7 +292,7 @@ function runjsPartnerGrid(){
               title: "Référence",
               type: "text",
               align: "right",
-              width: 60,
+              width: 40,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
                 return '<i class="monosp-ft">' + value + '</i>';
