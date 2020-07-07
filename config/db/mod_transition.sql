@@ -46,6 +46,10 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, nee
 
 UPDATE ref_status SET need_to_notify = FALSE, txt_to_notify = 'Cas d''un enlèvement, vous devez renseigner le contact et l''adresse.' WHERE id IN (0);
 
+UPDATE ref_status SET need_to_notify = TRUE;
+
+UPDATE ref_status SET need_to_notify = FALSE;
+UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 6, 10, 4, 2);
 
 
 
@@ -296,7 +300,14 @@ RETURNS TABLE (bc_id                   BIGINT,
                 msg                     VARCHAR(250))
                 -- Do the return at the end xxx
 AS $$
+DECLARE
+  var_msg     VARCHAR(250);
 BEGIN
+
+    SELECT CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END INTO var_msg
+      FROM ref_status rs
+      WHERE rs.id = $3;
+
     -- Do the INSERT
     -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
     INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
@@ -310,6 +321,8 @@ BEGIN
         under_incident = FALSE,
         update_date = CURRENT_TIMESTAMP
         WHERE id = $1;
+
+      var_msg := CONCAT(var_msg, ' Validation poids: ', $6::varchar(20));
 
     ELSE
       -- We update the barcode with last status
@@ -328,7 +341,7 @@ BEGIN
         u.firstname,
         u.email,
         rs.step,
-        CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END
+        var_msg
         FROM barcode bc JOIN users u ON u.id = bc.owner_id
                         JOIN ref_status rs ON rs.id = bc.status
                         WHERE bc.id = $1

@@ -233,7 +233,7 @@ function createBarCodeFor(pName, id, o){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
   //console.log('Here is o: ' + o);
   // The value here is the partner id
-  $('#nm-t-cf').html(pName + '#' + id + ((o == 'D') ? ' pour une <strong>réception</strong>' : ' pour un <strong>enlèvement</strong>'));
+  $('#nm-t-cf').html(pName + '#' + id + ((o == 'D') ? ' pour une <strong>livraison</strong>' : ' pour un <strong>enlèvement</strong>'));
   // Parameters in dialog !
 
   $('#crt-cb-param').html(id);
@@ -257,10 +257,10 @@ function confirmedBarCodeFor(){
             addbarCodeJson(partnerId);
           }
           else if (xhr.responseText ==  'max'){
-            $('#msg-feedback').html("Navré ! Vous avez dépassé le maximum de création sur 7 jours. Veuillez contacter votre partenaire pour qu'il vous en crée. L'opération a retourné un erreur réseau FORG988-" + xhr.responseText);
+            $('#msg-feedback').html("Navré ! Vous avez dépassé le maximum de création sur 7 jours. Veuillez contacter votre partenaire pour qu'il vous en crée. L'opération a retourné un refus FORG988-" + xhr.responseText);
           }
           else if (xhr.responseText ==  'poc'){
-            $('#msg-feedback').html("Navré ! Veuillez vérifier vos droits de création avec ce partenaire. L'opération a retourné un erreur réseau FOSG328-" + xhr.responseText);
+            $('#msg-feedback').html("Navré ! Veuillez vérifier vos droits de création avec ce partenaire. L'opération a retourné un refus FOSG328-" + xhr.responseText);
           }else{
             $('#msg-feedback').html("Navré ! L'opération a retourné un erreur réseau FORG763-" + xhr.responseText);
           }

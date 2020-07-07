@@ -25,6 +25,7 @@ class BarcodeController < ApplicationController
     @list_pure_array_id = JSON.parse(params[:grpcheckcbpureid])
     @list_ext_array = JSON.parse(params[:grpcheckcbext])
     @stepTxt = params[:steptxt]
+    @do_we_need_grp_notify = false;
 
     #puts '--------------------------'
     #puts '*** PURE inspect <<<<<<<<<<< ' + @list_pure_array.inspect
@@ -62,6 +63,7 @@ class BarcodeController < ApplicationController
         # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
         # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
         # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        @do_we_need_grp_notify = true;
         puts 'Notif Pure: ' + notification.inspect
       end
 
@@ -95,6 +97,7 @@ class BarcodeController < ApplicationController
         # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
         # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
         # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        @do_we_need_grp_notify = true;
         puts 'Notif Ext: ' + notification.inspect
       end
     end
@@ -268,7 +271,7 @@ class BarcodeController < ApplicationController
         sql_query_ck_delivery_pickup_col = ' SELECT DISTINCT bc.type_pack AS bc_type_pack, rte.id AS end_step_id '
         # Clause with wk_tag table
         sql_query_where_ck_delivery_pickup =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
-                                              " AND bc.type_pack IN ('D', 'P') AND rte.id IN (2, 4) " +
+                                              " AND bc.type_pack IN ('D', 'P') AND rte.id IN (2, 1) " +
                                               " AND bc.status = wt.current_step_id " + sql_query_where_cut
 
         sql_query_big_ck_delivery_pickup = sql_query_ck_delivery_pickup_col + sql_query_join + sql_query_where_ck_delivery_pickup

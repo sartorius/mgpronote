@@ -73,7 +73,7 @@ function mainScanLoaderInCaseOfChange(){
       loadCameraRead(true);
 
       //DEBUG CHANGE keep for test
-      //$('#mg-grp-step-btn').show();
+      $('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -211,7 +211,7 @@ function displayNext(isGrp){
   // Initialize
 
   let nextSteps = "";
-  // target <option value="1" title="Tooltip">Réception</option>
+  // target <option value="1" title="Tooltip">Livraison</option>
   let nsp1 = '<option value="';
   let nsp2 = '" >';
   let nsp2Disabled = '" disabled>';
@@ -392,22 +392,16 @@ function loadCameraRead(isGrp){
 
       // DEBUG CHANGE
       // 4 pures are OK ***
-      //listOfBCToHandle.push("AZERTY4");
-      //listOfBCToHandle.push("M00003WPJ");
-      //listOfBCToHandle.push("M00004GUX");
-      //listOfBCToHandle.push("M000055Y2");
-      //listOfBCToHandle.push("M00004YAK"); // w Address
-      //listOfBCToHandle.push("M00001218"); // w Address and incident
-      //listOfBCToHandle.push("M00003ALN"); // w Address and incident
-      //listOfBCToHandle.push("M0000312V"); // Under Weight
-      //listOfBCToHandle.push("M00003RZW"); // Address Delivery
-      //listOfBCToHandle.push("M00001R1A"); // Address Delivery -- eq AZERTY
+      
+      listOfBCToHandle.push("M000092NQ");
+      listOfBCToHandle.push("M00009ASO");
+      listOfBCToHandle.push("M00008ZUM");
 
-      //listOfBCToHandle.push("M00004GUX");
-      //listOfBCToHandle.push("M0000430O");
-      //listOfBCToHandle.push("M00003WPJ");
-      //listOfBCToHandle.push("AZERTY5");
-
+      /*
+      listOfBCToHandle.push("M00008NH6");
+      listOfBCToHandle.push("M00007AN4");
+      listOfBCToHandle.push("M00006N8H");
+      */
 
 
       //console.log("You have clicked on #mg-grp-step-btn");

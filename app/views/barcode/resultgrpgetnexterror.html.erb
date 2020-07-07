@@ -23,10 +23,10 @@
           <br>Les codes barres ci-dessous ont un incident <i class="glyphicon glyphicon-info-sign"></i>
         <% end %>
         <% if @need_to_feedback_delivery_pickup %>
-          <br>Un enlèvement et une réception ne peuvent être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+          <br>Un enlèvement et une livraison ne peuvent être groupée. <i class="glyphicon glyphicon-info-sign"></i>
         <% end %>
         <% if @need_to_feedback_next_weight %>
-          <br>La prochaine étape obligatoire est la pesée. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+          <br>La prochaine étape obligatoire est la <strong>pesée</strong>. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
         <% end %>
       </div>
     </div>
@@ -60,7 +60,7 @@
 
             <% if @need_to_feedback_delivery_pickup %>
               <% if "#{result['bc_type_pack']}" == 'D' %>
-                <strong>Prochaine action possible: <i class="mgs-red">Réception</i></strong><br>
+                <strong>Prochaine action possible: <i class="mgs-red">Livraison</i></strong><br>
               <% else %>
                 <strong>Prochaine action possible: <i class="mgs-red">Enlèvement</i></strong><br>
               <% end %>
