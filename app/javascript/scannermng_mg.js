@@ -158,12 +158,6 @@ function verityWeightFormRef(){
   }
 }
 
-//Need to promote to generic utils forced?
-function mgsEncodeClientRef(fname, lid, ref){
-  let lidPlusSec = parseInt(lid.toString() + mgspad(ref, 3).toString()).toString(35);
-  let fnameCode = (fname.length == 1) ? fname.substring(0, 1)+'X' : fname.substring(0, 2);
-  return fnameCode.toUpperCase() + '-' + lidPlusSec.replace(/o/g,"Z").replace(/O/g,"Z").toUpperCase();
-}
 
 function weightManager(){
   //Weight Manager

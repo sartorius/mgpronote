@@ -74,7 +74,7 @@ class PartnerController < ApplicationController
   def dashboard
     #sendEmailTest('ratinahirana@gmail.com', 'Blou Ratinahirana', 'M03200202', 'Arrivé au centre de dépot')
 
-    sql_query = "SELECT bc.id AS id, uo.name AS oname, uo.firstname AS ofirstname, " +
+    sql_query = "SELECT bc.id AS id, uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, " +
                       " uo.phone AS ophone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
                       " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
                       " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +

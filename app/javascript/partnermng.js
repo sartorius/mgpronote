@@ -267,7 +267,7 @@ function runjsPartnerGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-home"></i>' : '<i class="c-b glyphicon glyphicon-arrow-up"></i>';
+                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
               }
             },
             //Default width is auto
@@ -282,9 +282,17 @@ function runjsPartnerGrid(){
                 return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value) + '</i>';
               }
             },
+            { name: "oclient_ref",
+              title: 'Client',
+              type: "text",
+              width: 38,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                return mgsEncodeClientRef(item.ofirstname, item.oid, value);
+              }
+            },
             { name: "oname", title: "Nom", type: "text", width: 70, headercss: "h-jsG-l" },
             { name: "ofirstname", title: "Prénom", type: "text", width: 25, headercss: "h-jsG-l" },
-            { name: "ophone", title: '<i class="glyphicon glyphicon-phone-alt"></i>', type: "text", width: 35, headercss: "h-jsG-c" },
             { name: "create_date", title: "Créé le", type: "text", width: 30, headercss: "h-jsG-l" },
             { name: "diff_days",
               title: '<i class="glyphicon glyphicon-time"></i>',

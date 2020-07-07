@@ -57,6 +57,8 @@ Rails.application.routes.draw do
   get     '/clientmng',    to: 'client#clientmng'
   post    '/clientmng',    to: 'client#newclient'
   post    '/createbarcodeforclient',    to: 'client#createbarcodeforclient'
+  post    '/revokmngbarcodeforclient',    to: 'client#revokmngbarcodeforclient'
+
 
   #Route for Personal and Reseller Controller
   get     '/persoreseldash',    to: 'persoresel#dashboard'

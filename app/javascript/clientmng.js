@@ -16,18 +16,18 @@ function mainClientLoaderInCaseOfChange(){
       }
 
       runjsClientGrid();
-      //Button Barcode creator
-      $( ".bc-crt-clt" ).click(function() {
-        createBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
-      });
-      //Button Authorize
-      $( ".bc-auth-clt" ).click(function() {
-        authorizeClientToCreateBC($(this));
-      });
+
 
       // Confirmation button is here
       $("#crt-cb-clt-cf").click(function() {
-        confirmedBarCodeFor();
+        if($("#dial-order").html() == 'C'){
+          //confirmedBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
+          confirmedBarCodeFor();
+        }
+        else{
+          //confirmedMngClientToCreateBC($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
+          confirmedMngClientToCreateBC();
+        }
       });
 
       $("#crt-cb-clt-ds").click(function() {
@@ -48,11 +48,26 @@ function mainClientLoaderInCaseOfChange(){
   }
 }
 
+function revokeClientPOCMng(name, id, o, email){
+  // console.log('revokeClientPOCMng: you did click on me: ' + name + '#' + id + ' order: ' + o + ' email: ' + email);
+  //console.log('Here is o: ' + o);
+  // POC mode
+  $("#dial-order").html('P');
+  $('#nm-t-cf').html(' changer les drois de ' + name + '#' + id + ((o == 'FALSE') ? ' pour une <strong>interdiction de créer des suivis/codes barres</strong>' : ' pour une <strong>autorisation de créer des suivis/codes barres</strong>'));
+  // Parameters in dialog !
+  $('#crt-cb-param').html(id);
+  $('#crt-cb-order').html(o);
+  $('#crt-cb-email').html(email);
+  $('#mgs-dialog').show(100);
+
+}
+
 //Inner variable declaration !
 function createBarCodeFor(name, id, o, email){
-  //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
-  //console.log('Here is o: ' + o);
-  $('#nm-t-cf').html(name + '#' + id + ((o == 'D') ? ' pour une <strong>livraison</strong>' : ' pour un <strong>enlèvement</strong>'));
+  // console.log('createBarCodeFor: you did click on me: ' + name + '#' + id + ' order: ' + o + ' email: ' + email);
+  // Creation mode
+  $("#dial-order").html('C');
+  $('#nm-t-cf').html(' créer un code barre pour' + name + '#' + id + ((o == 'D') ? ' pour une <strong>livraison</strong>' : ' pour un <strong>enlèvement</strong>'));
   // Parameters in dialog !
   $('#crt-cb-param').html(id);
   $('#crt-cb-order').html(o);
@@ -85,6 +100,18 @@ function addbarCodeJson(clientId){
       break;
     }
   }
+}
+
+function updRevokMng(clientId){
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(dataTagToJsonArray[i].id == clientId){
+      dataTagToJsonArray[i].poc = (dataTagToJsonArray[i].poc ? false : true);
+      //console.log('read value: ' + dataTagToJsonArray[i].totalbc);
+      //console.log('updated value: ' + parseInt(dataTagToJsonArray[i].totalbc) + 1);
+      break;
+    }
+  }
+  runjsClientGrid();
 }
 
 function confirmedBarCodeFor(){
@@ -122,8 +149,35 @@ function confirmedBarCodeFor(){
 }
 
 //Authorize the client to create his/her own barcode
-function authorizeClientToCreateBC(el){
-  console.log('authorizeClientToCreateBC: you did click on me: ' + el.val());
+function confirmedMngClientToCreateBC(){
+  console.log('confirmedMngClientToCreateBC: you did click on me');
+  //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
+  let clientId = $('#crt-cb-param').html();
+  let clientEmail = $('#crt-cb-email').html();
+  $.ajax('/revokmngbarcodeforclient', {
+      type: 'POST',  // http method
+      data: { client_id: clientId,
+              client_email: clientEmail,
+              partner_id: $('#cur-part-id').html(),
+              auth_token: $('#auth-token-s').val(),
+              order: $('#crt-cb-order').html(),
+      },  // data to submit
+      success: function (data, status, xhr) {
+          //console.log('answer: ' + xhr.responseText);
+          if(xhr.responseText == 'ok'){
+            $('#msg-feedback').html("Super ! Le changement de droit de " + clientEmail + " <br> s'est déroulée correctment");
+            updRevokMng(clientId);
+          }
+          else{
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau RED209-" + xhr.responseText);
+          }
+          displaySuccessDialog();
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-feedback').html("Navré ! Une erreur 9UZ728 est survenue");
+          displayErrorDialog();
+      }
+  });
 }
 
 
@@ -141,6 +195,15 @@ function runjsClientGrid(){
 
         fields: [
             { name: "id", title: "#", type: "number", width: 18 , headercss: "h-jsG-r" },
+            { name: "client_ref",
+              title: 'Reférence',
+              type: "text",
+              width: 38,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                return mgsEncodeClientRef(item.firstname, item.id, value);
+              }
+            },
             { name: "name", title: "Nom", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
             { name: "firstname", title: "Prénom", type: "text", align: "right", width: 50, headercss: "h-jsG-r" },
             { name: "email", title: "Email", type: "text", align: "right", headercss: "h-jsG-r" },
@@ -171,7 +234,7 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-home"></i>' + '</button>';
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
               }
             },
             {
@@ -181,7 +244,7 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-arrow-up"></i>' + '</button>';
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
               }
             },
             {
@@ -191,10 +254,19 @@ function runjsClientGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button class="btn btn-default btn-sm btn-block bc-auth-clt" value="' + value + '">' + '<i class="glyphicon glyphicon-duplicate"></i>' + '</button>';
+                return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="glyphicon glyphicon-remove"></i>' : '<i class="glyphicon glyphicon-duplicate"></i>') + '</button>';
               }
             }
         ]
+    });
+    //Button Barcode creator
+    $( ".bc-crt-clt" ).click(function() {
+      createBarCodeFor($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
+    });
+
+    //After the grid creation we do the listener Here
+    $( ".btn-rvk-mng" ).click(function() {
+      revokeClientPOCMng($(this).data('name'), $(this).val(), $(this).data('order'), $(this).data('email'));
     });
   }
   else{

@@ -120,7 +120,7 @@ function runjsPersoreselGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-home"></i>' : '<i class="c-b glyphicon glyphicon-arrow-up"></i>';
+                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
               }
             },
             { name: "part_phone", title: "Téléphone", type: "text", width: 20, headercss: "h-jsG-l" },
@@ -307,7 +307,7 @@ function runjsPartnerListGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-home"></i>' + '</button>';
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
               }
             },
             {
@@ -317,7 +317,7 @@ function runjsPartnerListGrid(){
               align: "left",
               width: 25,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-arrow-up"></i>' + '</button>';
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
               }
             }
         ]

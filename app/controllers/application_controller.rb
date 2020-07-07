@@ -108,7 +108,7 @@ class ApplicationController < ActionController::Base
     end
     variable = Mailjet::Send.create(messages: [{
         'From'=> {
-            'Email'=> 'mgsuivi@protonmail.com',
+            'Email'=> ENV['MJ_SEND_MAIL'],
             'Name'=> 'MG Suivi notification'
         },
         'To'=> [

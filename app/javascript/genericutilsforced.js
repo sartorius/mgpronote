@@ -1,3 +1,5 @@
+// minify here : https://javascript-minifier.com
+
 //Decode barcode
 function validateMGSCode(codeTest){
   const re = /^M[A-Z0-9]{8}$/;
@@ -32,6 +34,14 @@ function mgsEncode(lid, sec){
   // The format here is 1 / 345 will be 10345
   let lidPlusSec = parseInt(lid.toString() + mgspad(sec, 4).toString());
   return 'M' + mgspad(lidPlusSec.toString(36), 8).toUpperCase();
+}
+
+
+//Need to promote to generic utils forced?
+function mgsEncodeClientRef(fname, lid, ref){
+  let lidPlusSec = parseInt(lid.toString() + mgspad(ref, 3).toString()).toString(35);
+  let fnameCode = (fname.length == 1) ? fname.substring(0, 1)+'X' : fname.substring(0, 2);
+  return fnameCode.toUpperCase() + '-' + lidPlusSec.replace(/o/g,"Z").replace(/O/g,"Z").toUpperCase();
 }
 
 /*
