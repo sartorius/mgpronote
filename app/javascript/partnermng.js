@@ -6,6 +6,7 @@ $(document).on('turbolinks:load', function() {
 
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
+
     initDataTagToJsonArrayDashboard();
     $( "#mgs-dash-print-csv" ).click(function() {
       generatePartDashCSV();
@@ -229,8 +230,31 @@ function initDataTagToJsonArrayDashboard(){
   runjsPartnerGrid();
 }
 
+function printMngOrder(id, order){
+  //console.log('printMngOrder: ');
+  //console.log('id: ' + id);
+  if(order == 'U'){
+    // we are unprint so we need to print !
+    printArray.push(parseInt(id));
+  }
+  else{
+    // in that case it is P
+    // we are Print so we need to unprint !
+    let index = printArray.indexOf(parseInt(id));
+    if (index !== -1){
+      printArray.splice(index, 1);
+    }
+    //console.log('found index: ' + index);
+  }
+  $('#count-print').html((printArray.length == 0 ? '' : printArray.length));
+  updatePrintElemntArray(id);
+};
+
 /* JS GRID */
 function runjsPartnerGrid(){
+
+
+
   if(dataTagToJsonArray.length > 0){
     //Set the number of data
     $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
@@ -242,7 +266,23 @@ function runjsPartnerGrid(){
         paging: true,
         // args are item - itemIndex - event
         rowClick: function(args){
-          goToPartBarcode(args.item.id, args.item.secure)
+          //console.log(args.event);
+          //alert('test ' + JSON.stringify(args.event));
+          // I cannot do anything on the row click for now
+          //goToPartBarcode(args.item.id, args.item.secure)
+          var $target = $(args.event.target);
+          //console.log(JSON.stringify($target));
+          //console.log(JSON.stringify(args.event));
+          //console.log(args.item.id);
+          if($target.closest(".btn-print-mng").length) {
+             // handle cell click
+             //console.log('IN btn-print-mng');
+             printMngOrder(args.item.id, args.item.print);
+          }
+          else{
+            //console.log('OUT btn-print-mng');
+            goToPartBarcode(args.item.id, args.item.secure);
+          }
         },
 
         data: filteredDataTagToJsonArray,
@@ -302,6 +342,7 @@ function runjsPartnerGrid(){
               itemTemplate: function(value, item) {
                 // print U is for Unpring
                 // print P is for Print
+                // onclick="printMngOrder(' + value + ', "' + item.print + '")"
                 return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="glyphicon glyphicon-print"></i>' + '</button>';
               }
             },
@@ -316,14 +357,8 @@ function runjsPartnerGrid(){
             }
         ]
     });
-    //After the grid creation we do the listener Here
-    $( ".btn-print-mng" ).click(function() {
-      printMngOrder($(this).val(), $(this).data('order'));
-
-    });
-    $( "#re-init-print-dash" ).click(function() {
-      clearPrint();
-    });
+    // After the grid
+    refreshListener();
   }
   else{
     $("#jsGrid").hide();
@@ -337,39 +372,35 @@ function runjsPartnerGrid(){
             */
 }
 
-function printMngOrder(id, order){
-  console.log('printMngOrder: ');
-  console.log('id: ' + id);
-  if(order == 'U'){
-    // we are unprint so we need to print !
 
-    printArray.push(parseInt(id));
-  }
-  else{
-    // in that case it is P
-    // we are Print so we need to unprint !
-    let index = printArray.indexOf(parseInt(id));
-    if (index !== -1){
-      printArray.splice(index, 1);
-    }
-    console.log('found index: ' + index);
-  }
-  $('#count-print').html(printArray.length);
-  updatePrintElemntArray(id);
+function refreshListener(){
+  //After the grid creation we do the listener Here
+  $( "#re-init-print-dash" ).click(function() {
+    clearPrint();
+  });
 }
 
 function clearPrint(){
   //console.log('input clearPrint');
   $('#count-print').html('');
-  printArray = new Array();
   for(i=0; i<dataTagToJsonArray.length; i++){
     dataTagToJsonArray[i].print = 'U';
   }
   runjsPartnerGrid();
+  printArray = new Array();
+}
+
+function clearPrintElemntArray(id){
+  // Then update row data
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(dataTagToJsonArray[i].id == id){
+      dataTagToJsonArray[i].print = 'U';
+      break;
+    }
+  }
 }
 
 function updatePrintElemntArray(id){
-
   // Then update row data
   for(i=0; i<dataTagToJsonArray.length; i++){
     if(dataTagToJsonArray[i].id == id){
@@ -387,25 +418,6 @@ function updatePrintElemntArray(id){
     }
   }
 
-  /*
-  for(i=0; i<filteredDataTagToJsonArray.length; i++){
-    if(filteredDataTagToJsonArray[i].id == id){
-      console.log('C Found element: ' + i);
-
-      if(filteredDataTagToJsonArray[i].print == 'U'){
-        console.log('C Found element U: ' + filteredDataTagToJsonArray[i].print);
-        filteredDataTagToJsonArray[i].print = 'P';
-      }
-      else{
-        console.log('C Found element P: ' + filteredDataTagToJsonArray[i].print);
-        filteredDataTagToJsonArray[i].print = 'U';
-      }
-      //filteredDataTagToJsonArray[i].print = (filteredDataTagToJsonArray[i].print == 'U' ? 'P' : 'U');
-      break;
-    }
-  }
-  */
-  //Display grid first
   runjsPartnerGrid();
 }
 
