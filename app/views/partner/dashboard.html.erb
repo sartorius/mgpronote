@@ -13,7 +13,8 @@
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
 		// We init here the filter value
-		var filteredDataTagToJsonArray = dataTagToJsonArray;
+		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
+		var printArray = new Array();
   </script>
 <% end %>
 <%= render 'layouts/dirtycsv' %>
@@ -33,7 +34,7 @@
 		<div class="row filter-banner" id="filter-block">
 			<div class="col-sm-2 fil-el">
 				<button id="print-dash" type="button" class="btn btn-md btn-block btn-default">
-					Générer PDF &nbsp; <i class="glyphicon glyphicon-print"></i>
+					imprimer <i id="count-print"></i> &nbsp; <i class="glyphicon glyphicon-print"></i>
 				</button>
 		  </div>
 			<div class="col-sm-1 fil-el">
