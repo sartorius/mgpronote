@@ -185,7 +185,7 @@ function initDataTagToJsonArrayDashboard(){
     for(i=0; i<dataTagToJsonArray.length; i++){
       dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
       // We concatenate the data
-      dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].raw_data + dataTagToJsonArray[i].ref_tag;
+      dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].raw_data + dataTagToJsonArray[i].ref_tag + mgsEncodeClientRef(dataTagToJsonArray[i].ofirstname, dataTagToJsonArray[i].oid, dataTagToJsonArray[i].oclient_ref);
     }
 
     //DEBUG
