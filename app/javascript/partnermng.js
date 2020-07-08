@@ -15,6 +15,9 @@ function mainPartnLoaderInCaseOfChange(){
     $( "#mgs-dash-print-csv" ).click(function() {
       generatePartDashCSV();
     });
+    $("#all-print-dash").click(function() {
+      fillMaxPrint();
+    });
   }
   else if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
           ($('#mg-graph-identifier').text() == 'parprintnotrack-gr')){
@@ -308,9 +311,27 @@ function initDataTagToJsonArrayDashboard(){
   runjsPartnerGrid();
 }
 
+function fillMaxPrint(){
+  clearPrint();
+  const MAX_PRINT = parseInt($('#max-print-const').html());
+
+
+  for(iallP=0; iallP<MAX_PRINT+1; iallP++){
+    //console.log('iallP value >>>>>>>>>>>>' + iallP);
+    if(iallP<filteredDataTagToJsonArray.length){
+      //console.log('fillMaxPrint: ' + filteredDataTagToJsonArray[iallP].id);
+      //console.log('printArray.length: ' + printArray.length);
+      printMngOrder(filteredDataTagToJsonArray[iallP].id, 'U', filteredDataTagToJsonArray[iallP].ref_tag, filteredDataTagToJsonArray[iallP].oclient_ref);
+    }
+    else{
+      //console.log('ELSE fillMaxPrint: ' + filteredDataTagToJsonArray.length + ' vs ' + iallP);
+    }
+  }
+}
+
 function printMngOrder(id, order, bcref, cliref){
   const MAX_PRINT = parseInt($('#max-print-const').html());
-  console.log('MAX_PRINT: ' + MAX_PRINT);
+  //console.log('MAX_PRINT: ' + MAX_PRINT);
   let updateArrayList = false;
   //console.log('printMngOrder: ');
   //console.log('id: ' + id);
