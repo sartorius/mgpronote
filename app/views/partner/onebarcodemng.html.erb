@@ -1,4 +1,4 @@
-<% provide(:title, "Code barre") %>
+<% provide(:title, "Suivi") %>
 <div id="mg-graph-identifier">partonebc-gr</div>
 <%= render 'partner/dirtyjspdf' %>
 <% if @resultSet.nil? %>
@@ -24,7 +24,7 @@
 <div class="row mgs-title">
   <div class="col-lg-6">
 		<div class="monosp-ft-title">
-    	<span id="bc-seeone">Code barre</span>
+    	<span id="bc-seeone">Suivi</span>
 		</div>
     <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
     <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
