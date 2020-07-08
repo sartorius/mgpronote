@@ -6,7 +6,7 @@ $(document).on('turbolinks:load', function() {
 
 function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'peredash-gr'){
-      runjsPersoreselGrid();
+      initDataTagToJsonArrayDashboard();
   }
   else if($('#mg-graph-identifier').text() == 'persom-gr'){
       runjsPartnerListGrid();
@@ -76,12 +76,56 @@ function goToBarcode(lid, lsec){
   $("#mg-checkbc-form").submit();
 }
 
-/* JS GRID */
-function runjsPersoreselGrid(){
+/** Filter utils **/
+function clearDataPartner(){
+  filteredDataTagToJsonArray = Array.from(dataTagToJsonArray);
+  runjsPersoreselGrid();
+};
+
+function filterData(){
+  if(($('#filter-all').val().length > 2) && ($('#filter-all').val().length < 35)){
+    filteredDataTagToJsonArray = dataTagToJsonArray.filter(function (el) {
+                                      return el.raw_data.includes($('#filter-all').val().toUpperCase())
+                                  });
+    runjsPersoreselGrid();
+  }
+  else if(($('#filter-all').val().length < 3)) {
+    // We clear data
+    clearDataPartner();
+  }
+  else{
+    // DO nothing
+  }
+}
+
+// This function is used to encode only
+function initDataTagToJsonArrayDashboard(){
   for(i=0; i<dataTagToJsonArray.length; i++){
     dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
+    dataTagToJsonArray[i].raw_data = (dataTagToJsonArray[i].ref_tag + dataTagToJsonArray[i].part_name + dataTagToJsonArray[i].step + dataTagToJsonArray[i].bc_description + dataTagToJsonArray[i].p_address_note).toUpperCase();
   }
+  filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
 
+
+  if(dataTagToJsonArray.length > 0){
+    $('#filter-all').keyup(function() {
+      filterData();
+    });
+    $('#re-init-dash').click(function() {
+      $('#filter-all').val('');
+      clearDataPartner();
+    });
+
+  }
+  /* THE INIT HAS BEEN DONE IN ERB */
+  // filteredDataTagToJsonArray = dataTagToJsonArray;
+  runjsPersoreselGrid();
+}
+
+/* JS GRID */
+function runjsPersoreselGrid(){
+
+  $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
   if(dataTagToJsonArray.length > 0){
     $("#jsGrid").jsGrid({
         height: "auto",
@@ -93,7 +137,7 @@ function runjsPersoreselGrid(){
         rowClick: function(args){
           goToBarcode(args.item.id, args.item.secure)
         },
-        data: dataTagToJsonArray,
+        data: filteredDataTagToJsonArray,
 
         fields: [
             { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
@@ -101,13 +145,21 @@ function runjsPersoreselGrid(){
               title: "Référence",
               type: "text",
               align: "right",
-              width: 25,
+              width: 30,
               headercss: "h-jsG-r",
               itemTemplate: function(value, item) {
                 return '<i class="monosp-ft">' + value + '</i>';
               }
             },
-            { name: "step", title: "Status", type: "text", width: 25, headercss: "h-jsG-l" },
+            { name: "step",
+              title: "Status",
+              type: "text",
+              width: 55,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
+              }
+            },
             { name: "status",
               title: '<i class="glyphicon glyphicon-edit"></i>',
               type: "text",
@@ -128,9 +180,25 @@ function runjsPersoreselGrid(){
                 return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
               }
             },
-            { name: "part_phone", title: "Téléphone", type: "text", width: 20, headercss: "h-jsG-l" },
+            { name: "part_phone", title: "Téléphone", type: "text", width: 30, headercss: "h-jsG-l" },
             //Default width is auto
-            { name: "part_name", title: "Nom partenaire", type: "text", headercss: "h-jsG-l" },
+            { name: "part_name",
+              title: "Nom partenaire",
+              type: "text",
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+              }
+            },
+            { name: "bc_description",
+              title: "Description",
+              type: "text",
+              width: 45,
+              headercss: "h-jsG-l",
+              itemTemplate: function(value, item) {
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+              }
+            },
             { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
             { name: "diff_days",
               title: '<i class="glyphicon glyphicon-time"></i>',
@@ -332,3 +400,10 @@ function runjsPartnerListGrid(){
     $("#jsGridPartnerList").hide();
   }
 }
+
+
+
+/*******************************************************************************************************/
+/*******************************           CSV      ****************************************************/
+/*******************************************************************************************************/
+/*******************************************************************************************************/
