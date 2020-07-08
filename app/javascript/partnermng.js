@@ -458,23 +458,29 @@ function updatePrintElemntArray(id){
 /***********************************************************************************************************/
 
 function generatePartDashCSV(){
-	let csvContent = "data:text/csv;charset=utf-8,";
+	const csvContentType = "data:text/csv;charset=utf-8,";
+  let csvContent = "";
+  const SEP_ = ";"
 
-	let dataString = "#;Référence;Status;Nom;Prénom;Numéro;Date de création;En attente depuis;\n";
+	let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_ + "Numéro" + SEP_ + "Date de création" + SEP_ + "Description" + SEP_ + "En attente depuis" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArray.length; i++){
-		dataString = dataTagToJsonArray[i].id + ';' + removeDiacritics(dataTagToJsonArray[i].ref_tag) + ';' + removeDiacritics(dataTagToJsonArray[i].step) + ';' +  dataTagToJsonArray[i].oname + ';' +  dataTagToJsonArray[i].ofirstname + ';' + dataTagToJsonArray[i].ophone + ';' + dataTagToJsonArray[i].create_date + ';' +   dataTagToJsonArray[i].diff_days + ';' ;
+		dataString = dataTagToJsonArray[i].id + SEP_ + removeDiacritics(dataTagToJsonArray[i].ref_tag) + SEP_ + removeDiacritics(dataTagToJsonArray[i].step) + SEP_ +  dataTagToJsonArray[i].oname + SEP_ +  dataTagToJsonArray[i].ofirstname + SEP_ + dataTagToJsonArray[i].ophone + SEP_ + dataTagToJsonArray[i].bcdescription + SEP_ + dataTagToJsonArray[i].create_date + SEP_ +   dataTagToJsonArray[i].diff_days + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArray.length ? dataString+ "\n" : dataString;
 	}
-	//var encodedUri = encodeURI(csvContent);
-	//window.open(encodedUri);
 
-	var encodedUri = encodeURI(csvContent);
-	var link = document.createElement("a");
-	link.setAttribute("href", encodedUri);
-	link.setAttribute("download", 'CodesbarresListe.csv');
-	document.body.appendChild(link); // Required for FF
+  //console.log('Click on csv');
+	let encodedUri = encodeURI(csvContent);
+  let csvData = new Blob([csvContent], { type: csvContentType });
 
-	link.click(); // This will download the data file named "my_data.csv".
+	let link = document.createElement("a");
+  let csvUrl = URL.createObjectURL(csvData);
+
+  link.href =  csvUrl;
+  link.style = "visibility:hidden";
+  link.download = 'suiviListeMGSuiviPartenaire.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }

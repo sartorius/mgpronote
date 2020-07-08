@@ -24,10 +24,9 @@
 				dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
 			}
 		}
-		console.log('Count 2: ' + dataTagToJsonArray.length);
 		// We init here the filter value
 		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
-		console.log('Count 1: ' + filteredDataTagToJsonArray.length);
+
   </script>
 <% end %>
 <%= render 'layouts/dirtycsv' %>
@@ -101,7 +100,7 @@
 			La colonne&nbsp; <i class="glyphicon glyphicon-list-alt"></i> &nbsp;indique le nombre de code barre pour ce client actuellement.<br>
 			La colonne&nbsp; <i class="glyphicon glyphicon-duplicate"></i> &nbsp;indique si le client a le pouvoir de création, c'est à dire si vous l'avez authorisé à créer lui-même des codes barres.<br>
 
-			La colonne&nbsp; <i class="glyphicon glyphicon-ok"></i> &nbsp;indique que le client a le droit de créer des suivi/codes barres.
+			La colonne&nbsp; <i class="glyphicon glyphicon-ok"></i> &nbsp;indique que le client a le droit de créer des suivi/codes barres.<br>
 			La colonne&nbsp; <i class="glyphicon glyphicon-remove"></i> &nbsp;indique que le client n'a pas le droit de créer des suivi/codes barres.
 		</div>
 	</div>

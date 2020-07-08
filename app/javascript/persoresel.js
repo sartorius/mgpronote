@@ -7,6 +7,9 @@ $(document).on('turbolinks:load', function() {
 function mainClientLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'peredash-gr'){
       initDataTagToJsonArrayDashboard();
+      $( "#mgs-dash-print-csv" ).click(function() {
+        generateDashCSV();
+      });
   }
   else if($('#mg-graph-identifier').text() == 'persom-gr'){
       runjsPartnerListGrid();
@@ -102,7 +105,7 @@ function filterData(){
 function initDataTagToJsonArrayDashboard(){
   for(i=0; i<dataTagToJsonArray.length; i++){
     dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
-    dataTagToJsonArray[i].raw_data = (dataTagToJsonArray[i].ref_tag + dataTagToJsonArray[i].part_name + dataTagToJsonArray[i].step + dataTagToJsonArray[i].bc_description + dataTagToJsonArray[i].p_address_note).toUpperCase();
+    dataTagToJsonArray[i].raw_data = (dataTagToJsonArray[i].ref_tag + dataTagToJsonArray[i].part_name + dataTagToJsonArray[i].step + dataTagToJsonArray[i].bcdescription + dataTagToJsonArray[i].p_address_note).toUpperCase();
   }
   filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
 
@@ -190,7 +193,7 @@ function runjsPersoreselGrid(){
                 return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
               }
             },
-            { name: "bc_description",
+            { name: "bcdescription",
               title: "Description",
               type: "text",
               width: 45,
@@ -407,3 +410,37 @@ function runjsPartnerListGrid(){
 /*******************************           CSV      ****************************************************/
 /*******************************************************************************************************/
 /*******************************************************************************************************/
+function generateDashCSV(){
+	const csvContentType = "data:text/csv;charset=utf-8,";
+  let csvContent = "";
+  const SEP_ = ";"
+
+  let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Numéro" + SEP_ + "Partenaire" + SEP_ + "Date de création" + SEP_ + "Description" + SEP_ + "En attente depuis" + SEP_ + "\n";
+	csvContent += dataString;
+	for(var i=0; i<dataTagToJsonArray.length; i++){
+		dataString = dataTagToJsonArray[i].id + SEP_ +
+                  removeDiacritics(dataTagToJsonArray[i].ref_tag) + SEP_ +
+                  removeDiacritics(dataTagToJsonArray[i].step) + SEP_ +
+                  dataTagToJsonArray[i].part_phone + SEP_ +
+                  dataTagToJsonArray[i].part_name + SEP_ +
+                  dataTagToJsonArray[i].create_date + SEP_ +
+                  dataTagToJsonArray[i].bcdescription + SEP_ +
+                  dataTagToJsonArray[i].diff_days + SEP_ ;
+    // easy close here
+    csvContent += i < dataTagToJsonArray.length ? dataString+ "\n" : dataString;
+	}
+
+  //console.log('Click on csv');
+	let encodedUri = encodeURI(csvContent);
+  let csvData = new Blob([csvContent], { type: csvContentType });
+
+	let link = document.createElement("a");
+  let csvUrl = URL.createObjectURL(csvData);
+
+  link.href =  csvUrl;
+  link.style = "visibility:hidden";
+  link.download = 'suiviListeMGSuiviClient.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
