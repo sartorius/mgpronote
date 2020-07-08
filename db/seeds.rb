@@ -1,5 +1,5 @@
 
-=begin
+
 # Create a main sample user.
 User.create!(name:  "Ratinahirana",
              firstname: "Herinirina",
@@ -10,6 +10,8 @@ User.create!(name:  "Ratinahirana",
              admin:     true,
              activated: true,
              activated_at: Time.zone.now)
+
+=begin
 # Client
 User.create!(name:  "Rakotoarinia",
             firstname: "Toky",
@@ -46,7 +48,7 @@ User.create!(name:  "Rakotomalala",
             activated: true,
             activated_at: Time.zone.now)
 
-=end
+
 
 # Patron
 User.create!(name:  "Rabemanara",
