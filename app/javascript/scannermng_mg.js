@@ -271,27 +271,15 @@ function displayNext(isGrp){
         // Now we need to treat differently 2 and 4 which are specific
         // Step 2 cannot be pickup
         // We need to discard one of them
-        if ((parseInt(dataTagToJsonArray[i].end_step_id) == 2) &&
-              parseInt((dataTagToJsonArray[i].curr_step_id) == 0) &&
-              (dataTagToJsonArray[i].bc_type_pack == 'P')){
-              // This is not possible we do nothing
-              if(i == 0){
-                // We need to re-initialize the text
-                needReInitReadStepTxt = true;
-                console.log('needReInitReadStepTxt true');
-              }
-              disabledCounter++;
-        }
-        else {
-          nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + curNsp2 + dataTagToJsonArray[i].end_step + nsp3;
-          if (needReInitReadStepTxt){
-            console.log('Did the needReInitReadStepTxt');
-            $('#read-step-txt').val(dataTagToJsonArray[i].end_step);
-          }
+        nextSteps = nextSteps + nsp1 + dataTagToJsonArray[i].end_step_id + curNsp2 + dataTagToJsonArray[i].end_step + nsp3;
+        if (needReInitReadStepTxt){
+          console.log('Did the needReInitReadStepTxt');
+          $('#read-step-txt').val(dataTagToJsonArray[i].end_step);
         }
     }
     $("#stepCtrl").html(nextSteps);
     // No other step is possible
+    console.log('End: disabledCounter: ' + disabledCounter);
     if(disabledCounter == dataTagToJsonArray.length){
       $('#stpcmt').hide();
       $('#mg-save-step-btn').hide();

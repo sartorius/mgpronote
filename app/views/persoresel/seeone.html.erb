@@ -17,7 +17,7 @@
 
     dataTagToJsonStepWF = dataTagToJsonStepWF.replace(/&quot;/g,"\"");
     var dataTagToJsonStepWFArray = JSON.parse(dataTagToJsonStepWF);
-
+		
   </script>
 <% end %>
 
@@ -42,7 +42,7 @@
   Cet écran est optimisé pour une utilisation ordinateur ou tablette.
 </div>
 
-<% if (@resultSet[0]['step_id'] == 0) && (@resultSet[0]['type_pack'] == 'P') %>
+<% if (@resultSet[0]['step_id'] == 3) && (@resultSet[0]['type_pack'] == 'P') %>
     <div class="row">
       <div class="col-sm-3">
       </div>

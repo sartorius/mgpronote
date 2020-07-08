@@ -81,37 +81,35 @@ ALTER TABLE ref_status ADD COLUMN txt_to_notify VARCHAR(250);
 UPDATE ref_status SET txt_to_notify = 'Vous venez de recevoir une référence paquet. Vous avez une action à faire: renseigner le.la réceptionneur.euse, veuillez vous connecter pour effectuer cette action.' WHERE id IN (0);
 UPDATE ref_status SET description = 'Le poids a été validé.' WHERE id IN (6);
 M000055Y2/M00004YAK
-
-
 */
 
 UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
 
 
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-1, 'Remis au client', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE, 8);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (0, 'Attente de livraison', 'Créé, attente de livraions.', 'Y', 'P', 1);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (3, 'Attente de saisie adresse', 'Créé, l''adresse enlèvement doit être saisie.', 'Y', 'P', 1);
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (-1, 'Terminée', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (0, 'En attente de réception', 'Ce suivi vient d''être créé.', 'Y', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (1, 'Adressé enlèvement', 'Les informations l''adresse et le contact de l''enlèvement ont été saisis.', 'N', 'Q');
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (1, 'Adressé, attente enlèvement', 'Les informations l''adresse et le contact de l''enlèvement ont été saisis.', 'N', 'Q', 2);
 -- Make sure the status 4 is specific
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (4, 'Enlèvement', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P');
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (4, 'Enlevé, attente local', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P', 2);
 -- Make sure the status 2 is specific
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (2, 'Livraison au local partenaire', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P', TRUE);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (7, 'Dépôt frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (8, 'Dépôt frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P');
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (2, 'Livré au local partenaire', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', 3);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P', 4, TRUE);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (7, 'Déposé frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P', 5);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (8, 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (11, 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5);
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (9, 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7);
 
 
 -- Particular case of pickup but it is as well created from screen
-
-UPDATE ref_status SET need_to_notify = FALSE, txt_to_notify = 'Cas d''un enlèvement, vous devez renseigner le contact et l''adresse.' WHERE id IN (0);
-
-UPDATE ref_status SET need_to_notify = TRUE;
-
 UPDATE ref_status SET need_to_notify = FALSE;
 UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 2, 6, 10);
 
+-- /////////////////////////////////////////////////////////////////////// Done set up
 
 -- START GRP Workflow
 
@@ -124,34 +122,13 @@ CREATE TABLE grp_status (
 );
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (1, 'Réception', TRUE, 1);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (2, 'Enlèvement', FALSE, 2);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Livraison local partenaire', TRUE, 3);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Local partenaire', TRUE, 3);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (4, 'Pesée', TRUE, 4);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot pour frêt aéroport', TRUE, 5);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée Tana', TRUE, 6);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Récupération disponible client', TRUE, 7);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Terminé, colis entre vos mains', TRUE, 8);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Disponible client', TRUE, 7);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Colis remis', TRUE, 8);
 
-
--- ALTER TABLE ref_status ADD COLUMN grp_id SMALLINT DEFAULT 0;
-UPDATE ref_status SET grp_id = 8 WHERE id = -1;
-UPDATE ref_status SET grp_id = 1 WHERE id = 0;
-UPDATE ref_status SET grp_id = 2 WHERE id = 1;
-UPDATE ref_status SET grp_id = 2 WHERE id = 4;
-
-UPDATE ref_status SET grp_id = 3 WHERE id = 2;
-UPDATE ref_status SET grp_id = 4 WHERE id = 6;
-
-UPDATE ref_status SET grp_id = 5 WHERE id = 7;
-UPDATE ref_status SET grp_id = 5 WHERE id = 8;
-UPDATE ref_status SET grp_id = 5 WHERE id = 11;
-
-UPDATE ref_status SET grp_id = 6 WHERE id = 9;
-UPDATE ref_status SET grp_id = 7 WHERE id = 10;
-
-
-UPDATE grp_status SET grp_step = 'Disponible client' WHERE id = 7;
-UPDATE grp_status SET grp_step = 'Terminé' WHERE id = 8;
-UPDATE grp_status SET grp_step = 'Local partenaire' WHERE id = 3;
 -- END GRP Workflow
 
 
@@ -173,51 +150,22 @@ CREATE TABLE mod_workflow (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 1);
+
 -- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 2); -- remove
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 4);
 -- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 4);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 4, 2);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 2);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 2, 6);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 7);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 8);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 11);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 8, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 11, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
-
-
-
-/*
-UPDATE mod_workflow SET start_id = 0, end_id = 5 WHERE start_id = 2 AND end_id = 5;
-DELETE FROM mod_workflow WHERE start_id = 1 AND end_id = 2;
-DELETE FROM ref_status WHERE id = 2;
-*/
-
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (11, 'Dépôt frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P');
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 11);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 11, 9);
-
-/*
--- Finally updated to 2 review of workflow #revwf
-UPDATE mod_workflow SET start_id = 0, end_id = -1 WHERE start_id = 0 AND end_id = 5;
-UPDATE mod_workflow SET start_id = 4, end_id = -1 WHERE start_id = 4 AND end_id = 5;
-UPDATE mod_workflow SET start_id = -1, end_id = 6 WHERE start_id = 5 AND end_id = 6;
-UPDATE ref_status SET id = 2 WHERE id = 5;
-UPDATE mod_workflow SET start_id = 0, end_id = 2 WHERE start_id = 0 AND end_id = -1;
-UPDATE mod_workflow SET start_id = 4, end_id = 2 WHERE start_id = 4 AND end_id = -1;
-UPDATE mod_workflow SET start_id = 2, end_id = 6 WHERE start_id = -1 AND end_id = 6;
-*/
-
-
-/*
-select rw.code, rfs.step, rfe.step
-                              from mod_workflow mw join ref_status rfs on rfs.id = mw.start_id
-                              join ref_status rfe on rfe.id = mw.end_id
-                              join ref_workflow rw on rw.id = mw.wkf_id
-                                                    and rw.id = 1;
-*/
 
 
 CREATE TABLE barcode(
@@ -694,15 +642,15 @@ CREATE TABLE client_partner_xref (
   PRIMARY KEY (client_id, partner_id)
 );
 
-/*
+
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
 -- Error to be solved Here
-UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
+-- UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
 
-*/
+
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is attaching client to a company
 DROP FUNCTION IF EXISTS CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255));
@@ -827,10 +775,10 @@ BEGIN
     IF var_can_crt = TRUE THEN
 
       var_secure := FLOOR(random() * 9999 + 1)::INT;
-      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack)
-        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order) RETURNING id INTO  var_bc_id;
+      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack, status)
+        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, 0, par_creator_id);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
 
       var_result := var_bc_id;
     ELSIF var_reach_limit = TRUE THEN

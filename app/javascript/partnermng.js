@@ -36,16 +36,17 @@ function mainPartnLoaderInCaseOfChange(){
       $('#bc-seeone').html(getBarcodeMGS);
 
       // Display the barcode to print
+      //DisplayOne
       JsBarcode("#mbc-0", getBarcodeMGS);
       $("#btn-print-bc").click(function() {
           //generateCb12PDF();
-          dataTagToJsonArray = new Array();
+          
           let oneBarcode = {
-            dest_email: dataTagToJsonOneBCArray[0].oemail,
-            step: dataTagToJsonOneBCArray[0].step,
+            bcref: mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()),
+            cliref: $('#cli-ref').html(),
           };
-          dataTagToJsonArray.push(oneBarcode);
-          generateCb12PDF();
+          printArray.push(oneBarcode);
+          generatePrintedPDF();
       });
   }
   else{

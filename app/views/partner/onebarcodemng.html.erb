@@ -1,5 +1,6 @@
 <% provide(:title, "Suivi") %>
 <div id="mg-graph-identifier">partonebc-gr</div>
+<%= render 'partner/partnerutils' %>
 <%= render 'partner/dirtyjspdf' %>
 <% if @resultSet.nil? %>
 	//Error TDY789
@@ -13,6 +14,7 @@
     dataTagToJsonOneBC = dataTagToJsonOneBC.replace(/&quot;/g,"\"");
     var dataTagToJsonOneBCArray = JSON.parse(dataTagToJsonOneBC);
 		var dataTagToJsonArray;
+		var printArray = new Array();
   </script>
 <% end %>
 
@@ -30,7 +32,7 @@
     <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
 		<div class="monosp-ft-title-mini">
 				<span>
-			    appartenant à <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %>
+			    appartenant à <i id="cli-ref"><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></i>
 			  </span>
 		</div>
   </div>

@@ -549,6 +549,7 @@ class BarcodeController < ApplicationController
   # Check BC Utils
 
   def checkbc
+    @checkBCIndicator = 1
     render 'checkbc'
   end
 

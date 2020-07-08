@@ -8,15 +8,15 @@ CREATE TABLE client_partner_xref (
   PRIMARY KEY (client_id, partner_id)
 );
 
-/*
+
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
 -- Error to be solved Here
-UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
+-- UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
 
-*/
+
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is attaching client to a company
 DROP FUNCTION IF EXISTS CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255));
@@ -141,10 +141,10 @@ BEGIN
     IF var_can_crt = TRUE THEN
 
       var_secure := FLOOR(random() * 9999 + 1)::INT;
-      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack)
-        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order) RETURNING id INTO  var_bc_id;
+      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack, status)
+        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, 0, par_creator_id);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
 
       var_result := var_bc_id;
     ELSIF var_reach_limit = TRUE THEN
