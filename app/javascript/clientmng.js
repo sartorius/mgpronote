@@ -259,7 +259,10 @@ function runjsClientGrid(){
           }
           else{
             //Do nothing we did not recognize the order
-            console.log('button not recognized');
+            $('#client-id-post').val(args.item.id);
+            //Run submit
+            //console.log('button not recognized');
+            $('#mg-checkbc-form').submit();
           }
         },
 

@@ -40,7 +40,7 @@ function mainPartnLoaderInCaseOfChange(){
       JsBarcode("#mbc-0", getBarcodeMGS);
       $("#btn-print-bc").click(function() {
           //generateCb12PDF();
-          
+
           let oneBarcode = {
             bcref: mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()),
             cliref: $('#cli-ref').html(),
@@ -48,6 +48,8 @@ function mainPartnLoaderInCaseOfChange(){
           printArray.push(oneBarcode);
           generatePrintedPDF();
       });
+
+      displayWorkflowClient();
   }
   else{
     //do nothing
@@ -71,7 +73,35 @@ function pad(num, size) {
     return s;
 }
 
-
+function displayWorkflowClient(){
+  console.log('displayWorkflowClient: Start');
+  let disStep = '';
+  let disStepBC = '';
+  let disStepBCGrp = 0;
+  let neverDisplayBC = false;
+  for(i=0; i<dataTagToJsonStepWFArray.length; i++){
+    const nspStart = '<span class="badge badge-default-light">';
+    const nspEnd = '</span>&nbsp;';
+    const nspSelected = '<span class="badge badge-primary">';
+    if(i == 0){
+      disStepBC = disStepBC + nspSelected + dataTagToJsonStepWFArray[i].step + nspEnd;
+      disStepBCGrp = parseInt(dataTagToJsonStepWFArray[i].id);
+    }
+    else{
+      if((disStepBCGrp <= parseInt(dataTagToJsonStepWFArray[i].id)) && (!neverDisplayBC)){
+        disStep = disStep + disStepBC;
+        neverDisplayBC = true;
+      }
+      else if(dataTagToJsonStepWFArray[i].common == true){
+        disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? nspSelected : nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
+      }
+      else{
+        //do nothing
+      }
+    }
+  }
+  $("#disp-step").html(disStep);
+}
 
 
 /* Print 12 */
@@ -405,7 +435,7 @@ function runjsPartnerGrid(){
   listToUpd.push('re-init-print-dash');
   listToUpd.push('re-init-dash');
 
-  if(window.screen.availWidth < 770){
+  if(window.screen.availWidth < 1100){
     // Manage button
     fromMDSizetoSM(listToUpd);
 

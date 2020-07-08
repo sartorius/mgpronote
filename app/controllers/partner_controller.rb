@@ -54,12 +54,23 @@ class PartnerController < ApplicationController
                       " AND bc.partner_id = " + @current_user.partner.to_s +
                   		" AND bc.secure = " + params[:checkcbsec] + ";"
 
+    sql_query_step = " SELECT DISTINCT gs.id, bc.id AS bc_id, bcrs.step, gs.grp_step, gs.common, gs.order_id " +
+                      " FROM ref_status rs  " +
+                      " JOIN grp_status gs ON rs.grp_id = gs.id " +
+                      " LEFT JOIN barcode bc ON bc.status = rs.id " +
+                      						" AND bc.id = " + params[:checkcbid] +
+                      						" LEFT JOIN ref_status bcrs ON bcrs.id = bc.status " +
+                      " order by bc.id, gs.order_id ASC; "
+
+
     begin
 
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
+
+      @resultSetStepWorkflow = ActiveRecord::Base.connection.exec_query(sql_query_step)
 
       @screenClient = false
 
@@ -70,36 +81,21 @@ class PartnerController < ApplicationController
       render 'onebarcodemng'
   end
 
+  def dashboardbyclient
+      load_dashboard(params[:clientid])
+
+      if params[:clientid].nil?
+        flash.now[:danger] = "Problème dans le chargement client. Erreur NDH738"
+      end
+
+      render 'dashboard'
+  end
+
+
   # Get the next step BC
   def dashboard
     #sendEmailTest('ratinahirana@gmail.com', 'Blou Ratinahirana', 'M03200202', 'Arrivé au centre de dépot')
-
-    sql_query = "SELECT bc.id AS id, uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, " +
-                      " uo.phone AS ophone, bc.description as bcdescription, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
-                      " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
-                      " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
-                      " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      " bc.type_pack, bc.ext_ref, 'U' AS print, " +
-                      " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step)) AS raw_data " +
-                      " FROM barcode bc join ref_status rs on rs.id = bc.status " +
-                      # You can use this to make sure barcode is link to the partner
-                      " JOIN users u ON u.partner = bc.partner_id " +
-                      " JOIN users uo ON uo.id = bc.owner_id " +
-                      " WHERE u.id = " + @current_user.id.to_s +
-                      # End partner check
-                      " ORDER BY bc.id DESC LIMIT "+ ENV['SQL_LIMIT_LG'] +";"
-
-
-    begin
-
-      #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
-      #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
-      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
-      @emptyResultSet = @resultSet.empty?
-
-      @maxRowParamLG = " Cet écran récupère un maximum de " + ENV['SQL_LIMIT_LG'].to_s + " références. Si vous avez besoin de plus contactez-nous avec le code UPG678."
-      @maxPrintConstEnv = ENV['MAX_PRINT'].to_s
-      puts '@maxPrintConstEnv: ' + @maxPrintConstEnv.to_s
+      load_dashboard(nil)
 
       render 'dashboard'
     end
@@ -135,6 +131,46 @@ class PartnerController < ApplicationController
 
   def printnotrack
     render 'printnotrack'
+  end
+
+  private
+
+  def load_dashboard(client_id)
+
+    unless client_id.nil?
+      sql_clause = " AND bc.owner_id = " + client_id.to_s
+    else
+      sql_clause = ''
+    end
+    sql_query = "SELECT bc.id AS id, uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, " +
+                      " uo.phone AS ophone, bc.description as bcdescription, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
+                      " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
+                      " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
+                      " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
+                      " bc.type_pack, bc.ext_ref, 'U' AS print, " +
+                      " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step)) AS raw_data " +
+                      " FROM barcode bc join ref_status rs on rs.id = bc.status " +
+                      # You can use this to make sure barcode is link to the partner
+                      " JOIN users u ON u.partner = bc.partner_id " +
+                      " JOIN users uo ON uo.id = bc.owner_id " +
+                      " WHERE u.id = " + @current_user.id.to_s +
+                      sql_clause +
+                      # End partner check
+                      " ORDER BY bc.id DESC LIMIT "+ ENV['SQL_LIMIT_LG'] +";"
+
+
+
+    begin
+
+      #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+      #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+      @emptyResultSet = @resultSet.empty?
+
+      @maxRowParamLG = " Cet écran récupère un maximum de " + ENV['SQL_LIMIT_LG'].to_s + " références. Si vous avez besoin de plus contactez-nous avec le code UPG678."
+      @maxPrintConstEnv = ENV['MAX_PRINT'].to_s
+      puts '@maxPrintConstEnv: ' + @maxPrintConstEnv.to_s
+
   end
 
 end

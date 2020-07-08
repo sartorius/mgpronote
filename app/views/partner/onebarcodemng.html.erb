@@ -15,6 +15,11 @@
     var dataTagToJsonOneBCArray = JSON.parse(dataTagToJsonOneBC);
 		var dataTagToJsonArray;
 		var printArray = new Array();
+
+		var dataTagToJsonStepWF = '<%= @resultSetStepWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonStepWF = dataTagToJsonStepWF.replace(/&quot;/g,"\"");
+    var dataTagToJsonStepWFArray = JSON.parse(dataTagToJsonStepWF);
   </script>
 <% end %>
 
@@ -49,7 +54,7 @@
 	<div class="col-lg-1">
 	</div>
 </div>
-
+<%= render 'persoresel/displayworkflow' %>
 <div class="mgs-note mgs-note-mrg-grid">
   Cet écran est optimisé pour une utilisation ordinateur ou tablette.
 </div>

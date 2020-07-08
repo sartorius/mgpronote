@@ -647,6 +647,7 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
+
 -- Error to be solved Here
 -- UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
 
