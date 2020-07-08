@@ -2,9 +2,10 @@
 const STR_LENGTH_XS = 3;
 const STR_LENGTH_SM = 5;
 const STR_LENGTH_MD = 10;
-const STR_LENGTH_LG = 15;
-const STR_LENGTH_XL = 20;
-const STR_LENGTH_XXL = 25;
+const STR_LENGTH_LG = 20;
+const STR_LENGTH_XL = 25;
+const STR_LENGTH_XXL = 30;
+const STR_LENGTH_XXXL = 40;
 
 //Decode barcode
 function validateMGSCode(codeTest){
@@ -59,3 +60,24 @@ def encode_client_ref(fname, id, ref)
   return  (fname[0..1] + '-' + (id.to_s + ref.to_s.rjust(3, "0")).to_i.to_s(35)).upcase.gsub(/O/, 'Z')
 end
 */
+
+
+function fromMDSizetoSM(listOfId){
+  for(i=0; i<listOfId.length; i++){
+    let element = document.getElementById(listOfId[i]);
+    element.classList.remove('btn-md');
+    element.classList.add('btn-sm');
+    //$('#'+listOfId[i]).removeClass('btn-md');
+    //$('#'+listOfId[i]).addClass('btn-sm');
+  }
+}
+
+function fromSMSizetoMD(listOfId){
+  for(i=0; i<listOfId.length; i++){
+    let element = document.getElementById(listOfId[i]);
+    element.classList.remove('btn-sm');
+    element.classList.add('btn-md');
+    //$('#'+listOfId[i]).removeClass('btn-sm');
+    //$('#'+listOfId[i]).addClass('btn-md');
+  }
+}

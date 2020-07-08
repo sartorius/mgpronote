@@ -398,18 +398,15 @@ function printBtnAvailability(){
 /* JS GRID */
 function runjsPartnerGrid(){
   let fields;
+  let listToUpd = new Array();
+  listToUpd.push('print-dash');
+  listToUpd.push('all-print-dash');
+  listToUpd.push('re-init-print-dash');
+  listToUpd.push('re-init-dash');
+
   if(window.screen.availWidth < 770){
     // Manage button
-
-    $('#print-dash').removeClass('btn-md');
-    $('#all-print-dash').removeClass('btn-md');
-    $('#re-init-print-dash').removeClass('btn-md');
-    $('#re-init-dash').removeClass('btn-md');
-
-    $('#print-dash').addClass('btn-sm');
-    $('#all-print-dash').addClass('btn-sm');
-    $('#re-init-print-dash').addClass('btn-sm');
-    $('#re-init-dash').addClass('btn-sm');
+    fromMDSizetoSM(listToUpd);
 
     //if small we remove some columns
     responsivefields = [
@@ -476,17 +473,7 @@ function runjsPartnerGrid(){
   }
   else{
 
-    $('#print-dash').removeClass('btn-sm');
-    $('#all-print-dash').removeClass('btn-sm');
-    $('#re-init-print-dash').removeClass('btn-sm');
-    $('#re-init-dash').removeClass('btn-sm');
-
-    $('#print-dash').addClass('btn-md');
-    $('#all-print-dash').addClass('btn-md');
-    $('#re-init-print-dash').addClass('btn-md');
-    $('#re-init-dash').addClass('btn-md');
-
-
+    fromSMSizetoMD(listToUpd);
     // We are in big screens !
     responsivefields = [
         { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
