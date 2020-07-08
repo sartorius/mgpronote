@@ -8,6 +8,7 @@ CREATE TABLE client_partner_xref (
   PRIMARY KEY (client_id, partner_id)
 );
 
+/*
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
@@ -15,6 +16,7 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 -- Error to be solved Here
 UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';
 
+*/
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is attaching client to a company
 DROP FUNCTION IF EXISTS CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255));

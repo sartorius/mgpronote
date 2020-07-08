@@ -1,10 +1,10 @@
-<h1>Sample App</h1>
+<h1>MG Suivi</h1>
 
-<p>Hi <%= @user.name %>,</p>
+<p>Bonjour <%= @user.name %>,</p>
 
 <p>
-Welcome to the Sample App! Click on the link below to activate your account:
+Bienvenu sur MGSuivi! Cliquez sur le lien suivant pour profiter du meilleur de votre suivi:
 </p>
 
-<%= link_to "Activate", edit_account_activation_url(@user.activation_token,
+<%= link_to "Activer", edit_account_activation_url(@user.activation_token,
                                                     email: @user.email) %>

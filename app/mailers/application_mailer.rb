@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "ne-pas-repondre@projetbannister.com"
+  default from: ENV['MJ_SEND_MAIL']
   layout 'mailer'
 end

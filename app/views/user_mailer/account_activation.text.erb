@@ -1,5 +1,5 @@
-Hi <%= @user.name %>,
+Bonjour <%= @user.name %>,
 
-Welcome to the Sample App! Click on the link below to activate your account:
+Bienvenu sur MGSuivi! Cliquez sur le lien suivant pour profiter du meilleur de votre suivi:
 
 <%= edit_account_activation_url(@user.activation_token, email: @user.email) %>

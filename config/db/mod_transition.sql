@@ -75,7 +75,7 @@ INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Récupérati
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Terminé, colis entre vos mains', TRUE, 8);
 
 
-ALTER TABLE ref_status ADD COLUMN grp_id SMALLINT DEFAULT 0;
+-- ALTER TABLE ref_status ADD COLUMN grp_id SMALLINT DEFAULT 0;
 UPDATE ref_status SET grp_id = 8 WHERE id = -1;
 UPDATE ref_status SET grp_id = 1 WHERE id = 0;
 UPDATE ref_status SET grp_id = 2 WHERE id = 1;
@@ -132,11 +132,11 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
 
 
 
-
+/*
 UPDATE mod_workflow SET start_id = 0, end_id = 5 WHERE start_id = 2 AND end_id = 5;
 DELETE FROM mod_workflow WHERE start_id = 1 AND end_id = 2;
 DELETE FROM ref_status WHERE id = 2;
-
+*/
 
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (11, 'Dépôt frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P');
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 11);

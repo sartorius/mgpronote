@@ -66,17 +66,17 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'https://mgsuivi-test-2046.herokuapp.com'
+  host = 'https://mgsuivi-jtd-2046.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'mail34.lwspanel.com',
+    :address        => 'in-v3.mailjet.com',
     :port           => '587',
     :authentication => :login,
     #:user_name      => ENV['SENDGRID_USERNAME'],
     #:password       => ENV['SENDGRID_PASSWORD'],
-    :user_name      => 'ne-pas-repondre@projetbannister.com',
-    :password       => 'NePasRepondr_12',
-    :domain         => 'projetbannister.com',
+    :user_name      => 'mgsuivi@protonmail.com',
+    :password       => '77eaf825c21d0015e6cda0fbaed1d6c7',
+    :domain         => 'mailjet.com',
     :enable_starttls_auto => true
   }
 
