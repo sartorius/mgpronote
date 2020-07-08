@@ -42,6 +42,7 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VAL
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (9, 'Arrivé Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P');
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE);
 
+
 -- Particular case of pickup but it is as well created from screen
 
 UPDATE ref_status SET need_to_notify = FALSE, txt_to_notify = 'Cas d''un enlèvement, vous devez renseigner le contact et l''adresse.' WHERE id IN (0);
@@ -85,10 +86,17 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
 
+
+
+
 UPDATE mod_workflow SET start_id = 0, end_id = 5 WHERE start_id = 2 AND end_id = 5;
 DELETE FROM mod_workflow WHERE start_id = 1 AND end_id = 2;
 DELETE FROM ref_status WHERE id = 2;
 
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner) VALUES (11, 'Dépôt frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P');
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 11);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 11, 9);
 
 /*
 -- Finally updated to 2 review of workflow #revwf

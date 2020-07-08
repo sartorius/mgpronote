@@ -1,3 +1,4 @@
+<%= render 'persoresel/displayworkflow' %>
 <div class="row">
   <div class="col-sm-4">
     <div class="crt-block">Paquet</div>
@@ -81,7 +82,7 @@
     </div>
     <label>Propriétaire</label><br>
     <div class="field-big">
-      <%= @resultSet[0]['oname'].to_s %>&nbsp;<%= @resultSet[0]['ofirstname'].to_s %>
+      <%= @resultSet[0]['oname'].to_s %><br><%= @resultSet[0]['ofirstname'].to_s %>
     </div>
     <label>Email</label><br>
     <div class="field-md">
