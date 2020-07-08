@@ -26,5 +26,6 @@ module SampleApp
 
     ENV['SQL_LIMIT_MD'] = ' 250 '
     ENV['SQL_LIMIT_LG'] = ' 500 '
+    ENV['MAX_PRINT'] = '11'
   end
 end

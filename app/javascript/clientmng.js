@@ -149,7 +149,7 @@ function confirmedBarCodeFor(){
 
 //Authorize the client to create his/her own barcode
 function confirmedMngClientToCreateBC(){
-  console.log('confirmedMngClientToCreateBC: you did click on me');
+  //console.log('confirmedMngClientToCreateBC: you did click on me');
   //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
   let clientId = $('#crt-cb-param').html();
   let clientEmail = $('#crt-cb-email').html();

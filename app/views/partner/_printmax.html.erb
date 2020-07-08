@@ -1,0 +1,21 @@
+<hr>
+<div class="row hid-display" id="block-print">
+    <% for i in 0..35 do %>
+          <% if i % 2 == 0 %>
+            <div class="row">
+          <% end %>
+                <div class="col-sm-4 img-center">
+                    <div>
+                      <img id="mbc-<%= i %>">
+                    </div>
+                </div>
+                <div class="col-sm-2 bc-block-print-note">
+                    <span id="item-bc-<%= i %>"></span><br>
+
+                </div>
+          <% if i % 2 == 1 %>
+            </div>
+          <% end %>
+          <% i = i + 1 %>
+    <% end %>
+</div>

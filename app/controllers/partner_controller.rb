@@ -98,6 +98,8 @@ class PartnerController < ApplicationController
       @emptyResultSet = @resultSet.empty?
 
       @maxRowParamLG = " Cet écran récupère un maximum de " + ENV['SQL_LIMIT_LG'].to_s + " références. Si vous avez besoin de plus contactez-nous avec le code UPG678."
+      @maxPrintConstEnv = ENV['MAX_PRINT'].to_s
+      puts '@maxPrintConstEnv: ' + @maxPrintConstEnv.to_s
 
       render 'dashboard'
     end

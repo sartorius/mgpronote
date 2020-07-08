@@ -8,6 +8,10 @@ function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
 
     initDataTagToJsonArrayDashboard();
+    printBtnAvailability();
+    $( "#print-dash" ).click(function() {
+      handlePrint();
+    });
     $( "#mgs-dash-print-csv" ).click(function() {
       generatePartDashCSV();
     });
@@ -57,6 +61,9 @@ function pad(num, size) {
     while (s.length < size) s = "0" + s;
     return s;
 }
+
+
+
 
 /* Print 12 */
 // This function is inspired by Camelbull generateAppPDF() function
@@ -151,6 +158,83 @@ function goToPartBarcode(lid, lsec){
   $("#mg-checkbc-form").submit();
 }
 
+function handlePrint(){
+  console.log('handlePrint: ');
+  console.log(JSON.stringify(printArray));
+
+  for(i=0; i<printArray.length; i++){
+    $("#item-bc-"+i).html(printArray[i].bcref + '<br>' + printArray[i].cliref + '<br>' + $('#part-tech-name').html());
+    JsBarcode("#mbc-"+i, printArray[i].bcref);
+  }
+  generatePrintedPDF();
+  //Do not forget to clear Print button
+  clearPrint();
+}
+
+function generatePrintedPDF(){
+	$("body").addClass("loading");
+  console.log('Click on generatePrintedPDF');
+
+  var doc = new jsPDF();
+	var rowReseter = 1;
+
+  var currentDate = new Date();
+  //console.log('current date: ' + currentDate.toLocaleString())
+
+
+	var cel1_2 = '';
+	var cel2 = '';
+	var cel3 = '';
+
+  var barcodeWidth = 60;
+  var barcodeHeight = 25;
+
+	var startY = 15;
+	var sizeY = 20;
+	var offsetX = 5;
+	var offsetY = 30;
+
+	var cellSize = 37;
+	var offsetY2 = 40;
+  var offsetTextY2 = 20;
+	var offsetBackY = 5;
+
+  //This should be the loop for one page
+  //Should not oversize 12
+  //rowReseter is the line counter
+  //This handle row max is 2
+  for(i=0; i<printArray.length; i++){
+    let oddOffsetX =  100 * (i % 2);
+    let cel1 = '';
+    cel1 = cel1 + setCellSize('REF: ' + printArray[i].bcref);
+    cel1 = cel1 + setCellSize(' - Client: ' + printArray[i].cliref);
+    cel1 = cel1 + " - Appartient à: " + $('#part-tech-name').html();
+    let celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
+    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, 3 + (offsetY2 + 1)*rowReseter, celRef);
+
+
+    // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
+    doc.addImage(document.getElementById('mbc-' + i).src, //img src
+                  'PNG', //format
+                  offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
+                  offsetY2*rowReseter, //y
+                  barcodeWidth, //Width
+                  barcodeHeight); //Height
+
+    // Incremetor are here
+    if(((i + 1) % 2) == 0){
+      rowReseter++
+    }
+  }
+
+  doc.save('MGSuivi_Print');
+
+  $("body").removeClass("loading");
+}
+
+
+/************** FILTER *************/
+
 function clearDataPartner(){
   filteredDataTagToJsonArray = Array.from(dataTagToJsonArray);
   runjsPartnerGrid();
@@ -163,13 +247,6 @@ function filterData(){
                                       return el.raw_data.includes($('#filter-all').val().toUpperCase())
                                   });
     runjsPartnerGrid();
-    /*
-    console.log('size jsonArray: ' + dataTagToJsonArray.length);
-    console.log('size of filter Njara: ' +
-              dataTagToJsonArray.filter(function (el) {
-                  return el.oname == 'De la Cannelle'
-              }).length)
-    */
   }
   else if(($('#filter-all').val().length < 3)) {
     // We clear data
@@ -185,8 +262,9 @@ function initDataTagToJsonArrayDashboard(){
   if(dataTagToJsonArray.length > 0){
     for(i=0; i<dataTagToJsonArray.length; i++){
       dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
+      dataTagToJsonArray[i].oclient_ref = mgsEncodeClientRef(dataTagToJsonArray[i].ofirstname, dataTagToJsonArray[i].oid, dataTagToJsonArray[i].oclient_ref)
       // We concatenate the data
-      dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].raw_data + dataTagToJsonArray[i].ref_tag + mgsEncodeClientRef(dataTagToJsonArray[i].ofirstname, dataTagToJsonArray[i].oid, dataTagToJsonArray[i].oclient_ref);
+      dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].raw_data + dataTagToJsonArray[i].ref_tag + dataTagToJsonArray[i].oclient_ref;
     }
 
     //DEBUG
@@ -230,25 +308,68 @@ function initDataTagToJsonArrayDashboard(){
   runjsPartnerGrid();
 }
 
-function printMngOrder(id, order){
+function printMngOrder(id, order, bcref, cliref){
+  const MAX_PRINT = parseInt($('#max-print-const').html());
+  console.log('MAX_PRINT: ' + MAX_PRINT);
+  let updateArrayList = false;
   //console.log('printMngOrder: ');
   //console.log('id: ' + id);
   if(order == 'U'){
+    //console.log('1');
     // we are unprint so we need to print !
-    printArray.push(parseInt(id));
+    if(printArray.length > MAX_PRINT){
+      //console.log('2');
+      $('#print-max-msg').html("- Max impression: " + (parseInt(MAX_PRINT) + 1).toString());
+    }
+    else{
+      //console.log('3');
+      let el = {
+                id: parseInt(id),
+                bcref: bcref,
+                cliref: cliref
+              };
+      printArray.push(el);
+      updateArrayList = true;
+    }
   }
   else{
+    //console.log('4');
     // in that case it is P
     // we are Print so we need to unprint !
-    let index = printArray.indexOf(parseInt(id));
+    //console.log('read id: ' + parseInt(id))
+    let index = -1;
+
+    for(i=0; i<printArray.length; i++){
+      if(printArray[i].id == parseInt(id)){
+        index = i;
+        break;
+      }
+    }
     if (index !== -1){
+      //console.log('5');
       printArray.splice(index, 1);
+      updateArrayList = true;
+      $('#print-max-msg').html('');
     }
     //console.log('found index: ' + index);
   }
-  $('#count-print').html((printArray.length == 0 ? '' : printArray.length));
-  updatePrintElemntArray(id);
+  if(updateArrayList){
+    //console.log('6');
+    printBtnAvailability();
+    updatePrintElemntArray(id);
+  }
 };
+
+function printBtnAvailability(){
+  $('#count-print').html((printArray.length == 0 ? '' : printArray.length));
+  if(printArray.length > 0){
+    $("#print-dash").prop('disabled', false);
+  }
+  else{
+    $("#print-dash").prop('disabled', true);
+  }
+}
+
 
 /* JS GRID */
 function runjsPartnerGrid(){
@@ -276,7 +397,7 @@ function runjsPartnerGrid(){
           if($target.closest(".btn-print-mng").length) {
              // handle cell click
              //console.log('IN btn-print-mng');
-             printMngOrder(args.item.id, args.item.print);
+             printMngOrder(args.item.id, args.item.print, args.item.ref_tag, args.item.oclient_ref);
           }
           else{
             //console.log('OUT btn-print-mng');
@@ -325,10 +446,7 @@ function runjsPartnerGrid(){
               title: 'Client',
               type: "text",
               width: 38,
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                return mgsEncodeClientRef(item.ofirstname, item.oid, value);
-              }
+              headercss: "h-jsG-l"
             },
             {
               name: "oname",
@@ -415,12 +533,18 @@ function refreshListener(){
 
 function clearPrint(){
   //console.log('input clearPrint');
-  $('#count-print').html('');
   for(i=0; i<dataTagToJsonArray.length; i++){
     dataTagToJsonArray[i].print = 'U';
   }
+  /* clean barcode list */
+  for(i=0; i<printArray.length; i++){
+    $("#item-bc-"+i).html('');
+    JsBarcode("#mbc-"+i, '0');
+  }
+
   runjsPartnerGrid();
   printArray = new Array();
+  printBtnAvailability();
 }
 
 function clearPrintElemntArray(id){
