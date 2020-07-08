@@ -22,7 +22,7 @@ module SampleApp
     ENV['titlepage'] = 'MG Suivi'
     ENV['MJ_APIKEY_PUBLIC'] = '6532da700924bb9f1c446083039c4566'
     ENV['MJ_APIKEY_PRIVATE'] = '77eaf825c21d0015e6cda0fbaed1d6c7'
-    ENV['MJ_SEND_MAIL'] = 'mgsuivi@protonmail.com'
+    ENV['MJ_SEND_MAIL'] = 'ne-pas-repondre@projetbannister.com'
 
     ENV['SQL_LIMIT_MD'] = ' 250 '
     ENV['SQL_LIMIT_LG'] = ' 500 '
