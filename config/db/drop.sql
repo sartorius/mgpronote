@@ -4,5 +4,6 @@ DROP TABLE IF EXISTS wk_tag;
 DROP TABLE IF EXISTS barcode;
 DROP TABLE IF EXISTS mod_workflow;
 DROP TABLE IF EXISTS ref_workflow;
+DROP TABLE IF EXISTS grp_status;
 DROP TABLE IF EXISTS ref_status;
 DROP TABLE IF EXISTS ref_partner;

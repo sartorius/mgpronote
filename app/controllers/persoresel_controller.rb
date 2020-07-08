@@ -127,12 +127,23 @@ class PersoreselController < ApplicationController
                   		" AND bc.secure = " + params[:checkcbsec] +
                   		" AND bc.owner_id = " + @current_user.id.to_s + ";"
 
+    sql_query_step = " SELECT DISTINCT gs.id, bc.id AS bc_id, bcrs.step, gs.grp_step, gs.common, gs.order_id " +
+                      " FROM ref_status rs  " +
+                      " JOIN grp_status gs ON rs.grp_id = gs.id " +
+                      " LEFT JOIN barcode bc ON bc.status = rs.id " +
+                      						" AND bc.id = " + params[:checkcbid] +
+                      						" LEFT JOIN ref_status bcrs ON bcrs.id = bc.status " +
+                      " order by bc.id, gs.order_id ASC; "
+
     begin
 
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
+
+      @resultSetStepWorkflow = ActiveRecord::Base.connection.exec_query(sql_query_step)
+
 
       @screenClient = true
 

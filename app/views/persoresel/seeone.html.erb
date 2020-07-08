@@ -12,6 +12,12 @@
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+		var dataTagToJsonStepWF = '<%= @resultSetStepWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonStepWF = dataTagToJsonStepWF.replace(/&quot;/g,"\"");
+    var dataTagToJsonStepWFArray = JSON.parse(dataTagToJsonStepWF);
+
   </script>
 <% end %>
 
@@ -29,6 +35,9 @@
     appartenant à <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %>
   </div>
 </div>
+<% if @screenClient %>
+	<%= render 'persoresel/displayworkflow' %>
+<% end %>
 <div class="mgs-note mgs-note-mrg-grid">
   Cet écran est optimisé pour une utilisation ordinateur ou tablette.
 </div>

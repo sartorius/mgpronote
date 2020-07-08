@@ -3,6 +3,7 @@ CREATE TABLE ref_status (
   id                  SMALLINT      PRIMARY KEY,
   step                VARCHAR(50)   NOT NULL,
   description         VARCHAR(250)  NOT NULL,
+  grp_id              SMALLINT      DEFAULT 0,
   next_input_needed   CHAR(1)       NOT NULL,
   -- A All
   -- P Partner
@@ -23,6 +24,8 @@ ALTER TABLE ref_status ADD COLUMN txt_to_notify VARCHAR(250);
 UPDATE ref_status SET txt_to_notify = 'Vous venez de recevoir une référence paquet. Vous avez une action à faire: renseigner le.la réceptionneur.euse, veuillez vous connecter pour effectuer cette action.' WHERE id IN (0);
 UPDATE ref_status SET description = 'Le poids a été validé.' WHERE id IN (6);
 M000055Y2/M00004YAK
+
+
 */
 
 UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
@@ -52,6 +55,47 @@ UPDATE ref_status SET need_to_notify = TRUE;
 UPDATE ref_status SET need_to_notify = FALSE;
 UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 2, 6, 10);
 
+
+-- START GRP Workflow
+
+-- Transition ref
+CREATE TABLE grp_status (
+  id                  SMALLINT      PRIMARY KEY,
+  order_id            SMALLINT      NOT NULL,
+  common              BOOLEAN       DEFAULT TRUE,
+  grp_step            VARCHAR(50)   NOT NULL
+);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (1, 'Réception', TRUE, 1);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (2, 'Enlèvement', FALSE, 2);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Livraison local partenaire', TRUE, 3);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (4, 'Pesée', TRUE, 4);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot pour frêt aéroport', TRUE, 5);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée Tana', TRUE, 6);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Récupération disponible client', TRUE, 7);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Terminé, colis entre vos mains', TRUE, 8);
+
+
+ALTER TABLE ref_status ADD COLUMN grp_id SMALLINT DEFAULT 0;
+UPDATE ref_status SET grp_id = 8 WHERE id = -1;
+UPDATE ref_status SET grp_id = 1 WHERE id = 0;
+UPDATE ref_status SET grp_id = 2 WHERE id = 1;
+UPDATE ref_status SET grp_id = 2 WHERE id = 4;
+
+UPDATE ref_status SET grp_id = 3 WHERE id = 2;
+UPDATE ref_status SET grp_id = 4 WHERE id = 6;
+
+UPDATE ref_status SET grp_id = 5 WHERE id = 7;
+UPDATE ref_status SET grp_id = 5 WHERE id = 8;
+UPDATE ref_status SET grp_id = 5 WHERE id = 11;
+
+UPDATE ref_status SET grp_id = 6 WHERE id = 9;
+UPDATE ref_status SET grp_id = 7 WHERE id = 10;
+
+
+UPDATE grp_status SET grp_step = 'Disponible client' WHERE id = 7;
+UPDATE grp_status SET grp_step = 'Terminé' WHERE id = 8;
+UPDATE grp_status SET grp_step = 'Local partenaire' WHERE id = 3;
+-- END GRP Workflow
 
 
 CREATE TABLE ref_workflow (

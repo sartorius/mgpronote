@@ -34,6 +34,7 @@ function mainClientLoaderInCaseOfChange(){
   }
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
       let readBCSeeOne = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
+      displayWorkflowClient();
 
       $('#bc-seeone').html(readBCSeeOne);
 
@@ -50,6 +51,7 @@ function mainClientLoaderInCaseOfChange(){
         $("#mg-add-tname").val($('#alr-rec-name').html());
         $("#mg-add-tfname").val($('#alr-rec-fname').html());
         $("#mg-add-tphone").val($('#alr-rec-phone').html());
+
 
       });
       $( "#disp-cnl-inf" ).click(function() {
@@ -70,6 +72,37 @@ function mainClientLoaderInCaseOfChange(){
     //do nothing
   }
 }
+
+function displayWorkflowClient(){
+  console.log('displayWorkflowClient: Start');
+  let disStep = '';
+  let disStepBC = '';
+  let disStepBCGrp = 0;
+  let neverDisplayBC = false;
+  for(i=0; i<dataTagToJsonStepWFArray.length; i++){
+    const nspStart = '<span class="badge badge-default-light">';
+    const nspEnd = '</span>&nbsp;';
+    const nspSelected = '<span class="badge badge-primary">';
+    if(i == 0){
+      disStepBC = disStepBC + nspSelected + dataTagToJsonStepWFArray[i].step + nspEnd;
+      disStepBCGrp = parseInt(dataTagToJsonStepWFArray[i].id);
+    }
+    else{
+      if((disStepBCGrp <= parseInt(dataTagToJsonStepWFArray[i].id)) && (!neverDisplayBC)){
+        disStep = disStep + disStepBC;
+        neverDisplayBC = true;
+      }
+      else if(dataTagToJsonStepWFArray[i].common == true){
+        disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? nspSelected : nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
+      }
+      else{
+        //do nothing
+      }
+    }
+  }
+  $("#disp-step").html(disStep);
+}
+
 
 function goToBarcode(lid, lsec){
   //alert('You clicked on item: ' + el);
@@ -190,7 +223,7 @@ function runjsPersoreselGrid(){
               type: "text",
               headercss: "h-jsG-l",
               itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
               }
             },
             { name: "bcdescription",
