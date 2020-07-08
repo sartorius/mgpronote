@@ -69,14 +69,14 @@ Rails.application.configure do
   host = 'https://mgsuivi-test-2046.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'in-v3.mailjet.com',
+    :address        => 'mail34.lwspanel.com',
     :port           => '587',
     :authentication => :login,
     #:user_name      => ENV['SENDGRID_USERNAME'],
     #:password       => ENV['SENDGRID_PASSWORD'],
-    :user_name      => 'mgsuivi@protonmail.com',
-    :password       => '77eaf825c21d0015e6cda0fbaed1d6c7',
-    :domain         => 'mailjet.com',
+    :user_name      => 'ne-pas-repondre@projetbannister.com',
+    :password       => 'NePasRepondr_12',
+    :domain         => 'projetbannister.com',
     :enable_starttls_auto => true
   }
 
