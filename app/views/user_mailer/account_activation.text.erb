@@ -1,5 +1,5 @@
-Bonjour <%= @user.name %>,
+Bonjour <%= @user.name %> <%= @user.firstname %>,
 
-Bienvenu sur MGSuivi! Cliquez sur le lien suivant pour profiter du meilleur de votre suivi:
+Bienvenue sur MGSuivi! Cliquez sur le lien suivant pour profiter du meilleur de votre suivi:
 
 <%= edit_account_activation_url(@user.activation_token, email: @user.email) %>
