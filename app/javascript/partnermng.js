@@ -6,9 +6,14 @@ $(document).on('turbolinks:load', function() {
 
 function mainPartnLoaderInCaseOfChange(){
   if($('#mg-graph-identifier').text() == 'pardash-gr'){
+    //alert('size H:' + window.screen.availHeight + ' W:' + window.screen.availWidth);
 
     initDataTagToJsonArrayDashboard();
     printBtnAvailability();
+
+    window.addEventListener("orientationchange", function(event) {
+      runjsPartnerGrid();
+    });
     $( "#print-dash" ).click(function() {
       handlePrint();
     });
@@ -306,8 +311,6 @@ function initDataTagToJsonArrayDashboard(){
     });
 
   }
-  /* THE INIT HAS BEEN DONE IN ERB */
-  // filteredDataTagToJsonArray = dataTagToJsonArray;
   runjsPartnerGrid();
 }
 
@@ -394,7 +397,198 @@ function printBtnAvailability(){
 
 /* JS GRID */
 function runjsPartnerGrid(){
+  let fields;
+  if(window.screen.availWidth < 770){
+    // Manage button
 
+    $('#print-dash').removeClass('btn-md');
+    $('#all-print-dash').removeClass('btn-md');
+    $('#re-init-print-dash').removeClass('btn-md');
+    $('#re-init-dash').removeClass('btn-md');
+
+    $('#print-dash').addClass('btn-sm');
+    $('#all-print-dash').addClass('btn-sm');
+    $('#re-init-print-dash').addClass('btn-sm');
+    $('#re-init-dash').addClass('btn-sm');
+
+    //if small we remove some columns
+    responsivefields = [
+        { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
+        { name: "ref_tag",
+          title: "Référence",
+          type: "text",
+          align: "right",
+          width: 50,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return '<i class="monosp-ft">' + value + '</i>';
+
+          }
+        },
+        { name: "type_pack",
+          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          type: "text",
+          align: "center",
+          width: 10,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
+          }
+        },
+        //Default width is auto
+        { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
+        { name: "oclient_ref",
+          title: 'Client',
+          type: "text",
+          width: 38,
+          headercss: "h-jsG-l"
+        },
+        {
+          name: "bcdescription",
+          title: "Description",
+          type: "text",
+          width: 38,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-print"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="glyphicon glyphicon-print"></i>' + '</button>';
+          }
+        },
+        { name: "diff_days",
+          title: '<i class="glyphicon glyphicon-time"></i>',
+          type: "number",
+          width: 3,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return '<p class="center">' + value + '</p>';
+          }
+        }
+    ];
+  }
+  else{
+
+    $('#print-dash').removeClass('btn-sm');
+    $('#all-print-dash').removeClass('btn-sm');
+    $('#re-init-print-dash').removeClass('btn-sm');
+    $('#re-init-dash').removeClass('btn-sm');
+
+    $('#print-dash').addClass('btn-md');
+    $('#all-print-dash').addClass('btn-md');
+    $('#re-init-print-dash').addClass('btn-md');
+    $('#re-init-dash').addClass('btn-md');
+
+
+    // We are in big screens !
+    responsivefields = [
+        { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
+        { name: "ref_tag",
+          title: "Référence",
+          type: "text",
+          align: "right",
+          width: 40,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return '<i class="monosp-ft">' + value + '</i>';
+
+          }
+        },
+        { name: "type_pack",
+          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          type: "text",
+          align: "center",
+          width: 10,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
+          }
+        },
+        //Default width is auto
+        { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
+        { name: "ext_ref",
+          title: "Ext Ref",
+          type: "text",
+          align: "right",
+          width: 35,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD)) + '</i>';
+          }
+        },
+        { name: "oclient_ref",
+          title: 'Client',
+          type: "text",
+          width: 38,
+          headercss: "h-jsG-l"
+        },
+        {
+          name: "oname",
+          title: "Nom",
+          type: "text",
+          width: 40,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return value.substring(0, STR_LENGTH_LG);
+          }
+        },
+        {
+          name: "ofirstname",
+          title: "Prénom",
+          type: "text",
+          width: 25,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            // print U is for Unpring
+            // print P is for Print
+            // onclick="printMngOrder(' + value + ', "' + item.print + '")"
+            return value.substring(0, STR_LENGTH_SM);
+          }
+        },
+        {
+          name: "bcdescription",
+          title: "Description",
+          type: "text",
+          width: 40,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            // print U is for Unpring
+            // print P is for Print
+            // onclick="printMngOrder(' + value + ', "' + item.print + '")"
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-print"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            // print U is for Unpring
+            // print P is for Print
+            // onclick="printMngOrder(' + value + ', "' + item.print + '")"
+            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="glyphicon glyphicon-print"></i>' + '</button>';
+          }
+        },
+        { name: "diff_days",
+          title: '<i class="glyphicon glyphicon-time"></i>',
+          type: "number",
+          width: 3,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return '<p class="center">' + value + '</p>';
+          }
+        }
+    ];
+  }
 
   if(dataTagToJsonArray.length > 0){
     //Set the number of data
@@ -428,106 +622,7 @@ function runjsPartnerGrid(){
 
         data: filteredDataTagToJsonArray,
 
-        fields: [
-            { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
-            { name: "ref_tag",
-              title: "Référence",
-              type: "text",
-              align: "right",
-              width: 40,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return '<i class="monosp-ft">' + value + '</i>';
-
-              }
-            },
-            { name: "type_pack",
-              title: '<i class="glyphicon glyphicon-barcode"></i>',
-              type: "text",
-              align: "center",
-              width: 10,
-              headercss: "h-jsG-c",
-              itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
-              }
-            },
-            //Default width is auto
-            { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
-            { name: "ext_ref",
-              title: "Ext Ref",
-              type: "text",
-              align: "right",
-              width: 35,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD)) + '</i>';
-              }
-            },
-            { name: "oclient_ref",
-              title: 'Client',
-              type: "text",
-              width: 38,
-              headercss: "h-jsG-l"
-            },
-            {
-              name: "oname",
-              title: "Nom",
-              type: "text",
-              width: 40,
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                return value.substring(0, STR_LENGTH_LG);
-              }
-            },
-            {
-              name: "ofirstname",
-              title: "Prénom",
-              type: "text",
-              width: 25,
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                // print U is for Unpring
-                // print P is for Print
-                // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-                return value.substring(0, STR_LENGTH_SM);
-              }
-            },
-            {
-              name: "bcdescription",
-              title: "Description",
-              type: "text",
-              width: 40,
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                // print U is for Unpring
-                // print P is for Print
-                // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
-              }
-            },
-            {
-              name: "id",
-              title: '<i class="glyphicon glyphicon-print"></i>',
-              type: "string",
-              align: "left",
-              width: 25,
-              itemTemplate: function(value, item) {
-                // print U is for Unpring
-                // print P is for Print
-                // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-                return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="glyphicon glyphicon-print"></i>' + '</button>';
-              }
-            },
-            { name: "diff_days",
-              title: '<i class="glyphicon glyphicon-time"></i>',
-              type: "number",
-              width: 3,
-              headercss: "h-jsG-c",
-              itemTemplate: function(value, item) {
-                return '<p class="center">' + value + '</p>';
-              }
-            }
-        ]
+        fields: responsivefields
     });
     // After the grid
     refreshListener();
