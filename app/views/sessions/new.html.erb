@@ -1,8 +1,9 @@
-<% provide(:title, "Connexion") %>
+<% provide(:title, "Se connecter") %>
 <h1>Connexion</h1>
-
+<br><br><br><br>
 <div class="row">
-  <div class="col-md-6 col-md-offset-3 sess-block">
+
+  <div class="col-md-6 sess-block">
     <%= form_with(url: login_path, scope: :session, local: true) do |f| %>
 
       <%= f.email_field :email, class: 'form-control', placeholder: "Email" %>
@@ -16,9 +17,17 @@
         <span>Rappelez vous de moi</span>
       <% end %>
 
-      <%= f.submit "Log in", class: "btn btn-default" %>
+      <%= f.submit "Connexion", class: "btn btn-default" %>
     <% end %>
 
-    <p>Nouveau ? <%= link_to "Créez un compte dès maintenant !", signup_path %></p>
+
+  </div>
+
+  <div class="col-md-6 sess-block">
+
+    <div class="pos-center">
+      <a href="/signup" class="btn btn-default-light btn-lg btn-block">Créer un compte</a>
+    </div>
   </div>
 </div>
+<br><br><br><br>

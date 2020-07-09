@@ -69,14 +69,14 @@ Rails.application.configure do
   host = 'https://mgsuivi-jdt-2046.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'mail34.lwspanel.com',
+    :address        => 'mail.gandi.net',
     :port           => '587',
     :authentication => :login,
     #:user_name      => ENV['SENDGRID_USERNAME'],
     #:password       => ENV['SENDGRID_PASSWORD'],
-    :user_name      => 'ne-pas-repondre@projetbannister.com',
-    :password       => 'NePasRepondr_12',
-    :domain         => 'projetbannister.com',
+    :user_name      => ENV['MJ_SEND_MAIL'],
+    :password       => ENV['MJ_SEND_MAIL_PWD'],
+    :domain         => ENV['MJ_SEND_MAIL_DOMAIN'],
     :enable_starttls_auto => true
   }
 

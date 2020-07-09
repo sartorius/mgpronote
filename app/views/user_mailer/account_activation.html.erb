@@ -8,3 +8,6 @@ Bienvenue sur MGSuivi! Cliquez sur le lien suivant pour profiter du meilleur de 
 
 <%= link_to "Activer", edit_account_activation_url(@user.activation_token,
                                                     email: @user.email) %>
+<hr>
+Si ce lien ne fonctionne pas, copier collez le dans votre navigateur :
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>

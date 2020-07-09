@@ -45,17 +45,17 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'https://mgsuivi-jdt-2046.herokuapp.com'
+  host = 'http://localhost:3000'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'in-v3.mailjet.com',
+    :address        => 'mail.gandi.net',
     :port           => '587',
     :authentication => :login,
     #:user_name      => ENV['SENDGRID_USERNAME'],
     #:password       => ENV['SENDGRID_PASSWORD'],
-    :user_name      => '6532da700924bb9f1c446083039c4566',
-    :password       => '77eaf825c21d0015e6cda0fbaed1d6c7',
-    :domain         => 'mailjet.com',
+    :user_name      => ENV['MJ_SEND_MAIL'],
+    :password       => ENV['MJ_SEND_MAIL_PWD'],
+    :domain         => ENV['MJ_SEND_MAIL_DOMAIN'],
     :enable_starttls_auto => true
   }
 
