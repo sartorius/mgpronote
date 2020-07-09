@@ -258,7 +258,7 @@ function generatePrintedPDF(){
                   offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
                   offsetY2*rowReseter, //y
                   barcodeWidth, //Width
-                  barcodeHeight); //Height
+                  barcodeHeight,'FAST'); //Height // Fast is to get less big files
 
     // Incremetor are here
     if(((i + 1) % 2) == 0){
