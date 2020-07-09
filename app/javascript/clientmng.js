@@ -247,6 +247,15 @@ function runjsClientGrid(){
           width: 38,
           headercss: "h-jsG-l"
         },
+        { name: "totalbc",
+          title: '<i class="glyphicon glyphicon-list-alt"></i>',
+          type: "number",
+          width: 18,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return '<i id="totalbc-' + item.id + '">' + value + '</i>';
+          }
+        },
         { name: "poc",
           title: '<i class="glyphicon glyphicon-duplicate"></i>',
           type: "string",
@@ -416,10 +425,16 @@ function runjsClientGrid(){
           }
           else{
             //Do nothing we did not recognize the order
-            $('#client-id-post').val(args.item.id);
-            //Run submit
-            //console.log('button not recognized');
-            $('#mg-checkbc-form').submit();
+
+            if(window.screen.availWidth < 1100){
+              // Not available on mobile/small screen
+            }
+            else{
+              $('#client-id-post').val(args.item.id);
+              //Run submit
+              //console.log('button not recognized');
+              $('#mg-checkbc-form').submit();
+            }
           }
         },
 

@@ -272,6 +272,8 @@ class BarcodeController < ApplicationController
       @need_to_feedback_incident_exists = true;
     end
 
+    # TODO
+    #This control need to be removed !!!
 
     # Delivery Pickup Exception
     # We will avoid to goes to DB if previous check are KO
