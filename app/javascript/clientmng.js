@@ -10,6 +10,9 @@ function mainClientLoaderInCaseOfChange(){
       // Initalize
       initDataTagToJsonArrayDashboard();
 
+      window.addEventListener("orientationchange", function(event) {
+        runjsClientGrid();
+      });
 
       // Confirmation button is here
       $("#crt-cb-clt-cf").click(function() {
@@ -225,9 +228,163 @@ function initDataTagToJsonArrayDashboard(){
 
 /* JS GRID */
 function runjsClientGrid(){
+  let fields;
+  /*
+  let listToUpd = new Array();
+  listToUpd.push('print-dash');
+  listToUpd.push('all-print-dash');
+  listToUpd.push('re-init-print-dash');
+  listToUpd.push('re-init-dash');
+  */
+
+  if(window.screen.availWidth < 1100){
+    // Small screens
+    //fromMDSizetoSM(listToUpd);
+    responsivefields = [
+        { name: "enc_client_ref",
+          title: 'Reférence',
+          type: "text",
+          width: 38,
+          headercss: "h-jsG-l"
+        },
+        { name: "poc",
+          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          type: "string",
+          align: "center",
+          width: 10,
+          itemTemplate: function(value, item) {
+            return value ? '<i class="glyphicon glyphicon-ok"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="glyphicon glyphicon-remove"></i>' : '<i class="glyphicon glyphicon-duplicate"></i>') + '</button>';
+          }
+        }
+    ]
+  }
+  else{
+    // Big screens
+    //fromSMSizetoMD(listToUpd);
+    responsivefields = [
+        { name: "id", title: "#", type: "number", width: 18 , headercss: "h-jsG-r" },
+        { name: "enc_client_ref",
+          title: 'Reférence',
+          type: "text",
+          width: 38,
+          headercss: "h-jsG-l"
+        },
+        { name: "name",
+          title: "Nom",
+          type: "text",
+          filtering: true,
+          align: "right",
+          width: 50,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+          }
+        },
+        { name: "firstname",
+          title: "Prénom",
+          type: "text",
+          align: "right",
+          width: 50,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+          }
+        },
+        { name: "email",
+          title: "Email",
+          type: "text",
+          align: "right",
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
+          }
+        },
+        { name: "totalbc",
+          title: '<i class="glyphicon glyphicon-list-alt"></i>',
+          type: "number",
+          width: 18,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return '<i id="totalbc-' + item.id + '">' + value + '</i>';
+          }
+        },
+        { name: "poc",
+          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          type: "string",
+          align: "center",
+          width: 10,
+          itemTemplate: function(value, item) {
+            return value ? '<i class="glyphicon glyphicon-ok"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
+          }
+        },
+        //Default width is auto
+        { name: "since", title: "Client.e depuis le", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          type: "string",
+          align: "left",
+          width: 25,
+          itemTemplate: function(value, item) {
+            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="glyphicon glyphicon-remove"></i>' : '<i class="glyphicon glyphicon-duplicate"></i>') + '</button>';
+          }
+        }
+    ]
+  }
+
+
   $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
   if(dataTagToJsonArray.length > 0){
-
     $("#jsGrid").jsGrid({
         height: "auto",
         width: "100%",
@@ -268,95 +425,7 @@ function runjsClientGrid(){
 
         data: filteredDataTagToJsonArray,
 
-        fields: [
-            { name: "id", title: "#", type: "number", width: 18 , headercss: "h-jsG-r" },
-            { name: "enc_client_ref",
-              title: 'Reférence',
-              type: "text",
-              width: 38,
-              headercss: "h-jsG-l"
-            },
-            { name: "name",
-              title: "Nom",
-              type: "text",
-              filtering: true,
-              align: "right",
-              width: 50,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
-              }
-            },
-            { name: "firstname",
-              title: "Prénom",
-              type: "text",
-              align: "right",
-              width: 50,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
-              }
-            },
-            { name: "email",
-              title: "Email",
-              type: "text",
-              align: "right",
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
-              }
-            },
-            { name: "totalbc",
-              title: '<i class="glyphicon glyphicon-list-alt"></i>',
-              type: "number",
-              width: 18,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return '<i id="totalbc-' + item.id + '">' + value + '</i>';
-              }
-            },
-            { name: "poc",
-              title: '<i class="glyphicon glyphicon-duplicate"></i>',
-              type: "string",
-              align: "center",
-              width: 10,
-              itemTemplate: function(value, item) {
-                return value ? '<i class="glyphicon glyphicon-ok"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
-              }
-            },
-            //Default width is auto
-            { name: "since", title: "Client.e depuis le", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
-            {
-              name: "id",
-              title: '<i class="glyphicon glyphicon-barcode"></i>',
-              type: "string",
-              align: "left",
-              width: 25,
-              itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
-              }
-            },
-            {
-              name: "id",
-              title: '<i class="glyphicon glyphicon-barcode"></i>',
-              type: "string",
-              align: "left",
-              width: 25,
-              itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
-              }
-            },
-            {
-              name: "id",
-              title: '<i class="glyphicon glyphicon-duplicate"></i>',
-              type: "string",
-              align: "left",
-              width: 25,
-              itemTemplate: function(value, item) {
-                return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="glyphicon glyphicon-remove"></i>' : '<i class="glyphicon glyphicon-duplicate"></i>') + '</button>';
-              }
-            }
-        ]
+        fields: responsivefields
     });
   }
   else{

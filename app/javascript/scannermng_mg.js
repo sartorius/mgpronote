@@ -547,7 +547,7 @@ function loadCameraRead(isGrp){
               if($('#manual-cb').val().length > 0){
                   getGeoL();
                   //Go valid
-                  let manualbc = $('#manual-cb').val();
+                  let manualbc = $('#manual-cb').val().trim();
                   $("#read-cb").val(manualbc);
 
                   if(validateMGSCode(manualbc)){

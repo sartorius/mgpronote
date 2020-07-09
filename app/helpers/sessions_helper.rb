@@ -15,8 +15,8 @@ module SessionsHelper
   # Returns the user corresponding to the remember token cookie.
   def current_user
     # DEBUG CHANGE
-    puts '>>>> ' + session[:user_id].to_s
-    puts '@current_user is nil >>>> ' + @current_user.nil?.to_s
+    # puts '>>>> ' + session[:user_id].to_s
+    # puts '@current_user is nil >>>> ' + @current_user.nil?.to_s
     if (user_id = session[:user_id])
       @current_user ||= User.find_by(id: user_id)
 

@@ -21,8 +21,10 @@
       <ul class="nav navbar-nav ml-auto d-inline-block">
 
 
-        <li class="nav-item"><%= link_to "Home", root_path %></li>
-
+        <%# Remove the HOME_LINK As I don't want it on mobile %>
+        <% unless (mobile_device == "mobile") && is_partner?  %>
+          <li class="nav-item"><%= link_to "Home", root_path %></li>
+        <% end %>
         <% if logged_in? %>
             <%# Is logged in %>
             <% unless (mobile_device == "mobile")  %>
@@ -60,11 +62,16 @@
                   <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
                   <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
                   <li class="nav-item"><%= link_to 'Grouper'.html_safe, grpgetnext_path %></li>
+                  <li class="divider"></li>
+                  <li class="nav-item"><%= link_to "Clients", clientmng_path %></li>
+                  <li class="nav-item"><%= link_to "+ Client", signnewclient_path %></li>
+                  <li class="divider"></li>
               <% end %>
             <% end %>
 
         <% else %>
           <%# Not logged in %>
+
           <% unless (mobile_device == "mobile")  %>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -83,6 +90,7 @@
         <% end %>
 
         <% if logged_in? %>
+
 
             <% if false %>
               code to comment for admin
@@ -103,10 +111,10 @@
                     <%= @current_user.name.to_s %> <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
-                    <li class="nav-item"><%= link_to "Mon compte", current_user %></li>
+                    <li class="nav-item"><%= link_to "Profil", current_user %></li>
                     <li class="divider"></li>
                     <li class="nav-item">
-                      <%= link_to "Se déconnecter", logout_path, method: :delete %>
+                      <%= link_to "Déconnexion", logout_path, method: :delete %>
                     </li>
                   </ul>
                 </li class="nav-item">
