@@ -256,21 +256,12 @@ function runjsClientGrid(){
             return '<i id="totalbc-' + item.id + '">' + value + '</i>';
           }
         },
-        { name: "poc",
-          title: '<i class="glyphicon glyphicon-duplicate"></i>',
-          type: "string",
-          align: "center",
-          width: 10,
-          itemTemplate: function(value, item) {
-            return value ? '<i class="glyphicon glyphicon-ok"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
-          }
-        },
         {
           name: "id",
           title: '<i class="glyphicon glyphicon-barcode"></i>',
           type: "string",
           align: "left",
-          width: 25,
+          width: 35,
           itemTemplate: function(value, item) {
             return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
           }
@@ -280,7 +271,7 @@ function runjsClientGrid(){
           title: '<i class="glyphicon glyphicon-barcode"></i>',
           type: "string",
           align: "left",
-          width: 25,
+          width: 20,
           itemTemplate: function(value, item) {
             return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
           }
@@ -363,7 +354,7 @@ function runjsClientGrid(){
           title: '<i class="glyphicon glyphicon-barcode"></i>',
           type: "string",
           align: "left",
-          width: 25,
+          width: 35,
           itemTemplate: function(value, item) {
             return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
           }
@@ -373,7 +364,7 @@ function runjsClientGrid(){
           title: '<i class="glyphicon glyphicon-barcode"></i>',
           type: "string",
           align: "left",
-          width: 25,
+          width: 20,
           itemTemplate: function(value, item) {
             return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
           }

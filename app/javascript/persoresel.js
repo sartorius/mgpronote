@@ -216,11 +216,11 @@ function runjsPersoreselGrid(){
                 return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
               }
             },
-            { name: "part_phone", title: "Téléphone", type: "text", width: 30, headercss: "h-jsG-l" },
             //Default width is auto
             { name: "part_name",
               title: "Nom partenaire",
               type: "text",
+              width: 45,
               headercss: "h-jsG-l",
               itemTemplate: function(value, item) {
                 return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
@@ -229,10 +229,9 @@ function runjsPersoreselGrid(){
             { name: "bcdescription",
               title: "Description",
               type: "text",
-              width: 45,
               headercss: "h-jsG-l",
               itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_LG));
+                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
               }
             },
             { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
@@ -414,7 +413,7 @@ function runjsPartnerListGrid(){
               title: '<i class="glyphicon glyphicon-barcode"></i>',
               type: "string",
               align: "left",
-              width: 25,
+              width: 30,
               itemTemplate: function(value, item) {
                 return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
               }
@@ -424,7 +423,7 @@ function runjsPartnerListGrid(){
               title: '<i class="glyphicon glyphicon-barcode"></i>',
               type: "string",
               align: "left",
-              width: 25,
+              width: 20,
               itemTemplate: function(value, item) {
                 return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
               }
@@ -448,7 +447,7 @@ function generateDashCSV(){
   let csvContent = "";
   const SEP_ = ";"
 
-  let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Numéro" + SEP_ + "Partenaire" + SEP_ + "Date de création" + SEP_ + "Description" + SEP_ + "En attente depuis" + SEP_ + "\n";
+  let dataString = "#" + SEP_ + "Reference" + SEP_ + "Status" + SEP_ + "Numero" + SEP_ + "Partenaire" + SEP_ + "Date de creation" + SEP_ + "Description" + SEP_ + "En attente depuis" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArray.length; i++){
 		dataString = dataTagToJsonArray[i].id + SEP_ +
