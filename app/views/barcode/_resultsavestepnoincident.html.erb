@@ -9,12 +9,12 @@
 
   <div class="mgs-info-big">
     <%= @steptxt %>
-    <% unless (@stepweight.nil?) || (@stepweight == '') || (@stepweight.to_i == 0) %>
+    <% unless (@stepweight.nil?) || (@stepweight == '') %>
     <div class="mgs-note mgs-note-top">
       Poids
     </div>
     <div class="mgs-info">
-      <%= number_with_delimiter(@stepweight.to_i, :delimiter => ' ') %> grammes.
+      <%= @stepweight %> Kg
     </div>
     <% end %>
   </div>

@@ -99,9 +99,9 @@
 
             <% if (mobile_device == "mobile")  %>
               <%# MOBILE %>
-              <li class="nav-item"><%= link_to "Mon compte", current_user %></li>
+              <li class="nav-item"><%= link_to "Profil", current_user %></li>
               <li class="nav-item">
-                <%= link_to "Se déconnecter", logout_path, method: :delete %>
+                <%= link_to "Déconnexion", logout_path, method: :delete %>
               </li>
             <% else %>
 

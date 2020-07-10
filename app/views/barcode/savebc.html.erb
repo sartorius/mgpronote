@@ -47,7 +47,9 @@
 					L'incident suivant est en cours. En passant à l'étape suivante, il sera considéré comme résolu :<br>
 					<span id="descr-incident"></span>
 				</div>
-
+				<div class="center hid-display" id="wght-in-kg-blc">
+					<i id="wght-in-kg" class="wght-title">0</i>&nbsp;<i class="wght-in-kg-txt">kg</i><br>
+				</div>
         <form action="/save_step" method="post">
           <div class="form-group" id="blc-step-ctrl">
             <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
@@ -63,7 +65,7 @@
           </div>
 
 					<div class="form-group" id="blk-weight">
-            <textarea class="form-control" name="stepweight" placeholder="Poids en gramme - min. 250g" id="stpweight" type="number" rows="1" style="resize: none;"></textarea>
+            <textarea class="form-control" name="stepweight" placeholder="Poids en Kilogrammes - min. 0.25 - 2 décimales" id="stpweight" type="number" rows="1" style="resize: none;"></textarea>
 						<hr>
 					</div>
 

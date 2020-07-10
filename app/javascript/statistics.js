@@ -54,10 +54,12 @@ function runStatusStat(){
       '#C87900'
   ];
 
+
+  // Stat of status population
   let listOfLabelStat = new Array();
   let listOfDataStat = new Array();
   for(i=0; i<dataTagToJsonArray.length; i++){
-    listOfLabelStat.push(dataTagToJsonArray[i].step);
+    listOfLabelStat.push(dataTagToJsonArray[i].step.substring(0, STR_LENGTH_LG));
     listOfDataStat.push(dataTagToJsonArray[i].cnt_stat);
   }
 
@@ -86,7 +88,7 @@ function runStatusStat(){
       }
   });
 
-
+  // Stats bigger clients
   let listOfLabelClient = new Array();
   let listOfDataClient = new Array();
 
@@ -111,4 +113,49 @@ function runStatusStat(){
       options: {
       }
   });
+
+  // Stat of all weight
+  let listOfLabelAllWeights = new Array();
+  let listOfDataAllWeights = new Array();
+  for(i=0; i<dataTagAllWeightsToJsonArray.length; i++){
+    listOfLabelAllWeights.push(dataTagAllWeightsToJsonArray[i].step);
+    listOfDataAllWeights.push(dataTagAllWeightsToJsonArray[i].sum_weight);
+  }
+
+
+  var ctx = document.getElementById('statAllWeights');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: listOfLabelAllWeights,
+          datasets: [{
+              label: 'Poids par status',
+              data: listOfDataAllWeights,
+              backgroundColor: backgroundColorRef,
+              borderColor: borderColorRef,
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
+
+  let nsp1 = '<i class="wght-title-stat">'
+  let nsp2 = '</i>&nbsp;<i class="wght-title-stp">kg</i><br>'
+  let weightToDisplay = ''
+
+  // Weight 6 Management
+  for(i=0; i<dataTagAllWeightsToJsonArray.length; i++){
+    weightToDisplay = weightToDisplay + '<i class="wght-title-stp">' + dataTagAllWeightsToJsonArray[i].step + '</i>' + ':&nbsp;&nbsp;' + nsp1 + dataTagAllWeightsToJsonArray[i].sum_weight + nsp2
+  }
+  $("#weight-blc-stat").html(weightToDisplay);
+
+
 };

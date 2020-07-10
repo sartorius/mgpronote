@@ -66,11 +66,11 @@
 
     <div class="crt-block">Poids</div>
     <div class="t-of-use mgs-med-note">
-      Poids en grammes.
+      Poids en Kilogramme(s)
     </div>
-      <% unless (@resultSet[0]['weight_in_gr'].nil?) || (@resultSet[0]['weight_in_gr'].to_i == 0) %>
+      <% unless (@resultSet[0]['weight_in_gr'].nil?) %>
     <div class="field-big">
-        <%= number_with_delimiter(@resultSet[0]['weight_in_gr'].to_i, :delimiter => ' ') %>
+        <%= @resultSet[0]['weight_in_gr'].to_f/1000 %>
       <% else %>
     <div class="field-md">
         Non renseigné pour l'instant

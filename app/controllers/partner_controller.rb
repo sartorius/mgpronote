@@ -5,6 +5,19 @@ class PartnerController < ApplicationController
 
   def mainstatistics
 
+
+    # Get all weight for all status
+    sql_query_weight_per_step = "SELECT rs.step, rs.id, ROUND(SUM(bc.weight_in_gr)::decimal/1000, 2) AS sum_weight " +
+                                " FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +
+                                # You can use this to make sure barcode is link to the partner
+                                " JOIN users u ON u.partner = bc.partner_id " +
+                                " WHERE u.id = " + @current_user.id.to_s +
+                                # End partner check
+                                " AND bc.weight_in_gr IS NOT NULL " +
+                                # We do not consider 10 dispo client and -1 terminated
+                                " AND rs.id NOT IN (10, -1) " +
+                	              " GROUP BY rs.step, rs.id ORDER BY rs.id ASC;"
+
     # Get all status
     sql_query = "SELECT rs.step, rs.id, COUNT(1) AS cnt_stat " +
                         " FROM barcode bc JOIN ref_status rs ON bc.status = rs.id " +
@@ -29,6 +42,9 @@ class PartnerController < ApplicationController
 
       @resultSetClient = ActiveRecord::Base.connection.exec_query(sql_query_client)
       @emptyResultSetClients = @resultSetClient.empty?
+
+      @resultSetAllWeights = ActiveRecord::Base.connection.exec_query(sql_query_weight_per_step)
+      @emptyResultSetAllWeights = @resultSetAllWeights.empty?
 
       render 'mainstatistics'
     end

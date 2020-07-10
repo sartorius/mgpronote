@@ -19,17 +19,37 @@
     dataTagClientToJson = dataTagClientToJson.replace(/&quot;/g,"\"");
     var dataTagClientToJsonArray = JSON.parse(dataTagClientToJson);
 
+		var dataTagAllWeightsToJson = '<%= @resultSetAllWeights.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagAllWeightsToJson = dataTagAllWeightsToJson.replace(/&quot;/g,"\"");
+    var dataTagAllWeightsToJsonArray = JSON.parse(dataTagAllWeightsToJson);
+
   </script>
 <% end %>
 
 <div class="row">
+		<div class="col-lg-6">
+			<div class="center">Poids</div>
+			<hr>
+			<canvas id="statAllWeights"></canvas>
+		</div>
     <div class="col-lg-6">
-			<div class="center">Volume</div>
+			<div class="center">Statistiques poids</div>
+			<hr>
+			<div id="weight-blc-stat">
+			</div>
+
+    </div>
+</div>
+<br><br><br><br><br>
+<div class="row">
+    <div class="col-lg-6">
+			<div class="center">Volume client</div>
 			<hr>
       <canvas id="statClientCv"></canvas>
     </div>
     <div class="col-lg-6">
-			<div class="center">Répartition des status</div>
+			<div class="center">Répartition status</div>
 			<hr>
 			<canvas id="statStatCv"></canvas>
     </div>

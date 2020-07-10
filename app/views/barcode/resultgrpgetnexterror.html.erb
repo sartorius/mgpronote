@@ -22,11 +22,13 @@
         <% if @need_to_feedback_incident_exists %>
           <br>Les codes barres ci-dessous ont un incident <i class="glyphicon glyphicon-info-sign"></i>
         <% end %>
-        <% if @need_to_feedback_delivery_pickup %>
-          <br>Un enlèvement et une livraison ne peuvent être groupée. <i class="glyphicon glyphicon-info-sign"></i>
-        <% end %>
+
         <% if @need_to_feedback_next_weight %>
           <br>La prochaine étape obligatoire est la <strong>pesée</strong>. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+        <% end %>
+
+				<% if @need_to_feedback_next_terminated %>
+          <br>La prochaine étape est la <strong>remise au client</strong>. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
         <% end %>
       </div>
     </div>
@@ -58,13 +60,6 @@
               <strong>Incident en cours: <i class="mgs-red">Oui</i></strong><br>
             <% end %>
 
-            <% if @need_to_feedback_delivery_pickup %>
-              <% if "#{result['bc_type_pack']}" == 'D' %>
-                <strong>Prochaine action possible: <i class="mgs-red">Livraison</i></strong><br>
-              <% else %>
-                <strong>Prochaine action possible: <i class="mgs-red">Enlèvement</i></strong><br>
-              <% end %>
-            <% end %>
 
             <% unless "#{result['ext_ref']}" == '' %>
               <strong>Reférence externe: </strong><i class="monosp-ft-nc"><%= "#{result['ext_ref']}" %></i><br>
@@ -87,7 +82,7 @@
     <div class="col-lg-6">
       <div class="crt-block">Non reconnu&nbsp;<i class="glyphicon glyphicon-barcode"></i></div>
       <div class="t-of-use mgs-med-note-imp">
-        Les codes barres suivants sont manquants :<br>
+        Les codes barres suivants sont manquants ou non reconnus :<br>
         <hr>
       </div>
     </div>

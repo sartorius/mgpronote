@@ -126,7 +126,8 @@ function addOptionListener(){
 }
 
 function validateNumberOnly(weight){
-  const re = /^[0-9]*$/;
+  //const re = /^[0-9]*$/;
+  const re = /^(\d+(?:[\.\,]\d{2})?)$/;
   return re.test(weight);
 }
 
@@ -137,11 +138,11 @@ function verityWeightFormRef(){
   if (!(validateNumberOnly($('#stpweight').val()))){
     allFieldOK = false;
   }
-  if(parseInt($('#stpweight').val()) < 250){
+  if(parseFloat($('#stpweight').val().replace(/,/g,".")) < 0.25){
     allFieldOK = false;
   }
   // limite 10t
-  if(parseInt($('#stpweight').val()) > 10000000){
+  if(parseFloat($('#stpweight').val().replace(/,/g,".")) > 10000){
     allFieldOK = false;
   }
   if($('#stpweight').val().length == 0){
@@ -149,10 +150,13 @@ function verityWeightFormRef(){
   }
 
   if(allFieldOK){
+      //$("#wght-in-kg").html((parseInt($('#stpweight').val())/1000).toFixed(2));
+      $("#wght-in-kg").html($('#stpweight').val());
       $("#mg-save-step-btn").prop('disabled', false);
       $("#mg-save-step-btn").show(500);
   }
   else{
+      $("#wght-in-kg").html('0');
       $("#mg-save-step-btn").prop('disabled', true);
       $("#mg-save-step-btn").hide(500);
   }
@@ -164,6 +168,8 @@ function weightManager(){
   //We are trying to check weight
   // 6 is the weight step id
   if(dataTagToJsonArray[0].end_step_id == 6){
+    $('#wght-in-kg-blc').show();
+
     $('#blk-weight').show();
     $('#mg-save-step-btn').hide();
     $( "#stpweight" ).keyup(function() {
@@ -374,16 +380,17 @@ function loadCameraRead(isGrp){
 
       // DEBUG CHANGE
       // 4 pures are OK ***
-      /*
-      listOfBCToHandle.push("M000080R3");
-      listOfBCToHandle.push("M00007U88");
-      listOfBCToHandle.push("M00007JC7");
-      */
 
+      //listOfBCToHandle.push("M00081ZBG");
+      //listOfBCToHandle.push("M0000186T");
+
+      //listOfBCToHandle.push("M00002C8A");
+      //listOfBCToHandle.push("M00000WBD");
+      //listOfBCToHandle.push("M000019YA");
+      //listOfBCToHandle.push("M00000WB6");
       /*
-      listOfBCToHandle.push("M00008NH6");
-      listOfBCToHandle.push("M00007AN4");
-      listOfBCToHandle.push("M00006N8H");
+      listOfBCToHandle.push("M00000STJ");
+      listOfBCToHandle.push("M00000M3J");
       */
 
 

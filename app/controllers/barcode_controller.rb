@@ -223,8 +223,8 @@ class BarcodeController < ApplicationController
     need_to_feedback_not_all_the_same = false;
     # This display if all are under incident
     @need_to_feedback_incident_exists = false;
-    @need_to_feedback_delivery_pickup = false;
     @need_to_feedback_next_weight = false;
+    @need_to_feedback_next_terminated = false;
 
     all_check_are_passed = true;
 
@@ -272,38 +272,6 @@ class BarcodeController < ApplicationController
       @need_to_feedback_incident_exists = true;
     end
 
-    # TODO
-    #This control need to be removed !!!
-
-    # Delivery Pickup Exception
-    # We will avoid to goes to DB if previous check are KO
-    # We go on category 2 check
-    if all_check_are_passed then
-
-        # This Q check the column with specific where clause
-        # Need to return 2 lines max
-        sql_query_ck_delivery_pickup_col = ' SELECT DISTINCT bc.type_pack AS bc_type_pack, rte.id AS end_step_id '
-        # Clause with wk_tag table
-        sql_query_where_ck_delivery_pickup =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
-                                              " AND bc.type_pack IN ('D', 'P') AND rte.id IN (2, 1) " +
-                                              " AND bc.status = wt.current_step_id " + sql_query_where_cut
-
-        sql_query_big_ck_delivery_pickup = sql_query_ck_delivery_pickup_col + sql_query_join + sql_query_where_ck_delivery_pickup
-        @resultSetCheckDeliveryPickup = ActiveRecord::Base.connection.exec_query(sql_query_big_ck_delivery_pickup)
-
-        # We check here if we have mix Delivery (D) and Pickup (P) with next steps 2 or 4
-        # 2 is for Delivery Reception
-        # 4 is for Pickup Enlèvement
-        if @resultSetCheckDeliveryPickup.length > 2 then
-          #puts 'Xroad 21 - we found: ' + @resultSetCheckDeliveryPickup.length.to_s
-          all_check_are_passed = false;
-
-          # We have more than one line which is not possible that means the barcode are not the same
-          @need_to_feedback_delivery_pickup = true;
-        end
-
-    end
-
     # Weight Exception
     # We will avoid to goes to DB if previous check are KO
     # We go on category 3 check
@@ -329,6 +297,33 @@ class BarcodeController < ApplicationController
 
           # We have more than one line which is not possible that means the barcode are not the same
           @need_to_feedback_next_weight = true;
+        end
+
+    end
+
+    # Terminated Exception
+    # We will avoid to goes to DB if previous check are KO
+    # We go on category 312 check
+    if all_check_are_passed then
+
+        # This Q check the column with specific where clause
+        # Need to return zero lines max
+        sql_query_ck_terminated_col = ' SELECT rte.id AS end_step_id '
+        # Clause with terminated
+        sql_query_where_ck_terminated =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
+                                              " AND rte.id IN (-1) " +
+                                              " AND bc.status = wt.current_step_id " + sql_query_where_cut
+
+        sql_query_big_ck_terminated = sql_query_ck_terminated_col + sql_query_join + sql_query_where_ck_terminated
+        @resultSetCheckTerminated = ActiveRecord::Base.connection.exec_query(sql_query_big_ck_terminated)
+
+        # We check here if next step is terminated
+        if @resultSetCheckTerminated.length > 0 then
+          #puts 'Xroad 312 - we found: ' + @resultSetCheckTerminated.length.to_s
+          all_check_are_passed = false;
+
+          # We have more than one line which is not possible that means the barcode are not the same
+          @need_to_feedback_next_terminated = true;
         end
 
     end
@@ -373,7 +368,7 @@ class BarcodeController < ApplicationController
     else
       # We need to get feedback
       # We need to access database for feedback !
-      if need_to_feedback_not_all_the_same || @need_to_feedback_incident_exists || @need_to_feedback_delivery_pickup || @need_to_feedback_next_weight then
+      if need_to_feedback_not_all_the_same || @need_to_feedback_incident_exists || @need_to_feedback_next_weight || @need_to_feedback_next_terminated then
         #puts 'Xroad 3 & 4 feedback'
         # We go on feedback mode here
         # We fill the result set for feedback
@@ -497,10 +492,13 @@ class BarcodeController < ApplicationController
 
     if (params[:stepcomment].nil?) || (params[:stepcomment] == '') then
 
-
+          # We save in gram
+          unless params[:stepweight].nil? || (params[:stepweight] == '')
+            stepWeightKilo = (params[:stepweight].to_s.gsub(/,/, '.').to_f * 1000).to_i
+          end
           # We are not in incident case
           sql_query = "SELECT * FROM CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " +
-                          @current_user.id.to_s + ", " + get_safe_pg_number(params[:stepweight]) + ");"
+                          @current_user.id.to_s + ", " + get_safe_pg_number(stepWeightKilo.to_s) + ");"
           #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
 
           @refwkf = params[:steprwfid]

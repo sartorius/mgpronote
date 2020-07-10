@@ -93,9 +93,9 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp
 
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (1, 'Adressé, attente enlèvement', 'Les informations l''adresse et le contact de l''enlèvement ont été saisis.', 'N', 'Q', 2);
 -- Make sure the status 4 is specific
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (4, 'Enlevé, attente local', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P', 2);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (4, 'Enlevé, en cours vers local transporteur', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P', 2);
 -- Make sure the status 2 is specific
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (2, 'Livré au local partenaire', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', 3);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (2, 'Livré au local transporteur', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', 3);
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P', 4, TRUE);
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (7, 'Déposé frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P', 5);
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (8, 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5);
@@ -379,7 +379,7 @@ BEGIN
         update_date = CURRENT_TIMESTAMP
         WHERE id = $1;
 
-      var_msg := CONCAT(var_msg, ' Validation poids: ', $6::varchar(20));
+      var_msg := CONCAT(var_msg, ' Validation poids: ', ROUND($6::decimal/1000, 2)::varchar(20), ' Kilogrammes');
 
     ELSE
       -- We update the barcode with last status
