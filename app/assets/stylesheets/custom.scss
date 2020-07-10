@@ -412,6 +412,21 @@ p {
 }
 
 
+.wrkf-selected{
+  background-color: #410092;
+  color: white;
+}
+
+.wrkf-light{
+  background-color: #F4ECFF;
+}
+
+.wrkf-blc{
+  display: inline-block;
+  margin-left: 10px;
+  right: 10px;
+}
+
 /* Loading */
 // We do here the loading part
 /* Start by setting display:none to make this hidden.

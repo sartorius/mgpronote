@@ -100,26 +100,50 @@
 
   </div>
   <div class="col-sm-4">
-    <div class="crt-block">Livraison chez le partenaire</div>
-    <div class="t-of-use mgs-med-note">
-      Si vous avez décidé de faire livrer votre colis chez notre partenaire, vous devez le faire à l'adresse suivante.
-    </div>
-    <label>À quelle adresse faire livrer votre colis ?</label><br>
-    <div class="field-md">
-      <%= @resultSet[0]['delivery_addr'].split('@')[0] %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %><br>
-      <%= @resultSet[0]['delivery_addr'].split('@')[1] %>
-    </div>
-    <div class="t-of-use mgs-med-note-imp">
-      <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
-       votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong>.
-      Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
-      <strong>Chaque client a son code de référence unique et il ne doit pas être partagé.</strong>
-    </div>
 
 
-    <div class="crt-block">Livraison</div>
+    <% if @resultSet[0]['type_pack'] == 'D' %>
+
+        <div class="crt-block">Livraison chez le partenaire</div>
+        <div class="t-of-use mgs-med-note">
+          Si vous avez décidé de faire livrer votre colis chez notre partenaire, vous devez le faire à l'adresse suivante.
+        </div>
+        <label>À quelle adresse faire livrer votre colis ?</label><br>
+        <div class="field-md">
+          <%= @resultSet[0]['delivery_addr'].split('@')[0] %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %><br>
+          <%= @resultSet[0]['delivery_addr'].split('@')[1] %>
+        </div>
+        <div class="t-of-use mgs-med-note-imp">
+          <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
+           votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong>.
+          Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
+          <strong>Chaque client a son code de référence unique et il ne doit pas être partagé.</strong>
+        </div>
+    <% else %>
+        <%# This to know if someone has been updated to pick up %>
+        <% if !(@resultSet[0]['p_name_firstname'].nil?) %>
+          <div class="crt-block">Enlèvement&nbsp;<i class="c-b glyphicon glyphicon-move"></i></div>
+          <div class="t-of-use mgs-med-note">
+            Information concernant l'enlèvement.
+          </div>
+          <label>Nom du contact enlèvement</label><br>
+          <div class="field-md">
+            <%= @resultSet[0]['p_name_firstname'].to_s %>
+          </div>
+          <label>Téléphone du contact enlèvement</label><br>
+          <div class="field-md">
+            <%= @resultSet[0]['p_phone'].to_s %>
+          </div>
+          <label>Adresse enlèvement</label><br>
+          <div class="field-md">
+            <%= @resultSet[0]['p_address_note'].to_s %>
+          </div>
+        <% end %>
+    <% end %>
+
+    <div class="crt-block">Récupération</div>
     <div class="t-of-use mgs-med-note">
-      Information concernant la livraison.
+      Le lieu où allez récupérer le paquet.
     </div>
     <label>Destination finale où récupérer le colis</label><br>
     <div class="field-md">
@@ -145,33 +169,21 @@
       </div>
     <% end %>
 
-    <div class="crt-block">Vérification</div>
-    <div class="t-of-use mgs-med-note">
-      En cas de contrôle lors de la remise en main propre, il sera demandé la pièce d'identité mais il est aussi possible de demander ce code.
-    </div>
-    <label>Code de vérification</label><br>
-    <div class="field-md">
-      <%= @resultSet[0]['secret_code'].to_s %>
-    </div>
+    <% if @screenClient %>
 
-    <% if !(@resultSet[0]['p_name_firstname'].nil?) %>
-      <div class="crt-block">Enlèvement&nbsp;<i class="c-b glyphicon glyphicon-move"></i></div>
-      <div class="t-of-use mgs-med-note">
-        Information concernant l'enlèvement.
+      <div class="crt-block">Vérification</div>
+      <div class="t-of-use mgs-med-note-imp">
+        <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Confidentiel</strong>&nbsp;
+        La remise en main propre: il sera demandé la pièce d'identité mais aussi ce code. Il ne doit pas être partagé. Seul vous pouvez le connaître.
       </div>
-      <label>Nom du contact enlèvement</label><br>
+      <label>Code de vérification</label><br>
       <div class="field-md">
-        <%= @resultSet[0]['p_name_firstname'].to_s %>
+        <%= @resultSet[0]['secret_code'].to_s %>
       </div>
-      <label>Téléphone du contact enlèvement</label><br>
-      <div class="field-md">
-        <%= @resultSet[0]['p_phone'].to_s %>
-      </div>
-      <label>Adresse enlèvement</label><br>
-      <div class="field-md">
-        <%= @resultSet[0]['p_address_note'].to_s %>
-      </div>
+
     <% end %>
+
+
 
   </div>
 </div>

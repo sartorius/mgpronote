@@ -79,10 +79,15 @@ function displayWorkflowClient(){
   let disStepBC = '';
   let disStepBCGrp = 0;
   let neverDisplayBC = false;
+
+
+  const nspStart = '<i class="glyphicon glyphicon-chevron-right"></i><div class="wrkf-blc wrkf-light">&nbsp;';
+  const nspEnd = '&nbsp;</div>&nbsp;';
+  const nspSelected = '<i class="glyphicon glyphicon-chevron-right"></i><div class="wrkf-blc wrkf-selected">&nbsp;';
+
   for(i=0; i<dataTagToJsonStepWFArray.length; i++){
-    const nspStart = '<span class="badge badge-default-light">';
-    const nspEnd = '</span>&nbsp;';
-    const nspSelected = '<span class="badge badge-primary">';
+
+
     if(i == 0){
       disStepBC = disStepBC + nspSelected + dataTagToJsonStepWFArray[i].step + nspEnd;
       disStepBCGrp = parseInt(dataTagToJsonStepWFArray[i].id);
@@ -99,6 +104,7 @@ function displayWorkflowClient(){
         //do nothing
       }
     }
+
   }
   $("#disp-step").html(disStep);
 }

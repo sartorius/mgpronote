@@ -39,6 +39,8 @@ INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, deli
 
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr, pickup_phone) VALUES (3, 'Fanny Service Transport', 'Exemple de transporteur 2', 'C', 1, '0764288678', '78 Rue de la Gare, 92304 Maison la Foire', 'Box 782, Centre La City Hazobe Tana 101', '0338919064');
 
+UPDATE ref_partner SET delivery_addr = 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I' WHERE id IN (2);
+UPDATE ref_partner SET delivery_addr = 'FANNY SERVICE TRANSPORT@ 21 RUE DE LA GARE, 92304 Maison la Foire', pickup_addr = 'Box 10A, Centre La City Hazobe Tana 101'  WHERE id IN (3);
 
 
 -- Need a cross table partner x mod_workflow
