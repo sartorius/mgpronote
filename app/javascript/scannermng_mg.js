@@ -540,7 +540,7 @@ function loadCameraRead(isGrp){
 
   //Aztec and QR reader
   const codeReader = new ZXing.BrowserMultiFormatReader();
-  console.log('ZXing code reader initialized');
+  //console.log('BC lib code reader initialized');
   codeReader.getVideoInputDevices()
       .then((videoInputDevices) => {
           const sourceSelect = document.getElementById('sourceSelect');

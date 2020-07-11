@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function() {
   // Should be called at each visit
-  console.log('Personal reseller TBL Page as changed');
+  //console.log('Personal reseller TBL Page as changed');
   mainClientLoaderInCaseOfChange();
 })
 
@@ -74,7 +74,7 @@ function mainClientLoaderInCaseOfChange(){
 }
 
 function displayWorkflowClient(){
-  console.log('displayWorkflowClient: Start');
+  // console.log('displayWorkflowClient: Start');
   let disStep = '';
   let disStepBC = '';
   let disStepBCGrp = 0;

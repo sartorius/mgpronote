@@ -7,13 +7,13 @@
     <div class="col-lg-8 lorem-text">
         <p>
           <% if Rails.env.production? %>
-            PROD !
+            notify prd !
           <% end %>
           <% if Rails.env.test? %>
-            TEST !
+            notify test !
           <% end %>
           <% if Rails.env.development? %>
-            DEV !
+            notify dev !
           <% end %>
 
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sodales orci eros, a tincidunt magna pulvinar ut. Proin ligula neque, elementum nec justo ut, faucibus rhoncus enim. Nullam blandit nisl arcu, a fermentum leo feugiat iaculis. Proin sed dignissim nulla, sed interdum quam. Mauris ac aliquam tortor. Vivamus in urna massa. In hac habitasse platea dictumst. Phasellus lacus nulla, lobortis ac blandit vitae, mollis sed nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum pharetra efficitur sodales. Donec est dolor, malesuada ac consequat et, dapibus eu tortor.

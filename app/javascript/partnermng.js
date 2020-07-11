@@ -74,7 +74,7 @@ function pad(num, size) {
 }
 
 function displayWorkflowClient(){
-  console.log('displayWorkflowClient: Start');
+  // console.log('displayWorkflowClient: Start');
   let disStep = '';
   let disStepBC = '';
   let disStepBCGrp = 0;
