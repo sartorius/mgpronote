@@ -422,9 +422,21 @@ p {
 }
 
 .wrkf-blc{
+  border-radius: 2px;
   display: inline-block;
   margin-left: 10px;
   right: 10px;
+}
+
+.classy-input{
+  font-size: 23px;
+  //background-color: #FAF6FF;
+  //border: none;
+  //outline: none;
+}
+
+.printed{
+  color: $main-color;
 }
 
 /* Loading */

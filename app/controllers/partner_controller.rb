@@ -163,7 +163,7 @@ class PartnerController < ApplicationController
                       " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
                       " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
                       " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      " bc.type_pack, bc.ext_ref, 'U' AS print, " +
+                      " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, " +
                       " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step)) AS raw_data " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner

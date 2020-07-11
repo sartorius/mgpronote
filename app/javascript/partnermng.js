@@ -80,10 +80,10 @@ function displayWorkflowClient(){
   let disStepBCGrp = 0;
   let neverDisplayBC = false;
 
-
-  const nspStart = '<i class="glyphicon glyphicon-chevron-right"></i><div class="wrkf-blc wrkf-light">&nbsp;';
+  let chevron = ''
+  const nspStart = '<div class="wrkf-blc wrkf-light">&nbsp;';
   const nspEnd = '&nbsp;</div>&nbsp;';
-  const nspSelected = '<i class="glyphicon glyphicon-chevron-right"></i><div class="wrkf-blc wrkf-selected">&nbsp;';
+  const nspSelected = '<div class="wrkf-blc wrkf-selected">&nbsp;';
 
   for(i=0; i<dataTagToJsonStepWFArray.length; i++){
 
@@ -94,15 +94,17 @@ function displayWorkflowClient(){
     }
     else{
       if((disStepBCGrp <= parseInt(dataTagToJsonStepWFArray[i].id)) && (!neverDisplayBC)){
-        disStep = disStep + disStepBC;
+        disStep = disStep + chevron + disStepBC;
         neverDisplayBC = true;
       }
       else if(dataTagToJsonStepWFArray[i].common == true){
-        disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? nspSelected : nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
+        disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? chevron + nspSelected : chevron + nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
       }
       else{
         //do nothing
       }
+      // We add chevron, we do not want to start with value
+      chevron = '<i class="glyphicon glyphicon-chevron-right"></i>';
     }
 
   }
@@ -204,14 +206,25 @@ function goToPartBarcode(lid, lsec){
 }
 
 function handlePrint(){
-  console.log('handlePrint: ');
-  console.log(JSON.stringify(printArray));
+  //console.log('handlePrint: ');
+  //console.log(JSON.stringify(printArray));
 
   for(i=0; i<printArray.length; i++){
     $("#item-bc-"+i).html(printArray[i].bcref + '<br>' + printArray[i].cliref + '<br>' + $('#part-tech-name').html());
     JsBarcode("#mbc-"+i, printArray[i].bcref);
+    //We need to notify that these have been printed for the session
+    for(k=0; k<dataTagToJsonArray.length; k++){
+      if(dataTagToJsonArray[k].id == printArray[i].id){
+        dataTagToJsonArray[k].ald_print = 'Y';
+        break;
+      }
+    }
+
   }
   generatePrintedPDF();
+
+
+
   //Do not forget to clear Print button
   clearPrint();
 }
@@ -257,14 +270,14 @@ function generatePrintedPDF(){
     let celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, 3 + (offsetY2 + 1)*rowReseter, celRef);
 
-
+    //console.log('Element print read: mbc-' + i );
     // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
     doc.addImage(document.getElementById('mbc-' + i).src, //img src
                   'PNG', //format
                   offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
                   offsetY2*rowReseter, //y
                   barcodeWidth, //Width
-                  barcodeHeight,'FAST'); //Height // Fast is to get less big files
+                  barcodeHeight, null, 'FAST'); //Height // Fast is to get less big files
 
     // Incremetor are here
     if(((i + 1) % 2) == 0){
@@ -355,13 +368,20 @@ function fillMaxPrint(){
   clearPrint();
   const MAX_PRINT = parseInt($('#max-print-const').html());
 
-
-  for(iallP=0; iallP<MAX_PRINT+1; iallP++){
+  let counterPrint = 0;
+  for(iallP=0; iallP<MAX_PRINT+1+counterPrint; iallP++){
     //console.log('iallP value >>>>>>>>>>>>' + iallP);
+    // We do not go more than limit and we do not print if already printed
     if(iallP<filteredDataTagToJsonArray.length){
       //console.log('fillMaxPrint: ' + filteredDataTagToJsonArray[iallP].id);
       //console.log('printArray.length: ' + printArray.length);
-      printMngOrder(filteredDataTagToJsonArray[iallP].id, 'U', filteredDataTagToJsonArray[iallP].ref_tag, filteredDataTagToJsonArray[iallP].oclient_ref);
+      if(filteredDataTagToJsonArray[iallP].ald_print == 'N'){
+        printMngOrder(filteredDataTagToJsonArray[iallP].id, 'U', filteredDataTagToJsonArray[iallP].ref_tag, filteredDataTagToJsonArray[iallP].oclient_ref);
+      }
+      else{
+        // It has been printed already we inc more one
+        counterPrint = counterPrint + 1;
+      }
     }
     else{
       //console.log('ELSE fillMaxPrint: ' + filteredDataTagToJsonArray.length + ' vs ' + iallP);
@@ -475,7 +495,10 @@ function runjsPartnerGrid(){
           title: 'Client',
           type: "text",
           width: 38,
-          headercss: "h-jsG-l"
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((item.ald_print == 'Y') ? value + '&nbsp;<i class="printed glyphicon glyphicon-print"></i>' : value);
+          }
         },
         {
           name: "bcdescription",
@@ -551,7 +574,10 @@ function runjsPartnerGrid(){
           title: 'Client',
           type: "text",
           width: 38,
-          headercss: "h-jsG-l"
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((item.ald_print == 'Y') ? value + '&nbsp;<i class="printed glyphicon glyphicon-print"></i>' : value);
+          }
         },
         {
           name: "oname",

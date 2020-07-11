@@ -110,8 +110,8 @@
         </div>
         <label>À quelle adresse faire livrer votre colis ?</label><br>
         <div class="field-md">
-          <%= @resultSet[0]['delivery_addr'].split('@')[0] %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %><br>
-          <%= @resultSet[0]['delivery_addr'].split('@')[1] %>
+          <%= @resultSet[0]['delivery_addr'].split('@')[0].upcase %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %><br>
+          <%= @resultSet[0]['delivery_addr'].split('@')[1].upcase %>
         </div>
         <div class="t-of-use mgs-med-note-imp">
           <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient

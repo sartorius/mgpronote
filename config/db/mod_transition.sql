@@ -65,9 +65,9 @@ CREATE TABLE grp_status (
 );
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (1, 'Réception', TRUE, 1);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (2, 'Enlèvement', FALSE, 2);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Local partenaire', TRUE, 3);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Local transporteur', TRUE, 3);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (4, 'Pesée', TRUE, 4);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot pour frêt aéroport', TRUE, 5);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot frêt aéroport', TRUE, 5);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée Tana', TRUE, 6);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Disponible client', TRUE, 7);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Colis remis', TRUE, 8);

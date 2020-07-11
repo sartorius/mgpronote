@@ -80,9 +80,10 @@ function displayWorkflowClient(){
   let disStepBCGrp = 0;
   let neverDisplayBC = false;
 
-  const nspStart = '<i class="glyphicon glyphicon-chevron-right"></i><div class="wrkf-blc wrkf-light">&nbsp;';
+  let chevron = ''
+  const nspStart = '<div class="wrkf-blc wrkf-light">&nbsp;';
   const nspEnd = '&nbsp;</div>&nbsp;';
-  const nspSelected = '<i class="glyphicon glyphicon-chevron-right"></i><div class="wrkf-blc wrkf-selected">&nbsp;';
+  const nspSelected = '<div class="wrkf-blc wrkf-selected">&nbsp;';
 
   for(i=0; i<dataTagToJsonStepWFArray.length; i++){
     if(i == 0){
@@ -91,15 +92,17 @@ function displayWorkflowClient(){
     }
     else{
       if((disStepBCGrp <= parseInt(dataTagToJsonStepWFArray[i].id)) && (!neverDisplayBC)){
-        disStep = disStep + disStepBC;
+        disStep = disStep + chevron + disStepBC;
         neverDisplayBC = true;
       }
       else if(dataTagToJsonStepWFArray[i].common == true){
-        disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? nspSelected : nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
+        disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? chevron + nspSelected : chevron + nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
       }
       else{
         //do nothing
       }
+      // We add chevron, we do not want to start with value
+      chevron = '<i class="glyphicon glyphicon-chevron-right"></i>';
     }
   }
   $("#disp-step").html(disStep);
