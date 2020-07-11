@@ -8,5 +8,15 @@ $(document).on('turbolinks:load', function() {
     $('#alerting-msg').text('Erreur: ' + msg);
     $('#alerting').show();
   }
-  
+
 })
+
+$(document).on("turbolinks:click", function(){
+  $(".spinner").show();
+  $(".modal").show();
+});
+
+$(document).on("turbolinks:load", function(){
+  $(".spinner").hide();
+  $(".modal").hide();
+});
