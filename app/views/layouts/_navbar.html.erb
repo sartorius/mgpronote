@@ -62,10 +62,8 @@
                   <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
                   <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
                   <li class="nav-item"><%= link_to 'Grouper'.html_safe, grpgetnext_path %></li>
-                  <li class="divider"></li>
-                  <li class="nav-item"><%= link_to "Clients", clientmng_path %></li>
-                  <li class="nav-item"><%= link_to "+ Client", signnewclient_path %></li>
-                  <li class="divider"></li>
+                  <li class="nav-item navzebra"><%= link_to "Clients", clientmng_path %></li>
+                  <li class="nav-item navzebra"><%= link_to "Ajouter client", signnewclient_path %></li>
               <% end %>
             <% end %>
 
