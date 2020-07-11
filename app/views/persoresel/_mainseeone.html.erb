@@ -149,7 +149,7 @@
     <div class="field-md">
       <%= @resultSet[0]['pickup_addr'].to_s %>
     </div>
-    <% if (@resultSet[0]['tname'].nil?) || (@resultSet[0]['tname'] == @resultSet[0]['oname']) %>
+    <% if (@resultSet[0]['tname'].nil?) || ((@resultSet[0]['tname'] == @resultSet[0]['oname']) && (@resultSet[0]['tfirstname'] == @resultSet[0]['ofirstname'])) %>
       <label>Receptionneur.euse</label><br>
       <div class="field-md">
         <i id='alr-rec-name'><%= @resultSet[0]['oname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['ofirstname'].to_s %></i>

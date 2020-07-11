@@ -40,16 +40,30 @@
         </div>
         <hr>
 
+				<%# There is no next step for the partner %>
 				<div id="no-next-step" class="t-of-use mgs-med-note-imp">
 					Navré. Aucune des prochaines étapes ci-dessous ne peut être effectuée par le partenaire. Contactez le propriétaire du code barre pour qu'il passe à la prochaine étape. Si vous pensez qu'il s'agit d'une erreur, contactez nous avec le code UQSK76.
 				</div>
+
+				<%# Message INCIDENT %>
 				<div id="decl-incident" class="t-of-use mgs-med-note-imp">
 					L'incident suivant est en cours. En passant à l'étape suivante, il sera considéré comme résolu :<br>
 					<span id="descr-incident"></span>
 				</div>
+
+				<%# Message WEIGHT %>
 				<div class="center hid-display" id="wght-in-kg-blc">
 					<i id="wght-in-kg" class="wght-title">0</i>&nbsp;<i class="wght-in-kg-txt">kg</i><br>
 				</div>
+
+				<%# Message WEIGHT %>
+				<div class="center hid-display" id="verif-blc">
+					<i class="glyphicon glyphicon-th"></i> <strong>Un code de vérification a été transmis au client par email</strong><br>Il est aussi disponible dans le détail du menu client "Mes suivis"<br>
+					Cette vérification est obligatoire et le transporteur n'a pas accès à ce code.
+					<hr>
+				</div>
+
+
         <form action="/save_step" method="post">
           <div class="form-group" id="blc-step-ctrl">
             <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
@@ -60,12 +74,17 @@
             </select>
           </div>
 
-          <div class="form-group" id="blk-cmt">
+          <div class="form-group hid-display" id="blk-cmt">
             <textarea class="form-control" name="stepcomment" placeholder="Commentaire" id="stpcmt" rows="3" style="resize: none;"></textarea>
           </div>
 
-					<div class="form-group" id="blk-weight">
-            <textarea class="form-control" name="stepweight" placeholder="En Kilogrammes - min. 0.25 - Format X ou X.XX" id="stpweight" inputmode="numeric" rows="1" style="resize: none;"></textarea>
+					<div class="form-group hid-display" id="blk-weight">
+            <textarea class="form-control classy-input" name="stepweight" placeholder="En Kilogrammes - min. 0.25 - Format X ou X.XX" id="stpweight" inputmode="numeric" rows="1" style="resize: none;"></textarea>
+						<hr>
+					</div>
+
+					<div class="form-group hid-display" id="blk-verif">
+            <textarea class="form-control classy-input" name="verif" placeholder="Entrez le code" id="stpverif" inputmode="numeric" rows="1" style="resize: none;"></textarea>
 						<hr>
 					</div>
 

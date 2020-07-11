@@ -34,7 +34,7 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (3, 'Attente de saisie adresse', 'Créé, l''adresse enlèvement doit être saisie.', 'Y', 'P', 1);
 
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (1, 'Adressé, attente enlèvement', 'Les informations l''adresse et le contact de l''enlèvement ont été saisis.', 'N', 'Q', 2);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (1, 'Adressé, attente enlèvement', 'Mise à jour adresse enlèvement.', 'N', 'Q', 2);
 -- Make sure the status 4 is specific
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (4, 'Enlevé, en cours vers local transporteur', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P', 2);
 -- Make sure the status 2 is specific
@@ -282,6 +282,34 @@ END
 $func$  LANGUAGE plpgsql;
 
 
+DROP FUNCTION IF EXISTS CLI_VERIF_CODE(BIGINT, SMALLINT);
+CREATE OR REPLACE FUNCTION CLI_VERIF_CODE(BIGINT, SMALLINT)
+-- By convention we return zero when everything is OK
+RETURNS INTEGER AS $$
+DECLARE
+  var_return_code     SMALLINT;
+  var_verif_code      SMALLINT;
+BEGIN
+    var_return_code := -1;
+    var_verif_code := 0;
+
+    IF NOT($2 IS NULL) THEN
+      -- We need to get the secret code
+      SELECT bc.secret_code INTO var_verif_code
+        FROM barcode bc
+        WHERE bc.id = $1;
+
+      IF (var_verif_code = $2) THEN
+        var_return_code := 0;
+      END IF;
+    END IF;
+
+    -- If code is correct we return 0 else we return -1;
+    RETURN var_return_code;
+END;
+$$ LANGUAGE plpgsql;
+
+
 -- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
 -- Create Procedure Insert Step as we need to handle ref_status
 -- CALL stored_procedure_name(parameter_list);
@@ -301,8 +329,10 @@ RETURNS TABLE (bc_id                   BIGINT,
                 -- Do the return at the end xxx
 AS $$
 DECLARE
-  var_msg     VARCHAR(250);
+  var_msg             VARCHAR(250);
+  var_verif_code      SMALLINT;
 BEGIN
+    var_verif_code := 0;
 
     SELECT CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END INTO var_msg
       FROM ref_status rs
@@ -332,6 +362,17 @@ BEGIN
         update_date = CURRENT_TIMESTAMP
         WHERE id = $1;
     END IF;
+
+    -- After Status update
+    IF ($3 = 10) THEN
+      -- The step 10 is verification code mandatory
+      -- We need to get the secret code
+      SELECT bc.secret_code INTO var_verif_code
+        FROM barcode bc
+        WHERE bc.id = $1;
+      var_msg := CONCAT(var_msg, ' Votre code de vérification: ', var_verif_code::varchar(20), ' - ce code est confidentiel, ne le partagez pas.');
+    END IF;
+
 
     RETURN QUERY
     SELECT

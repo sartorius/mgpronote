@@ -490,23 +490,41 @@ class BarcodeController < ApplicationController
     @incidentDeclared = 'N'
     @stepcb = params[:stepcb]
 
+    @verificationIsOK = true
+
     if (params[:stepcomment].nil?) || (params[:stepcomment] == '') then
 
           # We save in gram
           unless params[:stepweight].nil? || (params[:stepweight] == '')
             stepWeightKilo = (params[:stepweight].to_s.gsub(/,/, '.').to_f * 1000).to_i
           end
+
+          # We do the verification code here
+          unless params[:verif].nil? || (params[:verif] == '')
+            sql_query_verif = "SELECT * FROM CLI_VERIF_CODE (" + params[:stepcbid] + ", CAST (" + get_safe_pg_number(params[:verif]) + ' AS SMALLINT));'
+            @checkVerifResultSet = ActiveRecord::Base.connection.exec_query(sql_query_verif)
+
+            # M000030TG/9178
+            # puts 'inspect: ' + @checkVerifResultSet.inspect
+            # puts 'row: ' + @checkVerifResultSet[0]['cli_verif_code'].to_s
+
+            unless @checkVerifResultSet[0]['cli_verif_code'].to_i == 0 then
+              # Check has failed
+              @verificationIsOK = false
+            end
+          end
+
           # We are not in incident case
           sql_query = "SELECT * FROM CLI_STEP_TAG ("+ params[:stepcbid] +", CAST ("+ params[:steprwfid] +" AS SMALLINT), CAST ("+ params[:stepstep] + " AS SMALLINT), TRIM('"+ params[:stepgeol] +"'), " +
                           @current_user.id.to_s + ", " + get_safe_pg_number(stepWeightKilo.to_s) + ");"
           #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
 
+          @steptxt = params[:steptxt]
           @refwkf = params[:steprwfid]
           @stepcbid = params[:stepcbid]
           @stepmwfid = params[:stepmwfid]
           @stepstep = params[:stepstep]
           @stepgeol = params[:stepgeol]
-          @steptxt = params[:steptxt]
           @stepweight = params[:stepweight]
 
     else
@@ -518,29 +536,40 @@ class BarcodeController < ApplicationController
 
 
     begin
-      #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
-      @notificationResultSet = ActiveRecord::Base.connection.exec_query(sql_query)
 
-      puts 'Query has been launched correctly'
-      @notificationResultSet.each do |notification|
-        # conveniently, row is a hash
-        # the keys are the fields, as you'd expect
-        # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
-        # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
-        # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
-        # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
-        # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
-        # Notif Pure: {"bc_id"=>41, "bc_sec"=>9710, "name"=>"De la Cannelle", "firstname"=>"Tsiky", "to_addr"=>"tsiky.d@gmail.com", "step"=>"Arrivé Tana", "msg"=>"Le paquet est arrivé à Tana. Il est en formalité entrée de territoire."}
-        # puts 'Notif for: ' + encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s)
-        # puts 'Notif: ' + notification.inspect
-        sendEmailNotification(notification['to_addr'].to_s,
-                                notification['firstname'].to_s,
-                                encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
-                                notification['step'].to_s,
-                                notification['msg'].to_s)
+      unless !@verificationIsOK then
+        #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+        @notificationResultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+
+        puts 'Query has been launched correctly'
+        @notificationResultSet.each do |notification|
+          # conveniently, row is a hash
+          # the keys are the fields, as you'd expect
+          # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
+          # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
+          # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
+          # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+          # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
+          # Notif Pure: {"bc_id"=>41, "bc_sec"=>9710, "name"=>"De la Cannelle", "firstname"=>"Tsiky", "to_addr"=>"tsiky.d@gmail.com", "step"=>"Arrivé Tana", "msg"=>"Le paquet est arrivé à Tana. Il est en formalité entrée de territoire."}
+          # puts 'Notif for: ' + encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s)
+          # puts 'Notif: ' + notification.inspect
+          sendEmailNotification(notification['to_addr'].to_s,
+                                  notification['firstname'].to_s,
+                                  encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
+                                  notification['step'].to_s,
+                                  notification['msg'].to_s)
+        end
+
+
+        @returnmessage = "L'opération a été correctement enregistrée"
+
+      else
+        # Verification code is KO
+        flash.now[:danger] = 'Navré ! Echec vérification code. Ne peux être remis. Veuillez re-essayer'
+        @returnmessage = 'Code de vérification invalide'
+        @steptxt = 'Echec: ' + @steptxt
       end
 
-      @returnmessage = "L'opération a été correctement enregistrée"
       render 'resultsavestep'
     end
   end

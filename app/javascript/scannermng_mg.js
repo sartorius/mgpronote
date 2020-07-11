@@ -18,6 +18,7 @@ function mainScanLoaderInCaseOfChange(){
         //Weight need to be hide
         //M0000634S
         weightManagerDisable();
+        verifManagerDisable();
 
     });
     //inverse
@@ -31,6 +32,7 @@ function mainScanLoaderInCaseOfChange(){
         $("#stpcmt").val('');
         //Call Weight manager if needed
         weightManager();
+        verifManager();
     });
 
     $("#mg-save-step-btn").click(function() {
@@ -163,6 +165,38 @@ function verityWeightFormRef(){
 }
 
 
+function validateVerifCodeOnly(code){
+  //const re = /^[0-9]*$/;
+  const re = /^[0-9]+$/;
+  return re.test(code);
+}
+
+function verityVerifFormRef(){
+  let allFieldOK = true;
+
+  // Check email
+  if (!(validateVerifCodeOnly($('#stpverif').val()))){
+    allFieldOK = false;
+  }
+  if(parseInt($('#stpverif').val()) > 9999){
+    allFieldOK = false;
+  }
+  if($('#stpverif').val().length == 0){
+    allFieldOK = false;
+  }
+
+  if(allFieldOK){
+      $("#mg-save-step-btn").prop('disabled', false);
+      $("#mg-save-step-btn").show(500);
+  }
+  else{
+      $("#mg-save-step-btn").prop('disabled', true);
+      $("#mg-save-step-btn").hide(500);
+  }
+}
+
+// WEIGHT MANAGEMENT
+
 function weightManager(){
   //Weight Manager
   //We are trying to check weight
@@ -184,6 +218,34 @@ function weightManagerDisable(){
     $('#mg-save-step-btn').show();
   }
 }
+
+// VERIF MANAGEMENT
+
+function verifManager(){
+  // Verif Manager
+  // We raise it only on step to verify (which is 10)
+  if((dataTagToJsonArray[0].end_step_id == -1) && (dataTagToJsonArray[0].curr_step_id == 10)){
+    $('#verif-blc').show();
+
+    $('#blk-verif').show();
+    $('#mg-save-step-btn').hide();
+    $( "#stpverif" ).keyup(function() {
+      verityVerifFormRef();
+    });
+  }
+}
+// Need to be called in case of incident on off
+// We raise it only on step to verify (which is 10)
+function verifManagerDisable(){
+  if((dataTagToJsonArray[0].end_step_id == -1) && (dataTagToJsonArray[0].curr_step_id == 10)){
+    $('#blk-verif').hide();
+    $('#mg-save-step-btn').show();
+  }
+}
+
+
+
+
 
 function isOdd(num) {return (num % 2) == 1;}
 
@@ -234,6 +296,7 @@ function displayNext(isGrp){
       $('#curr-status').html(dataTagToJsonArray[0].curr_step);
       weightManager();
 
+      verifManager()
       // Handle incident here
       if((dataTagToJsonArray[0].curr_inc != null) && (dataTagToJsonArray[0].curr_inc != '')){
         $('#descr-incident').html(dataTagToJsonArray[0].curr_inc);
