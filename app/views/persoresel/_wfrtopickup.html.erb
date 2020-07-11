@@ -10,15 +10,15 @@
       </div>
       <br>
       <label>Nom du contact enlèvement</label>&nbsp;<span id="ck-mg-add-pk-name" class="ctr-ck-grp">(obligatoire)</span>
-      <textarea class="form-control crt-fill-form" rows="1" id="mg-add-pk-name" name="mgaddpknm" placeholder="Nom de la personne à contacter (min 5 car)" style="resize: none;"></textarea>
+      <textarea class="form-control crt-fill-form classy-input" rows="1" id="mg-add-pk-name" name="mgaddpknm" placeholder="Nom de la personne à contacter (min 5 car)" style="resize: none;"></textarea>
       <label>Téléphone du contact enlèvement</label>&nbsp;<span id="ck-mg-add-pk-phone" class="ctr-ck-grp">(obligatoire)</span>
-      <textarea class="form-control crt-fill-form" rows="1" id="mg-add-pk-phone" name="mgaddpkph" placeholder="Téléphone de la personne à contacter" style="resize: none;"></textarea>
+      <textarea class="form-control crt-fill-form classy-input" rows="1" id="mg-add-pk-phone" name="mgaddpkph" placeholder="Téléphone de la personne à contacter" style="resize: none;"></textarea>
       <br>
       <div class="t-of-use mgs-med-note-imp">
         En plus de l'adresse vous pouvez donner le maximum d'information dans le champs suivant : code porte, étage, porte, horaires de disponibilité, repère.<br>
       </div>
       <label>Adresse enlèvement</label>&nbsp;<span id="ck-mg-add-pk-add" class="ctr-ck-grp">(obligatoire)</span>
-      <textarea class="form-control crt-fill-form" rows="3" id="mg-add-pk-add" name="mgaddpkadd" placeholder="Adresse & notes (min 10 car)" style="resize: none;"></textarea>
+      <textarea class="form-control crt-fill-form classy-input" rows="3" id="mg-add-pk-add" name="mgaddpkadd" placeholder="Adresse & notes (min 10 car)" style="resize: none;"></textarea>
 
 
       <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="save-addr-sub"
@@ -29,7 +29,7 @@
 
       <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"><%= @resultSet[0]['id'].to_s %></textarea>
       <textarea class="form-control step-hid" rows="1" id="read-steprwf-id" name="steprwfid" placeholder="Workflow id" style="resize: none;">1</textarea>
-      
+
       <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"><%= @resultSet[0]['secure'].to_s %></textarea>
       <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
 

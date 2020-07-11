@@ -14,13 +14,13 @@
       </div>
 
       <label>Email <span id="ck-email" class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.email_field :email, class: 'form-control crt-fill-form', placeholder: "Email", id: 'crt-email' %>
+      <%= f.email_field :email, class: 'form-control crt-fill-form classy-input', placeholder: "Email", id: 'crt-email' %>
 
       <label>Mot de passe <span id="ck-pwd" class="ctr-ck-grp">(min. 7 caractères)</span></label>
-      <%= f.password_field :password, class: 'form-control crt-fill-form', placeholder: "Mot de passe", id: 'crt-pwd' %>
+      <%= f.password_field :password, class: 'form-control crt-fill-form classy-input', placeholder: "Mot de passe", id: 'crt-pwd' %>
 
       <label>Confirmation du mot de passe <span id="ck-cpwd" class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
+      <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form classy-input', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
 
 
 
@@ -30,13 +30,13 @@
       </div>
 
       <label>Nom de famille <span id="ck-name" class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.text_field :name, class: 'form-control crt-fill-form', placeholder: "Rakoto", id: 'crt-name' %>
+      <%= f.text_field :name, class: 'form-control crt-fill-form classy-input', placeholder: "Rakoto", id: 'crt-name' %>
 
       <label>Prénom <span id="ck-fname" class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.text_field :firstname, class: 'form-control crt-fill-form', placeholder: "Maeva", id: 'crt-fname' %>
+      <%= f.text_field :firstname, class: 'form-control crt-fill-form classy-input', placeholder: "Maeva", id: 'crt-fname' %>
 
       <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.text_field :phone, class: 'form-control crt-fill-form', placeholder: "Téléphone", id: 'crt-phone' %>
+      <%= f.text_field :phone, class: 'form-control crt-fill-form classy-input', placeholder: "Téléphone", id: 'crt-phone' %>
 
       <label>Vous êtes</label>
       <%= select(:user, :partner, [['Particulier', 0], ['Entreprise', 1]], class: 'form-control') %>
