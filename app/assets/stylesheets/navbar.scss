@@ -21,13 +21,13 @@
 
 
 // This is the current bootstrap triggering hamburger menu
-@media (max-width:768px){
+@media (max-width:600px){
   .navbar-collapse{
     padding-top: 10px;
     padding-left: 0px;
   }
   .navbar-nav{
-    float: left;
+    float: right;
     font-size: 18px;
     width: 100%;
   }
