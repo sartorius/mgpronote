@@ -4,19 +4,22 @@ $(document).ready(function() {
 });
 
 $(document).on('turbolinks:load', function() {
-  function customLogErr(msg){
-    $('#alerting-msg').text('Erreur: ' + msg);
-    $('#alerting').show();
-  }
+
+    function customLogErr(msg){
+      $('#alerting-msg').text('Erreur: ' + msg);
+      $('#alerting').show();
+    }
 
 })
 
 $(document).on("turbolinks:click", function(){
-  $(".spinner").show();
-  $(".modal").show();
+  //$("#screen-load").show();
+  //$(".modal").show();
+  $("#screen-load").show();
 });
 
 $(document).on("turbolinks:load", function(){
-  $(".spinner").hide();
-  $(".modal").hide();
+  //$("#screen-load").hide();
+  //$(".modal").hide();
+  $("#screen-load").hide();
 });

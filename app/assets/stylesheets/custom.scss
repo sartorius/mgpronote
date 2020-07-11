@@ -453,10 +453,30 @@ p {
     left:       0;
     height:     100%;
     width:      100%;
-    background: rgba( 255, 255, 255, .8 )
+    background: rgba( 255, 255, 255, .8 );
+
+    /*
+    background: rgba( 255, 255, 255, .7 )
                 url('http://i.stack.imgur.com/FhHRx.gif')
                 50% 50%
                 no-repeat;
+                */
+}
+
+.loader {
+  margin-top: 15em !important;
+  margin: auto;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid $main-color; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* When the body has the loading class, we turn
