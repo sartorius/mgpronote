@@ -55,7 +55,8 @@
 </div>
 <% if @emptyResultSet %>
   <div class="col-sm-12 no-data">
-    Désolé, nous n'avons pas trouvé de suivi &nbsp; <i class="glyphicon glyphicon-inbox"></i>
+		<%= image_tag("empty800.png", alt: "MGSuivi empty", width: "125")%><br>
+    Désolé, nous n'avons pas trouvé de suivi. Si vous venez de nous rejoindre c'est normal !<br> Déjà, bienvenue ! Ensuite, demandez à votre transporteur de vous ajouter dans sa liste de client pour voir vos premiers suivi.
   </div>
 
 <% else %>

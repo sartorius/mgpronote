@@ -30,8 +30,9 @@
 </div>
 <% if @emptyResultSet %>
   <div class="col-sm-12 no-data">
-    Désolé, Aucun partenaire transporteur n'a encore ajouté votre compte. Veuillez contacter le partenaire avec qui vous êtes en contact pour qu'il vous ajoute.<br>
-    Si vous n'êtes en contact avec aucun partenaire, vous pouvez contacter la liste des partenaires qui nous font confiance.
+		<%= image_tag("empty800.png", alt: "MGSuivi empty", width: "125")%><br>
+    Désolé, Aucun partenaire transporteur n'a encore ajouté votre compte.<br>Veuillez contacter le partenaire avec qui vous êtes en contact pour qu'il vous ajoute.
+
   </div>
 <% end %>
 

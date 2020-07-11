@@ -54,19 +54,22 @@
     <div class="field-md">
       <%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %>
     </div>
+    <div class="t-of-use mgs-med-note">
+      Cette référence est unique, anonymisée et personnelle. Vous ne devez pas la partager.
+    </div>
   </div>
   <div class="col-md-4">
     <div class="crt-block">Utilisez votre référence client</div>
     <div class="t-of-use mgs-med-note">
       Si vous deviez faire livrer votre colis à l'adresse suivante :<br>
-      Mada Colis Transport<br>
+      MADA COLIS TRANSPORT<br>
       15 RUE DE LA GARE<br>
       93170 BAGNOLET<br>
     </div>
     <div class="crt-block">&nbsp;</div>
     <div class="t-of-use mgs-med-note-imp">
       Vous devez entrer l'adresse suivante :<br>
-      Mada Colis Transport - <%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %><br>
+      MADA COLIS TRANSPORT - <strong><%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %></strong><br>
       15 RUE DE LA GARE<br>
       93170 BAGNOLET<br>
       <hr>
