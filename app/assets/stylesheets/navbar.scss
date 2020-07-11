@@ -19,12 +19,26 @@
   background-color: #C6B2D8;
 }
 
+
+// This is the current bootstrap triggering hamburger menu
+@media (max-width:768px){
+  .navbar-collapse{
+    padding-top: 10px;
+    padding-left: 0px;
+  }
+  .navbar-nav{
+    float: left;
+    font-size: 18px;
+    width: 100%;
+  }
+}
+
+
+
 .navbar-nav{
-  float: left;
-  font-size: 18px;
-  width: 100%;
+  float: right;
 }
 
 .navzebra {
-  background-color: #FFFFFF;
+  background-color: #EDEDED;
 }
