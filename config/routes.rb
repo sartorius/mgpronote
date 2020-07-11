@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   get     '/checkbc',    to: 'barcode#checkbc'
   post	  '/check_step'   => 'barcode#checkstep'
   get     '/check_step' => redirect("/")
+  post	  '/check_step_home'   => 'barcode#checkstephome'
+  get     '/check_step_home' => redirect("/")
 
   #Route for Partner Controller
   get     '/dashboard',    to: 'partner#dashboard'

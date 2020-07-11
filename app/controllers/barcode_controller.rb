@@ -582,22 +582,17 @@ class BarcodeController < ApplicationController
     render 'checkbc'
   end
 
+
+  def checkstephome
+    @checkBCFromHome = 1
+    checkstep
+    
+  end
+
   # checkstep/savebc
   # Save Next step BC
   # Operation after read BC
   def checkstep
-
-=begin
-    select bc.ref_tag,
-          rtc.step,
-          to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date,
-          rtc.description,
-          wt.geo_l
-          from wk_tag wt join barcode bc on bc.id = wt.bc_id
-										join ref_status rtc on rtc.id = wt.current_step_id
-							WHERE bc.ref_tag = '39287392' ORDER BY wt.id ASC;
-
-=end
     # checkcbid is empty when we have an external code
 
     sql_query = "SELECT bc.id, bc.ref_tag, u.id AS uid, u.name, u.firstname, u.client_ref AS uclient_ref, u.phone, rtc.step, to_char(wt.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rtc.description, wt.geo_l, " +

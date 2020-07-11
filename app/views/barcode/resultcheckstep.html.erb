@@ -31,8 +31,11 @@
       </div>
 
 
-			
-
+			<% if @checkBCFromHome.nil? %>
+				<div class="pos-center blc-cancel">
+					<a href="/checkbc" id="btn-cnl-nstp" class="btn btn-default btn-lg btn-block">Vérifier un autre</a>
+				</div>
+			<% end %>
 			<div class="pos-center blc-cancel">
 				<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-md btn-block">Retour</a>
 			</div>
