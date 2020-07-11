@@ -367,7 +367,7 @@ function displayNext(isGrp){
 }
 
 function strbadge(str){
-  return '<span class="badge badge-primary-medium">' + str + '</span>';
+  return '<span class="big-step-history"><i class="glyphicon glyphicon-chevron-right"></i>&nbsp;' + str + '</span>';
 }
 
 /* -------------------------------------------------------------------------- */

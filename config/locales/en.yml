@@ -31,3 +31,7 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    errors:
+      messages:
+        taken: "cet %{model}#email existe déjà. Vous ne pouvez pas créer ce compte."

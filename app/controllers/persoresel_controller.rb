@@ -118,7 +118,7 @@ class PersoreselController < ApplicationController
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
                 		" uo.id AS oid, uo.name AS oname, uo.client_ref AS oclient_ref, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
-                		" uc.name AS cname, uc.firstname AS cfirstname, uc.email AS cemail, uc.phone AS cphone " +
+                		" uc.name AS cname, uc.firstname AS cfirstname, uc.id AS cid, uc.client_ref AS cclient_ref, uc.email AS cemail, uc.phone AS cphone " +
                 		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +
                   		"JOIN ref_status rs ON rs.id = bc.status " +
                   		"JOIN users uo ON uo.id = bc.owner_id " +

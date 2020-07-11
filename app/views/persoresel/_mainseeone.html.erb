@@ -41,15 +41,7 @@
 
     <label>Suivi créé par</label><br>
     <div class="field-md">
-      <%= @resultSet[0]['cname'].to_s %>&nbsp;<%= @resultSet[0]['cfirstname'].to_s %>
-    </div>
-    <label>Téléphone</label><br>
-    <div class="field-md">
-      <%= @resultSet[0]['cphone'].to_s %>
-    </div>
-    <label>Email</label><br>
-    <div class="field-md">
-      <%= @resultSet[0]['cemail'].to_s %>
+      <%= encode_client_ref(@resultSet[0]['cfirstname'].to_s, @resultSet[0]['cid'].to_s, @resultSet[0]['cclient_ref'].to_s) %>
     </div>
     <label>Date de création</label><br>
     <div class="field-md">
@@ -106,7 +98,7 @@
 
         <div class="crt-block">Livraison chez le partenaire</div>
         <div class="t-of-use mgs-med-note">
-          Si vous avez décidé de faire livrer votre colis chez notre partenaire, vous devez le faire à l'adresse suivante.
+          Vous avez choisi un suivi livraison.
         </div>
         <label>À quelle adresse faire livrer votre colis ?</label><br>
         <div class="field-md">

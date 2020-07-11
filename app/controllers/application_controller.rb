@@ -117,9 +117,9 @@ class ApplicationController < ActionController::Base
                 'Name'=> firstname_name
             }
         ],
-        'Subject' => 'MGSuivi: ' + cb_code + ' ' + status,
-        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche.",
-        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + ". Pour plus de détails, tapez " + cb_code + " dans notre recherche."
+        'Subject' => 'MGS: ' + cb_code + ' ' + status,
+        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + " Pour plus de détails, tapez " + cb_code + " dans notre barre de recherche.",
+        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + "<br> Pour plus de détails, tapez " + cb_code + " dans notre barre de recherche."
     }]
     )
     p variable.attributes['Messages']
