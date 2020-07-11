@@ -1,5 +1,7 @@
 git pull origin master
 
+<input type="submit" name="formSubmit" id="btnVerify" class="btn btn btn-default btn-lg btn-block" value="Vérifier"/>
+
 Parameters: {"authenticity_token"=>"qi8GbXLgzxhtAbDxZCtEBuX0X58rjOsmcwZ1C5aUkgyLlgP0cifw/qtj0Db9Eb2rgVzoZN/HWEe6pnfHEhQdSg==", "stepgeol"=>"N", "grpcheckcbpure"=>"[{\"id\":1,\"secure\":3301},{\"id\":2,\"secure\":4352}]", "grpcheckcbext"=>"[\"3222475413469\",\"3263851322913\"]"}
   User Load (1.1ms)  SELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2  [["id", 140], ["LIMIT", 1]]
   ↳ app/helpers/sessions_helper.rb:18:in `current_user'
@@ -12,17 +14,3 @@ CLI_GRPSTEP_TAG_PURE
 
 OK CLI_STEP_TAG
 CLI_COM_TAG
-
-{
-  "originalEvent":{"isTrusted":true},
-  "type":"click",
-  "target":{},
-  "currentTarget":{
-    "jQuery351017946222272301972":{
-      "JSGridItem":{"id":39,"oid":141,"oname":"De la Cannelle","ofirstname":"Tsiky","oclient_ref":483,"ophone":"0320102045","create_date":"06/07/2020","diff_days":0,"ref_tag":"M00008G6G","step":"En attente de réception","secure":"4216","bsecret_code":"4996","type_pack":"D","ext_ref":null,"print":"U","raw_data":"DE LA CANNELLETSIKY0320102045EN ATTENTE DE RÉCEPTIONM00008G6GTS-3AHD"}},
-    "jQuery351017946222272301971":{"events":{"click":[{"type":"click","origType":"click","guid":44,"namespace":""}],"dblclick":[{"type":"dblclick","origType":"dblclick","guid":45,"namespace":""}],"mouseover":[{"type":"mouseover","origType":"mouseenter","data":null,"guid":46,"namespace":""}],"mouseout":[{"type":"mouseout","origType":"mouseleave","data":null,"guid":47,"namespace":""}]}}},"relatedTarget":null,"timeStamp":3454,"jQuery35101794622227230197":true,"delegateTarget":{"jQuery351017946222272301972":{"JSGridItem":{"id":39,"oid":141,"oname":"De la Cannelle","ofirstname":"Tsiky","oclient_ref":483,"ophone":"0320102045","create_date":"06/07/2020","diff_days":0,"ref_tag":"M00008G6G","step":"En attente de réception","secure":"4216","bsecret_code":"4996","type_pack":"D","ext_ref":null,"print":"U","raw_data":"DE LA CANNELLETSIKY0320102045EN ATTENTE DE RÉCEPTIONM00008G6GTS-3AHD"}},
-    "jQuery351017946222272301971":{"events":{"click":[{"type":"click","origType":"click","guid":44,"namespace":""}],
-      "dblclick":[{"type":"dblclick","origType":"dblclick","guid":45,"namespace":""}],
-      "mouseover":[{"type":"mouseover","origType":"mouseenter","data":null,"guid":46,"namespace":""}],
-      "mouseout":[{"type":"mouseout","origType":"mouseleave","data":null,"guid":47,"namespace":""}]}}},
-      "handleObj":{"type":"click","origType":"click","guid":44,"namespace":""}}

@@ -41,8 +41,9 @@
                           Partenaire <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                          <li class="nav-item"><%= link_to "Manager de suivi", dashboard_path %></li>
-                          <li class="nav-item"><%= link_to "Statistiques", mainstatistics_path %></li>
+
+                          <li class="nav-item"><%= link_to dashboard_path do %><i class="fas fa-clipboard-list"></i>&nbsp;Manager de suivi<% end %></li>
+                          <li class="nav-item"><%= link_to mainstatistics_path do %><i class="fas fa-chart-line"></i>&nbsp;Statistiques<% end %></li>
 
                           <li class="divider"></li>
                           <li class="nav-item"><%= link_to "Manager de Client", clientmng_path %></li>
@@ -100,7 +101,7 @@
 
             <% if (mobile_device == "mobile")  %>
               <%# MOBILE %>
-              <li class="nav-item"><%= link_to "Profil", current_user %></li>
+              <li class="nav-item"><%= link_to current_user do %><i class="fas fa-user-circle"></i>&nbsp;Profil<% end %></li>
               <li class="nav-item">
                 <%= link_to "Déconnexion", logout_path, method: :delete %>
               </li>
@@ -112,7 +113,7 @@
                     <%= @current_user.firstname.to_s %> <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
-                    <li class="nav-item"><%= link_to "Profil", current_user %></li>
+                    <li class="nav-item"><%= link_to current_user do %><i class="fas fa-user-circle"></i>&nbsp;Profil<% end %></li>
                     <li class="divider"></li>
                     <li class="nav-item">
                       <%= link_to "Déconnexion", logout_path, method: :delete %>
