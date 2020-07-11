@@ -560,16 +560,6 @@ function runjsPartnerGrid(){
         },
         //Default width is auto
         { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
-        { name: "ext_ref",
-          title: "Ext Ref",
-          type: "text",
-          align: "right",
-          width: 35,
-          headercss: "h-jsG-r",
-          itemTemplate: function(value, item) {
-            return '<i class="monosp-ft-xs">' + ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD)) + '</i>';
-          }
-        },
         { name: "oclient_ref",
           title: 'Client',
           type: "text",
@@ -583,7 +573,7 @@ function runjsPartnerGrid(){
           name: "oname",
           title: "Nom",
           type: "text",
-          width: 40,
+          width: 60,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
             return value.substring(0, STR_LENGTH_LG);

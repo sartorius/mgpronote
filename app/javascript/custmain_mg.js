@@ -8,4 +8,5 @@ $(document).on('turbolinks:load', function() {
     $('#alerting-msg').text('Erreur: ' + msg);
     $('#alerting').show();
   }
+  
 })
