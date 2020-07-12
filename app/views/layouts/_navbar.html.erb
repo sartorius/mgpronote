@@ -43,12 +43,12 @@
                         </a>
                         <ul class="dropdown-menu">
 
-                          <li class="nav-item"><%= link_to dashboard_path do %><i class="fas fa-clipboard-list"></i>&nbsp;Manager de suivi<% end %></li>
-                          <li class="nav-item"><%= link_to mainstatistics_path do %><i class="fas fa-chart-line"></i>&nbsp;Statistiques<% end %></li>
+                          <li class="nav-item"><%= link_to dashboard_path do %><i class="fas fa-globe-africa"></i>&nbsp;Manager de suivi<% end %></li>
+                          <li class="nav-item"><%= link_to mainstatistics_path do %><i class="fas fa-chart-bar"></i>&nbsp;Statistiques<% end %></li>
 
                           <li class="divider"></li>
                           <li class="nav-item"><%= link_to "Manager de Client", clientmng_path %></li>
-                          <li class="nav-item"><%= link_to "Ajouter un nouveau client", signnewclient_path %></li>
+                          <li class="nav-item"><%= link_to signnewclient_path do %><i class="fas fa-plus-square"></i>&nbsp;Nouveau client<% end %></li>
                           <li class="divider"></li>
                           <li class="nav-item"><%= link_to "Aide", help_path %></li>
                         </ul>
@@ -65,7 +65,7 @@
                   <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
                   <li class="nav-item"><%= link_to grpgetnext_path do %><i class="fas fa-layer-group"></i>&nbsp;Grouper<% end %></li>
                   <li class="nav-item navzebra"><%= link_to "Clients", clientmng_path %></li>
-                  <li class="nav-item navzebra"><%= link_to "Ajouter client", signnewclient_path %></li>
+                  <li class="nav-item"><%= link_to signnewclient_path do %><i class="fas fa-plus-square"></i>&nbsp;Nouveau client<% end %></li>
               <% end %>
             <% end %>
 

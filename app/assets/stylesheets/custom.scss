@@ -72,6 +72,34 @@ textarea {
     background-color: $main-color-light-contrast;
 }
 
+
+.btn-alternative{
+   color: white;
+   background-color:#5982DB;
+   border-color:#00277B;
+ }
+.btn.btn-alternative:hover,
+.btn.btn-alternative:focus,
+.btn.btn-alternative:active,
+.btn.btn-alternative.active {
+    color: #5982DB;
+    background-color:#CDDDFF;
+}
+
+.btn-alternative-light{
+   color: #00277B;
+   background-color: #CDDDFF;
+   border-color:#130022;
+ }
+.btn.btn-alternative-light:hover,
+.btn.btn-alternative-light:focus,
+.btn.btn-alternative-light:active,
+.btn.btn-alternative-light.active {
+    color: white;
+    background-color: #5982DB;
+}
+
+
 .badge-btn-primary {
   background-color: $main-color;
 }
@@ -215,10 +243,10 @@ p {
 }
 
 .no-data{
-  margin-top: 4em;
+  margin-top: 7em;
   text-align: center;
   font-size: 1.3em;
-  color: $main-color;
+  color: $main-color-medium;
   min-height: 300px;
 }
 
@@ -266,6 +294,12 @@ p {
   font-size: 2em;
   font-style: normal;
   color: $main-color-medium;
+}
+
+.help-title{
+  margin-bottom: 50px;
+  font-size: 25px;
+  color: $main-color;
 }
 
 #list-of-read-bc{
@@ -856,6 +890,11 @@ body.loading .modal {
 /* Lorem */
 .lorem-text{
   text-align: justify;
+}
+
+/* Lorem */
+.lorem-inf{
+  font-size: 18px;
 }
 /* header */
 

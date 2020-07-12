@@ -96,7 +96,14 @@ function displayWorkflowClient(){
       if((disStepBCGrp <= parseInt(dataTagToJsonStepWFArray[i].id)) && (!neverDisplayBC)){
         disStep = disStep + chevron + disStepBC;
         neverDisplayBC = true;
+        // at this step the current i is lost if we are still strinctly inferior
+        // We do not want to display the same family
+        if(disStepBCGrp < parseInt(dataTagToJsonStepWFArray[i].id)){
+          // As greater we do not display selected
+          disStep = disStep + chevron + nspStart + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
+        }
       }
+      // common means usual. For example Enlevement is not common
       else if(dataTagToJsonStepWFArray[i].common == true){
         disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? chevron + nspSelected : chevron + nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
       }
@@ -486,7 +493,7 @@ function runjsPartnerGrid(){
           width: 10,
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
-            return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
+            return (value == 'D') ? '<i class="c-w fas fa-box"></i>' : '<i class="c-b fas fa-truck"></i>';
           }
         },
         //Default width is auto
@@ -555,7 +562,7 @@ function runjsPartnerGrid(){
           width: 10,
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
-            return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
+            return (value == 'D') ? '<i class="c-w fas fa-box"></i>' : '<i class="c-b fas fa-truck"></i>';
           }
         },
         //Default width is auto
@@ -742,10 +749,10 @@ function generatePartDashCSV(){
   let csvContent = "";
   const SEP_ = ";"
 
-	let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_ + "Numéro" + SEP_ + "Date de création" + SEP_ + "Description" + SEP_ + "En attente depuis" + SEP_ + "\n";
+	let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_ + "Numéro" + SEP_ + "Description" + SEP_ + "Date de création" + SEP_ + "En attente depuis" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArray.length; i++){
-		dataString = dataTagToJsonArray[i].id + SEP_ + removeDiacritics(dataTagToJsonArray[i].ref_tag) + SEP_ + removeDiacritics(dataTagToJsonArray[i].step) + SEP_ +  dataTagToJsonArray[i].oname + SEP_ +  dataTagToJsonArray[i].ofirstname + SEP_ + dataTagToJsonArray[i].ophone + SEP_ + dataTagToJsonArray[i].bcdescription + SEP_ + dataTagToJsonArray[i].create_date + SEP_ +   dataTagToJsonArray[i].diff_days + SEP_ ;
+		dataString = dataTagToJsonArray[i].id + SEP_ + removeDiacritics(dataTagToJsonArray[i].ref_tag) + SEP_ + removeDiacritics(dataTagToJsonArray[i].step) + SEP_ +  dataTagToJsonArray[i].oname + SEP_ +  dataTagToJsonArray[i].ofirstname + SEP_ + dataTagToJsonArray[i] + SEP_ + (dataTagToJsonArray[i].bcdescription == null ? '-' : dataTagToJsonArray[i].bcdescription) + SEP_ + dataTagToJsonArray[i].create_date + SEP_ +   dataTagToJsonArray[i].diff_days + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArray.length ? dataString+ "\n" : dataString;
 	}

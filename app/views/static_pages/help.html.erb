@@ -1,31 +1,39 @@
-<% provide(:title, "Help") %>
+<% provide(:title, "Aide") %>
 <h1>Aide</h1>
 <br><br><br>
 <div class="row">
     <div class="col-lg-2">
     </div>
-    <div class="col-lg-8 lorem-text">
+    <div class="col-lg-8 lorem-text lorem-inf">
 
-        MG Suivi a été optimisé pour <i class="fab fa-safari"></i> Safari et <i class="fab fa-chrome"></i> Chrome. Nous vous recommandons d'utiliser d'abord ces navigateurs si vous rencontrez un problème.<br><br>
-
+        MG Suivi a été optimisé pour <i class="fab fa-safari"></i> Safari et <i class="fab fa-chrome"></i> Chrome. Nous vous recommandons d'utiliser d'abord ces navigateurs si vous rencontrez un problème. Nous avons bien sûr prévu de l'optimiser aux autres navigateurs.<br><br>
+        Privilégiez les <i class="fas fa-tv"></i> écrans larges (ordinateur ou tablette) pour toutes les tâches d'organisation et de management.<br>
+        Privilégiez les <i class="fas fa-mobile-alt"></i> smartphones pour toutes tâches de marquage.<br><br>
+        <hr>
+        Si vous utilisez le marquage par <i class="fas fa-mobile-alt"></i> smartphone pour la première fois, MG Suivi va vous demander les autorisations de la caméra et la localisation.<br>
+        La géolocalisation dépent du niveau de suivi que vous voulez proposer. Vous pouvez évidemment la refuser. Cependant vous devrez autoriser l'accès caméra.
+        Il peut mettre un peu de temps à s'initialiser et mettre en cache les informations. Soyez patient.<br><br>
+        Si vous changez d'avis et que vous voulez autorisation la localisation (ou revenir sur l'autorisation de caméra), nous vous invitons à mettre à jour les autorisations directement dans le navigateur mobile.
+        <hr>
+        En cas de problème, <i class="far fa-sad-cry"></i> sachez que nous sommes navrés pour la gêne occasionnée et veuillez accepter toutes nos excuses.<br>
+        Pour vous aider à résoudre votre soucis veuillez remplir ce formulaire et nous contacter. <br><br><a href="https://forms.gle/DM6yp7mksqE753ht5" class="btn btn-md btn-default">Déclarer un problème ou un amélioration</a>
+        <hr>
+        <div class="help-title">Workflow Paris</div>
+        <%= image_tag("Flux Process PA V3.png", alt: "MGSuivi WF Paris", width: "800")%>
+        <hr>
+        <div class="help-title">Workflow Guangzhou</div>
+        <%= image_tag("Flux Process GZ1 V3.png", alt: "MGSuivi WF Paris", width: "800")%>
+        <hr>
         <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sodales orci eros, a tincidunt magna pulvinar ut. Proin ligula neque, elementum nec justo ut, faucibus rhoncus enim. Nullam blandit nisl arcu, a fermentum leo feugiat iaculis. Proin sed dignissim nulla, sed interdum quam. Mauris ac aliquam tortor. Vivamus in urna massa. In hac habitasse platea dictumst. Phasellus lacus nulla, lobortis ac blandit vitae, mollis sed nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum pharetra efficitur sodales. Donec est dolor, malesuada ac consequat et, dapibus eu tortor.
-
-        Phasellus eu tristique ipsum. Ut congue mi luctus posuere imperdiet. Vivamus elit nisi, consequat et mauris sed, hendrerit vulputate lorem. Sed metus nibh, placerat vel rhoncus sed, malesuada at ante. Suspendisse quis purus sed metus cursus pulvinar eu consequat elit. Phasellus iaculis neque quam, eu molestie turpis convallis vel. Nam eleifend scelerisque libero ut cursus. Donec faucibus ullamcorper lectus a bibendum. Mauris a arcu ac ipsum tincidunt dictum eu eget sapien.
-
-        In hac habitasse platea dictumst. Integer magna nibh, consectetur eget urna at, ultrices ultrices eros. Quisque euismod blandit enim ut tristique. Integer in lacus dapibus, ullamcorper ligula molestie, posuere nunc. Mauris lacinia odio ante, vitae imperdiet massa euismod in. Pellentesque sit amet tellus luctus, porta dolor nec, eleifend felis. Etiam sodales mattis leo, quis cursus velit lacinia eget. Integer elit nibh, tristique a leo nec, ultricies pellentesque tortor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer elementum erat elit, eu ullamcorper ante pulvinar et.
-
-        Mauris eleifend lacus at augue suscipit, vel laoreet lorem maximus. Nullam vitae massa quis elit pellentesque dictum. Maecenas non est vestibulum, venenatis ligula sit amet, eleifend nisl. Cras congue elementum nisl vitae iaculis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac nisi auctor, tincidunt tellus eu, lobortis neque. Nunc feugiat nibh vulputate, vehicula nisl nec, faucibus nulla. Vestibulum in nulla eget neque elementum egestas at auctor sem. Maecenas mattis sem magna, a interdum sapien aliquam quis. Aenean quis magna at ligula pharetra dapibus. Nulla at enim eu purus pellentesque pretium.
-
-        Morbi nec velit ornare, cursus tellus a, laoreet nisi. Donec sit amet vestibulum urna, at scelerisque odio. Aenean nunc neque, luctus sollicitudin elementum ut, viverra ac massa. Donec rutrum arcu quis consequat dictum. Suspendisse ultricies commodo condimentum. Quisque condimentum mauris est, eu dapibus est dapibus sed. Vivamus mattis diam malesuada, lacinia elit et, finibus nunc. Vestibulum luctus diam eget cursus tincidunt. In elementum tellus id nunc mollis elementum at et metus. Vestibulum rhoncus tempor justo, id mollis erat posuere ac. Phasellus id nibh risus. Etiam non cursus dolor. Vivamus consectetur tincidunt dolor, sed bibendum urna sagittis sed. Nunc et turpis accumsan erat fermentum luctus. Nulla tincidunt lorem ex, vitae finibus enim faucibus quis.
+        Code de vérification:
         <% if Rails.env.production? %>
-          notify prd !
+          notify prd28
         <% end %>
         <% if Rails.env.test? %>
-          notify test !
+          notify tst90
         <% end %>
         <% if Rails.env.development? %>
-          notify dev !
+          notify dev78
         <% end %>
         </p>
     </div>

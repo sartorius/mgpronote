@@ -45,7 +45,6 @@ INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Clien
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr, pickup_phone) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', '48 Rue de la Boétie, 93078 Les Pinsons de la Rivière', 'Box 762, Centre Riviera Malaza Tana 101', '0326711567');
-
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr, pickup_phone) VALUES (3, 'Fanny Service Transport', 'Exemple de transporteur 2', 'C', 1, '0764288678', '78 Rue de la Gare, 92304 Maison la Foire', 'Box 782, Centre La City Hazobe Tana 101', '0338919064');
 
 UPDATE ref_partner SET delivery_addr = 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I' WHERE id IN (2);
@@ -692,8 +691,8 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
 
 
-UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
-UPDATE users SET name = 'Mada techno mafy' WHERE email = 'njara.h@gmail.com';
+-- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
+-- UPDATE users SET name = 'Mada techno mafy' WHERE email = 'njara.h@gmail.com';
 
 -- Error to be solved Here
 -- UPDATE users set firstname = 'Rado' WHERE email = 'rado.r@gmail.com';

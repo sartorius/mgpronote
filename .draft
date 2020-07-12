@@ -1,6 +1,6 @@
 git pull origin master
 
-<input type="submit" name="formSubmit" id="btnVerify" class="btn btn btn-default btn-lg btn-block" value="Vérifier"/>
+<input type="submit" name="formSubmit" id="btnVerify" class="btn btn btn-alternative btn-lg btn-block" value="Vérifier"/>
 
 Parameters: {"authenticity_token"=>"qi8GbXLgzxhtAbDxZCtEBuX0X58rjOsmcwZ1C5aUkgyLlgP0cifw/qtj0Db9Eb2rgVzoZN/HWEe6pnfHEhQdSg==", "stepgeol"=>"N", "grpcheckcbpure"=>"[{\"id\":1,\"secure\":3301},{\"id\":2,\"secure\":4352}]", "grpcheckcbext"=>"[\"3222475413469\",\"3263851322913\"]"}
   User Load (1.1ms)  SELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2  [["id", 140], ["LIMIT", 1]]
@@ -18,3 +18,30 @@ CLI_COM_TAG
 
 heroku config --app mgsuivi-jdt-2046
 heroku config:set RACK_ENV=test RAILS_ENV=test
+
+/* Bootstrap */
+
+.btn-alternative{
+   color: white;
+   background-color:$main-color;
+   border-color:#130022;
+ }
+.btn.btn-alternative:hover,
+.btn.btn-alternative:focus,
+.btn.btn-alternative:active,
+.btn.btn-alternative.active {
+    color: #45007B;
+}
+
+.btn-alternative-light{
+   color: $main-color;
+   background-color:$main-color-light;
+   border-color:#130022;
+ }
+.btn.btn-alternative-light:hover,
+.btn.btn-alternative-light:focus,
+.btn.btn-alternative-light:active,
+.btn.btn-alternative-light.active {
+    color: #45007B;
+    background-color: $main-color-light-contrast;
+}

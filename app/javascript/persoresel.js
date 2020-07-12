@@ -94,6 +94,12 @@ function displayWorkflowClient(){
       if((disStepBCGrp <= parseInt(dataTagToJsonStepWFArray[i].id)) && (!neverDisplayBC)){
         disStep = disStep + chevron + disStepBC;
         neverDisplayBC = true;
+        // at this step the current i is lost if we are still strinctly inferior
+        // We do not want to display the same family
+        if(disStepBCGrp < parseInt(dataTagToJsonStepWFArray[i].id)){
+          // As greater we do not display selected
+          disStep = disStep + chevron + nspStart + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
+        }
       }
       else if(dataTagToJsonStepWFArray[i].common == true){
         disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? chevron + nspSelected : chevron + nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
@@ -218,7 +224,7 @@ function runjsPersoreselGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w glyphicon glyphicon-stop"></i>' : '<i class="c-b glyphicon glyphicon-move"></i>';
+                return (value == 'D') ? '<i class="c-w fas fa-box"></i>' : '<i class="c-b fas fa-truck"></i>';
               }
             },
             //Default width is auto
@@ -420,7 +426,7 @@ function runjsPartnerListGrid(){
               align: "left",
               width: 30,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w glyphicon glyphicon-stop"></i>' + '</button>';
+                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
               }
             },
             {
@@ -430,7 +436,7 @@ function runjsPartnerListGrid(){
               align: "left",
               width: 20,
               itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-primary btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b glyphicon glyphicon-move"></i>' + '</button>';
+                return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
               }
             }
         ]

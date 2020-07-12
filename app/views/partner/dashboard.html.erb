@@ -27,7 +27,7 @@
 
 <div class="row mgs-title">
   <div class="col-lg-12">
-    <h1>Manager</h1>
+    <h1><i class="fas fa-globe-africa"></i>&nbsp;Manager</h1>
   </div>
 </div>
 <i class="hid-display" id="max-print-const"><%= @maxPrintConstEnv.to_s %></i>
@@ -71,8 +71,8 @@
 </div>
 <% if @emptyResultSet %>
   <div class="col-sm-12 no-data">
-		<%= image_tag("empty800.png", alt: "MGSuivi empty", width: "125")%><br>
-    Désolé, nous n'avons pas trouvé de suivi. Si vous venez de nous rejoindre c'est normal !<br> Déjà, bienvenue ! Ensuite, vous pouvez commencer par dire à vos clients de créer leurs comptes et vous verrez vos premiers suivis.
+		<i class="fas fa-box-open"></i>&nbsp;
+    Désolé, nous n'avons pas trouvé de suivi. Si vous venez de nous rejoindre c'est normal !<br> Déjà, bienvenue ! Ensuite, nous vous invitons à dire à vos clients de créer leurs comptes et vous verrez vos premiers suivis.
   </div>
 <% end %>
 
@@ -96,8 +96,8 @@
 	</div>
 	<div class="col-sm-12 mgs-med-note">
 		<hr>
-		Le symbole&nbsp; <i class="c-w glyphicon glyphicon-stop"></i> &nbsp;indique que le paquet est une Livraison. Il doit être livré au local transporteur.<br>
-		Le symbole&nbsp; <i class="c-b glyphicon glyphicon-move"></i> &nbsp;indique que le paquet est un enlèvement. Le transporteur ira l'enlever à l'adresse indiquée.<br>
+		Le symbole&nbsp; <i class="c-w fas fa-box"></i> &nbsp;indique que le paquet est une Livraison. Il doit être livré au local transporteur.<br>
+		Le symbole&nbsp; <i class="c-b fas fa-truck"></i> &nbsp;indique que le paquet est un enlèvement. Le transporteur ira l'enlever à l'adresse indiquée.<br>
 		Le symbole&nbsp; <i class="glyphicon glyphicon-align-justify"></i>&nbsp; permet de selectionner les <%= (@maxPrintConstEnv.to_i + 1).to_s %> premiers éléments de la liste. Le maximum de suivi par impression étant limité à <%= (@maxPrintConstEnv.to_i + 1).to_s %>.<br>
 		Le symbole&nbsp; <i class="printed glyphicon glyphicon-print"></i>&nbsp; va apparaître sur la ligne dans la colonne client dès que vous aurez imprimé la référence. Il disparaîtra si vous rechargez la page.
 	</div>
