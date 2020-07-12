@@ -38,14 +38,14 @@
               <div class="mgs-bg-scan col-sm-12">
 
                   <% if !@checkBCIndicator.nil? %>
-                  <button id="startButton" type="button" class="btn btn-lg btn-block btn-default-light">
-                    Vérifier &nbsp; <i class="far fa-check-square"></i>
+                  <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                    <i class="fas fa-binoculars"></i> &nbsp; Vérifier
                   <% elsif !@grpIndicator.nil? %>
                   <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
-                    Grouper &nbsp; <i class="fas fa-layer-group"></i>
+                    <i class="fas fa-layer-group"></i> &nbsp; Grouper
                   <% else %>
-                    <button id="startButton" type="button" class="btn btn-lg btn-block btn-default-light">
-                      Marquer &nbsp; <i class="fas fa-camera-retro"></i>
+                    <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                      <i class="glyphicon glyphicon-barcode"></i> &nbsp; Marquer
                   <% end %>
                 </button>
 
