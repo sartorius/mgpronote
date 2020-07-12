@@ -14,3 +14,7 @@ CLI_GRPSTEP_TAG_PURE
 
 OK CLI_STEP_TAG
 CLI_COM_TAG
+
+
+heroku config --app mgsuivi-jdt-2046
+heroku config:set RACK_ENV=test RAILS_ENV=test
