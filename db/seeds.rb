@@ -1,5 +1,5 @@
 
-
+=begin
 # Create a main sample user.
 User.create!(name:  "Ratinahirana",
              firstname: "Herinirina",
@@ -11,7 +11,8 @@ User.create!(name:  "Ratinahirana",
              activated: true,
              activated_at: Time.zone.now)
 
-=begin
+
+
 # Client
 User.create!(name:  "Rakotoarinia",
             firstname: "Toky",
@@ -23,8 +24,9 @@ User.create!(name:  "Rakotoarinia",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
+=end
 # Revendeur
-User.create!(name:  "Hexagone",
+User.create!(name:  "Mada Techno Mafy",
             firstname: "Njara",
             email: "njara.h@gmail.com",
             password:              "madagascar12",
@@ -35,21 +37,9 @@ User.create!(name:  "Hexagone",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-# Patron
-User.create!(name:  "Rakotomalala",
-            firstname: "Mamy",
-            email: "mamy.r@gmail.com",
-            password:              "madagascar12",
-            password_confirmation: "madagascar12",
-            phone: "0612345678",
-            admin:     false,
-            partner:   2,
-            incharge:     true,
-            activated: true,
-            activated_at: Time.zone.now)
 
 
-
+=begin
 # Patron
 User.create!(name:  "Rabemanara",
             firstname: "Fanny",
@@ -63,7 +53,21 @@ User.create!(name:  "Rabemanara",
             activated: true,
             activated_at: Time.zone.now)
 
-=begin
+=end
+
+# Patron
+User.create!(name:  "Rakotomalala",
+            firstname: "Mamy",
+            email: "mamy.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0612345678",
+            admin:     false,
+            partner:   2,
+            incharge:     true,
+            activated: true,
+            activated_at: Time.zone.now)
+
 # Livreur Receptionnaur
 User.create!(name:  "Razanamalaza",
             firstname: "Rado",
@@ -77,12 +81,23 @@ User.create!(name:  "Razanamalaza",
             activated: true,
             activated_at: Time.zone.now)
 
-
+# Livreur Receptionnaur
+User.create!(name:  "Rakotobe",
+            firstname: "Faly",
+            email: "faly.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0322345690",
+            admin:     false,
+            partner:   2,
+            incharge:     false,
+            activated: true,
+            activated_at: Time.zone.now)
 
 ###########################################################################
 # Bunch of Clients
 # Client
-User.create!(name:  "De la Cannelle",
+User.create!(name:  "Delamare",
             firstname: "Tsiky",
             email: "tsiky.d@gmail.com",
             password:              "madagascar12",
@@ -116,7 +131,7 @@ User.create!(name:  "Rakoto",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-
+=begin
 # Client
 User.create!(name:  "Ramilison",
             firstname: "Mila",
