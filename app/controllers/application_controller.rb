@@ -126,4 +126,31 @@ class ApplicationController < ActionController::Base
 
   end
 
+  # Mailer
+  def sendPlainEmail(to_addr, subject, msg)
+    Mailjet.configure do |config|
+      config.api_key = ENV['MJ_APIKEY_PUBLIC']
+      config.secret_key = ENV['MJ_APIKEY_PRIVATE']
+      config.api_version = "v3.1"
+    end
+    variable = Mailjet::Send.create(messages: [{
+        'From'=> {
+            'Email'=> ENV['MJ_SEND_MAIL'],
+            'Name'=> 'MG Suivi notification'
+        },
+        'To'=> [
+            {
+                'Email'=> to_addr,
+                'Name'=> 'Utilisateur.rice'
+            }
+        ],
+        'Subject' => 'MGS: ' + subject,
+        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! ' + msg + ' Ne répondez pas à cet email. Il ne sera pas lu.',
+        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! <br>' + msg + '<br>Ne répondez pas à cet email. Il ne sera pas lu.'
+    }]
+    )
+    p variable.attributes['Messages']
+
+  end
+
 end

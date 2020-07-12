@@ -55,11 +55,21 @@ class ClientController < ApplicationController
       if @resultSet[0]['cli_add_clt'].to_s == '0' then
         message  = "L'utilisateur "+ params[:email] +" a été bien ajouté à votre liste de clients"
         flash.now[:success] = message
+
+        # Notify the client
+
+        sendPlainEmail(params[:email],
+                        'votre compte a été ajouté par un partenaire transporteur',
+                        'Félicitation ! Un partenaire de MG Suivi vous a ajouté dans sa liste de client. Vous pouvez dès à présent créer des suivis pour tracer vos achats que vous faites parvenir par ce transporteur. Connectez-vous vite sur MG Suivi. ')
+
+
       elsif @resultSet[0]['cli_add_clt'].to_s == '1' then
-        message  = "L'utilisateur "+ params[:email] +" n'existe pas. Assurez vous d'avoir le bon email. "
-        message += "Demandez à votre client s'il a bien créé son compte que son compte est activé. "
-        message += "Il reçoit son lien d'activation par email."
+        message  = "L'utilisateur "+ params[:email] +" n'existe pas sur MG Suivi. Assurez vous d'avoir le bon email. "
+        message += "Demandez à votre client s'il a bien créé son compte et que son compte est activé. "
         flash.now[:danger] = message
+
+        # Notify the client
+
       elsif @resultSet[0]['cli_add_clt'].to_s == '2' then
         message  = "L'utilisateur "+ params[:email] +" existe déja dans votre liste de clients. "
         flash.now[:warning] = message
