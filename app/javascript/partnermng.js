@@ -107,13 +107,16 @@ function displayWorkflowClient(){
       else if(dataTagToJsonStepWFArray[i].common == true){
         disStep = disStep + ((parseInt(dataTagToJsonStepWFArray[i].id) < disStepBCGrp) ? chevron + nspSelected : chevron + nspStart) + dataTagToJsonStepWFArray[i].grp_step + nspEnd;
       }
-      else{
-        //do nothing
-      }
+
       // We add chevron, we do not want to start with value
       chevron = '<i class="glyphicon glyphicon-chevron-right"></i>';
     }
 
+  }
+
+  if (!neverDisplayBC){
+    disStep = disStep + chevron + disStepBC;
+    //do nothing
   }
   $("#disp-step").html(disStep);
 }

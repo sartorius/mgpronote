@@ -111,6 +111,10 @@ function displayWorkflowClient(){
       chevron = '<i class="glyphicon glyphicon-chevron-right"></i>';
     }
   }
+  if (!neverDisplayBC){
+    disStep = disStep + chevron + disStepBC;
+    //do nothing
+  }
   $("#disp-step").html(disStep);
 }
 
