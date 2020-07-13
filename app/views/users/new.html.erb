@@ -3,7 +3,9 @@
 <div id="mg-graph-identifier">formuser-gr</div>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
     <%= form_with(model: @user, local: true) do |f| %>
       <%= render 'shared/error_messages' %>
 
@@ -51,5 +53,11 @@
       Nous ne vous demandons que les informations essentielles. Le but est de pouvoir identifier et contacter le plus facilement le propriétaire du paquet. En dehors du transporteur qui doit vous acheminer votre paquet, nous ne partagerons jamais vos informations. Le transporteur signe une charte de confidentialité sur l'utilisation de vos données. Vous avez le droit de nous demander les informations que nous possédons vous concernants.
     </div>
   </div>
+  <div class="col-md-3">
+    <div class="crt-block">Les données</div>
 
+    <div class="t-of-use mgs-med-note">
+      Nous avons réduis au minimum les données à nous fournir. Ces informations ne seront pas partagés et vous ne serez pas spammé.<br><br> Nous savons que c'est pénible pour tout le monde de créer un compte. Mais nous savons aussi que c'est une source de stress de commander à distance.<br><br>Surtout si on vit à <i class="icon-rova5"></i> Madagascar. <strong>Mais on vous assure que ça en vaut la peine.</strong>
+    </div>
+  </div>
 </div>
