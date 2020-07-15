@@ -248,7 +248,7 @@ function runjsClientGrid(){
           headercss: "h-jsG-l"
         },
         { name: "totalbc",
-          title: '<i class="glyphicon glyphicon-list-alt"></i>',
+          title: '<i class="far fa-list-alt"></i>',
           type: "number",
           width: 18,
           headercss: "h-jsG-r",
@@ -258,7 +258,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 35,
@@ -268,7 +268,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 20,
@@ -278,12 +278,12 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          title: '<i class="far fa-copy"></i>',
           type: "string",
           align: "left",
           width: 25,
           itemTemplate: function(value, item) {
-            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="glyphicon glyphicon-remove"></i>' : '<i class="glyphicon glyphicon-duplicate"></i>') + '</button>';
+            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="far fa-times-circle"></i>' : '<i class="far fa-copy"></i>') + '</button>';
           }
         }
     ]
@@ -330,7 +330,7 @@ function runjsClientGrid(){
           }
         },
         { name: "totalbc",
-          title: '<i class="glyphicon glyphicon-list-alt"></i>',
+          title: '<i class="far fa-list-alt"></i>',
           type: "number",
           width: 18,
           headercss: "h-jsG-r",
@@ -339,19 +339,19 @@ function runjsClientGrid(){
           }
         },
         { name: "poc",
-          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          title: '<i class="far fa-copy"></i>',
           type: "string",
           align: "center",
           width: 10,
           itemTemplate: function(value, item) {
-            return value ? '<i class="glyphicon glyphicon-ok"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
+            return value ? '<i class="fas fa-check-square"></i>' : '<i class="far fa-times-circle"></i>';
           }
         },
         //Default width is auto
         { name: "since", title: "Client.e depuis le", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 35,
@@ -361,7 +361,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 20,
@@ -371,12 +371,12 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-duplicate"></i>',
+          title: '<i class="far fa-copy"></i>',
           type: "string",
           align: "left",
           width: 25,
           itemTemplate: function(value, item) {
-            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="glyphicon glyphicon-remove"></i>' : '<i class="glyphicon glyphicon-duplicate"></i>') + '</button>';
+            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="far fa-times-circle"></i>' : '<i class="far fa-copy"></i>') + '</button>';
           }
         }
     ]

@@ -14,21 +14,21 @@
 					Grouper impossible
 				</h1>
 			</div>
-      <div class="crt-block">Règles à respecter&nbsp;<i class="glyphicon glyphicon-remove"></i></div>
+      <div class="crt-block">Règles à respecter&nbsp;<i class="far fa-times-circle"></i></div>
       <div class="t-of-use mgs-med-note-imp">
         Pour évoluer ensemble, ces codes barres doivent <strong>tous</strong> être :<br>
-        <strong>Reconnus, sans incident en cours, de même status et de même workflow&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+        <strong>Reconnus, sans incident en cours, de même status et de même workflow&nbsp;<i class="fas fa-skull-crossbones"></i></strong>
         <hr>
         <% if @need_to_feedback_incident_exists %>
-          <br>Les codes barres ci-dessous ont un incident <i class="glyphicon glyphicon-info-sign"></i>
+          <br>Les codes barres ci-dessous ont un incident <i class="fas fa-info-circle"></i>
         <% end %>
 
         <% if @need_to_feedback_next_weight %>
-          <br>La prochaine étape obligatoire est la <strong>pesée</strong>. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+          <br>La prochaine étape obligatoire est la <strong>pesée</strong>. Cette action ne peut être groupée. <i class="fas fa-info-circle"></i>
         <% end %>
 
 				<% if @need_to_feedback_next_terminated %>
-          <br>La prochaine étape est la <strong>remise au client</strong>. Cette action ne peut être groupée. <i class="glyphicon glyphicon-info-sign"></i>
+          <br>La prochaine étape est la <strong>remise au client</strong>. Cette action ne peut être groupée. <i class="fas fa-info-circle"></i>
         <% end %>
       </div>
     </div>
@@ -80,7 +80,7 @@
     <div class="col-lg-3">
     </div>
     <div class="col-lg-6">
-      <div class="crt-block">Non reconnu&nbsp;<i class="glyphicon glyphicon-barcode"></i></div>
+      <div class="crt-block">Non reconnu&nbsp;<i class="fas fa-qrcode"></i></div>
       <div class="t-of-use mgs-med-note-imp">
         Les codes barres suivants sont manquants ou non reconnus :<br>
         <hr>

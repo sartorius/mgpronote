@@ -1,0 +1,5 @@
+<%# MOBILE %>
+<li class="nav-item"><%= link_to current_user, class: "nav-link" do %><i class="fas fa-user-circle"></i>&nbsp;Profil<% end %></li>
+<li class="nav-item">
+  <%= link_to "Déconnexion", logout_path, class: "nav-link", method: :delete %>
+</li>

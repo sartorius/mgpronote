@@ -1,0 +1,131 @@
+<nav>
+  <div class="navbar-header">
+
+    <button class="navbar-toggle collapsed" type="button"
+            data-toggle="collapse"
+            data-target="#bs-example-navbar-collapse-1"
+            aria-expanded="false"
+
+            aria-controls="navbarSupportedContent"
+            aria-label="Toggle navigation"
+
+            >
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav ml-auto d-inline-block">
+
+
+        <%# Remove the HOME_LINK As I don't want it on mobile %>
+        <% unless (mobile_device == "mobile") && is_partner?  %>
+          <li class="nav-item"><%= link_to "Home", root_path %></li>
+        <% end %>
+        <% if logged_in? %>
+            <%# Is logged in %>
+            <% unless (mobile_device == "mobile")  %>
+                  <% if is_partner? %>
+                      <%# I am a partner not in mobile %>
+
+                      <%# After test phase we need to remove this %>
+                      <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
+                      <li class="nav-item"><%= link_to 'Marquer'.html_safe, getnext_path %></li>
+
+                      <li class="nav-item"><%= link_to grpgetnext_path do %><i class="fas fa-layer-group"></i>&nbsp;Grouper<% end %></li>
+
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                          Partenaire <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+
+                          <li class="nav-item"><%= link_to dashboard_path do %><i class="fas fa-globe-africa"></i>&nbsp;Manager de suivi<% end %></li>
+                          <li class="nav-item"><%= link_to mainstatistics_path do %><i class="fas fa-chart-bar"></i>&nbsp;Statistiques<% end %></li>
+
+                          <li class="divider"></li>
+                          <li class="nav-item"><%= link_to "Manager de Client", clientmng_path %></li>
+                          <li class="nav-item"><%= link_to signnewclient_path do %><i class="fas fa-plus-square"></i>&nbsp;Nouveau client<% end %></li>
+                          <li class="divider"></li>
+                          <li class="nav-item"><%= link_to "Aide", help_path %></li>
+                        </ul>
+                      </li class="nav-item">
+                    <% else %>
+                        <%# I am a not a partner not in mobile %>
+                        <li class="nav-item"><%= link_to "Créer un suivi", getmypartnerlist_path %></li>
+                        <li class="nav-item"><%= link_to "Mes suivis", persoreseldash_path %></li>
+                    <% end %>
+            <% else %>
+              <%# I am on mobile %>
+              <% if is_partner? %>
+                  <li class="nav-item"><%= link_to "Vérifier", checkbc_path %></li>
+                  <li class="nav-item"><%= link_to "Marquer", getnext_path %></li>
+                  <li class="nav-item"><%= link_to grpgetnext_path do %><i class="fas fa-layer-group"></i>&nbsp;Grouper<% end %></li>
+                  <li class="nav-item navzebra"><%= link_to "Clients", clientmng_path %></li>
+                  <li class="nav-item"><%= link_to signnewclient_path do %><i class="fas fa-plus-square"></i>&nbsp;Nouveau client<% end %></li>
+              <% end %>
+            <% end %>
+
+        <% else %>
+          <%# Not logged in %>
+
+          <% unless (mobile_device == "mobile")  %>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  Découvrir <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li class="nav-item"><%= link_to "Les avantages de MG Suivi", why_path %></li>
+                  <li class="divider"></li>
+                  <li class="nav-item"><%= link_to howtouse_path do %><i class="fas fa-bolt"></i>&nbsp;Utiliser MGSuivi<% end %></li>
+                  <li class="nav-item"><%= link_to letsbepartners_path do %><i class="fas fa-box-open"></i>&nbsp;Devenir partenaire<% end %></li>
+                </ul>
+              </li class="nav-item">
+          <% else %>
+              <li class="nav-item"><%= link_to "Les avantages de MG Suivi", why_path %></li>
+              <li class="nav-item"><%= link_to "Utiliser MGSuivi", howtouse_path %></li>
+              <li class="nav-item"><%= link_to "Devenir partenaire", letsbepartners_path %></li>
+          <% end %>
+
+        <% end %>
+
+        <% if logged_in? %>
+
+
+            <% if false %>
+              code to comment for admin
+              <li class="nav-item"><%= link_to "Users", users_path %></li>
+            <% end %>
+
+            <% if (mobile_device == "mobile")  %>
+              <%# MOBILE %>
+              <li class="nav-item"><%= link_to current_user do %><i class="fas fa-user-circle"></i>&nbsp;Profil<% end %></li>
+              <li class="nav-item">
+                <%= link_to "Déconnexion", logout_path, method: :delete %>
+              </li>
+            <% else %>
+
+                <%# !MOBILE %>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <%= @current_user.firstname.to_s %> <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="nav-item"><%= link_to current_user do %><i class="fas fa-user-circle"></i>&nbsp;Profil<% end %></li>
+                    <li class="divider"></li>
+                    <li class="nav-item">
+                      <%= link_to "Déconnexion", logout_path, method: :delete %>
+                    </li>
+                  </ul>
+                </li class="nav-item">
+
+            <% end %>
+        <% else %>
+            <li class="nav-item"><%= link_to "Se connecter", login_path %></li>
+        <% end %>
+      </ul>
+  </div>
+</nav>

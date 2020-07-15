@@ -367,7 +367,7 @@ function displayNext(isGrp){
 }
 
 function strbadge(str){
-  return '<span class="big-step-history"><i class="glyphicon glyphicon-chevron-right"></i>&nbsp;' + str + '</span>';
+  return '<span class="big-step-history"><i class="fas fa-chevron-circle-right"></i>&nbsp;' + str + '</span>';
 }
 
 /* -------------------------------------------------------------------------- */
@@ -387,14 +387,14 @@ function loadBCTag(){
             resulTag = resulTag + 'Localisation indisponible ou refusée.';
           }
           else{
-            resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="glyphicon glyphicon-eye-open"></i></a>';
+            resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="fas fa-eye"></i></a>';
           }
-          resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
-          resulTag = resulTag + '<br><span class="mg-color"><i class="glyphicon glyphicon-barcode"></i> Opéré par ' + mgsEncodeClientRef(dataTagToJsonArray[i].firstname, dataTagToJsonArray[i].uid, dataTagToJsonArray[i].uclient_ref) + "</span><br>";
+          resulTag = resulTag + '<br><span class="mg-color"><i class="fas fa-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
+          resulTag = resulTag + '<br><span class="mg-color"><i class="fas fa-qrcode"></i> Opéré par ' + mgsEncodeClientRef(dataTagToJsonArray[i].firstname, dataTagToJsonArray[i].uid, dataTagToJsonArray[i].uclient_ref) + "</span><br>";
 
           if (((dataTagToJsonArray[i].com != null)) &&
                   (dataTagToJsonArray[i].com != '')) {
-            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="glyphicon glyphicon-barcode"></i>&nbsp;Taggué par: ' + mgsEncodeClientRef(dataTagToJsonArray[i].ucomfirstname, dataTagToJsonArray[i].ucomid, dataTagToJsonArray[i].ucomclient_ref) + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
+            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="fas fa-exclamation-triangle"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="fas fa-qrcode"></i>&nbsp;Taggué par: ' + mgsEncodeClientRef(dataTagToJsonArray[i].ucomfirstname, dataTagToJsonArray[i].ucomid, dataTagToJsonArray[i].ucomclient_ref) + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
           }
           resulTag = resulTag + "<hr>";
     }

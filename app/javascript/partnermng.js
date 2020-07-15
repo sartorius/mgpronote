@@ -109,7 +109,7 @@ function displayWorkflowClient(){
       }
 
       // We add chevron, we do not want to start with value
-      chevron = '<i class="glyphicon glyphicon-chevron-right"></i>';
+      chevron = '<i class="fas fa-chevron-circle-right"></i>';
     }
 
   }
@@ -490,7 +490,7 @@ function runjsPartnerGrid(){
           }
         },
         { name: "type_pack",
-          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "text",
           align: "center",
           width: 10,
@@ -507,7 +507,7 @@ function runjsPartnerGrid(){
           width: 38,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
-            return ((item.ald_print == 'Y') ? value + '&nbsp;<i class="printed glyphicon glyphicon-print"></i>' : value);
+            return ((item.ald_print == 'Y') ? value + '&nbsp;<i class="printed fas fa-print"></i>' : value);
           }
         },
         {
@@ -522,16 +522,16 @@ function runjsPartnerGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-print"></i>',
+          title: '<i class="fas fa-print"></i>',
           type: "string",
           align: "left",
           width: 25,
           itemTemplate: function(value, item) {
-            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="glyphicon glyphicon-print"></i>' + '</button>';
+            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-print"></i>' + '</button>';
           }
         },
         { name: "diff_days",
-          title: '<i class="glyphicon glyphicon-time"></i>',
+          title: '<i class="fas fa-stopwatch"></i>',
           type: "number",
           width: 3,
           headercss: "h-jsG-c",
@@ -559,7 +559,7 @@ function runjsPartnerGrid(){
           }
         },
         { name: "type_pack",
-          title: '<i class="glyphicon glyphicon-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "text",
           align: "center",
           width: 10,
@@ -576,7 +576,7 @@ function runjsPartnerGrid(){
           width: 38,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
-            return ((item.ald_print == 'Y') ? value + '&nbsp;<i class="printed glyphicon glyphicon-print"></i>' : value);
+            return ((item.ald_print == 'Y') ? value + '&nbsp;<i class="printed fas fa-print"></i>' : value);
           }
         },
         {
@@ -617,7 +617,7 @@ function runjsPartnerGrid(){
         },
         {
           name: "id",
-          title: '<i class="glyphicon glyphicon-print"></i>',
+          title: '<i class="fas fa-print"></i>',
           type: "string",
           align: "left",
           width: 25,
@@ -625,11 +625,11 @@ function runjsPartnerGrid(){
             // print U is for Unpring
             // print P is for Print
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="glyphicon glyphicon-print"></i>' + '</button>';
+            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-print"></i>' + '</button>';
           }
         },
         { name: "diff_days",
-          title: '<i class="glyphicon glyphicon-time"></i>',
+          title: '<i class="fas fa-stopwatch"></i>',
           type: "number",
           width: 3,
           headercss: "h-jsG-c",

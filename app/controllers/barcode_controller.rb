@@ -1,6 +1,6 @@
 class BarcodeController < ApplicationController
   require 'json'
-  before_action :mgs_user_is_partner, :except => [:checkbc, :checkstep]
+  before_action :mgs_user_is_partner, :except => [:checkbc, :checkstephome]
   # skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
 
   # Get the next step BC
@@ -586,7 +586,7 @@ class BarcodeController < ApplicationController
   def checkstephome
     @checkBCFromHome = 1
     checkstep
-    
+
   end
 
   # checkstep/savebc

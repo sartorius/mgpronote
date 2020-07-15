@@ -1,4 +1,20 @@
 
+$main-color-link: #57009f;
+$main-color-active: #e8cdff;
+
+
+
+@media (min-width:1000px){
+  .navbar{
+    padding-left: 70px;
+    padding-right: 70px;
+  }
+}
+
+.navbar{
+  font-size: 15px;
+}
+
 /* Nav bar */
 .navbar-inverse{
   background-color: #F9F5FA;
@@ -15,28 +31,30 @@
   background-color: transparent;
 }
 
+.dropdown-menu > a{
+  color: #565656;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.dropdown-menu > a:hover,
+.dropdown-menu > a:focus,
+.dropdown-menu > a:active{
+  text-decoration: none;
+  color: $main-color-link;
+}
+
+.dropdown-menu > a:active {
+  background-color: $main-color-active;
+}
+
+.dropdown-toggle:focus {
+    outline: none !important;
+}
+
+
 .navbar-toggle{
   background-color: #C6B2D8;
-}
-
-
-// This is the current bootstrap triggering hamburger menu
-@media (max-width:600px){
-  .navbar-collapse{
-    padding-top: 10px;
-    padding-left: 0px;
-  }
-  .navbar-nav{
-    float: right;
-    font-size: 18px;
-    width: 100%;
-  }
-}
-
-
-
-.navbar-nav{
-  float: right;
 }
 
 .navzebra {

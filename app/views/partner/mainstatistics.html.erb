@@ -1,7 +1,9 @@
 <% provide(:title, "Statistiques") %>
+<div id="mg-graph-identifier">parmstat-gr</div>
+
 <%= render 'partner/partnerutils' %>
 <h1><i class="fas fa-chart-bar"></i>&nbsp;Statistiques</h1>
-<div id="mg-graph-identifier">parmstat-gr</div>
+<br><br>
 <% if @resultSet.nil? %>
 	//Error
   <script>

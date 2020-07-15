@@ -24,7 +24,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
 </style>
-
 <div class="row mgs-title">
   <div class="col-lg-12">
     <h1><i class="fas fa-globe-africa"></i>&nbsp;Manager</h1>
@@ -36,17 +35,17 @@
 		<div class="row filter-banner" id="filter-block">
 			<div class="col-sm-2 fil-el">
 				<button id="print-dash" type="button" class="btn btn-md btn-block btn-default">
-					imprimer <i id="count-print"></i> &nbsp; <i class="glyphicon glyphicon-print"></i>
+					imprimer <i id="count-print"></i> &nbsp; <i class="fas fa-print"></i>
 				</button>
 		  </div>
 			<div class="col-sm-1 fil-el">
 				<button id="all-print-dash" type="button" class="btn btn-md btn-block btn-default">
-					<i class="glyphicon glyphicon-align-justify"></i>
+					<i class="fas fa-bars"></i>
 				</button>
 			</div>
 			<div class="col-sm-1 fil-el">
 				<button id="re-init-print-dash" type="button" class="btn btn-md btn-block btn-default">
-					<i class="glyphicon glyphicon-remove"></i>
+					<i class="far fa-times-circle"></i>
 				</button>
 			</div>
 
@@ -59,7 +58,7 @@
 		  </div>
 			<div class="col-sm-1 fil-el">
 				<button id="re-init-dash" type="button" class="btn btn-md btn-block btn-default">
-					<i class="glyphicon glyphicon-refresh"></i>
+					<i class="fas fa-sync-alt"></i>
 				</button>
 
 			</div>
@@ -91,15 +90,15 @@
 	<div class="col-lg-3">
 	</div>
 	<div class="col-lg-3">
-			<button id="mgs-dash-print-csv" class="btn btn-default-light btn-md btn-block">Exporter CSV &nbsp; <i class="glyphicon glyphicon-th"></i>
+			<button id="mgs-dash-print-csv" class="btn btn-default-light btn-md btn-block">Exporter CSV &nbsp; <i class="fas fa-th"></i>
 			</button>
 	</div>
 	<div class="col-sm-12 mgs-med-note">
 		<hr>
 		Le symbole&nbsp; <i class="c-w fas fa-box"></i> &nbsp;indique que le paquet est une Livraison. Il doit être livré au local transporteur.<br>
 		Le symbole&nbsp; <i class="c-b fas fa-truck"></i> &nbsp;indique que le paquet est un enlèvement. Le transporteur ira l'enlever à l'adresse indiquée.<br>
-		Le symbole&nbsp; <i class="glyphicon glyphicon-align-justify"></i>&nbsp; permet de selectionner les <%= (@maxPrintConstEnv.to_i + 1).to_s %> premiers éléments de la liste. Le maximum de suivi par impression étant limité à <%= (@maxPrintConstEnv.to_i + 1).to_s %>.<br>
-		Le symbole&nbsp; <i class="printed glyphicon glyphicon-print"></i>&nbsp; va apparaître sur la ligne dans la colonne client dès que vous aurez imprimé la référence. Il disparaîtra si vous rechargez la page.
+		Le symbole&nbsp; <i class="fas fa-bars"></i>&nbsp; permet de selectionner les <%= (@maxPrintConstEnv.to_i + 1).to_s %> premiers éléments de la liste. Le maximum de suivi par impression étant limité à <%= (@maxPrintConstEnv.to_i + 1).to_s %>.<br>
+		Le symbole&nbsp; <i class="printed fas fa-print"></i>&nbsp; va apparaître sur la ligne dans la colonne client dès que vous aurez imprimé la référence. Il disparaîtra si vous rechargez la page.
 	</div>
 </div>
 

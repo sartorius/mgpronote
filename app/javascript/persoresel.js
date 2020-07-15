@@ -108,7 +108,7 @@ function displayWorkflowClient(){
         //do nothing
       }
       // We add chevron, we do not want to start with value
-      chevron = '<i class="glyphicon glyphicon-chevron-right"></i>';
+      chevron = '<i class="fas fa-chevron-circle-right"></i>';
     }
   }
   if (!neverDisplayBC){
@@ -212,17 +212,17 @@ function runjsPersoreselGrid(){
               }
             },
             { name: "status",
-              title: '<i class="glyphicon glyphicon-edit"></i>',
+              title: '<i class="far fa-edit"></i>',
               type: "text",
               align: "center",
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return ((value == '3') && (item.type_pack == 'P')) ? '<i class="mgs-red glyphicon glyphicon-pencil"></i>' : '<i class="glyphicon glyphicon-remove"></i>';
+                return ((value == '3') && (item.type_pack == 'P')) ? '<i class="mgs-red fas fa-pen-square"></i>' : '<i class="far fa-times-circle"></i>';
               }
             },
             { name: "type_pack",
-              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              title: '<i class="fas fa-qrcode"></i>',
               type: "text",
               align: "center",
               width: 10,
@@ -251,7 +251,7 @@ function runjsPersoreselGrid(){
             },
             { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
             { name: "diff_days",
-              title: '<i class="glyphicon glyphicon-time"></i>',
+              title: '<i class="fas fa-stopwatch"></i>',
               type: "number",
               width: 3,
               headercss: "h-jsG-c",
@@ -415,7 +415,7 @@ function runjsPartnerListGrid(){
             { name: "rp_desc", title: "Description", type: "text", align: "right", width: 100, headercss: "h-jsG-r" },
             { name: "since", title: "Inscrit depuis", type: "text", align: "right", headercss: "h-jsG-r" },
             { name: "totalbc",
-              title: '<i class="glyphicon glyphicon-list-alt"></i>',
+              title: '<i class="far fa-list-alt"></i>',
               type: "number",
               width: 18,
               headercss: "h-jsG-r",
@@ -425,7 +425,7 @@ function runjsPartnerListGrid(){
             },
             {
               name: "id",
-              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              title: '<i class="fas fa-qrcode"></i>',
               type: "string",
               align: "left",
               width: 30,
@@ -435,7 +435,7 @@ function runjsPartnerListGrid(){
             },
             {
               name: "id",
-              title: '<i class="glyphicon glyphicon-barcode"></i>',
+              title: '<i class="fas fa-qrcode"></i>',
               type: "string",
               align: "left",
               width: 20,

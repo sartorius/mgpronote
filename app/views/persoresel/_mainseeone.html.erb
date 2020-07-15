@@ -34,7 +34,7 @@
     <% if @screenClient %>
 
       <button id="disp-add-info" type="button" class="btn btn-md btn-block btn-default">
-        Gérer information additionnel&nbsp; <i class="glyphicon glyphicon-th"></i>
+        Gérer information additionnel&nbsp; <i class="fas fa-th"></i>
       </button>
     <% end %>
     <div class="crt-block">Création</div>
@@ -50,7 +50,7 @@
     <div class="crt-block">Expiration</div>
     <div class="t-of-use mgs-med-note">
       Pour des raisons de charge de volumes les suivis terminés (donc remis au client final) expirent et disparaissent au bout de un mois.
-      <strong>Si vous désirez conserver ces informations, nous vous invitons à régulièrement exporter vers Excel vos suivis terminés&nbsp;<i class="glyphicon glyphicon-warning-sign"></i></strong>
+      <strong>Si vous désirez conserver ces informations, nous vous invitons à régulièrement exporter vers Excel vos suivis terminés&nbsp;<i class="fas fa-skull-crossbones"></i></strong>
     </div>
 
   </div>
@@ -106,7 +106,7 @@
           <%= @resultSet[0]['delivery_addr'].split('@')[1].upcase %>
         </div>
         <div class="t-of-use mgs-med-note-imp">
-          <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
+          <strong><i class="fas fa-skull-crossbones"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
            votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong>.
           Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
           <strong>Chaque client a son code de référence unique et il ne doit pas être partagé.</strong>
@@ -165,7 +165,7 @@
 
       <div class="crt-block">Vérification</div>
       <div class="t-of-use mgs-med-note-imp">
-        <strong><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Confidentiel</strong>&nbsp;
+        <strong><i class="fas fa-skull-crossbones"></i>&nbsp;Confidentiel</strong>&nbsp;
         La remise en main propre: il sera demandé la pièce d'identité mais aussi ce code. Il ne doit pas être partagé. Seul vous pouvez le connaître.
       </div>
       <label>Code de vérification</label><br>
