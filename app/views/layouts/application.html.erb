@@ -7,8 +7,6 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-
-
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= render 'layouts/dirtyutils' %>
@@ -23,13 +21,15 @@
       </div>
     <%# END Loading element %>
 
-
+    <%= render 'layouts/header' %>
     <div class="container">
-      <%= render 'layouts/header' %>
 
-      <% flash.each do |message_type, message| %>
-        <div class="alert alert-<%= message_type %>"><%= message %></div>
-      <% end %>
+
+      <div>
+        <% flash.each do |message_type, message| %>
+          <div class="alert alert-<%= message_type %>"><%= message %></div>
+        <% end %>
+      </div>
 
       <%= yield %>
 

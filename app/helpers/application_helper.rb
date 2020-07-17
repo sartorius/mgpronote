@@ -2,7 +2,6 @@ module ApplicationHelper
 
 
   # We use base 35 and replace O by Z to avoid zero
-  # This method duplicate in Application Controller !!!
   def encode_client_ref(fname, id, ref)
     if fname.length == 1 then
       return  (fname[0..0] + 'X-' + (id.to_s + ref.to_s.rjust(3, "0")).to_i.to_s(35)).upcase.upcase.gsub(/O/, 'Z')

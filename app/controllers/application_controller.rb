@@ -142,8 +142,8 @@ class ApplicationController < ActionController::Base
             }
         ],
         'Subject' => 'MGS: ' + subject,
-        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! ' + msg + ' Ne répondez pas à cet email. Il ne sera pas lu.',
-        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! <br>' + msg + '<br>Ne répondez pas à cet email. Il ne sera pas lu.'
+        'TextPart'=> 'Cher.ère utilisateur.rice, nous avons du nouveau pour vous ! ' + msg.gsub(/<br>/, "\n") + ' Ne répondez pas à cet email. Il ne sera pas lu.',
+        'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! <br>' + msg+ '<br><br><br>Ne répondez pas à cet email. Il ne sera pas lu.'
     }]
     )
     p variable.attributes['Messages']

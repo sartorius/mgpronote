@@ -71,10 +71,23 @@ class ClientController < ApplicationController
                               @resultSetAddClientNotif[0]['delivery_addr'].to_s + ' - ' +
                               @resultSetAddClientNotif[0]['pickup_addr'].to_s
 
+        # puts "Ref client: " + helpers.encode_client_ref(@resultSetAddClientNotif[0]['firstname'].to_s, @resultSetAddClientNotif[0]['id'].to_s, @resultSetAddClientNotif[0]['client_ref'].to_s)
+
+        notif_client_ref = helpers.encode_client_ref(@resultSetAddClientNotif[0]['firstname'].to_s,
+                                                  @resultSetAddClientNotif[0]['id'].to_s,
+                                                  @resultSetAddClientNotif[0]['client_ref'].to_s)
+
+        email_msg = "<br><br>Votre référence client est le " + notif_client_ref + ". " +
+                    " C'est une référence personnelle et elle ne doit pas être partagée. " +
+                    " Si vous décidez de faire livrer chez ce partenaire, vous devez faire livrer à cette adresse: <br><br>" +
+                    @resultSetAddClientNotif[0]['delivery_addr'].to_s.gsub(/@/, " - " + notif_client_ref + " <br> ") + " " +
+                    "<br><br>Connectez-vous vite sur MG Suivi pour obtenir le meilleur de votre tracking."
+
+        puts "email msg: " + email_msg
         # Notify the client
         sendPlainEmail(params[:email],
                         'votre compte a été ajouté par un partenaire transporteur',
-                        'Félicitation ! Un partenaire de MG Suivi vous a ajouté dans sa liste de client. Vous pouvez dès à présent créer des suivis pour tracer vos achats que vous faites parvenir par ce transporteur. Connectez-vous vite sur MG Suivi. ')
+                        'Félicitation ! Un partenaire de MG Suivi vous a ajouté dans sa liste de client. Vous pouvez dès à présent créer des suivis pour tracer vos achats que vous faites parvenir par ce transporteur. ' + email_msg)
 
 
       elsif @resultSet[0]['cli_add_clt'].to_s == '1' then
