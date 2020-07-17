@@ -157,6 +157,10 @@ textarea {
   box-shadow: none;
 }
 
+/* Due to Navbar*/
+.container{
+  margin-top: 40px;
+}
 
 /* End Bootstrap review */
 
@@ -341,13 +345,26 @@ p {
   color: #3E009E;
 }
 
-.monosp-ft-title{
-  font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
-  font-size: 4.2em;
-  color: $main-color;
-  text-align: center;
-  margin-top: 1em;
+@media (max-width:767px){
+  .monosp-ft-title{
+    font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
+    font-size: 3.0em;
+    color: $main-color;
+    text-align: center;
+    margin-top: 1em;
+  }
 }
+
+@media (min-width:767px){
+  .monosp-ft-title{
+    font-family: "Roboto Mono","Lucida Console", "Andale Mono", Courier, Monaco;
+    font-size: 4.2em;
+    color: $main-color;
+    text-align: center;
+    margin-top: 1em;
+  }
+}
+
 
 .mid-blc{
   margin-top: 15px;

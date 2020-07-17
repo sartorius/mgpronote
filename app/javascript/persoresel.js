@@ -10,6 +10,11 @@ function mainClientLoaderInCaseOfChange(){
       $( "#mgs-dash-print-csv" ).click(function() {
         generateDashCSV();
       });
+
+
+      window.addEventListener("orientationchange", function(event) {
+        runjsPersoreselGrid();
+      });
   }
   else if($('#mg-graph-identifier').text() == 'persom-gr'){
       runjsPartnerListGrid();
@@ -170,7 +175,130 @@ function initDataTagToJsonArrayDashboard(){
 }
 
 /* JS GRID */
+/* This is MES SUIVIS - all my suivis */
 function runjsPersoreselGrid(){
+
+  if(window.screen.availWidth < 1100){
+    // Mobile
+    responsivefields = [
+        { name: "ref_tag",
+          title: "Référence",
+          type: "text",
+          align: "left",
+          width: 40,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return '<i class="monosp-ft">' + value + '</i>';
+          }
+        },
+        { name: "status",
+          title: '<i class="far fa-edit"></i>',
+          type: "text",
+          align: "center",
+          width: 10,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+
+              switch (value.toString()) {
+                case '3':
+                  //return item.type_pack;
+                  return (item.type_pack == 'P') ? '<i class="mgs-red fas fa-pen-square"></i>' : '<i class="fas fa-arrow-circle-right"></i>';
+                  break;
+                case '10':
+                  return '<i class="fas fa-hand-holding-heart"></i>';
+                  break;
+                default:
+                  return '<i class="fas fa-arrow-circle-right"></i>';
+              }
+          }
+        },
+        //Default width is auto
+        { name: "part_name",
+          title: "Partenaire",
+          type: "text",
+          width: 45,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_SM));
+          }
+        }
+    ];
+  }
+  else{
+    // Big screens
+    responsivefields = [
+        { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
+        { name: "ref_tag",
+          title: "Référence",
+          type: "text",
+          align: "right",
+          width: 35,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return '<i class="monosp-ft">' + value + '</i>';
+          }
+        },
+        { name: "step",
+          title: "Status",
+          type: "text",
+          width: 55,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
+          }
+        },
+        { name: "status",
+          title: '<i class="far fa-edit"></i>',
+          type: "text",
+          align: "center",
+          width: 10,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return ((value == '3') && (item.type_pack == 'P')) ? '<i class="mgs-red fas fa-pen-square"></i>' : '<i class="fas fa-window-close"></i>';
+          }
+        },
+        { name: "type_pack",
+          title: '<i class="fas fa-qrcode"></i>',
+          type: "text",
+          align: "center",
+          width: 10,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return (value == 'D') ? '<i class="c-w fas fa-box"></i>' : '<i class="c-b fas fa-truck"></i>';
+          }
+        },
+        //Default width is auto
+        { name: "part_name",
+          title: "Nom partenaire",
+          type: "text",
+          width: 45,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
+          }
+        },
+        { name: "bcdescription",
+          title: "Description",
+          type: "text",
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
+          }
+        },
+        { name: "create_date", title: "Créé le", type: "text", width: 30, headercss: "h-jsG-l" },
+        { name: "diff_days",
+          title: '<i class="fas fa-stopwatch"></i>',
+          type: "number",
+          width: 3,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return '<p class="center">' + value + '</p>';
+          }
+        }
+
+    ];
+  }
+
 
   $("#nb-el-dash").html(filteredDataTagToJsonArray.length);
   if(dataTagToJsonArray.length > 0){
@@ -186,77 +314,7 @@ function runjsPersoreselGrid(){
         },
         data: filteredDataTagToJsonArray,
 
-        fields: [
-            { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
-            { name: "ref_tag",
-              title: "Référence",
-              type: "text",
-              align: "right",
-              width: 30,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return '<i class="monosp-ft">' + value + '</i>';
-              }
-            },
-            { name: "step",
-              title: "Status",
-              type: "text",
-              width: 55,
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
-              }
-            },
-            { name: "status",
-              title: '<i class="far fa-edit"></i>',
-              type: "text",
-              align: "center",
-              width: 10,
-              headercss: "h-jsG-c",
-              itemTemplate: function(value, item) {
-                return ((value == '3') && (item.type_pack == 'P')) ? '<i class="mgs-red fas fa-pen-square"></i>' : '<i class="fas fa-window-close"></i>';
-              }
-            },
-            { name: "type_pack",
-              title: '<i class="fas fa-qrcode"></i>',
-              type: "text",
-              align: "center",
-              width: 10,
-              headercss: "h-jsG-c",
-              itemTemplate: function(value, item) {
-                return (value == 'D') ? '<i class="c-w fas fa-box"></i>' : '<i class="c-b fas fa-truck"></i>';
-              }
-            },
-            //Default width is auto
-            { name: "part_name",
-              title: "Nom partenaire",
-              type: "text",
-              width: 45,
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XL));
-              }
-            },
-            { name: "bcdescription",
-              title: "Description",
-              type: "text",
-              headercss: "h-jsG-l",
-              itemTemplate: function(value, item) {
-                return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
-              }
-            },
-            { name: "create_date", title: "Créé le", type: "text", width: 30, headercss: "h-jsG-l" },
-            { name: "diff_days",
-              title: '<i class="fas fa-stopwatch"></i>',
-              type: "number",
-              width: 3,
-              headercss: "h-jsG-c",
-              itemTemplate: function(value, item) {
-                return '<p class="center">' + value + '</p>';
-              }
-            }
-
-        ]
+        fields: responsivefields
     });
   }
   else{

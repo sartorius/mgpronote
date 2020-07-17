@@ -31,6 +31,9 @@
                 <%# I am on mobile %>
                 <% if is_partner? %>
                     <%= render 'layouts/nav/part_on_mobile' %>
+                <% else %>
+                    <%# I am a not a partner not in mobile %>
+                    <%= render 'layouts/nav/client_on_mobile' %>
                 <% end %>
               <% end %>
           <% else %>
