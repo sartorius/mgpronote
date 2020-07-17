@@ -3,9 +3,6 @@ class ApplicationController < ActionController::Base
   require 'mailjet'
 
 
-
-
-
   private
 
   def get_partner_company_name

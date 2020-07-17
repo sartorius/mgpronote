@@ -387,7 +387,7 @@ function loadBCTag(){
             resulTag = resulTag + 'Localisation indisponible ou refusée.';
           }
           else{
-            resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo + '"><i class="fas fa-eye"></i></a>';
+            resulTag = resulTag + 'Voir localisation: <a href="http://www.google.com/maps/place/'+ dataTagToJsonArray[i].geo_l + '"><i class="fas fa-eye"></i></a>';
           }
           resulTag = resulTag + '<br><span class="mg-color"><i class="fas fa-paperclip"></i> ' + dataTagToJsonArray[i].description + "</span><br>";
           resulTag = resulTag + '<br><span class="mg-color"><i class="fas fa-qrcode"></i> Opéré par ' + mgsEncodeClientRef(dataTagToJsonArray[i].firstname, dataTagToJsonArray[i].uid, dataTagToJsonArray[i].uclient_ref) + "</span><br>";

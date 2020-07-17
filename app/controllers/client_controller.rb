@@ -56,8 +56,22 @@ class ClientController < ApplicationController
         message  = "L'utilisateur "+ params[:email] +" a été bien ajouté à votre liste de clients"
         flash.now[:success] = message
 
-        # Notify the client
+        #We need to retrieve the client information and partner address to let the user know
+        sql_query_mail_add_client = "SELECT u.firstname, u.client_ref, u.id, rp.delivery_addr, rp.pickup_addr FROM client_partner_xref cpx " +
+                                  				" JOIN users u ON u.id = cpx.client_id " +
+                                  				" JOIN ref_partner rp ON rp.id = cpx.partner_id " +
+                                  				" WHERE rp.id = " + @current_user.partner.to_s +
+                                  				" AND u.email = " + get_safe_pg_wq_ns(params[:email]) + ";"
 
+        @resultSetAddClientNotif = ActiveRecord::Base.connection.exec_query(sql_query_mail_add_client)
+        # xxx
+        puts "Add Client: " + @resultSetAddClientNotif[0]['firstname'].to_s + ' - ' +
+                              @resultSetAddClientNotif[0]['client_ref'].to_s + ' - ' +
+                              @resultSetAddClientNotif[0]['id'].to_s + ' - ' +
+                              @resultSetAddClientNotif[0]['delivery_addr'].to_s + ' - ' +
+                              @resultSetAddClientNotif[0]['pickup_addr'].to_s
+
+        # Notify the client
         sendPlainEmail(params[:email],
                         'votre compte a été ajouté par un partenaire transporteur',
                         'Félicitation ! Un partenaire de MG Suivi vous a ajouté dans sa liste de client. Vous pouvez dès à présent créer des suivis pour tracer vos achats que vous faites parvenir par ce transporteur. Connectez-vous vite sur MG Suivi. ')

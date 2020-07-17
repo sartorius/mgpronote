@@ -58,9 +58,6 @@ textarea {
   }
 }
 
-#hd-stumb{
-  height: 60px;
-}
 
 /*** LOADING ***/
 
@@ -136,6 +133,7 @@ textarea {
 }
 
 .badge-primary-medium{
+  color: white;
   background-color: $main-color-medium;
 }
 
@@ -159,7 +157,7 @@ textarea {
 
 /* Due to Navbar*/
 .container{
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 /* End Bootstrap review */
