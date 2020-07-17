@@ -26,10 +26,6 @@ function mainClientLoaderInCaseOfChange(){
         }
       });
 
-      $("#crt-cb-clt-ds").click(function() {
-        $('#mgs-dialog').hide(100);
-      });
-
       $("#close-feeback").click(function() {
         //console.log('$("#close-feeback").click');
         $('#mgs-dialog-feedback').hide(100);
@@ -54,7 +50,7 @@ function revokeClientPOCMng(name, id, o, email){
   $('#crt-cb-param').html(id);
   $('#crt-cb-order').html(o);
   $('#crt-cb-email').html(email);
-  $('#mgs-dialog').show(100);
+  $('#mgs-dialog').modal('show');
   $('html, body').animate({
               scrollTop: $("#mg-graph-identifier").offset().top
           }, 400);
@@ -66,12 +62,14 @@ function createBarCodeFor(name, id, o, email){
   // console.log('createBarCodeFor: you did click on me: ' + name + '#' + id + ' order: ' + o + ' email: ' + email);
   // Creation mode
   $("#dial-order").html('C');
-  $('#nm-t-cf').html(' créer un code barre pour' + name + '#' + id + ((o == 'D') ? ' pour une <strong>livraison</strong>' : ' pour un <strong>enlèvement</strong>'));
+  $('#nm-t-cf').html(' créer un code barre pour ' + name + '#' + id + ((o == 'D') ? ' pour une <strong>livraison</strong>' : ' pour un <strong>enlèvement</strong>'));
   // Parameters in dialog !
   $('#crt-cb-param').html(id);
   $('#crt-cb-order').html(o);
   $('#crt-cb-email').html(email);
-  $('#mgs-dialog').show(100);
+
+  // This element need to be modal
+  $('#mgs-dialog').modal('show');
   $('html, body').animate({
               scrollTop: $("#mg-graph-identifier").offset().top
           }, 400);
@@ -80,14 +78,14 @@ function createBarCodeFor(name, id, o, email){
 
 function displaySuccessDialog(){
   $('#mgs-dialog-feedback').show(100);
-  $('#mgs-dialog').hide(100);
+  $('#mgs-dialog').modal('hide');
 }
 
 function displayErrorDialog(){
   $('#close-feeback').removeClass('mgs-dialog-fdb-success');
   $('#close-feeback').addClass('mgs-dialog-fdb-error');
   $('#mgs-dialog-feedback').show(100);
-  $('#mgs-dialog').hide(100);
+  $('#mgs-dialog').modal('hide');
 }
 
 
@@ -348,7 +346,7 @@ function runjsClientGrid(){
           }
         },
         //Default width is auto
-        { name: "since", title: "Client.e depuis le", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
+        { name: "since", title: "Client.e depuis", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
         {
           name: "id",
           title: '<i class="fas fa-qrcode"></i>',

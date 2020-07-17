@@ -18,10 +18,6 @@ function mainClientLoaderInCaseOfChange(){
         createBarCodeFor($(this).data('partner_name'), $(this).val(), $(this).data('order'));
       });
 
-      $("#crt-cb-clt-ds").click(function() {
-        $('#mgs-dialog').hide(100);
-      });
-
       // Confirmation button is here
       $("#crt-cb-clt-cf").click(function() {
         confirmedBarCodeFor();
@@ -218,7 +214,7 @@ function runjsPersoreselGrid(){
               width: 10,
               headercss: "h-jsG-c",
               itemTemplate: function(value, item) {
-                return ((value == '3') && (item.type_pack == 'P')) ? '<i class="mgs-red fas fa-pen-square"></i>' : '<i class="far fa-times-circle"></i>';
+                return ((value == '3') && (item.type_pack == 'P')) ? '<i class="mgs-red fas fa-pen-square"></i>' : '<i class="fas fa-window-close"></i>';
               }
             },
             { name: "type_pack",
@@ -249,7 +245,7 @@ function runjsPersoreselGrid(){
                 return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XXL));
               }
             },
-            { name: "create_date", title: "Créé le", type: "text", width: 25, headercss: "h-jsG-l" },
+            { name: "create_date", title: "Créé le", type: "text", width: 30, headercss: "h-jsG-l" },
             { name: "diff_days",
               title: '<i class="fas fa-stopwatch"></i>',
               type: "number",
@@ -341,14 +337,14 @@ function addbarCodeJson(partnerId){
 
 function displaySuccessDialog(){
   $('#mgs-dialog-feedback').show(100);
-  $('#mgs-dialog').hide(100);
+  $('#mgs-dialog').modal('hide');
 }
 
 function displayErrorDialog(){
   $('#close-feeback').removeClass('mgs-dialog-fdb-success');
   $('#close-feeback').addClass('mgs-dialog-fdb-error');
   $('#mgs-dialog-feedback').show(100);
-  $('#mgs-dialog').hide(100);
+  $('#mgs-dialog').modal('hide');
 }
 
 //Inner variable declaration !
@@ -361,7 +357,7 @@ function createBarCodeFor(pName, id, o){
 
   $('#crt-cb-param').html(id);
   $('#crt-cb-order').html(o);
-  $('#mgs-dialog').show(100);
+  $('#mgs-dialog').modal('show');
 }
 
 function confirmedBarCodeFor(){

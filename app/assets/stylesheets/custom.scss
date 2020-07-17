@@ -187,7 +187,7 @@ h2 {
   margin-bottom: 30px;
   text-align: center;
   font-weight: normal;
-  color: $gray-200;
+  color: $gray-700;
 }
 
 p {
@@ -401,7 +401,11 @@ p {
   display: none;
 }
 
+
+/*********** MODAL FINALLY ********/
+
 #mgs-dialog{
+  margin-top: 75px;
 }
 
 #dial-order{
@@ -1096,10 +1100,6 @@ input {
 }
 
 
-/*********** MODAL FINALLY ********/
-#mgsModal{
-  margin-top: 80px;
-}
 
 /*********** Fontastics ***********/
 

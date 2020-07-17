@@ -1,20 +1,52 @@
 <!-- Modal -->
-<div class="modal fade" id="mgsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
-<div class="modal-dialog" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+<div class="modal fade" id="mgs-dialog" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Validation requise</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          </button>
+        </div>
+        <div class="modal-body">
+
+              <%# Text message goes here %>
+
+                <div class="mgs-dialog-window">
+              		Confirmez que vous voulez <br>
+              		<span id="nm-t-cf"></span> ?
+              		<div class="dialog-btn">
+                    <span id="dial-order">X</span>
+              		</div>
+              		<span id="crt-cb-param" class="hid-display"></span>
+                  <span id="crt-cb-order" class="hid-display"></span>
+                  <span id="crt-cb-email" class="hid-display"></span>
+                </div>
+
+
+        </div>
+        <div class="modal-footer">
+
+
+          <div class="diag-btn">
+            <button type="button" id="crt-cb-clt-ds" class="btn btn-default-light" data-dismiss="modal" >Annuler &nbsp; <i class="far fa-times-circle"></i></button>
+          </div>
+
+
+          <div class="diag-btn">
+            <button type="button" id="crt-cb-clt-cf" class="btn btn-default">Confirmer &nbsp; <i class="fas fa-check-square"></i></button>
+          </div>
+
+        </div>
+      </div>
     </div>
-    <div class="modal-body">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sodales orci eros.
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default-light" data-dismiss="modal">Annuler</button>
-      <button type="button" class="btn btn-default">Confirmer</button>
+</div>
+
+<div class="row">
+  <div id="mgs-dialog-feedback" class="mgs-dialog-big-block col-lg-12">
+    <div id="close-feeback" class="mgs-dialog-window-fdb mgs-dialog-fdb-success alert alert-dark" role="alert">
+
+      <span id="msg-feedback"></span>&nbsp;<span> <i class="far fa-times-circle"></i></span>
+
     </div>
   </div>
-</div>
 </div>
