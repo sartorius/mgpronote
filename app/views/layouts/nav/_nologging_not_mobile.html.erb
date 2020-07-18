@@ -3,9 +3,10 @@
     Découvrir <b class="caret"></b>
   </a>
   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <%= link_to "Les avantages de MG Suivi", why_path, class: "dropdown-item" %>
+    <%= link_to "Pourquoi utiliser MG Suivi", why_path, class: "dropdown-item" %>
+    <%= link_to features_path, class: "dropdown-item" do %><i class="fas fa-bolt"></i>&nbsp;Les avantages<% end %>
     <div class="dropdown-divider"></div>
-    <%= link_to howtouse_path, class: "dropdown-item" do %><i class="fas fa-bolt"></i>&nbsp;Utiliser MGSuivi<% end %>
+    <%= link_to howtouse_path, class: "dropdown-item" do %>Utiliser MGSuivi<% end %>
     <%= link_to letsbepartners_path, class: "dropdown-item" do %><i class="fas fa-box-open"></i>&nbsp;Devenir partenaire<% end %>
   </div>
 </li class="nav-item">

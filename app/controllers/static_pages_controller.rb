@@ -37,4 +37,8 @@ class StaticPagesController < ApplicationController
   def termsofuse
     render 'termsofuse'
   end
+
+  def features
+    render 'features'
+  end
 end

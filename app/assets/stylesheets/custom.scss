@@ -426,6 +426,19 @@ p {
   display: none;
 }
 
+.page-link{
+  color: $main-color;
+  font-size: 20px;
+}
+
+.page-link:hover{
+  color: $main-color;
+  background-color: $main-color-light;
+}
+
+.advt-blc{
+    margin-top: 60px;
+}
 
 /*********** MODAL FINALLY ********/
 
