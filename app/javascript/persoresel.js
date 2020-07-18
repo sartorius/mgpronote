@@ -202,20 +202,20 @@ function runjsPersoreselGrid(){
     // Mobile
     responsivefields = [
         { name: "ref_tag",
-          title: "Référence",
+          title: "#",
           type: "text",
           align: "left",
-          width: 40,
+          width: 60,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
-            return '<i class="monosp-ft">' + value + '</i>';
+            return '<i class="monosp-ft-mob">' + value + '</i>';
           }
         },
         { name: "status",
           title: '<i class="far fa-edit"></i>',
           type: "text",
           align: "center",
-          width: 10,
+          width: 20,
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
 
@@ -232,12 +232,21 @@ function runjsPersoreselGrid(){
               }
           }
         },
-        //Default width is auto
         { name: "part_name",
-          title: "Partenaire",
+          title: '<i class="fas fa-id-card"></i>',
           type: "text",
-          width: 45,
-          headercss: "h-jsG-l",
+          align: "center",
+          width: 40,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XS).toUpperCase());
+          }
+        },
+        //Default width is auto
+        { name: "bcdescription",
+          title: '<i class="fas fa-info-circle"></i>',
+          type: "text",
+          headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
             return ((value == null) ? '-' : value.substring(0, STR_LENGTH_SM));
           }

@@ -52,6 +52,13 @@ $main-color-active: #e8cdff;
     outline: none !important;
 }
 
+.navbar-toggler:focus {
+    outline: none !important;
+}
+
+.fa-1x {
+font-size: 1.5rem;
+}
 
 .navbar-toggle{
   background-color: #C6B2D8;
