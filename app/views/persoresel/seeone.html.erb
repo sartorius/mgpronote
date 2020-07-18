@@ -38,17 +38,18 @@
 
 <%= render 'persoresel/displayworkflow' %>
 <div class="mgs-note mgs-note-mrg-grid">
-  Cet écran est optimisé pour une utilisation ordinateur ou tablette.
+  <i id="optim-big-scr">Cet écran est optimisé pour une utilisation ordinateur ou tablette.</i>
+</div>
+
+<div id="return-list-mobile" class="step-no-disp">
+	<a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash"><i class="fas fa-arrow-circle-left"></i>&nbsp;Retour mes suivis</a>
 </div>
 
 <% if (@resultSet[0]['step_id'] == 3) && (@resultSet[0]['type_pack'] == 'P') %>
     <div class="row">
-      <div class="col-sm-3">
-      </div>
-      <div class="col-sm-6">
+      <div class="col-sm-12">
+				<%# Everytime I am in pickup needed this is triggered %>
 				<%= render 'persoresel/wfrtopickup' %>
-      </div>
-      <div class="col-sm-3">
       </div>
     </div>
 <% end %>

@@ -1,0 +1,38 @@
+
+<form action="/addaddress" method="post" id="mg-address">
+      <div id="mg-subgraph-identifier">pereonepk-gr</div>
+      <div class="crt-block-input">
+        Enlèvement: les informations suivantes sont requises de votre part.
+      </div>
+      <div class="t-of-use mgs-med-note-imp">
+        Ce colis est indiqué comme étant un enlèvement. Si ça n'est pas le cas, veuillez contacter le transporteur<br>
+        <strong>Toutes les informations suivantes sont obligatoires&nbsp;<i class="fas fa-star"></i></strong>
+      </div>
+      <br>
+      <label>Nom du contact enlèvement</label>&nbsp;<span id="ck-mg-add-pk-name" class="ctr-ck-grp">(obligatoire)</span>
+      <textarea class="form-control crt-fill-form classy-input" rows="1" id="mg-add-pk-name" name="mgaddpknm" placeholder="Nom du contact (min 5)" style="resize: none;"></textarea>
+      <label>Téléphone du contact enlèvement</label>&nbsp;<span id="ck-mg-add-pk-phone" class="ctr-ck-grp">(obligatoire)</span>
+      <textarea class="form-control crt-fill-form classy-input" rows="1" id="mg-add-pk-phone" name="mgaddpkph" placeholder="Téléphone contact" style="resize: none;"></textarea>
+      <br>
+      <div class="t-of-use mgs-med-note-imp">
+        En plus de l'adresse vous pouvez donner le maximum d'information dans le champs suivant : code porte, étage, porte, horaires de disponibilité, repère.<br>
+      </div>
+      <label>Adresse enlèvement</label>&nbsp;<span id="ck-mg-add-pk-add" class="ctr-ck-grp">(obligatoire)</span>
+      <textarea class="form-control crt-fill-form classy-input" rows="3" id="mg-add-pk-add" name="mgaddpkadd" placeholder="Adresse & notes (min 10 car)" style="resize: none;"></textarea>
+
+
+      <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="save-addr-sub"
+              value="Valider"/>
+
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+      <%# The cancel button get back to the list because it is mandatory to fill these information %>
+      <a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash">Retour liste&nbsp;<i class="far fa-times-circle"></i></a>
+
+      <textarea class="form-control step-no-disp" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"><%= @resultSet[0]['id'].to_s %></textarea>
+      <textarea class="form-control step-no-disp" rows="1" id="read-steprwf-id" name="steprwfid" placeholder="Workflow id" style="resize: none;">1</textarea>
+
+      <textarea class="form-control step-no-disp" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"><%= @resultSet[0]['secure'].to_s %></textarea>
+      <textarea class="form-control step-no-disp" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
+
+</form>

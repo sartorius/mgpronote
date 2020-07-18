@@ -34,17 +34,24 @@ function mainClientLoaderInCaseOfChange(){
       });
   }
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
+
+
+
       let readBCSeeOne = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
       displayWorkflowClient();
 
       $('#bc-seeone').html(readBCSeeOne);
 
       $( "#disp-add-info" ).click(function() {
-        $("#add-inf-blc").show(400);
+        //$("#add-inf-blc").show(400);
         // To animate to scroll to the element
+        /*
         $('html, body').animate({
                     scrollTop: $("#add-inf-blc").offset().top
                 }, 400);
+        */
+
+        $('#mgs-dialog-add-info').modal('show');
 
         $("#mg-add-ext-ref").val($('#alr-ref-ext').html());
         $("#mg-add-descr").val($('#alr-descr').html());
@@ -55,13 +62,11 @@ function mainClientLoaderInCaseOfChange(){
 
 
       });
-      $( "#disp-cnl-inf" ).click(function() {
-        $("#add-inf-blc").hide(400);
-      });
-
 
       // In case of pickup
       if($('#mg-subgraph-identifier').text() == 'pereonepk-gr'){
+
+        $('#mgs-dialog-pickup-info').modal('show');
         //console.log('Read listenPickUpFormCreate');
         //initialize
         $("#save-addr-sub").prop('disabled', true);
@@ -75,6 +80,8 @@ function mainClientLoaderInCaseOfChange(){
 }
 
 function displayWorkflowClient(){
+
+
   // console.log('displayWorkflowClient: Start');
   let disStep = '';
   let disStepBC = '';
@@ -83,8 +90,19 @@ function displayWorkflowClient(){
 
   let chevron = ''
   const nspStart = '<div class="wrkf-blc wrkf-light">&nbsp;';
-  const nspEnd = '&nbsp;</div>&nbsp;';
+  let nspEnd = '&nbsp;</div>&nbsp;';
   const nspSelected = '<div class="wrkf-blc wrkf-selected">&nbsp;';
+
+  if(window.screen.availWidth < 1100){
+    // We need to display return button as this is used mostly to see the workflow
+    $('#return-list-mobile').show(100);
+    // We display on column on small screens
+    $('#optim-big-scr').html('Cet écran a été optimisé pour téléphone mobile.');
+    $('#el-wf-1').removeClass('center');
+    $('#el-wf-1').addClass('pos-left');
+    chevron = '<i class="fas fa-chevron-circle-right"></i>';
+    nspEnd = nspEnd + '<br>';
+  }
 
   for(i=0; i<dataTagToJsonStepWFArray.length; i++){
     if(i == 0){
@@ -175,10 +193,12 @@ function initDataTagToJsonArrayDashboard(){
 }
 
 /* JS GRID */
+/*                  JS GRID ONE                   */
 /* This is MES SUIVIS - all my suivis */
 function runjsPersoreselGrid(){
 
   if(window.screen.availWidth < 1100){
+    $('#optim-big-scr').html('Cet écran a été optimisé pour téléphone mobile.');
     // Mobile
     responsivefields = [
         { name: "ref_tag",
@@ -452,9 +472,85 @@ function confirmedBarCodeFor(){
 
 
 
-/* JS GRID CLIENT LIST */
+/* JS GRID PARTNER FOR CLIENT LIST */
+/*                                       JS GRID 2                           */
 function runjsPartnerListGrid(){
   if(dataTagToJsonArray.length > 0){
+
+    if(window.screen.availWidth < 1100){
+      // SMALL Screens
+      $('#optim-big-scr').html('Cet écran a été optimisé pour téléphone mobile.');
+      responsivefields = [
+          { name: "rp_name", title: "Partenaire", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
+          { name: "totalbc",
+            title: '<i class="far fa-list-alt"></i>',
+            type: "number",
+            width: 18,
+            headercss: "h-jsG-r",
+            itemTemplate: function(value, item) {
+              return '<i id="totalbc-' + item.id + '">' + value + '</i>';
+            }
+          },
+          {
+            name: "id",
+            title: '<i class="fas fa-qrcode"></i>',
+            type: "string",
+            align: "left",
+            width: 30,
+            itemTemplate: function(value, item) {
+              return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
+            }
+          },
+          {
+            name: "id",
+            title: '<i class="fas fa-qrcode"></i>',
+            type: "string",
+            align: "left",
+            width: 20,
+            itemTemplate: function(value, item) {
+              return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
+            }
+          }
+      ]
+    }
+    else{
+      // BIG Screens
+      responsivefields = [
+          { name: "rp_name", title: "Partenaire", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
+          { name: "rp_desc", title: "Description", type: "text", align: "right", width: 100, headercss: "h-jsG-r" },
+          { name: "since", title: "Inscrit depuis", type: "text", align: "right", headercss: "h-jsG-r" },
+          { name: "totalbc",
+            title: '<i class="far fa-list-alt"></i>',
+            type: "number",
+            width: 18,
+            headercss: "h-jsG-r",
+            itemTemplate: function(value, item) {
+              return '<i id="totalbc-' + item.id + '">' + value + '</i>';
+            }
+          },
+          {
+            name: "id",
+            title: '<i class="fas fa-qrcode"></i>',
+            type: "string",
+            align: "left",
+            width: 30,
+            itemTemplate: function(value, item) {
+              return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
+            }
+          },
+          {
+            name: "id",
+            title: '<i class="fas fa-qrcode"></i>',
+            type: "string",
+            align: "left",
+            width: 20,
+            itemTemplate: function(value, item) {
+              return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
+            }
+          }
+      ]
+    }
+
     $("#jsGridPartnerList").jsGrid({
         height: "auto",
         width: "100%",
@@ -463,41 +559,7 @@ function runjsPartnerListGrid(){
         paging: true,
 
         data: dataTagToJsonArray,
-
-        fields: [
-            { name: "rp_name", title: "Partenaire", type: "text", filtering: true, align: "right", width: 50, headercss: "h-jsG-r" },
-            { name: "rp_desc", title: "Description", type: "text", align: "right", width: 100, headercss: "h-jsG-r" },
-            { name: "since", title: "Inscrit depuis", type: "text", align: "right", headercss: "h-jsG-r" },
-            { name: "totalbc",
-              title: '<i class="far fa-list-alt"></i>',
-              type: "number",
-              width: 18,
-              headercss: "h-jsG-r",
-              itemTemplate: function(value, item) {
-                return '<i id="totalbc-' + item.id + '">' + value + '</i>';
-              }
-            },
-            {
-              name: "id",
-              title: '<i class="fas fa-qrcode"></i>',
-              type: "string",
-              align: "left",
-              width: 30,
-              itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
-              }
-            },
-            {
-              name: "id",
-              title: '<i class="fas fa-qrcode"></i>',
-              type: "string",
-              align: "left",
-              width: 20,
-              itemTemplate: function(value, item) {
-                return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
-              }
-            }
-        ]
+        fields: responsivefields
     });
   }
   else{

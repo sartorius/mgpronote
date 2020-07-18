@@ -236,6 +236,7 @@ function runjsClientGrid(){
   */
 
   if(window.screen.availWidth < 1100){
+    $('#optim-big-scr').html('Cet écran a été optimisé pour téléphone mobile.');
     // Small screens
     //fromMDSizetoSM(listToUpd);
     responsivefields = [

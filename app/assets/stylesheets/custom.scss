@@ -150,6 +150,10 @@ textarea {
     }
 }
 
+
+
+
+
 /* Messing with Bootstrap button experience */
 .btn:focus {
   box-shadow: none;
@@ -422,6 +426,11 @@ p {
 #mgs-dialog{
   margin-top: 75px;
 }
+
+.mgs-dialog-blc{
+  margin-top: 85px;
+}
+
 
 #dial-order{
   display: none;
@@ -702,7 +711,6 @@ body.loading .modal {
   color: $main-color;
   background-color: $main-color-light;
   font-size: 1.2em;
-  margin-top: 20px;
   font-weight: bold;
   border-bottom: 0.5px solid $main-color;
 }
@@ -760,6 +768,10 @@ body.loading .modal {
 
 .step-hid{
   visibility: hidden;
+}
+
+.step-no-disp{
+  display: none;
 }
 
 .big-BC {
@@ -937,8 +949,10 @@ body.loading .modal {
 }
 
 /* See One */
-#add-inf-blc{
-  display: none;
+
+.fit-padd{
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* Lorem */
