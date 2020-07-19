@@ -287,7 +287,7 @@ function runjsPersoreselGrid(){
           }
         },
         { name: "type_pack",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "text",
           align: "center",
           width: 10,
@@ -502,7 +502,7 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-qrcode"></i>',
+            title: '<i class="fas fa-barcode"></i>',
             type: "string",
             align: "left",
             width: 30,
@@ -512,7 +512,7 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-qrcode"></i>',
+            title: '<i class="fas fa-barcode"></i>',
             type: "string",
             align: "left",
             width: 20,
@@ -539,7 +539,7 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-qrcode"></i>',
+            title: '<i class="fas fa-barcode"></i>',
             type: "string",
             align: "left",
             width: 30,
@@ -549,7 +549,7 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-qrcode"></i>',
+            title: '<i class="fas fa-barcode"></i>',
             type: "string",
             align: "left",
             width: 20,

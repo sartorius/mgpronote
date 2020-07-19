@@ -490,7 +490,7 @@ function runjsPartnerGrid(){
           }
         },
         { name: "type_pack",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "text",
           align: "center",
           width: 10,
@@ -559,7 +559,7 @@ function runjsPartnerGrid(){
           }
         },
         { name: "type_pack",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "text",
           align: "center",
           width: 10,

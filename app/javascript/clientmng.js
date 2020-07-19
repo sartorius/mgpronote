@@ -257,7 +257,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "string",
           align: "left",
           width: 35,
@@ -267,7 +267,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "string",
           align: "left",
           width: 20,
@@ -282,7 +282,7 @@ function runjsClientGrid(){
           align: "left",
           width: 25,
           itemTemplate: function(value, item) {
-            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="far fa-times-circle"></i>' : '<i class="far fa-copy"></i>') + '</button>';
+            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="fas fa-times"></i>' : '<i class="far fa-copy"></i>') + '</button>';
           }
         }
     ]
@@ -343,14 +343,14 @@ function runjsClientGrid(){
           align: "center",
           width: 10,
           itemTemplate: function(value, item) {
-            return value ? '<i class="fas fa-check-square"></i>' : '<i class="far fa-times-circle"></i>';
+            return value ? '<i class="fas fa-check-square"></i>' : '<i class="fas fa-times"></i>';
           }
         },
         //Default width is auto
         { name: "since", title: "Client.e depuis", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
         {
           name: "id",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "string",
           align: "left",
           width: 35,
@@ -360,7 +360,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="fas fa-qrcode"></i>',
+          title: '<i class="fas fa-barcode"></i>',
           type: "string",
           align: "left",
           width: 20,
@@ -375,7 +375,7 @@ function runjsClientGrid(){
           align: "left",
           width: 25,
           itemTemplate: function(value, item) {
-            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="far fa-times-circle"></i>' : '<i class="far fa-copy"></i>') + '</button>';
+            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="fas fa-times"></i>' : '<i class="far fa-copy"></i>') + '</button>';
           }
         }
     ]
