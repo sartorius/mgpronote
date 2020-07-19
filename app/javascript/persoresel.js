@@ -205,7 +205,7 @@ function runjsPersoreselGrid(){
           title: "#",
           type: "text",
           align: "left",
-          width: 60,
+          width: 65,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
             return '<i class="monosp-ft-mob">' + value + '</i>';
@@ -215,7 +215,7 @@ function runjsPersoreselGrid(){
           title: '<i class="far fa-edit"></i>',
           type: "text",
           align: "center",
-          width: 20,
+          width: 25,
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
 
@@ -233,13 +233,13 @@ function runjsPersoreselGrid(){
           }
         },
         { name: "part_name",
-          title: '<i class="fas fa-id-card"></i>',
+          title: 'Part.',
           type: "text",
           align: "center",
-          width: 40,
+          width: 50,
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
-            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_XS).toUpperCase());
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_SM));
           }
         },
         //Default width is auto
@@ -248,7 +248,7 @@ function runjsPersoreselGrid(){
           type: "text",
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
-            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_SM));
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
           }
         }
     ];
@@ -439,7 +439,7 @@ function createBarCodeFor(pName, id, o){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
   //console.log('Here is o: ' + o);
   // The value here is the partner id
-  $('#nm-t-cf').html(pName + '#' + id + ((o == 'D') ? ' pour une <strong>livraison</strong>' : ' pour un <strong>enlèvement</strong>'));
+  $('#nm-t-cf').html(' choisir notre partenaire ' + pName + '#' + id + ((o == 'D') ? ' pour un suivi <strong>livraison</strong>&nbsp;<i class="fas fa-box"></i>' : ' pour un suivi <strong>enlèvement</strong>&nbsp;<i class="fas fa-truck"></i>'));
   // Parameters in dialog !
 
   $('#crt-cb-param').html(id);

@@ -1,7 +1,22 @@
 class BarcodeController < ApplicationController
   require 'json'
-  before_action :mgs_user_is_partner, :except => [:checkbc, :checkstephome]
-  # skip_before_action :verify_authenticity_token, :only => [:savestep, :checkstep]
+  before_action :mgs_user_is_partner, :except => [:checkbc, :checkstephome, :apireadstepbc]
+  skip_before_action :verify_authenticity_token, :only => [:apireadstepbc]
+
+
+  # --------------------------------------- API ---------------------------------------
+
+  def apireadstepbc
+
+    puts "READ -------- " + params[:ref].to_s
+
+    sql_query = "SELECT * FROM ref_partner WHERE id = 2;"
+    @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+
+    render json: @resultSet.to_json
+  end
+
+  # --------------------------------------- GENERIC ---------------------------------------
 
   # Get the next step BC
   def getnext

@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   post	  '/save_step'   => 'barcode#savestep'
   get     '/save_step' => redirect("/")
 
+  get     '/api_read_step_bc/:ref',    to: 'barcode#apireadstepbc'
   get     '/checkbc',    to: 'barcode#checkbc'
   post	  '/check_step'   => 'barcode#checkstep'
   get     '/check_step' => redirect("/")
