@@ -1,4 +1,5 @@
 class StaticPagesController < ApplicationController
+
   def home
   end
 
@@ -39,6 +40,7 @@ class StaticPagesController < ApplicationController
   end
 
   def features
+    ApplicationSms.get_logging_oma
     render 'features'
   end
 end

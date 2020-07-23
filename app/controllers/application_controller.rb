@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   require 'mailjet'
 
+  require 'net/http'
+  require 'uri'
 
   private
 
@@ -149,5 +151,6 @@ class ApplicationController < ActionController::Base
     p variable.attributes['Messages']
 
   end
+
 
 end
