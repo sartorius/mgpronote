@@ -58,7 +58,7 @@ Content-Type: application/json
 =end
     end
 
-    def self.send_sms
+    def self.send_sms(token)
 =begin
 https://developer.orange.com/apis/sms-mg/getting-started
 curl -X POST -H "Authorization: Bearer {{access_token}}" \
@@ -74,16 +74,17 @@ curl -X POST -H "Authorization: Bearer {{access_token}}" \
 "https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B{{dev_phone_number}}/requests"
 =end
 
-    uri = URI.parse("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B{{dev_phone_number}}/requests")
+
+    uri = URI.parse("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B" + ENV['OMA_DEV_NUMBER'] + "/requests")
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/json"
-    request["Authorization"] = "Bearer {{access_token}}"
+    request["Authorization"] = "Bearer " + token
     request.body = JSON.dump({
     "outboundSMSMessageRequest" => {
     "address" => "tel:+{{recipient_phone_number}}",
-    "senderAddress" => "tel:+{{dev_phone_number}}",
+    "senderAddress" => "tel:+" + ENV['OMA_DEV_NUMBER'],
     "outboundSMSTextMessage" => {
-      "message" => "Hello!"
+      "message" => "Hello! C'est MG Suivi !"
     }
     }
     })

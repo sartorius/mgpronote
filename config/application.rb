@@ -32,5 +32,6 @@ module SampleApp
     ENV['MAX_PRINT'] = '11'
 
     ENV['OMA_HEADER_KEY'] = 'dkpWR04wNVJlQXVHVzJ5RWl3dlVOWnhFaWM4NG5hYjk6cUhINUpZSEE5MmRsY2ZPeQ=='
+    ENV['OMA_DEV_NUMBER'] = '2610000'
   end
 end
