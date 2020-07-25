@@ -57,4 +57,48 @@ Content-Type: application/json
 }
 =end
     end
+
+    def self.send_sms
+=begin
+https://developer.orange.com/apis/sms-mg/getting-started
+curl -X POST -H "Authorization: Bearer {{access_token}}" \
+-H "Content-Type: application/json" \
+-d '{"outboundSMSMessageRequest":{ \
+        "address": "tel:+{{recipient_phone_number}}", \
+        "senderAddress":"tel:+{{dev_phone_number}}", \
+        "outboundSMSTextMessage":{ \
+            "message": "Hello!" \
+        } \
+    } \
+}' \
+"https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B{{dev_phone_number}}/requests"
+=end
+
+    uri = URI.parse("https://api.orange.com/smsmessaging/v1/outbound/tel%3A%2B{{dev_phone_number}}/requests")
+    request = Net::HTTP::Post.new(uri)
+    request.content_type = "application/json"
+    request["Authorization"] = "Bearer {{access_token}}"
+    request.body = JSON.dump({
+    "outboundSMSMessageRequest" => {
+    "address" => "tel:+{{recipient_phone_number}}",
+    "senderAddress" => "tel:+{{dev_phone_number}}",
+    "outboundSMSTextMessage" => {
+      "message" => "Hello!"
+    }
+    }
+    })
+
+    req_options = {
+    use_ssl: uri.scheme == "https",
+    }
+
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+    end
+
+    # response.code
+    # response.body
+
+
+    end
 end
