@@ -212,6 +212,17 @@ p {
   margin-top: 2em;
 }
 
+.term-title{
+  font-size: 14px;
+  color: $main-color;
+  font-weight: bold;
+}
+
+.term-desc{
+  font-size: 12px;
+}
+
+
 /* Alerting */
 
 #alerting{
