@@ -10,7 +10,6 @@ $(document).on('turbolinks:load', function() {
       $('#alerting').show();
     }
 
-
     // RGDP
     //Check if display or not
     let didAcceptRGDPAlready = localStorage.getItem("acceptRGDP");
@@ -30,7 +29,25 @@ $(document).on('turbolinks:load', function() {
       $("#flt-bar-cookie").hide();
     });
 
+
+
+    // Handle specific page
+    if($('#mg-graph-identifier').text() == 'stat-fea-gr'){
+      handleFeatureDisp();
+    }
+
 })
+
+function handleFeatureDisp(){
+  $("#fea-ctr-clt").click(function() {
+    $("#fea-det-client").show();
+    $("#fea-det-part").hide();
+  });
+  $("#fea-ctr-part").click(function() {
+    $("#fea-det-client").hide();
+    $("#fea-det-part").show();
+  });
+}
 
 $(document).on("turbolinks:click", function(){
   //$("#screen-load").show();

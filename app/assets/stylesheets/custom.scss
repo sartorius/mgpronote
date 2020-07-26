@@ -233,22 +233,41 @@ p {
 }
 
 .fea-desc{
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .fea-need{
-  font-size: 14px;
+  font-size: 15px;
   color: $main-color-medium;
 }
 
-.fea-title-blc{
-  width: 50%;
-  margin: 0 auto;
-  text-align: center;
+@media (max-width:1000px){
+  .fea-title-blc{
+    text-align: center;
+  }
 }
+@media (min-width:1000px){
+  .fea-title-blc{
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
 
 .fea-li{
   width: 100%;
+}
+
+#fea-det-part{
+  display: none;
+}
+
+.fea-blc-title{
+  font-size: 24px;
+  font-weight: bold;
+  color: $main-color;
+  margin-bottom: 35px;
 }
 
 /* Alerting */
