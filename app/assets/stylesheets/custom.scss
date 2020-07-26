@@ -226,6 +226,31 @@ p {
   opacity: 0.1;
 }
 
+.fea-title{
+  font-size: 20px;
+  color: $main-color;
+  font-weight: bold;
+}
+
+.fea-desc{
+  font-size: 16px;
+}
+
+.fea-need{
+  font-size: 14px;
+  color: $main-color-medium;
+}
+
+.fea-title-blc{
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fea-li{
+  width: 100%;
+}
+
 /* Alerting */
 
 #alerting{
