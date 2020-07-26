@@ -1,6 +1,7 @@
 
 $main-color-link: #57009f;
 $main-color-active: #e8cdff;
+$main-color-active-dpm: #dfd9f1;
 
 
 
@@ -45,7 +46,7 @@ $main-color-active: #e8cdff;
 }
 
 .dropdown-menu > a:active {
-  background-color: $main-color-active;
+  background-color: $main-color-active-dpm;
 }
 
 .dropdown-toggle:focus {
