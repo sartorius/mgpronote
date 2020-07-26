@@ -244,6 +244,60 @@ p {
   margin-bottom: 50px;
 }
 
+/* Cookie bar */
+@media (max-width:767px){
+  #flt-bar-cookie {
+       display: none;
+       position: fixed;
+       z-index: 99;
+       background: $main-color;
+       height: 30px;
+       color: #FFFFFF;
+       font-size: 12px;
+       padding: 5px;
+       border-radius: 3px;
+       opacity: 0.65;
+  }
+
+  .flt-bar-txt{
+    font-size: 10px;
+  }
+  .flt-bar-btn{
+    font-size: 12px;
+  }
+}
+
+
+#flt-bar-cookie {
+     display: none;
+     position: fixed;
+     z-index: 99;
+     background: $main-color;
+     height: 30px;
+     color: #FFFFFF;
+     font-size: 12px;
+     padding: 7px;
+     border-radius: 3px;
+     opacity: 0.65;
+}
+
+.flt-bar-txt{
+  font-size: 11px;
+}
+
+.flt-bar-btn{
+  font-size: 13px;
+}
+
+#flt-bar-cookie a:hover {
+  color: yellow;
+  text-decoration: none;
+}
+
+#flt-bar-cookie a {
+     color: white;
+}
+
 /* columnt Partner */
 .hd-col{
   font-size: 1.3em;

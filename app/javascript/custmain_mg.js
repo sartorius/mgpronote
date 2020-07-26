@@ -10,6 +10,26 @@ $(document).on('turbolinks:load', function() {
       $('#alerting').show();
     }
 
+
+    // RGDP
+    //Check if display or not
+    let didAcceptRGDPAlready = localStorage.getItem("acceptRGDP");
+    if((typeof didAcceptRGDPAlready == 'undefined') || (didAcceptRGDPAlready == null)){
+        didAcceptRGDPAlready = 'N';
+        console.log("Not readable");
+    }
+    if(didAcceptRGDPAlready == 'N'){
+      $("#flt-bar-cookie").show();
+    }
+    // Handle the click accept
+    $("#rgdp-wrn").click(function() {
+      console.log("you clicked on #rgdp-wrn");
+      // Log in JS session
+      localStorage.setItem("acceptRGDP", 'Y');
+      // Remove
+      $("#flt-bar-cookie").hide();
+    });
+
 })
 
 $(document).on("turbolinks:click", function(){

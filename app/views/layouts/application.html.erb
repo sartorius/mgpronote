@@ -21,8 +21,15 @@
       </div>
     <%# END Loading element %>
 
+
+
     <%= render 'layouts/header' %>
     <div class="container">
+
+      <div id="flt-bar-cookie">
+        <span class="flt-bar-txt">Nous utilisons des cookies. Voir notre <a href="/termsofuse">politique des données</a></span>&nbsp;&nbsp;<a id="rgdp-wrn"><i class="flt-bar-btn fas fa-check-square"></i></a>
+      </div>
+
 
 
       <div>
@@ -32,6 +39,9 @@
       </div>
 
       <%= yield %>
+
+
+
 
       <%= render 'layouts/footer' %>
       <%= debug(params) if Rails.env.development? %>
