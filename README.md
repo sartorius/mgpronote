@@ -8,7 +8,7 @@ by [Michael Hartl](http://www.michaelhartl.com/).
 
 ## License
 
-All rights are reserved for MGSuivi by the team MGTool.
+All rights are reserved for MG Suivi by the team MGTool.
 
 ## Clone sample version
 
