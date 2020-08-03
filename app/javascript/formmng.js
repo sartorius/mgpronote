@@ -29,8 +29,8 @@ function mainFormLoaderInCaseOfChange(){
     listenClientFormToCreate();
 
     $("#createByPart").click(function(){
-      $('#form-try-new-email').hide(500);
-      $('#form-crt-clt-by-part').show(200);
+      $('#form-try-new-email').hide(300);
+      $('#form-crt-clt-by-part').show(100);
       window.scrollTo(0, 0);
     });
 
