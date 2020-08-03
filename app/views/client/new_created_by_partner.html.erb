@@ -2,85 +2,84 @@
 <h1>Client non trouvé</h1>
 <div id="mg-graph-identifier">userbypart-gr</div>
 
-<div class="row">
-  <div class="col-md-3">
-  </div>
-  <div class="col-md-6">
-    <div class="t-of-use mgs-med-note">
-      Cet email n'existe pas encore chez MG Suivi :
-      <strong><i id='email-crt-given'><%= @email_to_create.to_s %></i></strong><br>
-      Il peut s'agir d'une erreur, nous vous invitons dans ce cas à corriger la saisie.<br><br>
-      <%= render 'form_new_client' %>
-      <hr>
-      Ou si vous avez vérifié, alors vous pouvez décider de créer le compte. Une création de compte par le transporteur a surtout de l'intérêt dans un cas d'enlèvement. Pour un cas de livraison, il est préférable que le client crée son compte pour qu'il puisse avoir son adresse référence unique.
-      <button id="manualValid" type="button" class="btn btn-lg btn-block btn-default-light manual-el">
-        Créer le compte client &nbsp; <i class="fas fa-plus-square"></i>
-      </button>
-
-      <div class="pos-center blc-cancel">
-				<a href="/" id="btn-cnl-nstp" class="btn  btn-default-light btn-md btn-block">Retour</a>
-			</div>
+<div id="form-try-new-email" >
+  <div class="row">
+    <div class="col-md-3">
     </div>
-  </div>
-  <div class="col-md-3">
+    <div class="col-md-6">
+      <div class="t-of-use mgs-med-note">
+        Cet email n'existe pas encore chez MG Suivi :
+        <strong><i id='email-crt-given'><%= @email_to_create.to_s %></i></strong><br>
+        Il peut s'agir d'une erreur, nous vous invitons dans ce cas à corriger la saisie.<br><br>
+        <%= render 'form_new_client' %>
+        <hr>
+        Ou si vous avez vérifié, alors vous pouvez décider de créer le compte. Une création de compte par le transporteur a surtout de l'intérêt dans un cas d'enlèvement. Pour un cas de livraison, il est préférable que le client crée son compte pour qu'il puisse avoir son adresse référence unique.
+        <button id="createByPart" type="button" class="btn btn-lg btn-block btn-default-light manual-el">
+          Créer le compte client &nbsp; <i class="fas fa-plus-square"></i>
+        </button>
+
+        <div class="pos-center blc-cancel">
+  				<a href="/" id="btn-cnl-nstp" class="btn  btn-default-light btn-md btn-block">Retour</a>
+  			</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+    </div>
   </div>
 </div>
-<div id="form-crt-clt-by-part" class="row">
-  <div class="col-md-3">
-  </div>
-  <div class="col-md-6">
-    <%= form_with(model: @user, local: true) do |f| %>
-      <%= render 'shared/error_messages' %>
 
-      <div class="crt-block">Identifiant</div>
-
-      <div class="t-of-use mgs-med-note">
-        Un email de vérification va vous être envoyé avec un mot de passe généré automatiquement. Assurez-vous que le client a accès à cet email : <br>
-        <strong><i id='email-crt-given'><%= @email_to_create.to_s %></i></strong>
+<div id="form-crt-clt-by-part" class="hid-display">
+    <div  class="row">
+      <div class="col-md-3">
       </div>
+      <div class="col-md-6">
+        <%= form_with(model: @user, local: true) do |f| %>
+          <%= render 'shared/error_messages' %>
 
-      <%= f.email_field :email, class: 'form-control crt-fill-form classy-input hid-display', placeholder: "Email", id: 'crt-email' %>
-      <%= f.password_field :password, class: 'form-control crt-fill-form classy-input hid-display', placeholder: "Mot de passe", id: 'crt-pwd' %>
-      <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form classy-input hid-display', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
+          <div class="crt-block">Identifiant</div>
 
-      <div class="crt-block">Information concernant le client</div>
-      <div class="t-of-use mgs-med-note">
-      Par défaut, c'est avec ce nom et prénom que le client pourra récupérer son colis en présentant une pièce d'identité.
+          <div class="t-of-use mgs-med-note">
+            Un email de vérification va vous être envoyé avec un mot de passe généré automatiquement. Assurez-vous que le client a accès à cet email : <br>
+            <strong><i id='email-crt-given'><%= @email_to_create.to_s %></i></strong>
+          </div>
+
+          <%= f.email_field :email, class: 'form-control crt-fill-form classy-input hid-display', placeholder: "Email", id: 'crt-email' %>
+          <%= f.password_field :password, class: 'form-control crt-fill-form classy-input hid-display', placeholder: "Mot de passe", id: 'crt-pwd' %>
+          <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form classy-input hid-display', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
+
+          <div class="crt-block">Information concernant le client</div>
+          <div class="t-of-use mgs-med-note">
+          Par défaut, c'est avec ce nom et prénom que le client pourra récupérer son colis en présentant une pièce d'identité.
+          </div>
+
+          <label>Nom de famille <span id="ck-name" class="ctr-ck-grp"> - obligatoire</span></label>
+          <%= f.text_field :name, class: 'form-control crt-fill-form classy-input', placeholder: "Rakoto", id: 'crt-name' %>
+
+          <label>Prénom <span id="ck-fname" class="ctr-ck-grp"> - obligatoire</span></label>
+          <%= f.text_field :firstname, class: 'form-control crt-fill-form classy-input', placeholder: "Aina", id: 'crt-fname' %>
+
+          <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
+          <%= f.text_field :phone, class: 'form-control crt-fill-form classy-input', placeholder: "Téléphone", id: 'crt-phone' %>
+
+          <label>Le client est</label>
+          <%= select(:user, :partner, [['Particulier', 0], ['Entreprise', 1]], class: 'form-control') %>
+
+          <hr>
+          <div class="t-of-use mgs-med-note">
+          Les conditions d'utilisation suivantes vont lui être envoyé <%= link_to "les conditions d'utilisation de MGSuivi", termsofuse_path %>
+          </div>
+          <%= f.submit "Créer ce compte pour mon client", class: "btn btn-default btn-lg", id: "crt-submit" %>
+        <% end %>
+
+        <div class="pos-center blc-cancel">
+          <a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-md btn-block">Retour</a>
+        </div>
+
+        <div class="mgs-med-note">
+          Nous ne vous demandons que les informations essentielles. Le but est de pouvoir identifier et contacter le plus facilement le propriétaire du paquet. En dehors du transporteur qui doit vous acheminer votre paquet, nous ne partagerons jamais vos informations. Le transporteur signe une charte de confidentialité sur l'utilisation de vos données. Vous avez le droit de nous demander les informations que nous possédons vous concernants.
+        </div>
       </div>
-
-      <label>Nom de famille <span id="ck-name" class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.text_field :name, class: 'form-control crt-fill-form classy-input', placeholder: "Rakoto", id: 'crt-name' %>
-
-      <label>Prénom <span id="ck-fname" class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.text_field :firstname, class: 'form-control crt-fill-form classy-input', placeholder: "Aina", id: 'crt-fname' %>
-
-      <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
-      <%= f.text_field :phone, class: 'form-control crt-fill-form classy-input', placeholder: "Téléphone", id: 'crt-phone' %>
-
-      <label>Le client est</label>
-      <%= select(:user, :partner, [['Particulier', 0], ['Entreprise', 1]], class: 'form-control') %>
-
-      <hr>
-      <div class="t-of-use mgs-med-note">
-      Les conditions d'utilisation suivantes vont lui être envoyé <%= link_to "les conditions d'utilisation de MGSuivi", termsofuse_path %>
+      <div class="col-md-3">
       </div>
-      <%= f.submit "Créer ce compte pour mon client", class: "btn btn-default btn-lg", id: "crt-submit" %>
-    <% end %>
-
-    <div class="pos-center blc-cancel">
-      <a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-md btn-block">Retour</a>
     </div>
-
-    <div class="mgs-med-note">
-      Nous ne vous demandons que les informations essentielles. Le but est de pouvoir identifier et contacter le plus facilement le propriétaire du paquet. En dehors du transporteur qui doit vous acheminer votre paquet, nous ne partagerons jamais vos informations. Le transporteur signe une charte de confidentialité sur l'utilisation de vos données. Vous avez le droit de nous demander les informations que nous possédons vous concernants.
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="crt-block">Les données</div>
-
-    <div class="t-of-use mgs-lg-note">
-      Nous avons réduis tant que possible les données à nous fournir. Ces informations ne seront pas partagées et vous ne serez pas spammé.<br><br> Nous savons que c'est pénible pour tout le monde de créer un compte. Mais nous savons aussi que c'est une source de stress de commander à distance.<br><br><strong>Mais on vous assure que ça en vaut la peine.</strong>
-
-    </div>
-  </div>
 </div>

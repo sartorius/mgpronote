@@ -20,13 +20,20 @@ function mainFormLoaderInCaseOfChange(){
     listenAddCltFormCreate();
   }
   else if($('#mg-graph-identifier').text() == 'userbypart-gr'){
-    //edituser-gr
+
     listenAddCltFormCreate();
 
     //initialize
     $("#crt-submit").prop('disabled', true);
     $("#crt-submit").hide();
     listenClientFormToCreate();
+
+    $("#createByPart").click(function(){
+      $('#form-try-new-email').hide(500);
+      $('#form-crt-clt-by-part').show(200);
+      window.scrollTo(0, 0);
+    });
+
   }
   else if($('#mg-graph-identifier').text() == 'edituser-gr'){
     //edituser-gr
