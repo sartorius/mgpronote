@@ -19,6 +19,7 @@ If you plan to clone a sample empty version take the version 1.0
 To get started with the app, clone the repo and then install the needed gems:
 
 ```
+$ yarn add jquery@3.5.1
 $ bundle install --without production
 ```
 

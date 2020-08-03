@@ -1,0 +1,10 @@
+Bonjour <%= @user.name %> <%= @user.firstname %>,
+Ce compte a été créé automatiquement par <%= @partner_name.to_s %>.
+Bienvenue sur MG Suivi !
+
+Votre mot de passe généré automatiquement est: <%= @pwd.to_s %>
+
+Nous vous invitons très fortement à le changer dès que vous avez activé votre compte. Cet email est en version texte brute, il convient moins d'information que la version HTML que nous vous invitons à lire.
+Copiez coller le lien suivant dans votre navigateur pour profiter du meilleur de votre suivi:
+
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>

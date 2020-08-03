@@ -24,6 +24,10 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 
 -- SELECT * FROM CLI_ADD_CLT(user_id BIGINT, par_email VARCHAR(255));
 -- This action is attaching client to a company
+-- 3 is initial error
+-- 1 is not found
+-- 2 is already in the list of partner
+-- 4 is not activated
 DROP FUNCTION IF EXISTS CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255));
 CREATE OR REPLACE FUNCTION CLI_ADD_CLT(par_user_id BIGINT, par_email VARCHAR(255))
   -- By convention we return zero when everything is OK
@@ -35,15 +39,17 @@ DECLARE
   var_result          SMALLINT;
   var_result_exists   SMALLINT;
   var_partner_id      SMALLINT;
+  var_is_activated    BOOLEAN;
 BEGIN
     var_result := 3;
     -- Check if we found the email
     var_client_id := NULL;
-    SELECT id INTO var_client_id
+    var_is_activated := FALSE;
+
+    SELECT id, activated INTO var_client_id, var_is_activated
       FROM users u
       WHERE u.email = par_email
-      AND u.partner IN (0, 1)
-      AND u.activated = TRUE;
+      AND u.partner IN (0, 1);
 
     IF var_client_id IS NULL THEN
       -- The client does not exists
@@ -70,7 +76,12 @@ BEGIN
         ELSE
           -- Here we are good !
           INSERT INTO client_partner_xref (client_id, partner_id) VALUES (var_client_id, var_partner_id);
-          var_result := 0;
+
+          IF var_is_activated = TRUE THEN
+            var_result := 0;
+          ELSE
+            var_result := 4;
+          END IF; -- is activated
         END IF;
 
     END IF;

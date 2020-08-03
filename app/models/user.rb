@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token, :reset_token
-  before_save   :downcase_email
+  before_save   :downcase_email, :generate_client_ref
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }
   validates :firstname,  presence: true, length: { maximum: 50 }
@@ -47,14 +47,16 @@ class User < ApplicationRecord
     update_attribute(:activated,    true)
     update_attribute(:activated_at, Time.zone.now)
 
-    # I create the unique client code here
-    sql_query = " UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT) WHERE id = " + self.id.to_s + " ;"
-    ActiveRecord::Base.connection.exec_query(sql_query);
   end
 
   # Sends activation email.
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
+  end
+
+  # Sends activation email.
+  def send_activation_email_created_by_partner(pwd, partner_name, add_info)
+    UserMailer.account_activation_by_client(self, pwd, partner_name, add_info).deliver_now
   end
 
   # Sets the password reset attributes.
@@ -79,6 +81,11 @@ class User < ApplicationRecord
     # Converts email to all lower-case.
     def downcase_email
       self.email = email.downcase
+    end
+
+    # Generate the reference on Ruby Mode
+    def generate_client_ref
+      self.client_ref = rand(1..999)
     end
 
     # Creates and assigns the activation token and digest.

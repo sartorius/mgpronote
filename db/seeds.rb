@@ -1,5 +1,5 @@
 
-=begin
+
 # Create a main sample user.
 User.create!(name:  "Ratinahirana",
              firstname: "Herinirina",
@@ -24,7 +24,7 @@ User.create!(name:  "Rakotoarinia",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-=end
+
 # Revendeur
 User.create!(name:  "Mada Techno Mafy",
             firstname: "Njara",
@@ -39,7 +39,6 @@ User.create!(name:  "Mada Techno Mafy",
             activated_at: Time.zone.now)
 
 
-=begin
 # Patron
 User.create!(name:  "Rabemanara",
             firstname: "Fanny",
@@ -53,11 +52,11 @@ User.create!(name:  "Rabemanara",
             activated: true,
             activated_at: Time.zone.now)
 
-=end
+
 
 # Patron
 User.create!(name:  "Rakotomalala",
-            firstname: "Mamy",
+            firstname: "Mafy",
             email: "mamy.r@gmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
@@ -131,7 +130,7 @@ User.create!(name:  "Rakoto",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-=begin
+
 # Client
 User.create!(name:  "Ramilison",
             firstname: "Mila",
@@ -143,4 +142,3 @@ User.create!(name:  "Ramilison",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
-=end

@@ -12,10 +12,11 @@ default: &default
 development:
   adapter: postgresql
   encoding: unicode
-  database: mgscore_dev
+  database: localhost
+  database: mgsuivi_dev
   pool: 5
   username: postgres
-  password:
+  password: jmclairefornali
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
