@@ -35,76 +35,10 @@ function mainClientLoaderInCaseOfChange(){
         generateCSV();
       });
   }
-  else if($('#mg-graph-identifier').text() == 'userbypart-gr'){
-    //initialize
-    $("#crt-submit").prop('disabled', true);
-    $("#crt-submit").hide();
-    listenClientFormToCreate();
-  }
   else{
     //do nothing
   }
 }
-
-// Create the client by the partner
-
-function listenClientFormToCreate(){
-  $('#crt-email').val($('#email-crt-given').html());
-  $('#crt-pwd').val('00000000');
-  $('#crt-cpwd').val('00000000');
-
-  $( ".crt-fill-form" ).keyup(function() {
-    verityFieldClientByPartFormRef();
-  });
-  $("#crt-submit").click(function() {
-    $('#mg-add-pk-name').val(capitalizeFirstLetter($('#mg-add-pk-name').val()));
-  });
-
-}
-
-// Check element
-function validatePhoneNumberByPart(phonetest){
-  const re = /^[+-]?\d+$/;
-  return re.test(phonetest);
-}
-
-// CHECKER
-function verityFieldClientByPartFormRef(){
-  let allFieldOK = true;
-
-  // No check email
-  if($('#crt-name').val().length < 1){
-    allFieldOK = false;
-    $('#ck-name').show(800);
-  }
-  else{
-    $('#ck-name').hide(800);
-  }
-  if($('#crt-fname').val().length < 1){
-    allFieldOK = false;
-    $('#ck-fname').show(800);
-  }
-  else{
-    $('#ck-fname').hide(800);
-  }
-  if (!(validatePhoneNumberByPart($('#crt-phone').val()))){
-    allFieldOK = false;
-    $('#ck-phone').show(800);
-  }
-  else{
-    $('#ck-phone').hide(800);
-  }
-
-  if(allFieldOK){
-      $("#crt-submit").prop('disabled', false);
-      $("#crt-submit").show(500);
-  }
-  else{
-      $("#crt-submit").prop('disabled', true);
-      $("#crt-submit").hide(500);
-  }
-}
-
 
 function revokeClientPOCMng(name, id, o, email){
   // console.log('revokeClientPOCMng: you did click on me: ' + name + '#' + id + ' order: ' + o + ' email: ' + email);

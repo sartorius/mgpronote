@@ -1,0 +1,8 @@
+<form action="/clientmng" method="post" id="mg-checkbc-form">
+  <textarea class="form-control crt-fill-form" rows="1" name="email"  id="crt-email" placeholder="Email du client que vous voulez ajouter" style="resize: none;"></textarea>
+
+  <input type="submit" name="formSubmit" class="btn btn-lg btn-block btn-default" id="add-clt-submit"
+          value="Ajouter nouveau client"/>
+
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+</form>

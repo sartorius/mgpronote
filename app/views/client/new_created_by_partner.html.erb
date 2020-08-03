@@ -1,8 +1,31 @@
-<% provide(:title, 'Créer un compte pour un client') %>
-<h1>Créer un compte pour un client</h1>
+<% provide(:title, 'Client non trouvé') %>
+<h1>Client non trouvé</h1>
 <div id="mg-graph-identifier">userbypart-gr</div>
 
 <div class="row">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
+    <div class="t-of-use mgs-med-note">
+      Cet email n'existe pas encore chez MG Suivi :
+      <strong><i id='email-crt-given'><%= @email_to_create.to_s %></i></strong><br>
+      Il peut s'agir d'une erreur, nous vous invitons dans ce cas à corriger la saisie.<br><br>
+      <%= render 'form_new_client' %>
+      <hr>
+      Ou si vous avez vérifié, alors vous pouvez décider de créer le compte. Une création de compte par le transporteur a surtout de l'intérêt dans un cas d'enlèvement. Pour un cas de livraison, il est préférable que le client crée son compte pour qu'il puisse avoir son adresse référence unique.
+      <button id="manualValid" type="button" class="btn btn-lg btn-block btn-default-light manual-el">
+        Créer le compte client &nbsp; <i class="fas fa-plus-square"></i>
+      </button>
+
+      <div class="pos-center blc-cancel">
+				<a href="/" id="btn-cnl-nstp" class="btn  btn-default-light btn-md btn-block">Retour</a>
+			</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+  </div>
+</div>
+<div id="form-crt-clt-by-part" class="row">
   <div class="col-md-3">
   </div>
   <div class="col-md-6">
@@ -44,6 +67,9 @@
       <%= f.submit "Créer ce compte pour mon client", class: "btn btn-default btn-lg", id: "crt-submit" %>
     <% end %>
 
+    <div class="pos-center blc-cancel">
+      <a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-md btn-block">Retour</a>
+    </div>
 
     <div class="mgs-med-note">
       Nous ne vous demandons que les informations essentielles. Le but est de pouvoir identifier et contacter le plus facilement le propriétaire du paquet. En dehors du transporteur qui doit vous acheminer votre paquet, nous ne partagerons jamais vos informations. Le transporteur signe une charte de confidentialité sur l'utilisation de vos données. Vous avez le droit de nous demander les informations que nous possédons vous concernants.

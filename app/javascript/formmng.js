@@ -19,6 +19,15 @@ function mainFormLoaderInCaseOfChange(){
     $("#add-clt-submit").hide();
     listenAddCltFormCreate();
   }
+  else if($('#mg-graph-identifier').text() == 'userbypart-gr'){
+    //edituser-gr
+    listenAddCltFormCreate();
+
+    //initialize
+    $("#crt-submit").prop('disabled', true);
+    $("#crt-submit").hide();
+    listenClientFormToCreate();
+  }
   else if($('#mg-graph-identifier').text() == 'edituser-gr'){
     //edituser-gr
     //no initializion as pre-filled
@@ -222,5 +231,59 @@ function verityPwdEditFieldFormRef(){
   else{
       $("#editpwd-submit").prop('disabled', true);
       $("#editpwd-submit").hide(500);
+  }
+}
+
+
+// Create the client by the partner
+function listenClientFormToCreate(){
+  $('#crt-email').val($('#email-crt-given').html());
+  $('#crt-pwd').val('00000000');
+  $('#crt-cpwd').val('00000000');
+
+  $( ".crt-fill-form" ).keyup(function() {
+    verityFieldClientByPartFormRef();
+  });
+  $("#crt-submit").click(function() {
+    $('#mg-add-pk-name').val(capitalizeFirstLetter($('#mg-add-pk-name').val()));
+  });
+
+}
+
+
+// CHECKER
+function verityFieldClientByPartFormRef(){
+  let allFieldOK = true;
+
+  // No check email
+  if($('#crt-name').val().length < 1){
+    allFieldOK = false;
+    $('#ck-name').show(800);
+  }
+  else{
+    $('#ck-name').hide(800);
+  }
+  if($('#crt-fname').val().length < 1){
+    allFieldOK = false;
+    $('#ck-fname').show(800);
+  }
+  else{
+    $('#ck-fname').hide(800);
+  }
+  if (!(validatePhoneNumber($('#crt-phone').val()))){
+    allFieldOK = false;
+    $('#ck-phone').show(800);
+  }
+  else{
+    $('#ck-phone').hide(800);
+  }
+
+  if(allFieldOK){
+      $("#crt-submit").prop('disabled', false);
+      $("#crt-submit").show(500);
+  }
+  else{
+      $("#crt-submit").prop('disabled', true);
+      $("#crt-submit").hide(500);
   }
 }
