@@ -44,9 +44,11 @@
       <%= select(:user, :partner, [['Particulier', 0], ['Entreprise', 1]], class: 'form-control') %>
 
       <hr>
+
       <div class="t-of-use mgs-med-note">
       En créant votre compte, vous acceptez <%= link_to "les conditions d'utilisation de MGSuivi", termsofuse_path %>
       </div>
+
       <%= f.submit "Créer mon compte", class: "btn btn-default btn-lg", id: "crt-submit" %>
     <% end %>
     <div class="mgs-med-note">
