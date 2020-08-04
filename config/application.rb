@@ -28,7 +28,7 @@ module SampleApp
     ENV['MJ_SEND_MAIL_PWD'] = 'lesoiseaux1234567'
 
     ENV['SQL_LIMIT_MD'] = ' 250 '
-    ENV['SQL_LIMIT_LG'] = ' 500 '
+    ENV['SQL_LIMIT_LG'] = ' 800 '
     ENV['MAX_PRINT'] = '11'
 
     ENV['OMA_HEADER_KEY'] = 'dkpWR04wNVJlQXVHVzJ5RWl3dlVOWnhFaWM4NG5hYjk6cUhINUpZSEE5MmRsY2ZPeQ=='

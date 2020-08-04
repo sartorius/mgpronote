@@ -50,10 +50,24 @@
 				</button>
 			</div>
 
-			<div class="col-sm-4 fil-el-txt">
+
+			<div class="col-sm-1 fil-el-txt">
+				Pos. <i class="fas fa-th"></i>
+			</div>
+
+			<div class="col-sm-1 fil-el">
+				<select class="form-control" id="positionOffset">
+					<% for i in 0..@maxPrintConstEnv.to_i do %>
+						<option><%= i %></option>
+					<% end %>
+		    </select>
+			</div>
+
+			<div class="col-sm-2 fil-el-txt">
 				<span><i id='nb-el-dash'></i>&nbsp;trouvé(s)</span>&nbsp;
 				<span><i id='print-max-msg'></i></span>
 			</div>
+
 			<div class="col-sm-3 fil-el">
 				<textarea class="form-control" rows="1" id="filter-all" placeholder="Filtrez min. 3 caractères" style="resize: none;"></textarea>
 		  </div>

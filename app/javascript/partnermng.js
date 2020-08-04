@@ -278,7 +278,27 @@ function generatePrintedPDF(){
   //console.log('Click on generatePrintedPDF');
 
   var doc = new jsPDF();
-	var rowReseter = 1;
+
+
+  // We check the position here
+  var wantedPos = 0;
+  if(document.getElementById("positionOffset") == null){
+    // Do nothing
+  }
+  else {
+    wantedPos = parseInt(document.getElementById("positionOffset").selectedIndex);
+    //console.log('wantedPos 1: ' + wantedPos);
+    let maxPrintDisplay = $('#max-print-const').html();
+    //console.log('wantedPos 2: ' + wantedPos);
+    //console.log('maxPrintDisplay 2: ' + maxPrintDisplay);
+    if((parseInt(wantedPos) + printArray.length) > parseInt(maxPrintDisplay)){
+      //then we need to lower wanted Pos
+      //console.log('wantedPos 3: ' + wantedPos);
+      wantedPos = parseInt(maxPrintDisplay) - printArray.length + 1;
+    }
+  }
+  var rowReseter = 1 + parseInt(wantedPos/2);
+  //console.log('rowReseter: '+ rowReseter + ' wantedPos: ' + wantedPos);
 
   var currentDate = new Date();
   //console.log('current date: ' + currentDate.toLocaleString())
@@ -311,7 +331,10 @@ function generatePrintedPDF(){
   //rowReseter is the line counter
   //This handle row max is 2
   for(i=0; i<printArray.length; i++){
-    let oddOffsetX =  100 * (i % 2);
+    let oddOffsetX =  100 * ((parseInt(wantedPos)+i) % 2);
+    //console.log('i: ' + i);
+    //console.log('oddOffsetX: ' + oddOffsetX);
+    //console.log('rowReseter: '+ rowReseter);
     let celTitle = '';
     celTitle = celTitle + setCellSize(printArray[i].bcref);
     celTitle = celTitle + setCellSize(' / ' + printArray[i].cliref);
@@ -338,7 +361,7 @@ function generatePrintedPDF(){
                   barcodeHeight, null, 'FAST'); //Height // Fast is to get less big files
 
     // Incremetor are here
-    if(((i + 1) % 2) == 0){
+    if((((parseInt(wantedPos)+i) + 1) % 2) == 0){
       rowReseter++
     }
   }

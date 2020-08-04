@@ -83,7 +83,7 @@ CREATE TABLE ref_workflow (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Flux process Paris Tana standard');
+INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Paris Tana standard');
 
 
 CREATE TABLE mod_workflow (
