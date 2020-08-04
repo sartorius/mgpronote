@@ -2,6 +2,7 @@
 <div id="mg-graph-identifier">pardash-gr</div>
 <%= render 'partner/partnerutils' %>
 <%= render 'partner/dirtyjspdf' %>
+<%= render 'partner/dirtyqrcode' %>
 <% if @resultSet.nil? %>
 	//Error
   <script>
@@ -97,7 +98,7 @@
 		<hr>
 		Le symbole&nbsp; <i class="c-w fas fa-box"></i> &nbsp;indique que le paquet est une Livraison. Il doit être livré au local transporteur.<br>
 		Le symbole&nbsp; <i class="c-b fas fa-truck"></i> &nbsp;indique que le paquet est un enlèvement. Le transporteur ira l'enlever à l'adresse indiquée.<br>
-		Le symbole&nbsp; <i class="fas fa-bars"></i>&nbsp; permet de selectionner les <%= (@maxPrintConstEnv.to_i + 1).to_s %> premiers éléments de la liste. Le maximum de suivi par impression étant limité à <%= (@maxPrintConstEnv.to_i + 1).to_s %>.<br>
+		Le symbole&nbsp; <i class="fas fa-bars"></i>&nbsp; permet de selectionner les <%= (@maxPrintConstEnv.to_i + 1).to_s %> premiers éléments de la liste. Le maximum de suivi par impression étant limité à <%= (@maxPrintConstEnv.to_i + 1).to_s %>. Ce bouton ne sélectionne pas les lignes déjà imprimées.<br>
 		Le symbole&nbsp; <i class="fas fa-print"></i>&nbsp; va apparaître sur la ligne dans la colonne client dès que vous aurez imprimé la référence. Il disparaîtra si vous rechargez la page.
 	</div>
 </div>

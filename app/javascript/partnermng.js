@@ -15,7 +15,9 @@ function mainPartnLoaderInCaseOfChange(){
       runjsPartnerGrid();
     });
     $( "#print-dash" ).click(function() {
+      // To call back to use these only when ended
       handlePrint();
+
     });
     $( "#mgs-dash-print-csv" ).click(function() {
       generatePartDashCSV();
@@ -37,15 +39,17 @@ function mainPartnLoaderInCaseOfChange(){
 
       // Display the barcode to print
       //DisplayOne
-      JsBarcode("#mbc-0", getBarcodeMGS);
+      // JsBarcode("#mbc-0", getBarcodeMGS);
+      new QRCode(document.getElementById("mbc-0"), { text: getBarcodeMGS, width: 96, height: 96 });
       $("#btn-print-bc").click(function() {
-          //generateCb12PDF();
-
-          let oneBarcode = {
-            bcref: mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()),
-            cliref: $('#cli-ref').html(),
-          };
-          printArray.push(oneBarcode);
+          // If the user click a secund time we want to not push again
+          if(printArray.length == 0){
+              let oneBarcode = {
+                bcref: mgsEncode($('#id-seeone').html(), $('#sec-seeone').html()),
+                cliref: $('#cli-ref').html(),
+              };
+              printArray.push(oneBarcode);
+          }
           generatePrintedPDF();
       });
 
@@ -147,7 +151,7 @@ function generateCb12PDF(){
 	var offsetX = 5;
 	var offsetY = 30;
 
-	var cellSize = 37;
+	var cellSize = 45;
 	var offsetY2 = 40;
   var offsetTextY2 = 20;
 	var offsetBackY = 5;
@@ -178,7 +182,7 @@ function generateCb12PDF(){
 
 
     // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
-    doc.addImage(document.getElementById('mbc-' + i).src, //img src
+    doc.addImage(document.getElementById('mbc-' + i).getElementsByTagName('img')[0].src, //img src
                   'PNG', //format
                   offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
                   offsetY2*rowReseter, //y
@@ -201,7 +205,8 @@ function display12Cb(){
     // Use this to pad padStart(2, '0')
     dataTagToJsonArray[i].ref_tag = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
     $("#item-bc-"+i).html(dataTagToJsonArray[i].ref_tag);
-    JsBarcode("#mbc-"+i, dataTagToJsonArray[i].ref_tag);
+    //JsBarcode("#mbc-"+i, dataTagToJsonArray[i].ref_tag);
+    new QRCode(document.getElementById("mbc-"+i), { text: dataTagToJsonArray[i].ref_tag, width: 96, height: 96 });
     //JsBarcode("#mbc-"+i, 'M9999999999PAK15');
     // var i = 99999999999; i.toString(34); >> 1uovgaaj
   }
@@ -215,13 +220,24 @@ function goToPartBarcode(lid, lsec){
   $("#mg-checkbc-form").submit();
 }
 
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+
 function handlePrint(){
   //console.log('handlePrint: ');
   //console.log(JSON.stringify(printArray));
 
   for(i=0; i<printArray.length; i++){
     $("#item-bc-"+i).html(printArray[i].bcref + '<br>' + printArray[i].cliref + '<br>' + $('#part-tech-name').html());
-    JsBarcode("#mbc-"+i, printArray[i].bcref);
+    //JsBarcode("#mbc-"+i, printArray[i].bcref);
+    new QRCode(document.getElementById("mbc-"+i), { text: printArray[i].bcref, width: 96, height: 96 });
+    //console.log('I am imging: ' + i);
     //We need to notify that these have been printed for the session
     for(k=0; k<dataTagToJsonArray.length; k++){
       if(dataTagToJsonArray[k].id == printArray[i].id){
@@ -231,17 +247,35 @@ function handlePrint(){
     }
 
   }
-  generatePrintedPDF();
 
+  let needToPrinted = true;
+  // We have to check the element are ready
+  var checkExist = setInterval(function() {
+     if(needToPrinted){
+       if (checkIfAllQRCodeHasBeenGenerate()) {
+          //console.log("All generated !");
+          needToPrinted = false;
+          generatePrintedPDF();
+          clearPrint();
+       }
+     }
+  }, 100); // check every 100ms
+}
 
-
-  //Do not forget to clear Print button
-  clearPrint();
+function checkIfAllQRCodeHasBeenGenerate(){
+  let allGenerated = true;
+  for(i=0; i<printArray.length; i++){
+    if(typeof document.getElementById('mbc-'+i).getElementsByTagName('img')[0] === "undefined"){
+      allGenerated = false;
+      break;
+    }
+  }
+  return allGenerated;
 }
 
 function generatePrintedPDF(){
 	$("body").addClass("loading");
-  console.log('Click on generatePrintedPDF');
+  //console.log('Click on generatePrintedPDF');
 
   var doc = new jsPDF();
 	var rowReseter = 1;
@@ -254,18 +288,23 @@ function generatePrintedPDF(){
 	var cel2 = '';
 	var cel3 = '';
 
-  var barcodeWidth = 60;
-  var barcodeHeight = 25;
+  var barcodeWidth = 20;
+  var barcodeHeight = 20;
 
 	var startY = 15;
 	var sizeY = 20;
 	var offsetX = 5;
 	var offsetY = 30;
 
-	var cellSize = 37;
+	var cellSize = 45;
+	var offsetY2margin = 5;
 	var offsetY2 = 40;
+	var offsetY2Details = 5;
   var offsetTextY2 = 20;
 	var offsetBackY = 5;
+
+
+
 
   //This should be the loop for one page
   //Should not oversize 12
@@ -273,16 +312,25 @@ function generatePrintedPDF(){
   //This handle row max is 2
   for(i=0; i<printArray.length; i++){
     let oddOffsetX =  100 * (i % 2);
+    let celTitle = '';
+    celTitle = celTitle + setCellSize(printArray[i].bcref);
+    celTitle = celTitle + setCellSize(' / ' + printArray[i].cliref);
+    let celTitleRef = doc.setFontSize(10).splitTextToSize(celTitle, cellSize);
+    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2margin, celTitleRef);
+
     let cel1 = '';
-    cel1 = cel1 + setCellSize('REF: ' + printArray[i].bcref);
-    cel1 = cel1 + setCellSize(' - Client: ' + printArray[i].cliref);
+    cel1 = cel1 + setCellSize('Type: ' + (printArray[i].typedorp == 'D' ? 'LIVRAISON_' : 'ENLEVEMENT'));
+    cel1 = cel1 + setCellSize(' - Code: ' + printArray[i].wfcode);
+    cel1 = cel1 + setCellSize(' - Desc: ' + printArray[i].wfdesc);
     cel1 = cel1 + " - Appartient à: " + $('#part-tech-name').html();
-    let celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
-    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, 3 + (offsetY2 + 1)*rowReseter, celRef);
+    //.setFont('Lucida Console')
+    let celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);
+    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2Details + offsetY2margin, celRef);
 
     //console.log('Element print read: mbc-' + i );
     // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
-    doc.addImage(document.getElementById('mbc-' + i).src, //img src
+    //console.log('here is i value: ' + i);
+    doc.addImage(document.getElementById('mbc-' + i).getElementsByTagName('img')[0].src, //img src
                   'PNG', //format
                   offsetX + oddOffsetX, //x oddOffsetX is to define if position 1 or 2
                   offsetY2*rowReseter, //y
@@ -386,7 +434,7 @@ function fillMaxPrint(){
       //console.log('fillMaxPrint: ' + filteredDataTagToJsonArray[iallP].id);
       //console.log('printArray.length: ' + printArray.length);
       if(filteredDataTagToJsonArray[iallP].ald_print == 'N'){
-        printMngOrder(filteredDataTagToJsonArray[iallP].id, 'U', filteredDataTagToJsonArray[iallP].ref_tag, filteredDataTagToJsonArray[iallP].oclient_ref);
+        printMngOrder(filteredDataTagToJsonArray[iallP].id, 'U', filteredDataTagToJsonArray[iallP].ref_tag, filteredDataTagToJsonArray[iallP].oclient_ref, filteredDataTagToJsonArray[iallP].type_pack, filteredDataTagToJsonArray[iallP].rfw_code, filteredDataTagToJsonArray[iallP].rfw_desc);
       }
       else{
         // It has been printed already we inc more one
@@ -399,7 +447,7 @@ function fillMaxPrint(){
   }
 }
 
-function printMngOrder(id, order, bcref, cliref){
+function printMngOrder(id, order, bcref, cliref, ptypedorp, pwfcode, pwfdesc){
   const MAX_PRINT = parseInt($('#max-print-const').html());
   //console.log('MAX_PRINT: ' + MAX_PRINT);
   let updateArrayList = false;
@@ -417,7 +465,10 @@ function printMngOrder(id, order, bcref, cliref){
       let el = {
                 id: parseInt(id),
                 bcref: bcref,
-                cliref: cliref
+                cliref: cliref,
+                typedorp: ptypedorp,
+                wfcode: pwfcode,
+                wfdesc: pwfdesc
               };
       printArray.push(el);
       updateArrayList = true;
@@ -662,7 +713,7 @@ function runjsPartnerGrid(){
           if($target.closest(".btn-print-mng").length) {
              // handle cell click
              //console.log('IN btn-print-mng');
-             printMngOrder(args.item.id, args.item.print, args.item.ref_tag, args.item.oclient_ref);
+             printMngOrder(args.item.id, args.item.print, args.item.ref_tag, args.item.oclient_ref, args.item.type_pack, args.item.rfw_code, args.item.rfw_desc);
           }
           else{
             //console.log('OUT btn-print-mng');
@@ -705,7 +756,8 @@ function clearPrint(){
   /* clean barcode list */
   for(i=0; i<printArray.length; i++){
     $("#item-bc-"+i).html('');
-    JsBarcode("#mbc-"+i, '0');
+    //JsBarcode("#mbc-"+i, '0');
+    new QRCode(document.getElementById("mbc-"+i), { text: '0', width: 96, height: 96 });
   }
 
   runjsPartnerGrid();

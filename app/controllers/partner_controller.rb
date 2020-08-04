@@ -163,12 +163,13 @@ class PartnerController < ApplicationController
                       " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
                       " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
                       " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, " +
+                      " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, rfw.code AS rfw_code, rfw.description AS rfw_desc, " +
                       " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step)) AS raw_data " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +
                       " JOIN users uo ON uo.id = bc.owner_id " +
+                      " JOIN ref_workflow rfw ON rfw.id = bc.wf_id " +
                       " WHERE u.id = " + @current_user.id.to_s +
                       sql_clause +
                       # End partner check
