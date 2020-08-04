@@ -274,7 +274,8 @@ function checkIfAllQRCodeHasBeenGenerate(){
 }
 
 function generatePrintedPDF(){
-	$("body").addClass("loading");
+	//$("body").addClass("loading");
+  //$("#screen-load").show();
   //console.log('Click on generatePrintedPDF');
 
   var doc = new jsPDF();
@@ -368,7 +369,8 @@ function generatePrintedPDF(){
 
   doc.save('MGSuivi_Print');
 
-  $("body").removeClass("loading");
+  //$("body").removeClass("loading");
+  //$("#screen-load").hide();
 }
 
 
