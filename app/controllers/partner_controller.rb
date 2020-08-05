@@ -56,16 +56,18 @@ class PartnerController < ApplicationController
   #One barcode manager
   def onebarcodemng
     sql_query = "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
-                		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, rp.delivery_addr, rp.pickup_addr, rp.name AS part_name,  " +
+                		" bc.to_phone AS tphone, bc.ext_ref, bc.secret_code AS secret_code, rp.delivery_addr, rpw.pickup_addr, rpw.pickup_phone, rp.name AS part_name,  " +
                     " bc.type_pack, bc.p_name_firstname, bc.description as bcdescription, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
-                		" to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
+                		" to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rwf.code AS rwf_code, rwf.description  AS rwf_description, rwf.mode AS rwf_mode, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
                 		" uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.id AS cid, uc.client_ref AS cclient_ref, uc.email AS cemail, uc.phone AS cphone " +
                 		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +
-                  		"JOIN ref_status rs ON rs.id = bc.status " +
-                  		"JOIN users uo ON uo.id = bc.owner_id " +
-                  		"JOIN users uc ON uc.id = bc.creator_id " +
+                      " JOIN ref_partner_workflow rpw ON bc.wf_id = rpw.wf_id AND rp.id = rpw.partner_id " +
+                      " JOIN ref_workflow rwf ON rwf.id = bc.wf_id " +
+                  		" JOIN ref_status rs ON rs.id = bc.status " +
+                  		" JOIN users uo ON uo.id = bc.owner_id " +
+                  		" JOIN users uc ON uc.id = bc.creator_id " +
                   		" WHERE bc.id = " + params[:checkcbid] +
                       " AND bc.partner_id = " + @current_user.partner.to_s +
                   		" AND bc.secure = " + params[:checkcbsec] + ";"
@@ -164,7 +166,7 @@ class PartnerController < ApplicationController
                       " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
                       " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
                       " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, rfw.code AS rfw_code, rfw.description AS rfw_desc, " +
-                      " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step)) AS raw_data " +
+                      " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step, rfw.description, rfw.code)) AS raw_data " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner
                       " JOIN users u ON u.partner = bc.partner_id " +

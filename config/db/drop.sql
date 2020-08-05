@@ -6,4 +6,5 @@ DROP TABLE IF EXISTS mod_workflow;
 DROP TABLE IF EXISTS ref_workflow;
 DROP TABLE IF EXISTS grp_status;
 DROP TABLE IF EXISTS ref_status;
+DROP TABLE IF EXISTS ref_partner_workflow;
 DROP TABLE IF EXISTS ref_partner;

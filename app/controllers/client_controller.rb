@@ -26,7 +26,7 @@ class ClientController < ApplicationController
 
       puts 'We have retrieve email: ' + params[:client_email].to_s
 
-      sql_query = "SELECT * FROM CLI_CRT_BC(" + @current_user.id.to_s + ", "+ params[:client_id] +", CAST(" + params[:partner_id] + " AS SMALLINT), TRIM('" + params[:order] + "'));"
+      sql_query = "SELECT * FROM CLI_CRT_BC(" + @current_user.id.to_s + ", "+ params[:client_id] +", CAST(" + params[:partner_id] + " AS SMALLINT), TRIM('" + params[:order] + "'), CAST(" + params[:wf_id] + " AS SMALLINT));"
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
 
       if @resultSet[0]['cli_crt_bc'].to_i > 0 then
@@ -119,9 +119,10 @@ class ClientController < ApplicationController
 
   def self.get_email_text_after_attach_client_to_partner(partner_id, email)
     #We need to retrieve the client information and partner address to let the user know
-    sql_query_mail_add_client = "SELECT u.firstname, u.client_ref, u.id, rp.delivery_addr, rp.pickup_addr FROM client_partner_xref cpx " +
+    sql_query_mail_add_client = "SELECT u.firstname, u.client_ref, u.id, rp.delivery_addr, rpw.pickup_addr FROM client_partner_xref cpx " +
                                       " JOIN users u ON u.id = cpx.client_id " +
                                       " JOIN ref_partner rp ON rp.id = cpx.partner_id " +
+                                      " JOIN ref_partner_workflow rpw ON rp.main_wf_id = rpw.wf_id " +
                                       " WHERE rp.id = " + partner_id.to_s +
                                       " AND u.email = " + email + ";"
 
@@ -149,6 +150,8 @@ class ClientController < ApplicationController
 
   def clientmng
     load_clients
+    load_partner_workflow
+
     @getAuthToken = mgs_form_authenticity_token.to_s
 
 
@@ -180,6 +183,21 @@ class ClientController < ApplicationController
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
       @maxRowParamMD = " Cet écran récupère un maximum de " + ENV['SQL_LIMIT_MD'].to_s + " lignes. Si vous avez besoin de plus contactez-nous avec le code UPG921."
+    end
+    rescue Exception => exc
+       flash.now[:danger] = "Une erreur est survenue #{exec.message}"
+  end
+
+  # The result set retrieved here is different from Partner or Client.
+  # The client need to break the list per partner as JsonArray
+  # For the client we do use it like it is
+  def load_partner_workflow
+    sql_query = "SELECT rw.id AS rw_id, rw.code AS rw_code, rw.description AS rw_description, rpw.partner_id AS rpw_partner_id " +
+                " FROM ref_workflow rw JOIN ref_partner_workflow rpw ON rpw.wf_id = rw.id " +
+                " WHERE rpw.partner_id = " + @current_user.partner.to_s + " ORDER BY rw.id ASC;"
+    begin
+
+      @resultSetWorkflow = ActiveRecord::Base.connection.exec_query(sql_query)
     end
     rescue Exception => exc
        flash.now[:danger] = "Une erreur est survenue #{exec.message}"

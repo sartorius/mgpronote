@@ -113,16 +113,18 @@ class PersoreselController < ApplicationController
 
   def seeone
     sql_query = "SELECT bc.id AS id, bc.secure, bc.to_name AS tname, bc.to_firstname AS tfirstname, " +
-                		" bc.to_phone AS tphone, bc.description as bcdescription, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.delivery_addr, rp.pickup_addr, rp.name AS part_name,  " +
+                		" bc.to_phone AS tphone, bc.description as bcdescription, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.delivery_addr, rpw.pickup_addr, rpw.pickup_phone, rp.name AS part_name,  " +
                     " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
-                		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
+                		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, rwf.code AS rwf_code, rwf.description  AS rwf_description, rwf.mode AS rwf_mode, " +
                 		" uo.id AS oid, uo.name AS oname, uo.client_ref AS oclient_ref, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.id AS cid, uc.client_ref AS cclient_ref, uc.email AS cemail, uc.phone AS cphone " +
                 		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +
-                  		"JOIN ref_status rs ON rs.id = bc.status " +
-                  		"JOIN users uo ON uo.id = bc.owner_id " +
-                  		"JOIN users uc ON uc.id = bc.creator_id " +
+                      " JOIN ref_partner_workflow rpw ON bc.wf_id = rpw.wf_id AND rp.id = rpw.partner_id " +
+                      " JOIN ref_workflow rwf ON rwf.id = bc.wf_id " +
+                  		" JOIN ref_status rs ON rs.id = bc.status " +
+                  		" JOIN users uo ON uo.id = bc.owner_id " +
+                  		" JOIN users uc ON uc.id = bc.creator_id " +
                   		" WHERE bc.id = " + params[:checkcbid] +
                   		" AND bc.secure = " + params[:checkcbsec] +
                   		" AND bc.owner_id = " + @current_user.id.to_s + ";"

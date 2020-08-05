@@ -14,6 +14,11 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
 
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 3);
+
 
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
 -- UPDATE users SET name = 'Mada techno mafy' WHERE email = 'njara.h@gmail.com';
@@ -95,7 +100,8 @@ $func$  LANGUAGE plpgsql;
 -- This action is creating BC by partner or by client
 -- Has this method can be used by the client we need to check the access right
 DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1));
-CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1))
+DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1), par_wf_id SMALLINT);
+CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1), par_wf_id SMALLINT)
   -- By convention we return zero when everything is OK
   RETURNS BIGINT AS
                -- Do the return at the end
@@ -112,11 +118,9 @@ DECLARE
 
   var_result          BIGINT;
   var_result_exists   SMALLINT;
-  var_def_wf_id       SMALLINT;
 BEGIN
     var_result := -3;
     var_can_crt := FALSE;
-    var_def_wf_id := 1;
 
     -- Check if the creator can create a BC
     var_partner_id := NULL;
@@ -126,6 +130,8 @@ BEGIN
       AND u.partner > 1
       AND u.activated = TRUE;
 
+
+    -- Not in general way
     IF var_partner_id IS NULL THEN
       -- The creator is not a partner but client: personal or reseller
       -- For this partner
@@ -142,7 +148,7 @@ BEGIN
         AND bc.creator_id = par_creator_id;
 
       -- We retrieve the limit here but the main WORKFLOW as well
-      SELECT max_bc_clt, main_wf_id INTO var_max_bc_clt, var_def_wf_id
+      SELECT max_bc_clt INTO var_max_bc_clt
           FROM ref_partner rp
           WHERE rp.id = par_partner_id;
 
@@ -162,9 +168,9 @@ BEGIN
       -- Do the insert
       var_secure := FLOOR(random() * 9999 + 1)::INT;
       INSERT INTO barcode (creator_id, owner_id, partner_id, wf_id, secure, secret_code, type_pack, status)
-        VALUES (par_creator_id, par_client_id, par_partner_id, var_def_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
+        VALUES (par_creator_id, par_client_id, par_partner_id, par_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, par_wf_id, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
 
       var_result := var_bc_id;
     ELSIF var_reach_limit = TRUE THEN

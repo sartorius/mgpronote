@@ -634,8 +634,18 @@ function runjsPartnerGrid(){
 
           }
         },
+        { name: "rfw_code",
+          title: '<i class="fas fa-clipboard-list"></i>',
+          type: "text",
+          align: "center",
+          width: 10,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return value;
+          }
+        },
         { name: "type_pack",
-          title: '<i class="fas fa-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "text",
           align: "center",
           width: 10,

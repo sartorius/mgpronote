@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS mod_workflow;
 DROP TABLE IF EXISTS ref_workflow;
 DROP TABLE IF EXISTS grp_status;
 DROP TABLE IF EXISTS ref_status;
+DROP TABLE IF EXISTS ref_partner_workflow;
 DROP TABLE IF EXISTS ref_partner;
 CREATE TABLE ref_partner (
   id                SMALLINT        PRIMARY KEY,
@@ -19,43 +20,33 @@ CREATE TABLE ref_partner (
   type              CHAR(1)         DEFAULT 'P',
   website                       VARCHAR(500),
   delivery_addr                 VARCHAR(500),
-  -- Where to retrieve in Madagascar
-  pickup_addr                   VARCHAR(500),
-  pickup_phone                  VARCHAR(20),
   -- Paris Workflow id
   main_wf_id        SMALLINT        DEFAULT 1,
   max_bc_clt        SMALLINT        DEFAULT 5,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-/*
-ALTER TABLE ref_partner ADD COLUMN pickup_phone VARCHAR(20);
-UPDATE ref_partner SET pickup_phone = '0326711567' WHERE id IN (2);
-UPDATE ref_partner SET pickup_phone = '0338919064' WHERE id IN (3);
-UPDATE ref_partner SET to_phone = '0624788912' WHERE id IN (2);
-UPDATE ref_partner SET to_phone = '0764288678' WHERE id IN (3);
-
-ALTER TABLE ref_partner ADD COLUMN max_bc_clt_day    SMALLINT        DEFAULT 3;
-UPDATE ref_partner SET delivery_addr = 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I' WHERE id IN (2);
-UPDATE ref_partner SET delivery_addr = 'FANNY SERVICE TRANSPORT@ 21 RUE DE LA GARE, 92304 Maison la Foire', pickup_addr = 'Box 10A, Centre La City Hazobe Tana 101'  WHERE id IN (3);
-*/
-
 -- These are example of Carrier
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
-INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr, pickup_phone) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', '48 Rue de la Boétie, 93078 Les Pinsons de la Rivière', 'Box 762, Centre Riviera Malaza Tana 101', '0326711567');
-INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, pickup_addr, pickup_phone) VALUES (3, 'Fanny Service Transport', 'Exemple de transporteur 2', 'C', 1, '0764288678', '78 Rue de la Gare, 92304 Maison la Foire', 'Box 782, Centre La City Hazobe Tana 101', '0338919064');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr) VALUES (3, 'JBM Fret Service', 'JBM Fret Service', 'C', 2, '0664066109', 'JBM Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL');
 
-UPDATE ref_partner SET delivery_addr = 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I' WHERE id IN (2);
-UPDATE ref_partner SET delivery_addr = 'FANNY SERVICE TRANSPORT@ 21 RUE DE LA GARE, 92304 Maison la Foire', pickup_addr = 'Box 10A, Centre La City Hazobe Tana 101'  WHERE id IN (3);
+CREATE TABLE ref_partner_workflow (
+  id                SMALLINT        PRIMARY KEY,
+  partner_id        SMALLINT        NOT NULL,
+  wf_id             SMALLINT        NOT NULL,
+  pickup_addr       VARCHAR(500)    NOT NULL,
+  pickup_phone      VARCHAR(30)     NOT NULL,
+  create_date       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 
-
--- Need a cross table partner x mod_workflow
--- Need a cross table client x partner
-
-
--- Todo add pickup phone
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (1, 2, 1, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (2, 3, 2, 'AEROPORT A.A NETO - FACE NOUVEL AEROGARE POINTE NOIRE CONGO', '055743447/066443676');
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (3, 3, 3, 'AEROPORT A.A NETO - FACE NOUVEL AEROGARE POINTE NOIRE CONGO', '055743447/066443676');
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (4, 3, 4, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (5, 3, 5, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
 -- Transition ref
 CREATE TABLE ref_status (
   id                  SMALLINT      PRIMARY KEY,
@@ -107,6 +98,13 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7);
 
 
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (12, 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (13, 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (14, 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5);
+
 -- Particular case of pickup but it is as well created from screen
 UPDATE ref_status SET need_to_notify = FALSE;
 UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 2, 6, 10);
@@ -126,10 +124,10 @@ INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (1, 'Réception',
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (2, 'Enlèvement', FALSE, 2);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Local transporteur', TRUE, 3);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (4, 'Pesée', TRUE, 4);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot frêt aéroport', TRUE, 5);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée Tana', TRUE, 6);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot frêt', TRUE, 5);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée au pays', TRUE, 6);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Disponible client', TRUE, 7);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Colis remis', TRUE, 8);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Remis', TRUE, 8);
 
 -- END GRP Workflow
 
@@ -138,10 +136,21 @@ CREATE TABLE ref_workflow (
   id            SMALLINT      PRIMARY KEY,
   code          CHAR(2)       NOT NULL,
   description   VARCHAR(250)  NOT NULL,
+  -- P for plane
+  -- B for boat
+  -- R for road
+  mode          CHAR(1)       NOT NULL,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Flux process Paris Tana standard');
+-- The code or workflow may be duplicates but the code is different for the partner
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (1, 'TA', 'Paris Tana aérien', 'P');
+
+
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (2, 'PA', 'Paris Pointe Noire aérien', 'P');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (3, 'PM', 'Paris Pointe Noire maritime', 'B');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (4, 'BA', 'Paris Brazzaville aérien', 'P');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (5, 'BM', 'Paris Brazzaville maritime', 'B');
 
 
 CREATE TABLE mod_workflow (
@@ -152,12 +161,10 @@ CREATE TABLE mod_workflow (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Paris Tana Aérien
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 2);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 1);
-
--- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 2); -- remove
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 4);
--- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 4);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 4, 2);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 2, 6);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 7);
@@ -168,6 +175,60 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 11, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
+
+-- Paris Pointe Noire Aérien
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 6, 7);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 6, 8);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 6, 11);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 8, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 7, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 11, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 12, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 10, -1);
+
+-- Paris Brazzaville Aérien
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 6, 7);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 6, 8);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 6, 11);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 8, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 7, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 11, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 13, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 10, -1);
+
+
+-- Paris Pointe Maritime
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 6, 14);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 14, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 12, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 10, -1);
+
+-- Paris Brazzaville Maritime
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 6, 14);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 14, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 13, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 10, -1);
+
 
 
 CREATE TABLE barcode(
@@ -691,6 +752,11 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
 
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 3);
+
 
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
 -- UPDATE users SET name = 'Mada techno mafy' WHERE email = 'njara.h@gmail.com';
@@ -772,7 +838,8 @@ $func$  LANGUAGE plpgsql;
 -- This action is creating BC by partner or by client
 -- Has this method can be used by the client we need to check the access right
 DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1));
-CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1))
+DROP FUNCTION IF EXISTS CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1), par_wf_id SMALLINT);
+CREATE OR REPLACE FUNCTION CLI_CRT_BC(par_creator_id BIGINT, par_client_id BIGINT, par_partner_id SMALLINT, par_order CHAR(1), par_wf_id SMALLINT)
   -- By convention we return zero when everything is OK
   RETURNS BIGINT AS
                -- Do the return at the end
@@ -801,6 +868,8 @@ BEGIN
       AND u.partner > 1
       AND u.activated = TRUE;
 
+
+    -- Not in general way
     IF var_partner_id IS NULL THEN
       -- The creator is not a partner but client: personal or reseller
       -- For this partner
@@ -816,6 +885,7 @@ BEGIN
         WHERE bc.create_date > NOW() - INTERVAL '7 DAY'
         AND bc.creator_id = par_creator_id;
 
+      -- We retrieve the limit here but the main WORKFLOW as well
       SELECT max_bc_clt INTO var_max_bc_clt
           FROM ref_partner rp
           WHERE rp.id = par_partner_id;
@@ -833,11 +903,12 @@ BEGIN
 
     IF var_can_crt = TRUE THEN
 
+      -- Do the insert
       var_secure := FLOOR(random() * 9999 + 1)::INT;
-      INSERT INTO barcode (creator_id, owner_id, partner_id, secure, secret_code, type_pack, status)
-        VALUES (par_creator_id, par_client_id, par_partner_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
+      INSERT INTO barcode (creator_id, owner_id, partner_id, wf_id, secure, secret_code, type_pack, status)
+        VALUES (par_creator_id, par_client_id, par_partner_id, par_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, 1, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, par_wf_id, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
 
       var_result := var_bc_id;
     ELSIF var_reach_limit = TRUE THEN

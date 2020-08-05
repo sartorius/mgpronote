@@ -27,6 +27,19 @@
         </div>
     <% end %>
 
+    <label>Mode de transport</label><br>
+    <div class="field-md">
+
+      <%= @resultSet[0]['rwf_code'].to_s %>/<%= @resultSet[0]['rwf_description'].to_s %>&nbsp;
+      <% if (@resultSet[0]['rwf_mode'].to_s == 'P') %>
+        <i class="fas fa-plane-departure"></i>
+      <% elsif (@resultSet[0]['rwf_mode'].to_s == 'B') %>
+        <i class="fas fa-anchor"></i>
+      <% else %>
+        <i class="fas fa-road"></i>
+      <% end %>
+    </div>
+
     <label>Partenaire</label><br>
     <div class="field-md">
       <%= @resultSet[0]['part_name'].to_s %>
@@ -102,12 +115,13 @@
         </div>
         <label>À quelle adresse faire livrer votre colis ?</label><br>
         <div class="field-md">
-          <%= @resultSet[0]['delivery_addr'].split('@')[0].upcase %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %><br>
+          <%= @resultSet[0]['delivery_addr'].split('@')[0].upcase %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %>/<%= @resultSet[0]['rwf_code'].to_s %><br>
           <%= @resultSet[0]['delivery_addr'].split('@')[1].upcase %>
         </div>
         <div class="t-of-use mgs-med-note-imp">
           <strong><i class="fas fa-star"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
-           votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong>.
+           votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong> et
+           le mode de transport <strong><%= @resultSet[0]['rwf_code'].to_s %></strong>: <%= @resultSet[0]['rwf_description'].to_s %>.<br>
           Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
           <strong>Chaque client a son code de référence unique et il ne doit pas être partagé.</strong>
         </div>
@@ -137,10 +151,15 @@
     <div class="t-of-use mgs-med-note">
       Le lieu où allez récupérer le paquet.
     </div>
-    <label>Destination finale où récupérer le colis</label><br>
+    <label><i class="fas fa-warehouse"></i>&nbsp;Destination finale où récupérer le colis</label><br>
     <div class="field-md">
       <%= @resultSet[0]['pickup_addr'].to_s %>
     </div>
+    <label><i class="fas fa-warehouse"></i>&nbsp;Téléphone du partenaire</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['pickup_phone'].to_s %>
+    </div>
+    <hr>
     <% if (@resultSet[0]['tname'].nil?) || ((@resultSet[0]['tname'] == @resultSet[0]['oname']) && (@resultSet[0]['tfirstname'] == @resultSet[0]['ofirstname'])) %>
       <label>Receptionneur.euse</label><br>
       <div class="field-md">

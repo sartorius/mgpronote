@@ -49,6 +49,13 @@ INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp
 INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7);
 
 
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (12, 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (13, 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+
+
+INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (14, 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5);
+
 -- Particular case of pickup but it is as well created from screen
 UPDATE ref_status SET need_to_notify = FALSE;
 UPDATE ref_status SET need_to_notify = TRUE WHERE id IN (-1, 2, 6, 10);
@@ -68,10 +75,10 @@ INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (1, 'Réception',
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (2, 'Enlèvement', FALSE, 2);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Local transporteur', TRUE, 3);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (4, 'Pesée', TRUE, 4);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot frêt aéroport', TRUE, 5);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée Tana', TRUE, 6);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot frêt', TRUE, 5);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée au pays', TRUE, 6);
 INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Disponible client', TRUE, 7);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Colis remis', TRUE, 8);
+INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Remis', TRUE, 8);
 
 -- END GRP Workflow
 
@@ -80,10 +87,21 @@ CREATE TABLE ref_workflow (
   id            SMALLINT      PRIMARY KEY,
   code          CHAR(2)       NOT NULL,
   description   VARCHAR(250)  NOT NULL,
+  -- P for plane
+  -- B for boat
+  -- R for road
+  mode          CHAR(1)       NOT NULL,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref_workflow (id, code, description) VALUES (1, 'PA', 'Paris Tana standard');
+-- The code or workflow may be duplicates but the code is different for the partner
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (1, 'TA', 'Paris Tana aérien', 'P');
+
+
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (2, 'PA', 'Paris Pointe Noire aérien', 'P');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (3, 'PM', 'Paris Pointe Noire maritime', 'B');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (4, 'BA', 'Paris Brazzaville aérien', 'P');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (5, 'BM', 'Paris Brazzaville maritime', 'B');
 
 
 CREATE TABLE mod_workflow (
@@ -94,12 +112,10 @@ CREATE TABLE mod_workflow (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Paris Tana Aérien
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 0, 2);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 1);
-
--- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 2); -- remove
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 1, 4);
--- INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 3, 4);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 4, 2);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 2, 6);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 6, 7);
@@ -110,6 +126,60 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 11, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
+
+-- Paris Pointe Noire Aérien
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 6, 7);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 6, 8);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 6, 11);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 8, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 7, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 11, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 12, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 10, -1);
+
+-- Paris Brazzaville Aérien
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 6, 7);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 6, 8);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 6, 11);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 8, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 7, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 11, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 13, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (4, 10, -1);
+
+
+-- Paris Pointe Maritime
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 6, 14);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 14, 12);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 12, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 10, -1);
+
+-- Paris Brazzaville Maritime
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 6, 14);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 14, 13);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 13, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 10, -1);
+
 
 
 CREATE TABLE barcode(

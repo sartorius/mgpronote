@@ -69,6 +69,16 @@ function createBarCodeFor(name, id, o, email){
   $('#crt-cb-email').html(email);
 
   // This element need to be modal
+  // Feed the modal first
+  //dataTagToJsonWorkflowArray
+  let optionStr = '';
+  for(i=0; i<dataTagToJsonWorkflowArray.length; i++){
+    optionStr =  optionStr + '<option value="' + dataTagToJsonWorkflowArray[i].rw_code + '">' + dataTagToJsonWorkflowArray[i].rw_description + '</option>';
+  }
+  $('#opt-wkf').html(optionStr);
+  $('#multiple-workflow').show();
+
+  // Go for it modal
   $('#mgs-dialog').modal('show');
   $('html, body').animate({
               scrollTop: $("#mg-graph-identifier").offset().top
@@ -118,10 +128,16 @@ function confirmedBarCodeFor(){
   //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
   let clientId = $('#crt-cb-param').html();
   let clientEmail = $('#crt-cb-email').html();
+  let selectedWorkflow = parseInt(document.getElementById('opt-wkf').selectedIndex);
+  //console.log('parseInt($(#opt-wkf).selectedIndex: ' + parseInt(document.getElementById('opt-wkf').selectedIndex));
+  //console.log('selectedWorkflow: ' + selectedWorkflow);
+  //console.log('2: ' + dataTagToJsonWorkflowArray[2].rw_id);
+  let selectedWorkflowId = dataTagToJsonWorkflowArray[selectedWorkflow].rw_id;
   $.ajax('/createbarcodeforclient', {
       type: 'POST',  // http method
       data: { client_id: clientId,
               client_email: clientEmail,
+              wf_id: selectedWorkflowId,
               partner_id: $('#cur-part-id').html(),
               auth_token: $('#auth-token-s').val(),
               order: $('#crt-cb-order').html(),
@@ -257,7 +273,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="fas fa-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 35,
@@ -267,7 +283,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="fas fa-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 20,
@@ -291,7 +307,6 @@ function runjsClientGrid(){
     // Big screens
     //fromSMSizetoMD(listToUpd);
     responsivefields = [
-        { name: "id", title: "#", type: "number", width: 18 , headercss: "h-jsG-r" },
         { name: "enc_client_ref",
           title: 'Reférence',
           type: "text",
@@ -350,7 +365,7 @@ function runjsClientGrid(){
         { name: "since", title: "Client.e depuis", type: "text", width: 50, align: "right", headercss: "h-jsG-r" },
         {
           name: "id",
-          title: '<i class="fas fa-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 35,
@@ -360,7 +375,7 @@ function runjsClientGrid(){
         },
         {
           name: "id",
-          title: '<i class="fas fa-barcode"></i>',
+          title: '<i class="fas fa-qrcode"></i>',
           type: "string",
           align: "left",
           width: 20,
