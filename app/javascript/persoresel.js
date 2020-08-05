@@ -438,8 +438,23 @@ function displayErrorDialog(){
 function createBarCodeFor(pName, id, o){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
   //console.log('Here is o: ' + o);
+  let arrayWfListToValidate;
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(id == dataTagToJsonArray[i].cpx_partner_id){
+      arrayWfListToValidate = dataTagToJsonArray[i].workflow_list;
+      break;
+    }
+  }
+
+  let optionStr = '';
+  for(i=0; i<arrayWfListToValidate.length; i++){
+    optionStr =  optionStr + '<option value="' + arrayWfListToValidate[i].rw_code + '">' + arrayWfListToValidate[i].rw_description + '</option>';
+  }
+  $('#opt-wkf').html(optionStr);
+  $('#multiple-workflow').show();
+
   // The value here is the partner id
-  $('#nm-t-cf').html(' choisir notre partenaire ' + pName + '#' + id + ((o == 'D') ? ' pour un suivi <strong>livraison</strong>&nbsp;<i class="fas fa-box"></i>' : ' pour un suivi <strong>enlèvement</strong>&nbsp;<i class="fas fa-truck"></i>'));
+  $('#nm-t-cf').html(' choisir notre partenaire ' + pName + ((o == 'D') ? ' pour un suivi <strong>livraison</strong>&nbsp;<i class="fas fa-box"></i>' : ' pour un suivi <strong>enlèvement</strong>&nbsp;<i class="fas fa-truck"></i>'));
   // Parameters in dialog !
 
   $('#crt-cb-param').html(id);
@@ -450,9 +465,20 @@ function createBarCodeFor(pName, id, o){
 function confirmedBarCodeFor(){
   //console.log('confirmedBarCodeFor you clicked for: ' + $('#crt-cb-param').html());
   let partnerId = parseInt($('#crt-cb-param').html());
+  let arrayWfListToValidate;
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(partnerId == dataTagToJsonArray[i].cpx_partner_id){
+      arrayWfListToValidate = dataTagToJsonArray[i].workflow_list;
+      break;
+    }
+  }
+  let selectedWorkflow = parseInt(document.getElementById('opt-wkf').selectedIndex);
+  let selectedWorkflowId = arrayWfListToValidate[selectedWorkflow].rw_id;
+
   $.ajax('/createbarcodebyclient', {
       type: 'POST',  // http method
       data: { partner_id: partnerId,
+              wf_id: selectedWorkflowId,
               auth_token: $('#auth-token-s').val(),
               order: $('#crt-cb-order').html(),
       },  // data to submit

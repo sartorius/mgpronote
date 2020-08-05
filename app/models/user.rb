@@ -85,7 +85,10 @@ class User < ApplicationRecord
 
     # Generate the reference on Ruby Mode
     def generate_client_ref
-      self.client_ref = rand(1..999)
+      # We have to test if null because saved automatically if it is not
+      if self.client_ref.nil? then
+        self.client_ref = rand(1..999)
+      end
     end
 
     # Creates and assigns the activation token and digest.

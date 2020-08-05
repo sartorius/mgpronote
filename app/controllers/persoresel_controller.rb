@@ -12,7 +12,7 @@ class PersoreselController < ApplicationController
       sql_query = "SELECT * FROM CLI_CRT_BC(" +
                     @current_user.id.to_s + ", "+
                     @current_user.id.to_s + ", CAST(" + params[:partner_id] +
-                    " AS SMALLINT), TRIM('" + params[:order] + "'));"
+                    " AS SMALLINT), TRIM('" + params[:order] + "'), CAST(" + params[:wf_id] + " AS SMALLINT));"
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
 
       puts '>>> ' + @resultSet[0]['cli_crt_bc'].to_s
@@ -35,18 +35,21 @@ class PersoreselController < ApplicationController
 
 
   def getmypartnerlist
-    sql_query = "SELECT rp.id AS id, rp.name AS rp_name, rp.description AS rp_desc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, count(1) AS totalbc "
+    sql_query = "SELECT rp.id AS id, rp.name AS rp_name, rp.description AS rp_desc, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, cpx.partner_id AS cpx_partner_id,  bc.partner_id AS bc_partner_id, 'X' AS workflow_list, count(1) AS totalbc "
     sql_query += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
     sql_query += " JOIN ref_partner rp on rp.id = cpx.partner_id "
     sql_query += " AND cpx.client_id = " + @current_user.id.to_s
-    sql_query += " JOIN barcode bc ON bc.owner_id = u.id AND bc.partner_id = rp.id "
-    sql_query += " GROUP BY rp.id, rp.name, rp.description, cpx.create_date "
+    sql_query += " LEFT JOIN barcode bc ON bc.owner_id = u.id AND bc.partner_id = rp.id "
+    sql_query += " GROUP BY rp.id, rp.name, rp.description, cpx.partner_id, bc.partner_id, cpx.create_date "
     sql_query += " ORDER BY cpx.create_date DESC;"
 
     begin
 
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
       @emptyResultSet = @resultSet.empty?
+
+      load_my_partner_list_workflow
+
     end
     rescue Exception => exc
        flash.now[:danger] = "Une erreur est survenue #{exec.message}"
@@ -54,6 +57,23 @@ class PersoreselController < ApplicationController
        @getAuthToken = mgs_form_authenticity_token.to_s
 
     render 'getmypartnerlist'
+  end
+
+  # The result set retrieved here is different from Partner or Client.
+  # The client need to break the list per partner as JsonArray
+  # For the client we do use it like it is
+  def load_my_partner_list_workflow
+    sql_query = "SELECT rw.id AS rw_id, rw.code AS rw_code, rw.description AS rw_description, rpw.partner_id AS rpw_partner_id " +
+                " FROM client_partner_xref cpx " +
+                " JOIN ref_partner_workflow rpw ON rpw.partner_id = cpx.partner_id " +
+                " JOIN ref_workflow rw ON rw.id = rpw.wf_id " +
+                " WHERE cpx.client_id = " + @current_user.id.to_s + " ORDER BY rw.id ASC;"
+    begin
+
+      @resultSetWorkflow = ActiveRecord::Base.connection.exec_query(sql_query)
+    end
+    rescue Exception => exc
+       flash.now[:danger] = "Une erreur est survenue #{exec.message}"
   end
 
   def addadditionnal

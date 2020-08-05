@@ -11,6 +11,34 @@
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+		// We load the workflows Here @resultSetWorkflow
+		var dataTagToJsonWorkflow = '<%= @resultSetWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+    dataTagToJsonWorkflow = dataTagToJsonWorkflow.replace(/&quot;/g,"\"");
+    var dataTagToJsonWorkflowArray = JSON.parse(dataTagToJsonWorkflow);
+
+
+		for(i=0; i<dataTagToJsonArray.length; i++){
+			// Handle here the left join count total
+			if(dataTagToJsonArray[i].bc_partner_id == null){
+				dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
+			}
+
+			let arrayWfList = new Array();
+			for(k=0; k<dataTagToJsonWorkflowArray.length; k++){
+				if(dataTagToJsonWorkflowArray[k].rpw_partner_id == dataTagToJsonArray[i].cpx_partner_id){
+					let wf = {
+						//rw.id AS rw_id, rw.code AS rw_code, rw.description AS rw_description, rpw.partner_id AS rpw_partner_id
+						rw_id: dataTagToJsonWorkflowArray[k].rw_id,
+						rw_code: dataTagToJsonWorkflowArray[k].rw_code,
+						rw_description: dataTagToJsonWorkflowArray[k].rw_description,
+						rpw_partner_id: dataTagToJsonArray[i].cpx_partner_id
+					};
+					arrayWfList.push(wf);
+				}
+			}
+			dataTagToJsonArray[i].workflow_list = arrayWfList;
+		}
   </script>
 <% end %>
 

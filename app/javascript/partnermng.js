@@ -320,7 +320,8 @@ function generatePrintedPDF(){
 	var cellSize = 45;
 	var offsetY2margin = 5;
 	var offsetY2 = 40;
-	var offsetY2Details = 5;
+	var offsetY2Details = 7;
+  var offsetY2CltDetails = 4;
   var offsetTextY2 = 20;
 	var offsetBackY = 5;
 
@@ -338,13 +339,17 @@ function generatePrintedPDF(){
     //console.log('rowReseter: '+ rowReseter);
     let celTitle = '';
     celTitle = celTitle + setCellSize(printArray[i].bcref);
-    celTitle = celTitle + setCellSize(' / ' + printArray[i].cliref);
-    let celTitleRef = doc.setFontSize(10).splitTextToSize(celTitle, cellSize);
+    celTitle = celTitle + setCellSize('#' + printArray[i].wfcode);
+    let celTitleRef = doc.setFontSize(12).splitTextToSize(celTitle, cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2margin, celTitleRef);
+
+    let celClient = '';
+    celClient = celClient + setCellSize(printArray[i].cliref);
+    let celClientRef = doc.setFontSize(9).splitTextToSize(celClient, cellSize);
+    doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2CltDetails + offsetY2margin, celClientRef);
 
     let cel1 = '';
     cel1 = cel1 + setCellSize('Type: ' + (printArray[i].typedorp == 'D' ? 'LIVRAISON_' : 'ENLEVEMENT'));
-    cel1 = cel1 + setCellSize(' - Code: ' + printArray[i].wfcode);
     cel1 = cel1 + setCellSize(' - Desc: ' + printArray[i].wfdesc);
     cel1 = cel1 + " - Appartient à: " + $('#part-tech-name').html();
     //.setFont('Lucida Console')

@@ -141,7 +141,7 @@ class ClientController < ApplicationController
                                               @resultSetAddClientNotif[0]['client_ref'].to_s)
 
     return "<br><br>Votre référence client est le " + notif_client_ref + ". " +
-                " C'est une référence personnelle et elle ne doit pas être partagée. " +
+                " C'est une référence personnelle, anonymisée et elle ne doit pas être partagée. Elle permet au partenaire de reconnaitre rapidement votre colis. " +
                 " Si vous décidez de faire livrer chez ce partenaire, vous devez faire livrer à cette adresse: <br><br>" +
                 @resultSetAddClientNotif[0]['delivery_addr'].to_s.gsub(/@/, " - " + notif_client_ref + " <br> ") + " " +
                 "<br><br>Connectez-vous vite sur MG Suivi pour obtenir le meilleur de votre tracking."
