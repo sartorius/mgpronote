@@ -35,6 +35,10 @@ function mainClientLoaderInCaseOfChange(){
   }
   else if($('#mg-graph-identifier').text() == 'pereone-gr'){
 
+    // Display the barcode to print
+    //DisplayOne
+    // JsBarcode("#mbc-0", getBarcodeMGS);
+
 
 
       let readBCSeeOne = mgsEncode($('#id-seeone').html(), $('#sec-seeone').html());
@@ -42,6 +46,7 @@ function mainClientLoaderInCaseOfChange(){
 
       $('#bc-seeone').html(readBCSeeOne);
 
+      new QRCode(document.getElementById("mbc-0"), { text: readBCSeeOne, width: 96, height: 96 });
       $( "#disp-add-info" ).click(function() {
         //$("#add-inf-blc").show(400);
         // To animate to scroll to the element

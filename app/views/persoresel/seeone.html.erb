@@ -1,6 +1,6 @@
 <% provide(:title, "Suivi") %>
 <div id="mg-graph-identifier">pereone-gr</div>
-
+<%= render 'partner/dirtyqrcode' %>
 <% if @resultSet.nil? %>
 	//Error TDY789
   <script>
@@ -26,14 +26,29 @@
 </style>
 
 <div class="row mgs-title">
-  <div class="col-lg-12 monosp-ft-title">
-    <span id="bc-seeone">Suivi</span>
+  <div class="col-lg-6">
+		<div class="monosp-ft-title">
+    	<span id="bc-seeone">Suivi</span>
+		</div>
     <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
     <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
+		<div class="monosp-ft-title-mini">
+				<span>
+			    appartenant à <i id="cli-ref"><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></i>
+			  </span>
+		</div>
   </div>
-	<div class="col-lg-12 monosp-ft-title-mini">
-    appartenant à <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %>
-  </div>
+	<div class="col-lg-1">
+	</div>
+	<div class="col-lg-4 center mid-blc">
+			<div id="mbc-0" class="qr-one qr-client">
+			</div>
+			<div class="mid-blc qr-clt-txt">
+				Le qr-code pour récupérer votre colis.
+			</div>
+	</div>
+	<div class="col-lg-1">
+	</div>
 </div>
 
 <%= render 'persoresel/displayworkflow' %>

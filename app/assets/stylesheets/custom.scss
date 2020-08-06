@@ -677,6 +677,15 @@ p {
   color: $main-color;
 }
 
+.qr-client{
+  margin-top: 3.5em;
+}
+
+.qr-clt-txt{
+  font-size: 12px;
+  color: $main-color-medium;
+}
+
 /* Loading */
 // We do here the loading part
 /* Start by setting display:none to make this hidden.
