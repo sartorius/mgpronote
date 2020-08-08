@@ -7,9 +7,15 @@ const STR_LENGTH_XL = 25;
 const STR_LENGTH_XXL = 30;
 const STR_LENGTH_XXXL = 40;
 
+// This is the size max of the reference
+// It used to be 8 now it is 10
+// then zzz zzz can be 2 176 782 335 up to 2M
+const BC_REF_LIMIT = 10;
+
+//Be careful this method exist on RUBY in application controller
 //Decode barcode
 function validateMGSCode(codeTest){
-  const re = /^M[A-Z0-9]{8}$/;
+  const re = /^M[A-Z0-9]{BC_REF_LIMIT}$/;
   return re.test(codeTest);
 };
 function decodeMGSCodePartSecure(barcodeTest){
@@ -33,6 +39,7 @@ function mgspad(n, width, z) {
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
+// Be careful this method exist on RUBY in application controller
 // Be carefull this method exists on Ruby side on pure unhappy duplicate code
 function mgsEncode(lid, sec){
   //Go to base 26
@@ -40,11 +47,12 @@ function mgsEncode(lid, sec){
   //yourNumber = parseInt(hexString, 16); << hex to 10
   // The format here is 1 / 345 will be 10345
   let lidPlusSec = parseInt(lid.toString() + mgspad(sec, 4).toString());
-  return 'M' + mgspad(lidPlusSec.toString(36), 8).toUpperCase();
+  return 'M' + mgspad(lidPlusSec.toString(36), BC_REF_LIMIT).toUpperCase();
 }
 
 
 //Need to promote to generic utils forced?
+// Be carefull this method exists on Ruby side on pure unhappy duplicate code
 function mgsEncodeClientRef(fname, lid, ref){
   let lidPlusSec = parseInt(lid.toString() + mgspad(ref, 3).toString()).toString(35);
   let fnameCode = (fname.length == 1) ? fname.substring(0, 1)+'X' : fname.substring(0, 2);

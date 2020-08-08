@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
     # puts 'encodeMGS n2:' + n2.to_s
     # n3 = n2.to_s(36).rjust(8, '0')
     # puts 'encodeMGS n3:' + n3
-    return ('M' + (id.to_s + sec.to_s.rjust(4, '0')).to_i.to_s(36).rjust(8, '0')).upcase
+    return ('M' + (id.to_s + sec.to_s.rjust(4, '0')).to_i.to_s(36).rjust(ENV['BC_REF_LIMIT'].to_i, '0')).upcase
 
   end
 

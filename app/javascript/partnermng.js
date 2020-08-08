@@ -273,6 +273,9 @@ function checkIfAllQRCodeHasBeenGenerate(){
   return allGenerated;
 }
 
+
+// Main PRINT PDF is here !
+
 function generatePrintedPDF(){
 	//$("body").addClass("loading");
   //$("#screen-load").show();
@@ -314,12 +317,16 @@ function generatePrintedPDF(){
 
 	var startY = 15;
 	var sizeY = 20;
-	var offsetX = 5;
+	var offsetX = 20;
 	var offsetY = 30;
 
 	var cellSize = 45;
 	var offsetY2margin = 5;
-	var offsetY2 = 40;
+
+  let first_line_back = 15;
+  let const_offsetY2 = 40;
+
+	var offsetY2 = 0;
 	var offsetY2Details = 7;
   var offsetY2CltDetails = 4;
   var offsetTextY2 = 20;
@@ -333,6 +340,15 @@ function generatePrintedPDF(){
   //rowReseter is the line counter
   //This handle row max is 2
   for(i=0; i<printArray.length; i++){
+
+    // offsetY2 is the row position. We start row setter as 1
+    if(rowReseter == 1){
+      offsetY2 = const_offsetY2 - first_line_back;
+    }
+    else{
+      offsetY2 = const_offsetY2;
+    }
+
     let oddOffsetX =  100 * ((parseInt(wantedPos)+i) % 2);
     //console.log('i: ' + i);
     //console.log('oddOffsetX: ' + oddOffsetX);
@@ -558,7 +574,6 @@ function runjsPartnerGrid(){
 
     //if small we remove some columns
     responsivefields = [
-        { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
         { name: "ref_tag",
           title: "Référence",
           type: "text",
@@ -627,7 +642,6 @@ function runjsPartnerGrid(){
     fromSMSizetoMD(listToUpd);
     // We are in big screens !
     responsivefields = [
-        { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
         { name: "ref_tag",
           title: "Référence",
           type: "text",

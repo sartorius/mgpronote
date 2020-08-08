@@ -19,6 +19,8 @@ module SampleApp
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+    ENV['BC_REF_LIMIT'] = '10'
+
     ENV['titlepage'] = 'MG Suivi'
     ENV['MJ_APIKEY_PUBLIC'] = '6532da700924bb9f1c446083039c4566'
     ENV['MJ_APIKEY_PRIVATE'] = '77eaf825c21d0015e6cda0fbaed1d6c7'
