@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
 
+  get     '/resendactivation',        to: 'users#resendactivation'
+  get     '/resendactivationsbmt',    to: 'users#resendactivation'
+  post    '/resendactivationsbmt',    to: 'users#resendactivationsbmt'
+
   post     '/' => redirect("/")
 
   #Route for Barcode Controller POST checkstep/savebc

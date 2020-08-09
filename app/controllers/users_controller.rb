@@ -49,6 +49,7 @@ class UsersController < ApplicationController
         redirect_to '/clientmng'
       else
         @user.send_activation_email
+
         flash.now[:success] = "S'il vous plaît, vérifiez vos emails pour activer votre compte. Nous y avions un mail d'activation. Si vous ne le trouvez pas, vérifiez votre dossier spam."
         render 'static_pages/home'
       end
@@ -81,6 +82,33 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     flash.now[:success] = "Compte supprimé"
     redirect_to users_url
+  end
+
+  def resendactivation
+    render 'resendactivation'
+  end
+
+  def resendactivationsbmt
+    @user = User.find_by(email: params[:email].downcase)
+    if @user.nil? then
+      flash.now[:danger] = "Cet email est introuvable."
+    else
+      if @user.activated then
+        flash.now[:info] = "Votre compte est déjà activé. Vous pouvez vous connecter."
+      else
+
+        @user.regenerate_token_for_reactivation
+        puts '----- Here is the user: ' + @user.inspect
+        puts '----- Activation token: ' + @user.activation_token.to_s
+        #tapotyetsesamis@gmail.com
+        if @user.save then
+          @user.send_activation_email
+        end
+        flash.now[:success] = "Votre email d'activation a été renvoyé, vérifiez vos spams si besoin."
+      end
+    end
+
+    render 'static_pages/home'
   end
 
   private

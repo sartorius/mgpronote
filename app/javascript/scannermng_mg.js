@@ -292,7 +292,7 @@ function displayNext(isGrp){
     //Handle weight action here !
     //Grouping don't do Weight
     if (!isGrp){
-      console.log('We DO weightManager()');
+      //console.log('We DO weightManager()');
       $('#curr-status').html(dataTagToJsonArray[0].curr_step);
       weightManager();
 
@@ -348,7 +348,7 @@ function displayNext(isGrp){
     }
     $("#stepCtrl").html(nextSteps);
     // No other step is possible
-    console.log('End: disabledCounter: ' + disabledCounter);
+    //console.log('End: disabledCounter: ' + disabledCounter);
     if(disabledCounter == dataTagToJsonArray.length){
       $('#stpcmt').hide();
       $('#mg-save-step-btn').hide();
@@ -605,6 +605,7 @@ function loadCameraRead(isGrp){
           });
 
           $("#startManualButton").click(function() {
+
             //We end the scan
             $("#resetButton").prop('disabled', true);
             $("#startButton").prop('disabled', false);
@@ -612,7 +613,12 @@ function loadCameraRead(isGrp){
             $("#mgs-main-cam").hide();
             $("#mgs-manual-cam").show();
 
-            $("#manualValid").click(function() {
+            // Scroll to the top
+            //console.log('manualValid click on');
+            window.scrollTo(0, 0);
+
+            function inputManualRef(){
+
               // Handle here the valid manual
               if($('#manual-cb').val().length > 0){
                   getGeoL();
@@ -627,9 +633,18 @@ function loadCameraRead(isGrp){
 
                   //alert(manualbc + "valid MGS BC: " + validateMGSCode(manualbc) + " id: " + decodeMGSCodePartId(manualbc) +" sec: " + decodeMGSCodePartSecure(manualbc));
                   // Go to Post directly
+                  $("#screen-load").show();
                   $("#mg-checkbc-form").submit();
               }
-            });
+            };
+
+            $("#manualValid").click(inputManualRef);
+            window.addEventListener('keypress', function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    inputManualRef();
+                }
+            }, false);
           });
 
 
@@ -718,7 +733,7 @@ function loadCameraRead(isGrp){
       function endScan(){
         document.getElementById('result').textContent = '';
         codeReader.reset();
-        console.log('Reset.');
+        //console.log('Reset.');
       }
 
       function alreadyRead(val, list){

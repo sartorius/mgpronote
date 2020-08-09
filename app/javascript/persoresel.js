@@ -261,12 +261,11 @@ function runjsPersoreselGrid(){
   else{
     // Big screens
     responsivefields = [
-        { name: "id", title: "#", type: "number", width: 5, headercss: "h-jsG-r" },
         { name: "ref_tag",
           title: "Référence",
           type: "text",
           align: "right",
-          width: 35,
+          width: 43,
           headercss: "h-jsG-r",
           itemTemplate: function(value, item) {
             return '<i class="monosp-ft">' + value + '</i>';

@@ -1,5 +1,9 @@
 <% provide(:title, "Se connecter") %>
+<div id="mg-graph-identifier">log-new-gr</div>
 <h1>Connexion</h1>
+<script type="text/javascript">
+function noenter() {return !(window.event && window.event.keyCode == 13);}
+</script>
 <br><br><br><br>
 <div class="row">
 
@@ -22,6 +26,7 @@
     <% end %>
 
 
+
   </div>
 
   <div class="col-md-6 sess-block">
@@ -30,7 +35,10 @@
     <div class="pos-center">
       <a href="/signup" class="btn btn-default-light btn-lg btn-block">Créer un compte&nbsp;<i class="fas fa-plus-square"></i></a>
     </div>
-
+    <br>
+    <div class="pos-right">
+      <a href="/resendactivation" class="btn btn-default-light btn-sm">Renvoyer le mail d'activation&nbsp;<i class="fas fa-envelope-open-text"></i></a>
+    </div>
 
   </div>
 </div>

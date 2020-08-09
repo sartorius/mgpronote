@@ -1,0 +1,21 @@
+<% provide(:title, "Renvoyer activation") %>
+<div id="mg-graph-identifier">res-act-gr</div>
+<h1>Envoyer email d'activation</h1>
+<div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+        <div>
+          <form action="/resendactivationsbmt" method="post" id="mg-checkbc-form">
+            <textarea class="form-control crt-fill-form" rows="1" name="email"  id="crt-email" placeholder="Votre email" style="resize: none;"></textarea>
+
+            <input type="submit" name="formSubmit" class="btn btn-lg btn-block btn-default" id="add-clt-submit"
+                    value="Renvoyer"/>
+
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          </form>
+        </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+</div>

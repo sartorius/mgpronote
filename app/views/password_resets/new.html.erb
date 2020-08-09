@@ -2,7 +2,9 @@
 <h1>Mot de passe oublié</h1>
 <br><br>
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
     <%= form_with(url: password_resets_path, scope: :password_reset,
                   local: true) do |f| %>
       <%= f.label :email %>
@@ -10,6 +12,8 @@
 
       <%= f.submit "Valider", class: "btn btn-default" %>
     <% end %>
+  </div>
+  <div class="col-md-3">
   </div>
 </div>
 <br><br><br><br><br>

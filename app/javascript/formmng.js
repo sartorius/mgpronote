@@ -48,17 +48,47 @@ function mainFormLoaderInCaseOfChange(){
     listenPwdEditFormCreate();
   }
   else if($('#mg-graph-identifier').text() == 'home-gr'){
-    $("#btnVerify").click(function() {
+
+    $("#btnVerify").prop('disabled', true);
+    listenCheckHomInputCreate();
+
+    function prepVerificationRef() {
       let refTag = $('#inputMG').val();
-      if(validateMGSCode(refTag)){
-        $("#read-cb-id").val(decodeMGSCodePartId(refTag));
-        $("#read-cb-sec").val(decodeMGSCodePartSecure(refTag));
+      if(refTag.length > 0){
+        if(validateMGSCode(refTag)){
+          $("#read-cb-id").val(decodeMGSCodePartId(refTag));
+          $("#read-cb-sec").val(decodeMGSCodePartSecure(refTag));
+        };
+        $("#screen-load").show();
       }
-    });
+    };
+
+    window.addEventListener('keypress', function (e) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            prepVerificationRef();
+            let refTag = $('#inputMG').val();
+            if(refTag.length > 0){
+              //console.log('refTag 1: ' + refTag.length);
+              document.getElementById('vrf-main-form').submit();
+            }
+            else{
+              //console.log('refTag 2');
+            }
+        }
+    }, false);
+
+    $("#btnVerify").click(prepVerificationRef);
   }
   else{
     //do nothing
   }
+}
+
+function listenCheckHomInputCreate(){
+  $( ".crt-fill-form" ).keyup(function() {
+    verityHomeCheckFormRef();
+  });
 }
 
 function listenAllFormCreate(){
@@ -168,6 +198,22 @@ function verityFieldFormRef(){
   else{
       $("#crt-submit").prop('disabled', true);
       $("#crt-submit").hide(500);
+  }
+}
+
+function verityHomeCheckFormRef(){
+  let allFieldOK = true;
+
+  // Check email
+  if ($('#inputMG').val().length == 0){
+    allFieldOK = false;
+  }
+  // This could be simpler but we need to keep the logic
+  if(allFieldOK){
+      $("#btnVerify").prop('disabled', false);
+  }
+  else{
+      $("#btnVerify").prop('disabled', true);
   }
 }
 

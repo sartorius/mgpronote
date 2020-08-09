@@ -10,12 +10,13 @@ const STR_LENGTH_XXXL = 40;
 // This is the size max of the reference
 // It used to be 8 now it is 10
 // then zzz zzz can be 2 176 782 335 up to 2M
+// Be carefull regex validateMGSCode does not support const need to hardcode
 const BC_REF_LIMIT = 10;
 
 //Be careful this method exist on RUBY in application controller
 //Decode barcode
 function validateMGSCode(codeTest){
-  const re = /^M[A-Z0-9]{BC_REF_LIMIT}$/;
+  const re = /^M[A-Z0-9]{10}$/;
   return re.test(codeTest);
 };
 function decodeMGSCodePartSecure(barcodeTest){
@@ -23,6 +24,9 @@ function decodeMGSCodePartSecure(barcodeTest){
   //Decode en base 36
   let res = parseInt(barcodeTest.substring(1), 36);
   //230243 > substring(2) 0243
+  //00230243 > substring(4) 0243
+  //0000230243 > substring(6) 0243
+  // Anyway I need to take the 4 last which has been concatenated because secure is always on 4digit
   return parseInt(res.toString().substring(res.toString().length - 4));
 };
 function decodeMGSCodePartId(barcodeTest){
@@ -30,6 +34,7 @@ function decodeMGSCodePartId(barcodeTest){
   //Decode en base 36
   let res = parseInt(barcodeTest.substring(1), 36);
   //230243 > substring(0,2) 23
+  //0000000230243 > substring(0,2) 23
   return parseInt(res.toString().substring(0, res.toString().length - 4));
 }
 //pad(10, 4);      // 0010

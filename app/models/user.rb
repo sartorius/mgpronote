@@ -76,6 +76,10 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
+  def regenerate_token_for_reactivation
+    create_activation_digest
+  end
+
   private
 
     # Converts email to all lower-case.
