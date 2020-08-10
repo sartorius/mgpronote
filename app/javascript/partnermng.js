@@ -596,7 +596,12 @@ function runjsPartnerGrid(){
           }
         },
         //Default width is auto
-        { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
+        { name: "step_short",
+          title: "Status",
+          type: "text",
+          width: 33,
+          headercss: "h-jsG-l"
+        },
         { name: "oclient_ref",
           title: 'Client',
           type: "text",
@@ -610,7 +615,6 @@ function runjsPartnerGrid(){
           name: "bcdescription",
           title: "Description",
           type: "text",
-          width: 38,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
             return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
@@ -674,7 +678,12 @@ function runjsPartnerGrid(){
           }
         },
         //Default width is auto
-        { name: "step", title: "Status", type: "text", headercss: "h-jsG-l" },
+        { name: "step_short",
+          title: "Status",
+          type: "text",
+          width: 33,
+          headercss: "h-jsG-l"
+        },
         { name: "oclient_ref",
           title: 'Client',
           type: "text",
@@ -711,13 +720,21 @@ function runjsPartnerGrid(){
           name: "bcdescription",
           title: "Description",
           type: "text",
-          width: 40,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
             // print U is for Unpring
             // print P is for Print
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
             return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
+          }
+        },
+        { name: "diff_days",
+          title: '<i class="fas fa-stopwatch"></i>',
+          type: "number",
+          width: 3,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return '<p class="center">' + value + '</p>';
           }
         },
         {
@@ -732,18 +749,24 @@ function runjsPartnerGrid(){
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
             return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-print"></i>' + '</button>';
           }
-        },
-        { name: "diff_days",
-          title: '<i class="fas fa-stopwatch"></i>',
-          type: "number",
-          width: 3,
-          headercss: "h-jsG-c",
-          itemTemplate: function(value, item) {
-            return '<p class="center">' + value + '</p>';
-          }
         }
     ];
   }
+  // Options ------------------------------------
+  // Handle here all the options
+  if($('#hdl_price-su').html() == 'Y'){
+    let columnPaid = {
+      name: "paid_code",
+      title: '<i class="fas fa-receipt"></i>',
+      type: "number",
+      width: 3,
+      headercss: "h-jsG-c",
+      itemTemplate: function(value, item) {
+        return '<p class="center">' + value + '</p>';
+      }
+    };
+    responsivefields.push(columnPaid);
+  };
 
   if(dataTagToJsonArray.length > 0){
     //Set the number of data

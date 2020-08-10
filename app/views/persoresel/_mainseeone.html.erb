@@ -81,6 +81,20 @@
         Non renseigné pour l'instant
       <% end %>
     </div>
+
+    <%# Payment block %>
+    <% unless (@resultSet[0]['hdl_price'].to_s == 'N') %>
+        <div class="crt-block">Statut paiement</div>
+        <div class="field-md">
+          <% if (@resultSet[0]['paid_code'].to_s == 'N') %>
+            Non payé
+          <% else %>
+            Payé
+          <% end %>
+        </div>
+    <% end %>
+
+
     <div class="crt-block">Propriétaire</div>
     <div class="t-of-use mgs-med-note">
       Les informations suivantes concernent le propriétaire du paquet.

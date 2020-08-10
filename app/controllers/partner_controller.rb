@@ -60,6 +60,7 @@ class PartnerController < ApplicationController
                     " bc.type_pack, bc.p_name_firstname, bc.description as bcdescription, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                 		" to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, rwf.code AS rwf_code, rwf.description  AS rwf_description, rwf.mode AS rwf_mode, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, " +
+                    " rp.hdl_price, bc.price_cts, bc.paid_code, " +
                 		" uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.id AS cid, uc.client_ref AS cclient_ref, uc.email AS cemail, uc.phone AS cphone " +
                 		" FROM barcode bc JOIN ref_partner rp ON rp.id = bc.partner_id " +
@@ -163,9 +164,9 @@ class PartnerController < ApplicationController
     sql_query = "SELECT bc.id AS id, uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, " +
                       " uo.phone AS ophone, bc.description as bcdescription, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
                       " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
-                      " rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
+                      " rs.step AS step, rs.step_short, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
                       " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
-                      " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, rfw.code AS rfw_code, rfw.description AS rfw_desc, " +
+                      " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, rfw.code AS rfw_code, rfw.description AS rfw_desc, bc.paid_code, " +
                       " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step, rfw.description, rfw.code)) AS raw_data " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the partner

@@ -1,6 +1,7 @@
 -- Transition ref
 CREATE TABLE ref_status (
   id                  SMALLINT      PRIMARY KEY,
+  step_short          VARCHAR(7)    NOT NULL,
   step                VARCHAR(50)   NOT NULL,
   description         VARCHAR(250)  NOT NULL,
   grp_id              SMALLINT      DEFAULT 0,
@@ -30,31 +31,31 @@ M000055Y2/M00004YAK
 UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
 
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-1, 'Remis au client', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE, 8);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (0, 'Attente de livraison', 'Créé, attente de livraions.', 'Y', 'P', 1);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (3, 'Attente de saisie adresse', 'Créé, l''adresse enlèvement doit être saisie.', 'Y', 'P', 1);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-1, 'Remis', 'Remis au client', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE, 8);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (0, 'A. Livr', 'Attente de livraison', 'Créé, attente de livraions.', 'Y', 'P', 1);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (3, 'A. Adre', 'Attente de saisie adresse', 'Créé, l''adresse enlèvement doit être saisie.', 'Y', 'P', 1);
 
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (1, 'Adressé, attente enlèvement', 'Mise à jour adresse enlèvement.', 'N', 'Q', 2);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (1, 'Adr elv', 'Adressé, attente enlèvement', 'Mise à jour adresse enlèvement.', 'N', 'Q', 2);
 -- Make sure the status 4 is specific
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (4, 'Enlevé, en cours vers local transporteur', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P', 2);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (4, 'Elv loc', 'Enlevé, en cours vers local transporteur', 'Le paquet a été enlevé à l''adresse indiqué.', 'N', 'P', 2);
 -- Make sure the status 2 is specific
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (2, 'Livré au local transporteur', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', 3);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id, need_to_notify) VALUES (6, 'Pesé', 'Le poids a été validé.', 'N', 'P', 4, TRUE);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (7, 'Déposé frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P', 5);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (8, 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (11, 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (2, 'Local', 'Livré au local transporteur', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', 3);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, need_to_notify) VALUES (6, 'Pesé', 'Pesé', 'Le poids a été validé.', 'N', 'P', 4, TRUE);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (7, 'Ft. CDG', 'Déposé frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P', 5);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (8, 'Ft. Orl', 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (11, 'Ft. Exp', 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5);
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (9, 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P', 6);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (10, 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7);
-
-
-
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (12, 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6);
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (13, 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (9, 'Tana', 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (10, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7);
 
 
-INSERT INTO ref_status (id, step, description, next_input_needed, act_owner, grp_id) VALUES (14, 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5);
+
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (12, 'Pt. Noi', 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (13, 'Brazzav', 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+
+
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (14, 'Ft. Hav', 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5);
 
 -- Particular case of pickup but it is as well created from screen
 UPDATE ref_status SET need_to_notify = FALSE;
@@ -219,6 +220,10 @@ CREATE TABLE barcode(
   p_name_firstname      VARCHAR(50),
   p_phone               VARCHAR(50),
   p_address_note        VARCHAR(250),
+  -- Handle price
+  price_cts             SMALLINT  DEFAULT 0,
+  paid_code             CHAR(1)   DEFAULT 'N',
+  -- Usual information
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

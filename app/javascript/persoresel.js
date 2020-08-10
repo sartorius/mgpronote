@@ -210,7 +210,7 @@ function runjsPersoreselGrid(){
           title: "#",
           type: "text",
           align: "left",
-          width: 65,
+          width: 95,
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
             return '<i class="monosp-ft-mob">' + value + '</i>';
@@ -241,10 +241,21 @@ function runjsPersoreselGrid(){
           title: 'Part.',
           type: "text",
           align: "center",
-          width: 50,
+          width: 65,
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
             return ((value == null) ? '-' : value.substring(0, STR_LENGTH_SM));
+          }
+        },
+        {
+          name: "paid_code",
+          title: '<i class="fas fa-receipt"></i>',
+          type: "number",
+          width: 30,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return '<p class="center">' + ((item.hdl_price == 'N') ? '<i class="fas fa-window-close"></i>' : value) + '</p>';
+
           }
         },
         //Default width is auto
@@ -253,7 +264,7 @@ function runjsPersoreselGrid(){
           type: "text",
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
-            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_MD));
+            return ((value == null) ? '-' : value.substring(0, STR_LENGTH_SM));
           }
         }
     ];
@@ -326,6 +337,17 @@ function runjsPersoreselGrid(){
           headercss: "h-jsG-c",
           itemTemplate: function(value, item) {
             return '<p class="center">' + value + '</p>';
+          }
+        },
+        {
+          name: "paid_code",
+          title: '<i class="fas fa-receipt"></i>',
+          type: "number",
+          width: 3,
+          headercss: "h-jsG-c",
+          itemTemplate: function(value, item) {
+            return '<p class="center">' + ((item.hdl_price == 'N') ? '<i class="fas fa-window-close"></i>' : value) + '</p>';
+            // return item.hdl_price;
           }
         }
 

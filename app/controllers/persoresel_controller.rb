@@ -136,6 +136,7 @@ class PersoreselController < ApplicationController
                 		" bc.to_phone AS tphone, bc.description as bcdescription, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.delivery_addr, rpw.pickup_addr, rpw.pickup_phone, rp.name AS part_name,  " +
                     " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
+                    " rp.hdl_price, bc.price_cts, bc.paid_code, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, rwf.code AS rwf_code, rwf.description  AS rwf_description, rwf.mode AS rwf_mode, " +
                 		" uo.id AS oid, uo.name AS oname, uo.client_ref AS oclient_ref, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.id AS cid, uc.client_ref AS cclient_ref, uc.email AS cemail, uc.phone AS cphone " +
@@ -181,6 +182,7 @@ class PersoreselController < ApplicationController
 
     sql_query = "SELECT bc.id AS id, bc.ref_tag AS ref_tag, rs.step AS step, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
                       " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.description AS bcdescription, " +
+                      " rp.hdl_price, bc.price_cts, bc.paid_code, " +
                       " rp.name AS part_name, bc.status, rp.to_phone AS part_phone, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, DATE_PART('day', NOW() - bc.create_date) AS diff_days, 'X' AS raw_data " +
                       " FROM barcode bc join ref_status rs on rs.id = bc.status " +
                       # You can use this to make sure barcode is link to the owner id
