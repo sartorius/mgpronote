@@ -2,7 +2,15 @@
 <h1>Nouveau mot de passe</h1>
 
 <div class="row">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
+    <div class="crt-block">Mot de passe</div>
+
+    <div class="t-of-use mgs-med-note">
+      Le mot de passe doit faire minimum 7 caractères.
+    </div>
+
     <%= form_with(model: @user, url: password_reset_path(params[:id]),
                   local: true) do |f| %>
       <%= render 'shared/error_messages' %>
@@ -17,5 +25,7 @@
 
       <%= f.submit "Modifier mot de passe", class: "btn btn-default" %>
     <% end %>
+  </div>
+  <div class="col-md-3">
   </div>
 </div>

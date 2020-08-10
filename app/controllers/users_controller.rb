@@ -94,7 +94,7 @@ class UsersController < ApplicationController
       flash.now[:danger] = "Cet email est introuvable."
     else
       if @user.activated then
-        flash.now[:info] = "Votre compte est déjà activé. Vous pouvez vous connecter."
+        flash.now[:info] = "Bonne nouvelle ! Votre compte est déjà activé. Vous pouvez vous connecter."
       else
 
         @user.regenerate_token_for_reactivation
@@ -107,8 +107,7 @@ class UsersController < ApplicationController
         flash.now[:success] = "Votre email d'activation a été renvoyé, vérifiez vos spams si besoin."
       end
     end
-
-    render 'static_pages/home'
+    render 'sessions/new'
   end
 
   private

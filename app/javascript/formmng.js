@@ -12,7 +12,8 @@ function mainFormLoaderInCaseOfChange(){
     $("#crt-submit").hide();
     listenAllFormCreate();
   }
-  else if($('#mg-graph-identifier').text() == 'signupclt-gr'){
+  else if(($('#mg-graph-identifier').text() == 'signupclt-gr') ||
+                  ($('#mg-graph-identifier').text() == 'res-act-gr')){
     //edituser-gr
     //initialize
     $("#add-clt-submit").prop('disabled', true);

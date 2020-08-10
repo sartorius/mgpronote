@@ -2,7 +2,9 @@
 <div id="mg-graph-identifier">edituser-gr</div>
 
 <div class="row usr-block">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
     <%= form_with(model: @user, local: true) do |f| %>
       <%= render 'shared/error_messages' %>
 
@@ -30,5 +32,7 @@
       <a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="far fa-times-circle"></i></a>
     </div>
 
+  </div>
+  <div class="col-md-3">
   </div>
 </div>
