@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   def get_partner_company_name
     unless !@resultSetCompany.nil?
-      sql_query = "SELECT id, name, description, COALESCE(to_phone, 'NR') AS pphone, COALESCE(website, 'NR') AS pwebsite, cur_code, hdl_price, hdl_calc_pricing, hdl_big_wkf, hdl_merge FROM ref_partner rp WHERE id = " + @current_user.partner.to_s + ";"
+      sql_query = "SELECT id, name, description, COALESCE(to_phone, 'NR') AS pphone, COALESCE(website, 'NR') AS pwebsite, cur_code, hdl_price, hdl_pickup, hdl_calc_pricing, hdl_big_wkf, hdl_merge FROM ref_partner rp WHERE id = " + @current_user.partner.to_s + ";"
       begin
         #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
         #@resultSet = ActiveRecord::Base.connection.execute(sql_query)

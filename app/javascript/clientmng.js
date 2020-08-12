@@ -280,26 +280,6 @@ function runjsClientGrid(){
           itemTemplate: function(value, item) {
             return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
           }
-        },
-        {
-          name: "id",
-          title: '<i class="fas fa-qrcode"></i>',
-          type: "string",
-          align: "left",
-          width: 20,
-          itemTemplate: function(value, item) {
-            return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
-          }
-        },
-        {
-          name: "id",
-          title: '<i class="far fa-copy"></i>',
-          type: "string",
-          align: "left",
-          width: 25,
-          itemTemplate: function(value, item) {
-            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="fas fa-times"></i>' : '<i class="far fa-copy"></i>') + '</button>';
-          }
         }
     ]
   }
@@ -372,29 +352,39 @@ function runjsClientGrid(){
           itemTemplate: function(value, item) {
             return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
           }
-        },
-        {
-          name: "id",
-          title: '<i class="fas fa-qrcode"></i>',
-          type: "string",
-          align: "left",
-          width: 20,
-          itemTemplate: function(value, item) {
-            return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
-          }
-        },
-        {
-          name: "id",
-          title: '<i class="far fa-copy"></i>',
-          type: "string",
-          align: "left",
-          width: 25,
-          itemTemplate: function(value, item) {
-            return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="fas fa-times"></i>' : '<i class="far fa-copy"></i>') + '</button>';
-          }
         }
-    ]
+    ];
   }
+
+
+  // Options ------------------------------------
+  // Handle here all the options
+  if($('#hdl_pickup-su').html() == 'Y'){
+    let columnPickUp = {
+      name: "id",
+      title: '<i class="fas fa-qrcode"></i>',
+      type: "string",
+      align: "left",
+      width: 20,
+      itemTemplate: function(value, item) {
+        return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
+      }
+    };
+    responsivefields.push(columnPickUp);
+  };
+
+  // For design but we add revok column here
+  let columnRevok = {
+    name: "id",
+    title: '<i class="far fa-copy"></i>',
+    type: "string",
+    align: "left",
+    width: 25,
+    itemTemplate: function(value, item) {
+      return '<button id="revok-' + value + '" class="btn btn-default' + (item.poc ? '-light' : '') + ' btn-sm btn-block btn-rvk-mng" data-order="' + (item.poc ? 'FALSE' : 'TRUE') + '" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '">' + (item.poc ? '<i class="fas fa-times"></i>' : '<i class="far fa-copy"></i>') + '</button>';
+    }
+  };
+  responsivefields.push(columnRevok);
 
 
   $("#nb-el-dash").html(filteredDataTagToJsonArray.length);

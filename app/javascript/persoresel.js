@@ -518,7 +518,7 @@ function confirmedBarCodeFor(){
             $('#msg-feedback').html("Navré ! Vous avez dépassé le maximum de création sur 7 jours. Veuillez contacter votre partenaire pour qu'il vous en crée. L'opération a retourné un refus FORG988-" + xhr.responseText);
           }
           else if (xhr.responseText ==  'poc'){
-            $('#msg-feedback').html("Navré ! Veuillez vérifier vos droits de création avec ce partenaire. L'opération a retourné un refus FOSG328-" + xhr.responseText);
+            $('#msg-feedback').html("Navré ! Il semble que ce partenaire ne vous autorise plus à créer des suivis. L'opération a retourné un refus FOSG328-" + xhr.responseText);
           }else{
             $('#msg-feedback').html("Navré ! L'opération a retourné un erreur réseau FORG763-" + xhr.responseText);
           }
@@ -554,7 +554,7 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-barcode"></i>',
+            title: '<i class="fas fa-box"></i>',
             type: "string",
             align: "left",
             width: 30,
@@ -564,12 +564,12 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-barcode"></i>',
+            title: '<i class="fas fa-truck"></i>',
             type: "string",
             align: "left",
             width: 20,
             itemTemplate: function(value, item) {
-              return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
+              return (item.hdl_pickup == 'N') ? ('<p class="center"><i class="fas fa-window-close"></i></p>') : ('<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>');
             }
           }
       ]
@@ -591,7 +591,7 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-barcode"></i>',
+            title: '<i class="fas fa-box"></i>',
             type: "string",
             align: "left",
             width: 30,
@@ -601,12 +601,12 @@ function runjsPartnerListGrid(){
           },
           {
             name: "id",
-            title: '<i class="fas fa-barcode"></i>',
+            title: '<i class="fas fa-truck"></i>',
             type: "string",
             align: "left",
             width: 20,
             itemTemplate: function(value, item) {
-              return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
+              return (item.hdl_pickup == 'N') ? ('<p class="center"><i class="fas fa-window-close"></i></p>') : ('<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>');
             }
           }
       ]

@@ -466,17 +466,12 @@ function loadCameraRead(isGrp){
       // DEBUG CHANGE
       // 4 pures are OK ***
 
-      //listOfBCToHandle.push("M00081ZBG");
-      //listOfBCToHandle.push("M0000186T");
+      //listOfBCToHandle.push("M0000001DNY");
+      //listOfBCToHandle.push("M00000015LO");
+      //listOfBCToHandle.push("M0000000HNZ");
 
-      //listOfBCToHandle.push("M00002C8A");
-      //listOfBCToHandle.push("M00000WBD");
-      //listOfBCToHandle.push("M000019YA");
-      //listOfBCToHandle.push("M00000WB6");
-      /*
-      listOfBCToHandle.push("M00000STJ");
-      listOfBCToHandle.push("M00000M3J");
-      */
+
+
 
 
       //console.log("You have clicked on #mg-grp-step-btn");

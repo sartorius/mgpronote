@@ -15,6 +15,8 @@ CREATE TABLE ref_partner (
   max_bc_clt        SMALLINT        DEFAULT 5,
   -- Default currency
   cur_code          CHAR(3)         DEFAULT 'EUR',
+  -- Do we manage pick up for this partner
+  hdl_pickup         CHAR(1)         DEFAULT 'Y',
   -- Do we manage price for this partner we just notify if it has been paid or no
   hdl_price         CHAR(1)         DEFAULT 'N',
   -- Do we manage pricing for this partner : not implemented yet
@@ -23,7 +25,7 @@ CREATE TABLE ref_partner (
   hdl_big_wkf       CHAR(1)         DEFAULT 'N',
   -- Do we manage merging for this partner : not implemented yet
   hdl_merge         CHAR(1)         DEFAULT 'N',
-  -- Usual info 
+  -- Usual info
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -31,7 +33,7 @@ CREATE TABLE ref_partner (
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
-INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_pickup) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I', 'N');
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price) VALUES (3, 'JBM Fret Service', 'JBM Fret Service', 'C', 2, '0664066109', 'JBM Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y');
 
 CREATE TABLE ref_partner_workflow (
