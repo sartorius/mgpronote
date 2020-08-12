@@ -11,6 +11,12 @@
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+
+    var dataTagToJsonParam = '<%= @resultSetParam.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonParam = dataTagToJsonParam.replace(/&quot;/g,"\"");
+    var dataTagToJsonParamArray = JSON.parse(dataTagToJsonParam);
   </script>
 <% end %>
 <div>

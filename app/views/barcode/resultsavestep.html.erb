@@ -13,7 +13,10 @@
         <%= @stepcb %>
       </p>
     </div>
-    <% if @incidentDeclared == 'N' %>
+
+		<% if  @paymentUpdate %>
+				<%= render 'barcode/resultsaveparamupdate' %>
+		<% elsif @incidentDeclared == 'N' %>
         <%= render 'barcode/resultsavestepnoincident' %>
     <% else %>
         <%= render 'barcode/resultsavestepwithincident' %>

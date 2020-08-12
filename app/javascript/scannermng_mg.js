@@ -35,6 +35,13 @@ function mainScanLoaderInCaseOfChange(){
         verifManager();
     });
 
+    //Payment/this is set up
+    $("#btn-step-paid").click(function(){
+        $("#read-paid").val($("#paid-order").html());
+        $("#screen-load").show();
+        document.getElementById('savebc-form').submit();
+    });
+
     $("#mg-save-step-btn").click(function() {
         getGeoL();
     });
@@ -373,7 +380,8 @@ function strbadge(str){
 /* -------------------------------------------------------------------------- */
 // Show tag
 function loadBCTag(){
-  var resulTag = "";
+  let resulTag = "";
+  let resulTagParam = "";
 
   if(dataTagToJsonArray.length > 0){
 
@@ -397,14 +405,28 @@ function loadBCTag(){
             resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="fas fa-exclamation-triangle"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="fas fa-barcode"></i>&nbsp;Taggué par: ' + mgsEncodeClientRef(dataTagToJsonArray[i].ucomfirstname, dataTagToJsonArray[i].ucomid, dataTagToJsonArray[i].ucomclient_ref) + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
           }
           resulTag = resulTag + "<hr>";
+
+
+    }
+    for(var i=0; i<dataTagToJsonParamArray.length; i++){
+      resulTagParam = resulTagParam + "<small><strong>Date: " + dataTagToJsonParamArray[i].create_date + "</strong></small><br><strong>"+ dataTagToJsonParamArray[i].wp_comment + '</strong><br><span class="mg-color"><i class="fas fa-barcode"></i> Opéré par ' + mgsEncodeClientRef(dataTagToJsonParamArray[i].firstname, dataTagToJsonParamArray[i].uid, dataTagToJsonParamArray[i].uclient_ref) + '</span><br><br>'
     }
   }
   else{
     resulTag = "<h2>Navré, ce code barre est introuvable. Si vous pensez que c'est une erreur et que nous devrions le retrouver, contactez nous avec le code erreur BC404<h2>";
   }
 
+  let headerTracking = '<h2>Tracking</h2><br>'
+  let headerParam = '<br><h2>Mise à jour</h2><br>'
 
-  $("#block-of-tag").html(resulTag);
+  if(dataTagToJsonArray.length == 0){
+    headerTracking = ''
+  }
+  if(dataTagToJsonParamArray.length == 0){
+    headerParam = ''
+  }
+
+  $("#block-of-tag").html(headerTracking + resulTag + headerParam + resulTagParam);
   $("#no-found-bc").show(100);
 
 }

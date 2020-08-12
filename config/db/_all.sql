@@ -1,5 +1,8 @@
 DROP TABLE IF EXISTS client_partner_xref;
 
+
+-- To be deleted to delete barcode #0
+DROP TABLE IF EXISTS wk_param;
 -- To be deleted to delete barcode #1
 DROP TABLE IF EXISTS wk_tag_com;
 -- To be deleted to delete barcode #2
@@ -38,6 +41,7 @@ CREATE TABLE ref_partner (
   hdl_big_wkf       CHAR(1)         DEFAULT 'N',
   -- Do we manage merging for this partner : not implemented yet
   hdl_merge         CHAR(1)         DEFAULT 'N',
+  -- Usual info 
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -320,6 +324,16 @@ CREATE TABLE wk_tag_com(
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE wk_param(
+  id                    BIGSERIAL      PRIMARY KEY,
+  -- REFERENCES barcode(id)
+  bc_id                 BIGINT         NOT NULL,
+  -- REFERENCES users(id) who has done the action
+  user_id               BIGINT         NOT NULL,
+  comment               VARCHAR(500),
+  create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 /* ------------------------------------------------------------------------------------------------ */
 
 /*
@@ -348,6 +362,8 @@ CREATE OR REPLACE FUNCTION CLI_ACT_TAG(par_bc_id BIGINT, par_secure_id SMALLINT,
                   curr_inc                VARCHAR(500),
                   bc_type_pack            CHAR(1),
                   bc_category             CHAR(1),
+                  rp_hdl_price            CHAR(1),
+                  bc_paid_code            CHAR(1),
                   rse_act_owner           CHAR(1),
                   rse_next_input_needed   CHAR(1),
                   rwkf_id                 SMALLINT,
@@ -402,6 +418,8 @@ BEGIN
     wtc.comment AS curr_inc,
     bc.type_pack AS bc_type_pack,
     bc.category AS bc_category,
+    rp.hdl_price AS rp_hdl_price,
+    bc.paid_code AS bc_paid_code,
     rte.act_owner AS rse_act_owner,
     rte.next_input_needed AS rse_next_input_needed,
     mw.wkf_id, -- here is PA
@@ -416,6 +434,7 @@ BEGIN
 				                 JOIN ref_status rtc ON rtc.id = wt.current_step_id
 				                 JOIN ref_status rte ON rte.id = mw.end_id
                          JOIN barcode bc ON bc.id = wt.bc_id
+                         JOIN ref_partner rp ON bc.partner_id = rp.id
                          LEFT JOIN wk_tag_com wtc ON wtc.wk_tag_id = wt.id
 		  WHERE wt.id = var_found_last_step;
 END
@@ -456,7 +475,7 @@ $$ LANGUAGE plpgsql;
 -- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
 -- (bc_id, mwkf_id, current_step_id, geo_l)
 -- Change to a function to get notification
--- CREATE OR REPLACE FUNCTION CLI_ACT_TAG
+-- CREATE OR REPLACE FUNCTION CLI_STEP_TAG
 DROP FUNCTION IF EXISTS CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT);
 CREATE OR REPLACE FUNCTION CLI_STEP_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
 RETURNS TABLE (bc_id                   BIGINT,
@@ -528,6 +547,53 @@ BEGIN
                         WHERE bc.id = $1
                         -- Make sure we retrieve only when we need to notify
                         AND need_to_notify = TRUE;
+END
+$$ LANGUAGE plpgsql;
+
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- Create Procedure Insert Step as we need to handle ref_status
+-- CALL stored_procedure_name(parameter_list);
+-- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
+-- (bc_id, mwkf_id, current_step_id, geo_l)
+-- Change to a function to get notification
+-- CREATE OR REPLACE FUNCTION CLI_PAYMT_TAG
+DROP FUNCTION IF EXISTS CLI_PAYMT_TAG(BIGINT, CHAR(1), BIGINT, VARCHAR(50));
+CREATE OR REPLACE FUNCTION CLI_PAYMT_TAG(BIGINT, CHAR(1), BIGINT, VARCHAR(50))
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(250))
+                -- Do the return at the end xxx
+AS $$
+DECLARE
+  var_msg             VARCHAR(250);
+BEGIN
+
+    INSERT INTO wk_param (bc_id, user_id, comment) VALUES ($1, $3, $4);
+    -- We update the barcode with last status
+    UPDATE barcode
+      SET paid_code = $2,
+      update_date = CURRENT_TIMESTAMP
+      WHERE id = $1;
+
+    -- We need to notify
+    RETURN QUERY
+    SELECT
+        bc.id,
+        bc.secure,
+        u.name,
+        u.firstname,
+        u.email,
+        rs.step,
+        $4
+        FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                        JOIN ref_status rs ON rs.id = bc.status
+                        WHERE bc.id = $1;
 END
 $$ LANGUAGE plpgsql;
 

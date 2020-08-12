@@ -64,7 +64,7 @@
 				</div>
 
 
-        <form action="/save_step" method="post">
+        <form action="/save_step" method="post" id="savebc-form">
           <div class="form-group" id="blc-step-ctrl">
             <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
             <select name="stepstep" class="custom-select custom-select-lg mb-3" id="stepCtrl">
@@ -98,6 +98,20 @@
 
 					<div id="blok-inc-btn">
 						<hr>
+
+						<% unless @resultSet[0]['rp_hdl_price'].to_s == 'N' %>
+							<div class="center btn-cnc-step">
+								<a class="btn btn-default btn-md" id="btn-step-paid">
+										<% if @resultSet[0]['bc_paid_code'].to_s == 'N' %>
+											Valider le paiement&nbsp;<i class="fas fa-check-circle"></i><i class="hid-display" id="paid-order">Y</i>
+										<% else %>
+											Invalider le paiement&nbsp;<i class="fas fa-times-circle"></i><i class="hid-display" id="paid-order">N</i>
+										<% end %>
+								</a>
+							</div>
+							<hr>
+						<% end %>
+
 						<div class="center btn-cnc-step">
 							<a class="btn btn-default-light btn-md" id="btn-step-inc">
 									Déclarer un incident&nbsp;<i class="fas fa-exclamation-triangle"></i>
@@ -109,9 +123,12 @@
 							</a>
 					</div>
 
+
+          <textarea class="form-control step-hid" rows="1" id="read-paid" name="steppaid" placeholder="read paid" style="resize: none;"></textarea>
+
           <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="stepcbid" placeholder="code barre id" style="resize: none;"></textarea>
-          <textarea class="form-control step-hid" rows="1" id="read-mwfk" name="stepmwfid" placeholder="code barre id" style="resize: none;"></textarea>
-          <textarea class="form-control step-hid" rows="1" id="read-rwfk" name="steprwfid" placeholder="code barre id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-mwfk" name="stepmwfid" placeholder="wkf id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-rwfk" name="steprwfid" placeholder="rwfk id" style="resize: none;"></textarea>
           <textarea class="form-control step-hid" rows="1" id="read-step-txt" name="steptxt" placeholder="code barre" style="resize: none;">Err</textarea>
 
           <textarea class="form-control step-hid" rows="1" id="read-cb" name="stepcb" placeholder="code barre" style="resize: none;"><%= @readBC %></textarea>

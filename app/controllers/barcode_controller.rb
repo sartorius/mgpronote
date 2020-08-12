@@ -507,13 +507,32 @@ class BarcodeController < ApplicationController
 
     @verificationIsOK = true
 
-    if (params[:stepcomment].nil?) || (params[:stepcomment] == '') then
+    @paymentUpdate = false
+    @comment = ''
+
+    if (!params[:steppaid].nil?) && (params[:steppaid] == 'Y') then
+      puts 'You clicked on PAID'
+
+      @paymentUpdate = true
+      @comment = 'Mise à jour: paiement validé'
+      # We are in payment validation
+      sql_query = "SELECT * FROM CLI_PAYMT_TAG ("+ params[:stepcbid] +", 'P', " + @current_user.id.to_s + ", '" + @comment.to_s + "');"
+    elsif (!params[:steppaid].nil?) && (params[:steppaid] == 'N') then
+      puts 'You clicked on UNPAID'
+
+      @paymentUpdate = true
+      @comment = 'Mise à jour: paiement invalidé'
+      # We are in payment validation
+      sql_query = "SELECT * FROM CLI_PAYMT_TAG ("+ params[:stepcbid] +", 'N', " + @current_user.id.to_s + ", '" + @comment.to_s + "');"
+    elsif (params[:stepcomment].nil?) || (params[:stepcomment] == '') then
+          puts 'savestep Check point 2'
 
           # We save in gram
           unless params[:stepweight].nil? || (params[:stepweight] == '')
             stepWeightKilo = (params[:stepweight].to_s.gsub(/,/, '.').to_f * 1000).to_i
           end
 
+          # In case the step is verification of the code
           # We do the verification code here
           unless params[:verif].nil? || (params[:verif] == '')
             sql_query_verif = "SELECT * FROM CLI_VERIF_CODE (" + params[:stepcbid] + ", CAST (" + get_safe_pg_number(params[:verif]) + ' AS SMALLINT));'
@@ -543,6 +562,7 @@ class BarcodeController < ApplicationController
           @stepweight = params[:stepweight]
 
     else
+        puts 'savestep Check point 3'
         # We are in incident case
         sql_query = "SELECT * FROM CLI_COM_TAG ("+ params[:stepcbid] +", " + @current_user.id.to_s + ", " + get_safe_pg_wq(params[:stepcomment]) + ");"
         @incidentDeclared = 'Y'
@@ -618,13 +638,20 @@ class BarcodeController < ApplicationController
                     " LEFT JOIN wk_tag_com wtc ON wtc.wk_tag_id = wt.id " +
                     " LEFT JOIN users ucom ON wtc.user_id = ucom.id "
 
+    sql_query_param = "SELECT bc.id, bc.ref_tag, u.id AS uid, u.name, u.firstname, u.client_ref AS uclient_ref, wp.comment AS wp_comment, to_char(wp.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date FROM wk_param wp JOIN barcode bc on bc.id = wp.bc_id " +
+                      " JOIN users u on u.id = wp.user_id "
+
     if params[:checkcbid] == '' then
       #puts "<<<<<<<<< checkcbid is empty string"
       # checkcbid is empty when we have an external code because we cannot solve the MGS id
-      sql_query = sql_query + " WHERE bc.ext_ref IN (" + get_safe_pg_wq_ns(params[:checkcb]) + ") ORDER BY wt.id ASC;"
+      sql_where_clause = " WHERE bc.ext_ref IN (" + get_safe_pg_wq_ns(params[:checkcb]) + " ) "
+      sql_query = sql_query + sql_where_clause + " ORDER BY wt.id ASC;"
+      sql_query_param = sql_query_param + sql_where_clause + " ORDER BY wp.id ASC;"
     else
       #puts "<<<<<<<<< checkcbid is " + params[:checkcbid].to_s
-      sql_query = sql_query + " WHERE bc.id = " + params[:checkcbid] + " AND bc.secure = " + params[:checkcbsec] + " ORDER BY wt.id ASC;"
+      sql_where_clause = " WHERE bc.id = " + params[:checkcbid] + " AND bc.secure = " + params[:checkcbsec]
+      sql_query = sql_query + sql_where_clause + " ORDER BY wt.id ASC;"
+      sql_query_param = sql_query_param + sql_where_clause + " ORDER BY wp.id ASC;"
     end
 
 
@@ -635,6 +662,8 @@ class BarcodeController < ApplicationController
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.execute(sql_query)
+      @resultSetParam = ActiveRecord::Base.connection.execute(sql_query_param)
+
       @cbToCheck = params[:checkcb];
 
       render 'resultcheckstep'

@@ -48,24 +48,83 @@ heroku config:set RACK_ENV=test RAILS_ENV=test
 
 
 
--- Paris Pointe Maritime
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 0, 2);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 3, 1);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 1, 4);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 4, 2);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 2, 6);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 6, 14);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 14, 12);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 12, 10);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (3, 10, -1);
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- Create Procedure Insert Step as we need to handle ref_status
+-- CALL stored_procedure_name(parameter_list);
+-- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
+-- (bc_id, mwkf_id, current_step_id, geo_l)
+-- Change to a function to get notification
+-- CREATE OR REPLACE FUNCTION CLI_PAYMT_TAG
+DROP FUNCTION IF EXISTS CLI_PAYMT_TAG(BIGINT, CHAR(1), SMALLINT, VARCHAR(250), BIGINT, INT);
+CREATE OR REPLACE FUNCTION CLI_PAYMT_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(250))
+                -- Do the return at the end xxx
+AS $$
+DECLARE
+  var_msg             VARCHAR(250);
+  var_verif_code      SMALLINT;
+BEGIN
+    var_verif_code := 0;
 
--- Paris Brazzaville Maritime
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 0, 2);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 3, 1);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 1, 4);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 4, 2);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 2, 6);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 6, 14);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 14, 13);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 13, 10);
-INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 10, -1);
+    SELECT CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END INTO var_msg
+      FROM ref_status rs
+      WHERE rs.id = $3;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
+
+    -- Because Weight is specific action
+    IF ($3 = 6) AND NOT($6 IS NULL) THEN
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET status = $3,
+        weight_in_gr = $6,
+        under_incident = FALSE,
+        update_date = CURRENT_TIMESTAMP
+        WHERE id = $1;
+
+      var_msg := CONCAT(var_msg, ' Validation poids: ', ROUND($6::decimal/1000, 2)::varchar(20), ' Kilogrammes');
+
+    ELSE
+      -- We update the barcode with last status
+      UPDATE barcode
+        SET status = $3,
+        under_incident = FALSE,
+        update_date = CURRENT_TIMESTAMP
+        WHERE id = $1;
+    END IF;
+
+    -- After Status update
+    IF ($3 = 10) THEN
+      -- The step 10 is verification code mandatory
+      -- We need to get the secret code
+      SELECT bc.secret_code INTO var_verif_code
+        FROM barcode bc
+        WHERE bc.id = $1;
+      var_msg := CONCAT(var_msg, ' Votre code de vérification: ', var_verif_code::varchar(20), ' - ce code est confidentiel, ne le partagez pas.');
+    END IF;
+
+
+    RETURN QUERY
+    SELECT
+        bc.id,
+        bc.secure,
+        u.name,
+        u.firstname,
+        u.email,
+        rs.step,
+        var_msg
+        FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                        JOIN ref_status rs ON rs.id = bc.status
+                        WHERE bc.id = $1
+                        -- Make sure we retrieve only when we need to notify
+                        AND need_to_notify = TRUE;
+END
+$$ LANGUAGE plpgsql;

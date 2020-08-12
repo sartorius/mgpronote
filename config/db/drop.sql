@@ -1,5 +1,8 @@
 DROP TABLE IF EXISTS client_partner_xref;
 
+
+-- To be deleted to delete barcode #0
+DROP TABLE IF EXISTS wk_param;
 -- To be deleted to delete barcode #1
 DROP TABLE IF EXISTS wk_tag_com;
 -- To be deleted to delete barcode #2

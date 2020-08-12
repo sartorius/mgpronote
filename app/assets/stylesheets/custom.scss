@@ -65,7 +65,7 @@ textarea {
 /* Bootstrap */
 
 .btn-default{
-   color: white;
+   color: white !important;
    background-color:$main-color;
    border-color:#130022;
  }
@@ -73,7 +73,7 @@ textarea {
 .btn.btn-default:focus,
 .btn.btn-default:active,
 .btn.btn-default.active {
-    color: #45007B;
+    color: #45007B !important;
     background-color: $main-color-light;
 }
 
