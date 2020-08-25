@@ -79,6 +79,8 @@ Rails.application.routes.draw do
   get     '/getmypartnerlist',    to: 'persoresel#getmypartnerlist'
   post    '/createbarcodebyclient',    to: 'persoresel#createbarcodebyclient'
 
+  #Route for mothers
+  get     '/mothermng',    to: 'mother#mothermng'
 
   # File: config/routes.rb
   if Rails.env.production?

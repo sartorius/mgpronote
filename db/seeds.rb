@@ -1,5 +1,4 @@
 
-
 # Create a main sample user.
 User.create!(name:  "Ratinahirana",
              firstname: "Herinirina",
@@ -93,6 +92,32 @@ User.create!(name:  "Rakotobe",
             activated: true,
             activated_at: Time.zone.now)
 
+
+# Livreur Trans 2
+User.create!(name:  "Rakomino",
+            firstname: "Maurice",
+            email: "maurice.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0322345690",
+            admin:     false,
+            partner:   4,
+            incharge:  true,
+            activated: true,
+            activated_at: Time.zone.now)
+
+User.create!(name:  "Rakomandroso",
+            firstname: "Sylvie",
+            email: "sylvie.r@gmail.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0322345690",
+            admin:     false,
+            partner:   4,
+            incharge:  false,
+            activated: true,
+            activated_at: Time.zone.now)
+
 ###########################################################################
 # Bunch of Clients
 # Client
@@ -109,8 +134,8 @@ User.create!(name:  "Delamare",
 
 # Client
 User.create!(name:  "Razafy",
-            firstname: "Hanitra",
-            email: "hanitra.r@gmail.com",
+            firstname: "Mavo",
+            email: "mgsuivi@protonmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
             phone: "0320102045",
@@ -120,9 +145,9 @@ User.create!(name:  "Razafy",
             activated_at: Time.zone.now)
 
 # Client
-User.create!(name:  "Rakoto",
-            firstname: "Maeva",
-            email: "maeva.r@gmail.com",
+User.create!(name:  "Rafaly",
+            firstname: "Thierry",
+            email: "mgsuivi@gmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
             phone: "0320102045",
@@ -132,9 +157,9 @@ User.create!(name:  "Rakoto",
             activated_at: Time.zone.now)
 
 # Client
-User.create!(name:  "Ramilison",
-            firstname: "Mila",
-            email: "mila.r@gmail.com",
+User.create!(name:  "Etsesamis",
+            firstname: "Tapoty",
+            email: "tapotyetsesamis@gmail.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
             phone: "0320102045",

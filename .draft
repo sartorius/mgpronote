@@ -1,130 +1,127 @@
-git pull origin master
+package com.example.app;
 
-<input type="submit" name="formSubmit" id="btnVerify" class="btn btn btn-alternative btn-lg btn-block" value="Vérifier"/>
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.webkit.PermissionRequest;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
-Parameters: {"authenticity_token"=>"qi8GbXLgzxhtAbDxZCtEBuX0X58rjOsmcwZ1C5aUkgyLlgP0cifw/qtj0Db9Eb2rgVzoZN/HWEe6pnfHEhQdSg==", "stepgeol"=>"N", "grpcheckcbpure"=>"[{\"id\":1,\"secure\":3301},{\"id\":2,\"secure\":4352}]", "grpcheckcbext"=>"[\"3222475413469\",\"3263851322913\"]"}
-  User Load (1.1ms)  SELECT "users".* FROM "users" WHERE "users"."id" = $1 LIMIT $2  [["id", 140], ["LIMIT", 1]]
-  ↳ app/helpers/sessions_helper.rb:18:in `current_user'
-PURE <<<<<<<<<<< [{"id":1,"secure":3301},{"id":2,"secure":4352}]
-EXT <<<<<<<<<<< ["3222475413469","3263851322913"]
+import android.Manifest;
+import android.webkit.WebViewClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-CLI_GRPSTEP_TAG_EXT
-CLI_GRPSTEP_TAG_PURE
+public class MainActivity extends Activity {
 
-OK CLI_STEP_TAG
-CLI_COM_TAG
+    public static final String TAG = "MG Suivi";
+
+    private WebView mWebView;
+
+    @Override
+    @SuppressLint("SetJavaScriptEnabled")
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Log.e(TAG, "start");
+        setContentView(R.layout.activity_main);
+        mWebView = findViewById(R.id.activity_main_webview);
+        WebSettings webSettings = mWebView.getSettings();
+
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        //mWebView.setWebViewClient(new MyWebViewClient());
+        // Thit to avoid chrome in android
+        mWebView.setWebViewClient(new WebViewClient());
 
 
-heroku config --app mgsuivi-jdt-2046
-heroku config:set RACK_ENV=test RAILS_ENV=test
+        Log.e(TAG, "start 1");
+        mWebView.setWebChromeClient(new WebChromeClient() {
 
-/* Bootstrap */
 
-.btn-alternative{
-   color: white;
-   background-color:$main-color;
-   border-color:#130022;
- }
-.btn.btn-alternative:hover,
-.btn.btn-alternative:focus,
-.btn.btn-alternative:active,
-.btn.btn-alternative.active {
-    color: #45007B;
+
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                //Log.d('mgs', "onPermissionRequest");
+                Log.e(TAG, "start A1");
+                Log.e(TAG, "onPermissionRequest");
+                System.out.println(">>>>" + "onPermissionRequest");
+
+
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.M)
+                    @Override
+                    public void run() {
+                        Log.e(TAG, "start A2");
+                        Log.e(TAG, request.getOrigin().toString());
+                        System.out.println(">>>>" + request.getOrigin().toString());
+                        if(request.getOrigin().toString().equals("file:///")) {
+                            Log.e(TAG, "GRANTED");
+                            System.out.println(">>>> GRANTED");
+                            request.grant(request.getResources());
+                        } else {
+                            Log.e(TAG, "DENIED");
+                            System.out.println(">>>> DENIED");
+                            request.deny();
+                        }
+                    }
+                });
+            }
+
+
+        });
+
+        Log.e(TAG, "start 2");
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+            // Some method can come only after API 23
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                Log.e(TAG, "start 3");
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Log.e(TAG, "Greater than Lollipop");
+
+                    int hasCameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
+
+                    List<String> permissions = new ArrayList<String>();
+
+                    if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
+                        permissions.add(Manifest.permission.CAMERA);
+
+                    }
+
+                    if (!permissions.isEmpty()) {
+                        requestPermissions(permissions.toArray(new String[permissions.size()]), 111);
+                    }
+                    request.grant(request.getResources());
+                }
+            }
+
+        });
+
+        // REMOTE RESOURCE
+        mWebView.loadUrl("https://www.mgsuivi.com");
+
+        // LOCAL RESOURCE
+        // mWebView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
-
-.btn-alternative-light{
-   color: $main-color;
-   background-color:$main-color-light;
-   border-color:#130022;
- }
-.btn.btn-alternative-light:hover,
-.btn.btn-alternative-light:focus,
-.btn.btn-alternative-light:active,
-.btn.btn-alternative-light.active {
-    color: #45007B;
-    background-color: $main-color-light-contrast;
-}
-
-
-
--- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
--- Create Procedure Insert Step as we need to handle ref_status
--- CALL stored_procedure_name(parameter_list);
--- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
--- (bc_id, mwkf_id, current_step_id, geo_l)
--- Change to a function to get notification
--- CREATE OR REPLACE FUNCTION CLI_PAYMT_TAG
-DROP FUNCTION IF EXISTS CLI_PAYMT_TAG(BIGINT, CHAR(1), SMALLINT, VARCHAR(250), BIGINT, INT);
-CREATE OR REPLACE FUNCTION CLI_PAYMT_TAG(BIGINT, SMALLINT, SMALLINT, VARCHAR(250), BIGINT, INT)
-RETURNS TABLE (bc_id                   BIGINT,
-                bc_sec                  SMALLINT,
-                name                    VARCHAR(250),
-                firstname               VARCHAR(250),
-                to_addr                 VARCHAR(250),
-                step                    VARCHAR(50),
-                msg                     VARCHAR(250))
-                -- Do the return at the end xxx
-AS $$
-DECLARE
-  var_msg             VARCHAR(250);
-  var_verif_code      SMALLINT;
-BEGIN
-    var_verif_code := 0;
-
-    SELECT CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END INTO var_msg
-      FROM ref_status rs
-      WHERE rs.id = $3;
-
-    -- Do the INSERT
-    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
-    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id) VALUES ($1, $2, $3, $4, $5);
-
-    -- Because Weight is specific action
-    IF ($3 = 6) AND NOT($6 IS NULL) THEN
-      -- We update the barcode with last status
-      UPDATE barcode
-        SET status = $3,
-        weight_in_gr = $6,
-        under_incident = FALSE,
-        update_date = CURRENT_TIMESTAMP
-        WHERE id = $1;
-
-      var_msg := CONCAT(var_msg, ' Validation poids: ', ROUND($6::decimal/1000, 2)::varchar(20), ' Kilogrammes');
-
-    ELSE
-      -- We update the barcode with last status
-      UPDATE barcode
-        SET status = $3,
-        under_incident = FALSE,
-        update_date = CURRENT_TIMESTAMP
-        WHERE id = $1;
-    END IF;
-
-    -- After Status update
-    IF ($3 = 10) THEN
-      -- The step 10 is verification code mandatory
-      -- We need to get the secret code
-      SELECT bc.secret_code INTO var_verif_code
-        FROM barcode bc
-        WHERE bc.id = $1;
-      var_msg := CONCAT(var_msg, ' Votre code de vérification: ', var_verif_code::varchar(20), ' - ce code est confidentiel, ne le partagez pas.');
-    END IF;
-
-
-    RETURN QUERY
-    SELECT
-        bc.id,
-        bc.secure,
-        u.name,
-        u.firstname,
-        u.email,
-        rs.step,
-        var_msg
-        FROM barcode bc JOIN users u ON u.id = bc.owner_id
-                        JOIN ref_status rs ON rs.id = bc.status
-                        WHERE bc.id = $1
-                        -- Make sure we retrieve only when we need to notify
-                        AND need_to_notify = TRUE;
-END
-$$ LANGUAGE plpgsql;

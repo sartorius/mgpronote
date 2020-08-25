@@ -107,6 +107,7 @@ class ClientController < ApplicationController
         # The client exists and we attach it
         puts 'IN client manager'
         load_clients
+        load_partner_workflow
         @getAuthToken = mgs_form_authenticity_token.to_s
         render 'clientmng'
       end

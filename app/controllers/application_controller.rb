@@ -8,13 +8,17 @@ class ApplicationController < ActionController::Base
   private
 
   def get_partner_company_name
-    unless !@resultSetCompany.nil?
-      sql_query = "SELECT id, name, description, COALESCE(to_phone, 'NR') AS pphone, COALESCE(website, 'NR') AS pwebsite, cur_code, hdl_price, hdl_pickup, hdl_calc_pricing, hdl_big_wkf, hdl_merge FROM ref_partner rp WHERE id = " + @current_user.partner.to_s + ";"
-      begin
-        #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
-        #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
-        @resultSetCompany = ActiveRecord::Base.connection.exec_query(sql_query).cast_values
+    if (!@current_user.nil?) and (@current_user.partner.to_i > 1)
+
+      unless !@resultSetCompany.nil?
+        sql_query = "SELECT id, name, description, COALESCE(to_phone, 'NR') AS pphone, COALESCE(website, 'NR') AS pwebsite, cur_code, hdl_price, hdl_pickup, hdl_calc_pricing, hdl_mother, hdl_merge FROM ref_partner rp WHERE id = " + @current_user.partner.to_s + ";"
+        begin
+          #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
+          #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
+          @resultSetCompany = ActiveRecord::Base.connection.exec_query(sql_query).cast_values
+        end
       end
+
     end
   end
 
@@ -121,7 +125,10 @@ class ApplicationController < ActionController::Base
         'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! Votre paquet : ' + cb_code + ' est passé à #' + status + ". " +  msg + "<br> Pour plus de détails, tapez " + cb_code + " dans notre barre de recherche."
     }]
     )
+    # p is the function loggin the message to the terminal
     p variable.attributes['Messages']
+    puts "EMAIL Notification: " + variable.inspect
+
 
   end
 
@@ -148,7 +155,9 @@ class ApplicationController < ActionController::Base
         'HTMLPart'=> 'Cher.ère utilisateur.rice, <br> nous avons du nouveau pour vous ! <br>' + msg+ '<br><br><br>Ne répondez pas à cet email. Il ne sera pas lu.'
     }]
     )
+    # p is the function loggin the message to the terminal
     p variable.attributes['Messages']
+    puts "EMAIL Notification: " + variable.inspect
 
   end
 

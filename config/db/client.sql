@@ -9,15 +9,13 @@ CREATE TABLE client_partner_xref (
 );
 
 
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 2);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 2);
 
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 3);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 3);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 3);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 3);
 
 
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';

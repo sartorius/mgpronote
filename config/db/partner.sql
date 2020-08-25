@@ -22,7 +22,7 @@ CREATE TABLE ref_partner (
   -- Do we manage pricing for this partner : not implemented yet
   hdl_calc_pricing  CHAR(1)         DEFAULT 'N',
   -- Do we manage big workflow for this partner : not implemented yet
-  hdl_big_wkf       CHAR(1)         DEFAULT 'N',
+  hdl_mother        CHAR(1)         DEFAULT 'N',
   -- Do we manage merging for this partner : not implemented yet
   hdl_merge         CHAR(1)         DEFAULT 'N',
   -- Usual info
@@ -34,7 +34,9 @@ INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Clien
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_pickup) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I', 'N');
-INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price) VALUES (3, 'JBM Fret Service', 'JBM Fret Service', 'C', 2, '0664066109', 'JBM Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (3, 'Test 3 Fret Service', 'Test 3 Fret Service', 'C', 2, '0664066109', 'Test Trois Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y', 'Y');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (4, 'Test 4 Transport', 'Test Quatre', 'C', 2, '0664078109', 'Test Quatre Transport@ 12 RUE DES BRINS, 93170 BAGNOLET', 'Y', 'Y');
+
 
 CREATE TABLE ref_partner_workflow (
   id                SMALLINT        PRIMARY KEY,

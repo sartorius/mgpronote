@@ -6,3 +6,4 @@ cat ./config/db/partner.sql >> ./config/db/_all.sql
 cat ./config/db/mod_transition.sql >> ./config/db/_all.sql
 cat ./config/db/mod_user.sql >> ./config/db/_all.sql
 cat ./config/db/client.sql >> ./config/db/_all.sql
+cat ./config/db/mod_mother.sql >> ./config/db/_all.sql

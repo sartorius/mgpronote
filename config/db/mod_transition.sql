@@ -216,13 +216,17 @@ CREATE TABLE barcode(
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
-  -- If someone else need to come for pick up/enlèvement
+  -- Pick up/enlèvement details
   p_name_firstname      VARCHAR(50),
   p_phone               VARCHAR(50),
   p_address_note        VARCHAR(250),
   -- Handle price
   price_cts             SMALLINT  DEFAULT 0,
   paid_code             CHAR(1)   DEFAULT 'N',
+  -- Handle mother feature
+  -- In case it has a mother, this is not null
+  mother_id             BIGINT,
+  mother_ref            VARCHAR(10),
   -- Usual information
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS client_partner_xref;
+DROP TABLE IF EXISTS mother_barcode_xref;
 
 
 -- To be deleted to delete barcode #0
@@ -7,7 +8,12 @@ DROP TABLE IF EXISTS wk_param;
 DROP TABLE IF EXISTS wk_tag_com;
 -- To be deleted to delete barcode #2
 DROP TABLE IF EXISTS wk_tag;
+
+
 -- To be deleted to delete barcode #3
+DROP TABLE IF EXISTS mother;
+
+-- To be deleted to delete barcode #4
 DROP TABLE IF EXISTS barcode;
 
 DROP TABLE IF EXISTS mod_workflow;
@@ -40,7 +46,7 @@ CREATE TABLE ref_partner (
   -- Do we manage pricing for this partner : not implemented yet
   hdl_calc_pricing  CHAR(1)         DEFAULT 'N',
   -- Do we manage big workflow for this partner : not implemented yet
-  hdl_big_wkf       CHAR(1)         DEFAULT 'N',
+  hdl_mother        CHAR(1)         DEFAULT 'N',
   -- Do we manage merging for this partner : not implemented yet
   hdl_merge         CHAR(1)         DEFAULT 'N',
   -- Usual info
@@ -52,7 +58,9 @@ INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Clien
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_pickup) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I', 'N');
-INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price) VALUES (3, 'JBM Fret Service', 'JBM Fret Service', 'C', 2, '0664066109', 'JBM Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (3, 'Test 3 Fret Service', 'Test 3 Fret Service', 'C', 2, '0664066109', 'Test Trois Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y', 'Y');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (4, 'Test 4 Transport', 'Test Quatre', 'C', 2, '0664078109', 'Test Quatre Transport@ 12 RUE DES BRINS, 93170 BAGNOLET', 'Y', 'Y');
+
 
 CREATE TABLE ref_partner_workflow (
   id                SMALLINT        PRIMARY KEY,
@@ -286,13 +294,17 @@ CREATE TABLE barcode(
   to_name               VARCHAR(50),
   to_firstname          VARCHAR(50),
   to_phone              VARCHAR(50),
-  -- If someone else need to come for pick up/enlèvement
+  -- Pick up/enlèvement details
   p_name_firstname      VARCHAR(50),
   p_phone               VARCHAR(50),
   p_address_note        VARCHAR(250),
   -- Handle price
   price_cts             SMALLINT  DEFAULT 0,
   paid_code             CHAR(1)   DEFAULT 'N',
+  -- Handle mother feature
+  -- In case it has a mother, this is not null
+  mother_id             BIGINT,
+  mother_ref            VARCHAR(10),
   -- Usual information
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -835,15 +847,13 @@ CREATE TABLE client_partner_xref (
 );
 
 
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 2);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 2);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 2);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 2);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 2);
 
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'njara.h@gmail.com'), 3);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tsiky.d@gmail.com'), 3);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'hanitra.r@gmail.com'), 3);
-INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'maeva.r@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 3);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 3);
 
 
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
@@ -1010,3 +1020,31 @@ BEGIN
    RETURN var_result;
 END
 $func$  LANGUAGE plpgsql;
+-- Mother starts with M
+CREATE TABLE mother(
+  id                    BIGSERIAL      PRIMARY KEY,
+  -- Mostly beween 0 to 9999
+  secure                SMALLINT       NOT NULL,
+  -- Detail creation
+  partner_id            INT            NOT NULL,
+  -- creator id can be the partner or the client with high score who is granteed
+  creator_id            BIGINT         NOT NULL,
+  -- Workflow id
+  -- Default no workflow until we add one element
+  wf_id                 SMALLINT       DEFAULT 0,
+  status                SMALLINT       DEFAULT 0,
+  nbr_bc                SMALLINT       DEFAULT 0,
+  active                CHAR(1)        DEFAULT 'Y',
+  under_incident        BOOLEAN        DEFAULT FALSE,
+  -- Usual information
+  update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- This is the cross ref table for all mother to get their barcode
+CREATE TABLE mother_barcode_xref (
+  mother_id     BIGINT,
+  bc_id         BIGINT,
+  create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (mother_id, bc_id)
+);
