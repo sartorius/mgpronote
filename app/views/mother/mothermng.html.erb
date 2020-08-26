@@ -1,9 +1,40 @@
 <% provide(:title, "Mother") %>
 <div id="mg-graph-identifier">motdash-gr</div>
+<%= render 'partner/partnerutils' %>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+		// We init here the filter value
+		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
+		var printArray = new Array();
+
+  </script>
+<% end %>
 
 
 <div class="row">
   <div class="col-lg-12">
-    <h1>Référence mère</h1>
+    <h1><i class="fas fa-cubes"></i>&nbsp;Référence mother</h1>
   </div>
+</div>
+
+<div class="row">
+  <% if @resultSetCompany[0][9].to_s == 'N' %>
+    <%# We are not handling MOTHER Workflow %>
+    <div class="col-sm-12 no-data">
+  		<i class="fas fa-box-open"></i>&nbsp;
+      Désolé, vous n'avez pas encore souscrit à l'offre MOTHER. Cette option permet d'avoir une référence unique qui contrôle plusieurs sous-référence. Comme par exemple un palette qui contient 20 colis. En mettant à jour uniquement la référence MOTHER de la palette, vous mettez à jour automatiquement tous les 20 colis.<br><br>
+      Si vous êtes intéressé, n'hésitez pas à nous contacter, nous serons ravis de vous répondre.
+    </div>
+  <% else %>
+    <%= render 'mother/manager' %>
+  <% end %>
 </div>

@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   private
 
   def get_partner_company_name
+    puts '!@current_user.nil? : ' + (!@current_user.nil?).to_s
+    puts '@current_user.partner : ' + @current_user.partner.to_s
     if (!@current_user.nil?) and (@current_user.partner.to_i > 1)
 
       unless !@resultSetCompany.nil?

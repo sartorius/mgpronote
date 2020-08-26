@@ -29,6 +29,7 @@ module SampleApp
     ENV['MJ_SEND_MAIL_DOMAIN'] = 'mgsuivi.com'
     ENV['MJ_SEND_MAIL_PWD'] = 'lesoiseaux1234567'
 
+    ENV['SQL_LIMIT_SM'] = ' 250 '
     ENV['SQL_LIMIT_MD'] = ' 500 '
     ENV['SQL_LIMIT_LG'] = ' 800 '
     ENV['MAX_PRINT'] = '11'
