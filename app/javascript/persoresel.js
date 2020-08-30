@@ -447,7 +447,6 @@ function addbarCodeJson(partnerId){
   }
 }
 
-
 function displaySuccessDialog(){
   $('#mgs-dialog-feedback').show(100);
   $('#mgs-dialog').modal('hide');
@@ -459,6 +458,7 @@ function displayErrorDialog(){
   $('#mgs-dialog-feedback').show(100);
   $('#mgs-dialog').modal('hide');
 }
+
 
 //Inner variable declaration !
 function createBarCodeFor(pName, id, o){

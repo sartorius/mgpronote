@@ -1,0 +1,52 @@
+<%# Menu bar %>
+<%# This is the old "trouvé" %>
+<span class="info-sm"><i id='nb-el-dash'>0</i>&nbsp;mother(s) trouvé(s)</span><span class="info-sm"><i id='print-max-msg'></i></span>
+<div class="row filter-banner" id="filter-block">
+  <div class="col-sm-2 fil-el">
+    <button id="new-dash" type="button" class="btn btn-md btn-block btn-default crt-moth">
+      Nouveau&nbsp;<i class="fas fa-cubes"></i>
+    </button>
+  </div>
+  <div class="col-sm-2 fil-el">
+    <button id="print-dash" type="button" class="btn btn-md btn-block btn-default">
+      <i id="count-print"></i> &nbsp; <i class="fas fa-print"></i>
+    </button>
+  </div>
+  <div class="col-sm-1 fil-el">
+    <button id="all-print-dash" type="button" class="btn btn-md btn-block btn-default">
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+  <div class="col-sm-1 fil-el">
+    <button id="re-init-print-dash" type="button" class="btn btn-md btn-block btn-default">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+
+  <div class="col-sm-1 fil-el-txt">
+    Pos. <i class="fas fa-th"></i>
+  </div>
+
+  <div class="col-sm-1 fil-el">
+    <select class="form-control" id="positionOffset">
+      <% for i in 0..@maxPrintConstEnv.to_i do %>
+        <option><%= i %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="col-sm-1 fil-el-txt">
+
+  </div>
+
+  <div class="col-sm-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all" placeholder="Filtrez min. 3 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-sm-1 fil-el">
+    <button id="re-init-dash" type="button" class="btn btn-md btn-block btn-default">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+
+  </div>
+</div>

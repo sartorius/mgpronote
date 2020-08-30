@@ -1,6 +1,8 @@
 <% provide(:title, "Mother") %>
 <div id="mg-graph-identifier">motdash-gr</div>
 <%= render 'partner/partnerutils' %>
+<%= render 'partner/dirtyjspdf' %>
+<%= render 'partner/dirtyqrcode' %>
 <% if @resultSet.nil? %>
 	//Error
   <script>
@@ -18,23 +20,30 @@
 
   </script>
 <% end %>
-
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
 
 <div class="row">
   <div class="col-lg-12">
     <h1><i class="fas fa-cubes"></i>&nbsp;Référence mother</h1>
   </div>
 </div>
+<%= render 'layouts/mgs_modal' %>
+<input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
+<i class="hid-display" id="max-print-const"><%= @maxPrintConstEnv.to_s %></i>
+<br><br>
 
-<div class="row">
-  <% if @resultSetCompany[0][9].to_s == 'N' %>
-    <%# We are not handling MOTHER Workflow %>
-    <div class="col-sm-12 no-data">
-  		<i class="fas fa-box-open"></i>&nbsp;
-      Désolé, vous n'avez pas encore souscrit à l'offre MOTHER. Cette option permet d'avoir une référence unique qui contrôle plusieurs sous-référence. Comme par exemple un palette qui contient 20 colis. En mettant à jour uniquement la référence MOTHER de la palette, vous mettez à jour automatiquement tous les 20 colis.<br><br>
-      Si vous êtes intéressé, n'hésitez pas à nous contacter, nous serons ravis de vous répondre.
-    </div>
-  <% else %>
-    <%= render 'mother/manager' %>
-  <% end %>
-</div>
+<% if @resultSetCompany[0][9].to_s == 'N' %>
+  <%# We are not handling MOTHER Workflow %>
+  <div class="row">
+      <div class="col-sm-12 no-data">
+    		<i class="fas fa-box-open"></i>&nbsp;
+        Désolé, vous n'avez pas encore souscrit à l'offre MOTHER. Cette option permet d'avoir une référence unique qui contrôle plusieurs sous-référence. Comme par exemple un palette qui contient 20 colis. En mettant à jour uniquement la référence MOTHER de la palette, vous mettez à jour automatiquement tous les 20 colis.<br><br>
+        Si vous êtes intéressé, n'hésitez pas à nous contacter, nous serons ravis de vous répondre.
+      </div>
+  </div>
+<% else %>
+  <%= render 'mother/menubar' %>
+  <%= render 'mother/manager' %>
+<% end %>

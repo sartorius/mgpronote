@@ -1,4 +1,5 @@
 // minify here : https://javascript-minifier.com
+// Copy to _dirtyutils
 const STR_LENGTH_XS = 3;
 const STR_LENGTH_SM = 5;
 const STR_LENGTH_MD = 10;

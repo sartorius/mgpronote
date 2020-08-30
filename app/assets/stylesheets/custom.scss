@@ -523,6 +523,11 @@ p {
   display: inline !important;
 }
 
+.info-sm{
+  font-size: 0.8em;
+  color: $main-color;
+}
+
 #no-next-step{
   display: none;
 }
@@ -1034,6 +1039,15 @@ body.loading .modal {
 .mg-center-img{
   margin-top: 1em;
   margin-bottom: 2em;
+}
+
+.msg-med-vt{
+  margin-top: 6em;
+  margin-bottom: 3em;
+}
+
+.msg-bot-vt{
+  margin-bottom: 12em;
 }
 
 #home-search{

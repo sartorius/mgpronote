@@ -86,6 +86,7 @@ function createBarCodeFor(name, id, o, email){
   //console.log('createBarCodeFor');
 }
 
+
 function displaySuccessDialog(){
   $('#mgs-dialog-feedback').show(100);
   $('#mgs-dialog').modal('hide');

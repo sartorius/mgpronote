@@ -81,6 +81,7 @@ Rails.application.routes.draw do
 
   #Route for mothers
   get     '/mothermng',    to: 'mother#mothermng'
+  post    '/createmother',    to: 'mother#createmother'
 
   # File: config/routes.rb
   if Rails.env.production?
