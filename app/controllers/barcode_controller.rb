@@ -661,8 +661,8 @@ class BarcodeController < ApplicationController
 
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
-      @resultSet = ActiveRecord::Base.connection.execute(sql_query)
-      @resultSetParam = ActiveRecord::Base.connection.execute(sql_query_param)
+      @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+      @resultSetParam = ActiveRecord::Base.connection.exec_query(sql_query_param)
 
       @cbToCheck = params[:checkcb];
 

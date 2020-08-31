@@ -3,8 +3,13 @@
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
 </style>
-<% if @resultSet.nil? %>
+<% if (@resultSet.nil?) || (@resultSet.empty?) %>
 	//Error
+	<script>
+		// Making them empty will trigger not found error
+		var dataTagToJsonArray = new Array();
+		var dataTagToJsonParamArray = new Array();
+	</script>
 <% else %>
   <script>
     var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
