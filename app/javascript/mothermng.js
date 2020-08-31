@@ -38,6 +38,14 @@ function handleMotherDashboard(){
     fillMaxPrint();
   });
 
+  // Handle the feedback if by any reason we have created a new Element
+  let msgToDisp = sessionStorage.getItem("msgStDisp");
+  if(msgToDisp != null){
+    $('#msg-feedback').html(msgToDisp);
+    sessionStorage.removeItem("msgStDisp");
+    displaySuccessDialog();
+  }
+
 }
 
 // Dirty utils
@@ -56,6 +64,15 @@ function displayErrorDialog(){
 function reqConfMother(){
   console.log( ": reqConfMother" );
 
+  //dataTagToJsonWorkflowArray
+  let optionStr = '';
+  for(i=0; i<dataTagToJsonWorkflowArray.length; i++){
+    optionStr =  optionStr + '<option value="' + dataTagToJsonWorkflowArray[i].rw_code + '">' + dataTagToJsonWorkflowArray[i].rw_description + '</option>';
+  }
+  $('#opt-wkf').html(optionStr);
+  $('#multiple-workflow').show();
+
+
   $('#nm-t-cf').html(' créer une référence mother ');
   // Go for it modal confirmation
   $('#mgs-dialog').modal('show');
@@ -66,13 +83,17 @@ function reqConfMother(){
 
 function createMotherBarcode(){
   // We call an asynchronous ajax
+
+  let selectedWorkflow = parseInt(document.getElementById('opt-wkf').selectedIndex);
+  let selectedWorkflowId = dataTagToJsonWorkflowArray[selectedWorkflow].rw_id;
   $.ajax('/createmother', {
       type: 'POST',  // http method
       data: { partner_id: $('#cur-part-id').html(),
+              wf_id: selectedWorkflowId,
               auth_token: $('#auth-token-s').val()
       },  // data to submit
       success: function (data, status, xhr) {
-          //console.log('answer: ' + xhr.responseText);
+          console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
           if(xhr.responseText == 'unk'){
             $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau MOZE926-" + xhr.responseText);
           }
@@ -80,9 +101,14 @@ function createMotherBarcode(){
             $('#msg-feedback').html("Navré ! L'opération a retourné une erreur inconnue MOZU926-" + xhr.responseText);
           }
           else{
-            $('#msg-feedback').html("Super ! Le code mother créé est le suivant : " + xhr.responseText);
+            //$('#msg-feedback').html("Super ! Le code mother créé est le suivant : " + xhr.responseText);
+            let msgToDisp = "Super ! La référence mother a été créé avec succés !";
+            // As we reload the Page - we need to save the data in local storage
+            sessionStorage.setItem("msgStDisp", msgToDisp);
+            document.location.reload(true);
           }
           displaySuccessDialog();
+
       },
       error: function (jqXhr, textStatus, errorMessage) {
           $('#msg-feedback').html("Navré ! Une erreur MOE6980 est survenue");
@@ -259,6 +285,16 @@ function runjsMotherGrid(){
         { name: "c_crt",
           title: 'Créé par',
           type: "text",
+          align: "left",
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return value;
+          }
+        },
+        { name: "create_date",
+          title: 'Créé le',
+          type: "text",
+          width: 25,
           align: "left",
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
