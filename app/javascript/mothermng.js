@@ -45,7 +45,6 @@ function handleMotherDashboard(){
     sessionStorage.removeItem("msgStDisp");
     displaySuccessDialog();
   }
-
 }
 
 // Dirty utils
@@ -289,6 +288,19 @@ function runjsMotherGrid(){
           headercss: "h-jsG-l",
           itemTemplate: function(value, item) {
             return value;
+          }
+        },
+        {
+          name: "id",
+          title: '<i class="fas fa-th-list"></i>',
+          type: "string",
+          align: "left",
+          width: 10,
+          itemTemplate: function(value, item) {
+            // print U is for Unpring
+            // print P is for Print
+            // onclick="printMngOrder(' + value + ', "' + item.print + '")"
+            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-check"></i>' + '</button>';
           }
         },
         { name: "create_date",

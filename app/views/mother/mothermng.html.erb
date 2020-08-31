@@ -34,6 +34,7 @@
     <h1><i class="fas fa-cubes"></i>&nbsp;Référence mother</h1>
   </div>
 </div>
+
 <%= render 'layouts/mgs_modal' %>
 <input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
 <i class="hid-display" id="max-print-const"><%= @maxPrintConstEnv.to_s %></i>
@@ -51,4 +52,6 @@
 <% else %>
   <%= render 'mother/menubar' %>
   <%= render 'mother/manager' %>
+
+
 <% end %>

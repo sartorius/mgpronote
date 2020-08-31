@@ -9,7 +9,7 @@ CREATE TABLE mother(
   partner_id            INT            NOT NULL,
   -- Workflow id
   -- Default no workflow until we add one element
-  wf_id                 SMALLINT       DEFAULT 0,
+  wf_id                 SMALLINT       NOT NULL,
   status                SMALLINT       DEFAULT 0,
   nbr_bc                SMALLINT       DEFAULT 0,
   active                CHAR(1)        DEFAULT 'Y',
