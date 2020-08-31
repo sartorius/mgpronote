@@ -354,13 +354,13 @@ function generatePrintedPDF(){
     //console.log('oddOffsetX: ' + oddOffsetX);
     //console.log('rowReseter: '+ rowReseter);
     let celTitle = '';
-    celTitle = celTitle + setCellSize(printArray[i].bcref);
-    celTitle = celTitle + setCellSize('#' + printArray[i].wfcode);
+    celTitle = celTitle + setCellSize(shorter(printArray[i].bcref));
+    celTitle = celTitle + setCellSize(' -----> ' + printArray[i].wfcode);
     let celTitleRef = doc.setFontSize(12).splitTextToSize(celTitle, cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2margin, celTitleRef);
 
     let celClient = '';
-    celClient = celClient + setCellSize(printArray[i].cliref);
+    celClient = celClient + setCellSize(printArray[i].cliref + ' - ' + printArray[i].bcref);
     let celClientRef = doc.setFontSize(9).splitTextToSize(celClient, cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2CltDetails + offsetY2margin, celClientRef);
 

@@ -146,7 +146,7 @@ function filterDataMother(){
 function initDataTagToJsonArrayMother(){
   if(dataTagToJsonArray.length > 0){
     for(i=0; i<dataTagToJsonArray.length; i++){
-      dataTagToJsonArray[i].mt_ref = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure);
+      dataTagToJsonArray[i].mt_ref = mgsEncode(dataTagToJsonArray[i].id, dataTagToJsonArray[i].secure, 'M');
       dataTagToJsonArray[i].c_crt = mgsEncodeClientRef(dataTagToJsonArray[i].u_firstname, dataTagToJsonArray[i].creator_id, dataTagToJsonArray[i].u_client_ref)
       // We concatenate the data
       dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].raw_data + dataTagToJsonArray[i].mt_ref + dataTagToJsonArray[i].c_crt;
@@ -557,13 +557,13 @@ function generatePrintedPDF(){
     //console.log('oddOffsetX: ' + oddOffsetX);
     //console.log('rowReseter: '+ rowReseter);
     let celTitle = '';
-    celTitle = celTitle + setCellSize(printArray[i].bcref);
-    celTitle = celTitle + setCellSize('#' + printArray[i].wfcode);
+    celTitle = celTitle + setCellSize(shorter(printArray[i].bcref));
+    celTitle = celTitle + setCellSize(' -----> ' + printArray[i].wfcode);
     let celTitleRef = doc.setFontSize(12).splitTextToSize(celTitle, cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2margin, celTitleRef);
 
     let celClient = '';
-    celClient = celClient + setCellSize(printArray[i].cliref);
+    celClient = celClient + setCellSize(printArray[i].cliref + ' - ' + printArray[i].bcref);
     let celClientRef = doc.setFontSize(9).splitTextToSize(celClient, cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2CltDetails + offsetY2margin, celClientRef);
 

@@ -17,7 +17,7 @@ const BC_REF_LIMIT = 10;
 //Be careful this method exist on RUBY in application controller
 //Decode barcode
 function validateMGSCode(codeTest){
-  const re = /^M[A-Z0-9]{10}$/;
+  const re = /^[M|B][A-Z0-9]{10}$/;
   return re.test(codeTest);
 };
 function decodeMGSCodePartSecure(barcodeTest){
@@ -47,13 +47,18 @@ function mgspad(n, width, z) {
 
 // Be careful this method exist on RUBY in application controller
 // Be carefull this method exists on Ruby side on pure unhappy duplicate code
-function mgsEncode(lid, sec){
+function mgsEncode(lid, sec, st = 'B'){
   //Go to base 26
   //hexString = yourNumber.toString(16); << 10 to hex
   //yourNumber = parseInt(hexString, 16); << hex to 10
   // The format here is 1 / 345 will be 10345
   let lidPlusSec = parseInt(lid.toString() + mgspad(sec, 4).toString());
-  return 'M' + mgspad(lidPlusSec.toString(36), BC_REF_LIMIT).toUpperCase();
+  return st + mgspad(lidPlusSec.toString(36), BC_REF_LIMIT).toUpperCase();
+}
+
+// This to get print in big the last value
+function shorter(ref){
+  return ref.substring(0,1) + ref.substring(8);
 }
 
 
