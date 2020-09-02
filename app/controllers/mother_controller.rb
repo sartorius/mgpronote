@@ -117,13 +117,18 @@ class MotherController < ApplicationController
 
   def load_mother_dashboard
 
-    sql_query = "SELECT 'X' AS mt_ref, 'X' AS c_crt, mt.id AS id, mt.secure, CASE WHEN rfw.code IS NULL THEN 'na' ELSE rfw.code END AS rfw_code, " +
+    sql_query_with = " WITH moth_occ AS ( SELECT mother_id, count(1) AS occ from mother_barcode_xref GROUP BY mother_id) "
+
+    sql_query = sql_query_with + " SELECT 'X' AS mt_ref, 'X' AS c_crt, mt.id AS id, mt.secure, CASE WHEN rs.step_short IS NULL THEN 'Nouveau' ELSE rs.step_short END AS mstatus, CASE WHEN rfw.code IS NULL THEN 'na' ELSE rfw.code END AS rfw_code, " +
                       " partner_id, creator_id, u.firstname AS u_firstname, u.client_ref AS u_client_ref, to_char(mt.create_date, 'DD/MM/YYYY') AS create_date, " +
+                      " CASE WHEN mo.occ IS NULL THEN 0 ELSE mo.occ END AS occ, " +
                       " 'U' AS print, 'N' AS ald_print, " +
                       " UPPER(CONCAT(u.name, u.firstname)) AS raw_data " +
                       " FROM mother mt " +
                       " JOIN users u on u.id = " + @current_user.id.to_s +
+                      " LEFT JOIN ref_status rs ON mt.status = rs.id " +
                       " LEFT JOIN ref_workflow rfw ON rfw.id = mt.wf_id " +
+                      " LEFT JOIN moth_occ mo ON mt.id = mo.mother_id " +
                       " WHERE mt.partner_id = " + @current_user.partner.to_s +
                       # End partner check
                       " ORDER BY mt.id DESC LIMIT "+ ENV['SQL_LIMIT_SM'] +";"

@@ -281,6 +281,26 @@ function runjsMotherGrid(){
             return value;
           }
         },
+        { name: "mstatus",
+          title: 'Status',
+          type: "text",
+          align: "left",
+          width: 35,
+          headercss: "h-jsG-l",
+          itemTemplate: function(value, item) {
+            return value;
+          }
+        },
+        { name: "occ",
+          title: '<i class="far fa-list-alt"></i>',
+          type: "text",
+          align: "right",
+          width: 10,
+          headercss: "h-jsG-r",
+          itemTemplate: function(value, item) {
+            return value;
+          }
+        },
         { name: "c_crt",
           title: 'Créé par',
           type: "text",

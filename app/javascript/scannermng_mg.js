@@ -512,12 +512,11 @@ function loadCameraRead(isGrp){
       // DEBUG CHANGE
       // 4 pures are OK ***
 
-      listOfBCToHandle.push("B0000000Z89");
-      listOfBCToHandle.push("B0000000OKI");
-      listOfBCToHandle.push("B0000000KZW");
-      listOfBCToHandle.push("B0000000B2N");
-      //listOfBCToHandle.push("M000000241X");
-      listOfBCToHandle.push("M0000000F1C");
+      listOfBCToHandle.push("B0000000UNI");
+      listOfBCToHandle.push("B0000000IY0");
+      listOfBCToHandle.push("B0000000ES7");
+
+      listOfBCToHandle.push("M0000000HA1");
       //listOfBCToHandle.push("B0000000ZFE");
 
 

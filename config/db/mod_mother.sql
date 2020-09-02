@@ -10,7 +10,7 @@ CREATE TABLE mother(
   -- Workflow id
   -- Default no workflow until we add one element
   wf_id                 SMALLINT       NOT NULL,
-  status                SMALLINT       DEFAULT 0,
+  status                SMALLINT,
   active                CHAR(1)        DEFAULT 'Y',
   under_incident        BOOLEAN        DEFAULT FALSE,
   -- Usual information
