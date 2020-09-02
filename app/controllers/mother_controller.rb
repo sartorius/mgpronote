@@ -35,6 +35,84 @@ class MotherController < ApplicationController
   end
 
 
+  # Save the assocaition here
+  def associatemother
+    #puts '*** PURE <<<<<<<<<<< ' + params[:grpcheckcbpure]
+    #puts '*** PURE ID <<<<<<<<<<< ' + params[:grpcheckcbpureid]
+    #puts '*** EXT <<<<<<<<<<< ' + params[:grpcheckcbext]
+
+    @list_pure_array = JSON.parse(params[:grpcheckcbpure])
+    @list_pure_array_id = JSON.parse(params[:grpcheckcbpureid])
+    @list_ext_array = JSON.parse(params[:grpcheckcbext])
+
+    @list_mother_array = JSON.parse(params[:grpcheckcbmother])
+    @list_mother_array_raw = JSON.parse(params[:grpcheckcbmotherraw])
+
+    @do_we_need_grp_notify = false
+
+    # puts '--------------------------'
+    # puts '@list_mother_array: ' + @list_mother_array.inspect
+    # puts '@list_mother_array_raw: ' + @list_mother_array_raw.inspect
+
+    # puts '@list_mother_array_raw 0: ' + @list_mother_array_raw[0].to_s
+    # puts '@list_mother_array 0 id: ' + @list_mother_array[0]["id"].to_s
+
+    #puts '*** PURE inspect <<<<<<<<<<< ' + @list_pure_array.inspect
+    # *** PURE <<<<<<<<<<< [{"id":20,"secure":8473},{"id":19,"secure":536},{"id":18,"secure":2359}]
+    #puts '*** PURE ID inspect <<<<<<<<<<< ' + @list_pure_array_id.inspect
+    # *** PURE ID <<<<<<<<<<< [20,19,18]
+    #puts '*** EXT inspect <<<<<<<<<<< ' + @list_ext_array.inspect
+    # *** EXT <<<<<<<<<<< ["AZERTY5","AZERTY4"]
+
+    # We need to check if the list is not empty
+    # CALL CLI_GRPSTEP_TAG_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+    unless (@list_pure_array_id.empty?) then
+      # Construct the array
+      pure_array_id = ''
+      start_coma = ''
+      for pure_id in @list_pure_array_id do
+        pure_array_id = pure_array_id + start_coma + get_safe_pg_number(pure_id.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      pure_array_id = " '{"+ pure_array_id + "}'::BIGINT[] "
+
+      # CLI_GRPASSO_PURE(par_bc_id_arr BIGINT[], par_user_id BIGINT, par_mother_id BIGINT, par_mother_ref CHAR(11))
+      sql_query_pure_id = "SELECT * FROM CLI_GRPASSO_PURE ("+ pure_array_id + ", " + @current_user.id.to_s + ", " + @list_mother_array[0]["id"].to_s + ", '" + @list_mother_array_raw[0].to_s  + "');"
+      #puts 'Q Pure ID: ' + sql_query_pure_id
+
+      @resultSetCallPureId = ActiveRecord::Base.connection.exec_query(sql_query_pure_id)
+      # There is no notification to send
+
+    end
+
+
+    # We need to check if the list is not empty
+    # CALL CLI_GRPSTEP_TAG_EXT('{"AZERTY5","AZERTY4"}'::VARCHAR(35)[], CAST(7 AS SMALLINT), 'N', 140);
+    unless (@list_ext_array.empty?) then
+      # Construct the array
+      ext_array = ''
+      start_coma = ''
+      for ext in @list_ext_array do
+        ext_array = ext_array + start_coma + get_safe_pg_wq_ns_notrim_doublequote(ext.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      ext_array = " '{"+ ext_array + "}'::VARCHAR(35)[] "
+
+      # CLI_GRPASSO_EXT(par_bc_ext_arr VARCHAR(35)[], par_user_id BIGINT, par_mother_id BIGINT, par_mother_ref CHAR(11))
+      sql_query_ext = "SELECT * FROM CLI_GRPASSO_EXT("+ ext_array + ", " + @current_user.id.to_s + ", " + @list_mother_array[0]["id"].to_s + ", '" + @list_mother_array_raw[0].to_s  + "');"
+      #puts 'Q EXT: ' + sql_query_ext
+
+      @resultSetCallExt = ActiveRecord::Base.connection.exec_query(sql_query_ext)
+      # There is no notification to send
+    end
+
+    render 'resultfinalassociation'
+
+  end
+
+
   private
 
   def load_mother_dashboard

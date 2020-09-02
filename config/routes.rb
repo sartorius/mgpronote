@@ -83,6 +83,9 @@ Rails.application.routes.draw do
   get     '/mothermng',    to: 'mother#mothermng'
   post    '/createmother',    to: 'mother#createmother'
 
+  post    '/associate_mother' => 'mother#associatemother'
+  get     '/associate_mother' => 'mother#associatemother'
+
   # File: config/routes.rb
   if Rails.env.production?
     get "/404", to: "errors#not_found", :defaults => { :format => 'html' }

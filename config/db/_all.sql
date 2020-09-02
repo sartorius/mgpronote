@@ -91,6 +91,8 @@ CREATE TABLE ref_status (
   need_to_notify      BOOLEAN       DEFAULT FALSE,
   -- if need to notify and txt is null, use description
   txt_to_notify       VARCHAR(250),
+  -- Can we to to this status by using mother ?
+  handle_mother       CHAR(1)       DEFAULT 'N',
   create_date         TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -120,20 +122,20 @@ INSERT INTO ref_status (id, step_short, step, description, next_input_needed, ac
 -- Make sure the status 2 is specific
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (2, 'Local', 'Livré au local transporteur', 'Le paquet a été déposé en zone de stockage.', 'Y', 'P', 3);
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, need_to_notify) VALUES (6, 'Pesé', 'Pesé', 'Le poids a été validé.', 'N', 'P', 4, TRUE);
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (7, 'Ft. CDG', 'Déposé frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P', 5);
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (8, 'Ft. Orl', 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5);
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (11, 'Ft. Exp', 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (7, 'Ft. CDG', 'Déposé frêt CDG', 'Le paquet a été déposé en zone de frêt CDG.', 'N', 'P', 5, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (8, 'Ft. Orl', 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (11, 'Ft. Exp', 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5, 'Y');
 
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (9, 'Tana', 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P', 6);
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (10, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7);
-
-
-
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (12, 'Pt. Noi', 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6);
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (13, 'Brazzav', 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (9, 'Tana', 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P', 6, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (10, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7, 'Y');
 
 
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (14, 'Ft. Hav', 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5);
+
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (12, 'Pt. Noi', 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (13, 'Brazzav', 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6, 'Y');
+
+
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (14, 'Ft. Hav', 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5, 'Y');
 
 -- Particular case of pickup but it is as well created from screen
 UPDATE ref_status SET need_to_notify = FALSE;
@@ -304,7 +306,7 @@ CREATE TABLE barcode(
   -- Handle mother feature
   -- In case it has a mother, this is not null
   mother_id             BIGINT,
-  mother_ref            VARCHAR(10),
+  mother_ref            CHAR(11),
   -- Usual information
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -1031,9 +1033,8 @@ CREATE TABLE mother(
   partner_id            INT            NOT NULL,
   -- Workflow id
   -- Default no workflow until we add one element
-  wf_id                 SMALLINT       DEFAULT 0,
+  wf_id                 SMALLINT       NOT NULL,
   status                SMALLINT       DEFAULT 0,
-  nbr_bc                SMALLINT       DEFAULT 0,
   active                CHAR(1)        DEFAULT 'Y',
   under_incident        BOOLEAN        DEFAULT FALSE,
   -- Usual information
@@ -1080,3 +1081,135 @@ BEGIN
     RETURN var_result;
 END
 $func$  LANGUAGE plpgsql;
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPASSO_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+DROP FUNCTION IF EXISTS CLI_GRPASSO_PURE(par_bc_id_arr BIGINT[], par_user_id BIGINT, par_mother_id BIGINT, par_mother_ref CHAR(11));
+CREATE OR REPLACE FUNCTION CLI_GRPASSO_PURE(par_bc_id_arr BIGINT[], par_user_id BIGINT, par_mother_id BIGINT, par_mother_ref CHAR(11))
+RETURNS INTEGER
+AS $$
+DECLARE
+    var_return_code SMALLINT;
+    var_partner     SMALLINT;
+    var_status      SMALLINT;
+BEGIN
+    var_return_code := -1;
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Get the current status to update mother
+    SELECT DISTINCT status INTO var_status
+      FROM barcode
+      WHERE id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_param (bc_id, user_id, comment)
+            SELECT id, par_user_id, '+ ' || par_mother_ref || '//MOTHER'
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+
+    -- INSERT with ignore in the xref table
+    -- https://stackoverflow.com/questions/4069718/postgres-insert-if-does-not-exist-already
+    INSERT INTO mother_barcode_xref (mother_id, bc_id)
+            SELECT par_mother_id, id
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND id IN (SELECT(UNNEST((par_bc_id_arr))))
+            ON CONFLICT (mother_id, bc_id) DO NOTHING;
+
+    -- Update MOTHER - it must take the status
+    UPDATE mother
+      SET status = var_status,
+          update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND id = par_mother_id;
+
+    -- Update the BC with the Mother ref
+    UPDATE barcode
+      SET mother_id = par_mother_id,
+          mother_ref = par_mother_ref,
+          update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND id IN (SELECT(UNNEST((par_bc_id_arr))));
+
+    var_return_code := 0;
+
+    RETURN var_return_code;
+END
+$$ LANGUAGE plpgsql;
+
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPASSO_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+-- CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
+DROP FUNCTION IF EXISTS CLI_GRPASSO_EXT(par_bc_ext_arr VARCHAR(35)[], par_user_id BIGINT, par_mother_id BIGINT, par_mother_ref CHAR(11));
+CREATE OR REPLACE FUNCTION CLI_GRPASSO_EXT(par_bc_ext_arr VARCHAR(35)[], par_user_id BIGINT, par_mother_id BIGINT, par_mother_ref CHAR(11))
+RETURNS INTEGER
+AS $$
+DECLARE
+    var_return_code SMALLINT;
+    var_partner     SMALLINT;
+    var_status      SMALLINT;
+BEGIN
+    var_return_code := -1;
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Get the current status to update mother
+    SELECT DISTINCT status INTO var_status
+      FROM barcode
+      WHERE ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_param (bc_id, user_id, comment)
+            SELECT id, par_user_id, '+ ' || par_mother_ref || '//MOTHER'
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
+
+
+    -- INSERT with ignore in the xref table
+    -- https://stackoverflow.com/questions/4069718/postgres-insert-if-does-not-exist-already
+    INSERT INTO mother_barcode_xref (mother_id, bc_id)
+            SELECT par_mother_id, id
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))))
+            ON CONFLICT (mother_id, bc_id) DO NOTHING;
+
+    -- Update MOTHER - it must take the status
+    UPDATE mother
+      SET status = var_status,
+          update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND id = par_mother_id;
+
+    -- Update the BC with the Mother ref
+    UPDATE barcode
+      SET mother_id = par_mother_id,
+          mother_ref = par_mother_ref,
+          update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND ext_ref IN (SELECT(UNNEST((par_bc_ext_arr))));
+
+    var_return_code := 0;
+
+    RETURN var_return_code;
+END
+$$ LANGUAGE plpgsql;

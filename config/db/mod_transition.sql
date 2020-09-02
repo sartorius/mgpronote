@@ -228,7 +228,7 @@ CREATE TABLE barcode(
   -- Handle mother feature
   -- In case it has a mother, this is not null
   mother_id             BIGINT,
-  mother_ref            VARCHAR(10),
+  mother_ref            CHAR(11),
   -- Usual information
   update_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   create_date           TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

@@ -1,6 +1,17 @@
 
 <div class="row">
   <div class="col-sm-4">
+    <% unless @screenClient %>
+      <% unless (@resultSet[0]['mother_ref'].nil?) %>
+        <div class="crt-block">Référence MOTHER</div>
+        <div class="t-of-use mgs-med-note">
+          Associé sur le
+        </div>
+        <div class="field-md">
+          <%= @resultSet[0]['mother_ref'].to_s %>
+        </div>
+      <% end %>
+    <% end %>
     <div class="crt-block">Paquet</div>
     <div class="t-of-use mgs-med-note">
       Les informations suivantes concernent le paquet.

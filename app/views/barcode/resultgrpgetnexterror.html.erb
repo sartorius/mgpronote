@@ -30,6 +30,43 @@
 				<% if @need_to_feedback_next_terminated %>
           <br>La prochaine étape est la <strong>remise au client</strong>. Cette action ne peut être groupée. <i class="fas fa-info-circle"></i>
         <% end %>
+
+				<% if @need_to_feedback_mother_not_found %>
+          <br>Une référence mother <strong>est introuvable</strong>. Veuillez scanner à nouveau <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_next_not_mother %>
+          <br>La prochaine étape possible ne peut être gérée <strong>par une référence mother</strong>. Vous devez les scannez séparément <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_more_than_one_mother %>
+          <br>Vous ne pouvez associer que sur <strong>une seule référence mother</strong> <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_mother_not_same_wf %>
+          <br>La référence mother et les code barres filles <strong>ne sont pas de même workflow</strong>. Vous ne pouvez associer une référence mother qu'avec les codes barres de même types <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if (@need_to_feedback_more_than_one_mother) || (@need_to_feedback_more_than_one_mother) %>
+					<br>
+				  <% @list_mother_array_raw.each do |mother| %>
+				  <div class="row">
+				        <div class="col-lg-3">
+				        </div>
+				        <div class="col-lg-6">
+				          <div class="mgs-read-bc">
+				            <p class="monosp-ft-subtitle">
+				              <%= mother.to_s %>
+				            </p>
+				          </div>
+				          <hr>
+				        </div>
+				        <div class="col-lg-3">
+				        </div>
+				  </div>
+				  <% end %>
+
+        <% end %>
       </div>
     </div>
     <div class="col-lg-3">

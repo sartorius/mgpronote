@@ -61,6 +61,15 @@ function mainScanLoaderInCaseOfChange(){
     // Load the step
     displayNext(true);
   }
+  else if($('#mg-graph-identifier').text() == 'grpassoc-gr'){
+    // Association
+    associateMother();
+  }
+  else if($('#mg-graph-identifier').text() == 'grpfinassoc-gr'){
+    // Result association
+    displayGrpListOfBC();
+    $("#list-of-mother-one").html(dataTagToJsonArrayMotherRaw[0]);
+  }
   else if($('#mg-graph-identifier').text() == 'grpfinal-gr'){
     displayGrpListOfBC();
   }
@@ -82,7 +91,7 @@ function mainScanLoaderInCaseOfChange(){
       loadCameraRead(true);
 
       //DEBUG CHANGE keep for test
-      //$('#mg-grp-step-btn').show();
+      $('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -275,6 +284,37 @@ function displayGrpListOfBC(){
   $("#list-of-read-bc").html(diplayList);
 }
 
+
+function associateMother(){
+
+  /*
+  console.log('We do not do weightManager()');
+  console.log('Length pure: ' + dataTagToJsonArrayPure.length);
+  console.log('dataTagToJsonArrayPure: ' + JSON.stringify(dataTagToJsonArrayPure));
+
+  console.log('Length pure: ' + dataTagToJsonArrayExt.length);
+  console.log('dataTagToJsonArrayExt: ' + JSON.stringify(dataTagToJsonArrayExt));
+  */
+  dataTagToJsonArrayPureId = new Array();
+  for(i=0; i<dataTagToJsonArrayPure.length; i++){
+    dataTagToJsonArrayPureId.push(dataTagToJsonArrayPure[i].id);
+  }
+  // We update the data to be send
+  // Sending couple are useless but I want to get several code display
+  // ************************* NO MOTHER IS EXPECTED HERE *************************
+  $('#read-cb-grp-pure').val(JSON.stringify(dataTagToJsonArrayPure));
+  $('#read-cb-grp-pure-id').val(JSON.stringify(dataTagToJsonArrayPureId));
+  $('#read-cb-grp-ext').val(JSON.stringify(dataTagToJsonArrayExt));
+
+  $('#read-cb-grp-mother').val(JSON.stringify(dataTagToJsonArrayMother));
+  $('#read-cb-grp-mother-raw').val(JSON.stringify(dataTagToJsonArrayMotherRaw));
+
+  displayGrpListOfBC();
+  // Display the mother here
+  $("#list-of-mother-one").html(dataTagToJsonArrayMotherRaw[0]);
+}
+
+
 function displayNext(isGrp){
 
   // Initialize
@@ -325,8 +365,12 @@ function displayNext(isGrp){
       }
       // We update the data to be send
       // Sending couple are useless but I want to get several code display
+      // ************************* NO MOTHER IS EXPECTED HERE *************************
       $('#read-cb-grp-pure').val(JSON.stringify(dataTagToJsonArrayPure));
       $('#read-cb-grp-pure-id').val(JSON.stringify(dataTagToJsonArrayPureId));
+
+      // Here is used when we do grouping not for association
+
       $('#read-cb-grp-ext').val(JSON.stringify(dataTagToJsonArrayExt));
       displayGrpListOfBC();
     }
@@ -459,6 +503,8 @@ function loadCameraRead(isGrp){
 
   let readyToPExtMGS = new Array();
   let readyToPPureMGS = new Array();
+  let readyToPMotherMGS = new Array(); // Handle mother
+  let readyToPMotherRAW = new Array(); // Handle raw
 
 
   $("#mg-grp-step-btn").click(function() {
@@ -466,9 +512,13 @@ function loadCameraRead(isGrp){
       // DEBUG CHANGE
       // 4 pures are OK ***
 
-      //listOfBCToHandle.push("M0000001DNY");
-      //listOfBCToHandle.push("M00000015LO");
-      //listOfBCToHandle.push("M0000000HNZ");
+      listOfBCToHandle.push("B0000000Z89");
+      listOfBCToHandle.push("B0000000OKI");
+      listOfBCToHandle.push("B0000000KZW");
+      listOfBCToHandle.push("B0000000B2N");
+      //listOfBCToHandle.push("M000000241X");
+      listOfBCToHandle.push("M0000000F1C");
+      //listOfBCToHandle.push("B0000000ZFE");
 
 
 
@@ -480,8 +530,18 @@ function loadCameraRead(isGrp){
         //console.log('Val: ' + listOfBCToHandle[i]);
         if(validateMGSCode(listOfBCToHandle[i])){
           //console.log('Val is code: ' + listOfBCToHandle[i]);
-          let brokenMGBC = { id: decodeMGSCodePartId(listOfBCToHandle[i]), secure: decodeMGSCodePartSecure(listOfBCToHandle[i]) };
-          readyToPPureMGS.push(brokenMGBC);
+          if(listOfBCToHandle[i].substring(0,1) == 'B'){
+            // If it starts with B then we have a daugther
+            let brokenMGBC = { id: decodeMGSCodePartId(listOfBCToHandle[i]), secure: decodeMGSCodePartSecure(listOfBCToHandle[i]) };
+            readyToPPureMGS.push(brokenMGBC);
+          }
+          else{
+            let brokenMother = { id: decodeMGSCodePartId(listOfBCToHandle[i]), secure: decodeMGSCodePartSecure(listOfBCToHandle[i]) };
+            readyToPMotherMGS.push(brokenMother);
+
+            // Keep the list of mother
+            readyToPMotherRAW.push(listOfBCToHandle[i]);
+          }
         }
         else{
           //console.log('Val is NOT code: ' + listOfBCToHandle[i]);
@@ -494,6 +554,8 @@ function loadCameraRead(isGrp){
       //readyToPExtMGS: ["3263851322913","3222475413469","3263851322913","3222475413469"]
       $('#read-cb-grp-pure').val(JSON.stringify(readyToPPureMGS));
       $('#read-cb-grp-ext').val(JSON.stringify(readyToPExtMGS));
+      $('#read-cb-grp-mother').val(JSON.stringify(readyToPMotherMGS));
+      $('#read-cb-grp-mother-raw').val(JSON.stringify(readyToPMotherRAW));
 
       //Then we submit all
       $("#mg-checkbc-form").submit();

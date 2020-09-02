@@ -141,10 +141,15 @@ class BarcodeController < ApplicationController
 
     @list_pure_array = JSON.parse(params[:grpcheckcbpure])
     @list_ext_array = JSON.parse(params[:grpcheckcbext])
+    @list_mother_array = JSON.parse(params[:grpcheckcbmother])
+    @list_mother_array_raw = JSON.parse(params[:grpcheckcbmotherraw])
 
     #puts '--------------------------'
-    #puts 'PURE Size <<<<<<<<<<< ' + @list_pure_array.inspect
-    #puts 'EXT Size <<<<<<<<<<< ' + @list_ext_array.inspect
+    puts 'PURE Size <<<<<<<<<<< ' + @list_pure_array.inspect
+    puts 'EXT Size <<<<<<<<<<< ' + @list_ext_array.inspect
+    puts 'MOTHER Size <<<<<<<<<<< ' + @list_mother_array.inspect
+
+    # We need to make sure we have only one mother
 
 
     # Pure is the list the array with only pure MGS number
@@ -156,6 +161,15 @@ class BarcodeController < ApplicationController
       # puts 'pure_array id: ' + get_safe_pg_number(pure_array["id"].to_s) + '/secure: ' + get_safe_pg_number(pure_array["secure"].to_s)
 
       pure_clause = pure_clause + start_coma + gen_dual_not_safe_clause(get_safe_pg_number(pure_array["id"].to_s), get_safe_pg_number(pure_array["secure"].to_s))
+      start_coma = ', '
+    end
+
+    mother_clause = ''
+    start_coma = ''
+    for mother_array in @list_mother_array do
+      # puts 'pure_array id: ' + get_safe_pg_number(pure_array["id"].to_s) + '/secure: ' + get_safe_pg_number(pure_array["secure"].to_s)
+
+      mother_clause = mother_clause + start_coma + gen_dual_not_safe_clause(get_safe_pg_number(mother_array["id"].to_s), get_safe_pg_number(mother_array["secure"].to_s))
       start_coma = ', '
     end
 
@@ -206,6 +220,9 @@ class BarcodeController < ApplicationController
       count_of_list_pure_and_ext = @list_pure_array.length + @list_ext_array.length
     end
 
+
+
+
     # Check Qs
     # This Q will retrieve the count of all FOUND elements (Condition: ALL_FOUND)
     sql_query_count = "SELECT COUNT(1) AS mg_count FROM barcode bc "
@@ -228,20 +245,49 @@ class BarcodeController < ApplicationController
     sql_query_check_count = sql_query_count + sql_query_ck_where_bc_table_only
     @resultSetCheckCount = ActiveRecord::Base.connection.exec_query(sql_query_check_count)
 
+    # MOTHER SQL
+    sql_query_where_mother_cut = " AND ((mt.id, mt.secure) IN ( " + mother_clause  + ' )) '
 
 
 
 
+    # Are we in associating to Mother ?
+    are_we_associating_to_mother = false;
 
     # Control variables
     need_to_feedback_not_found = false;
     need_to_feedback_not_all_the_same = false;
     # This display if all are under incident
     @need_to_feedback_incident_exists = false;
+
+    # This is not need to be checked if Mother
     @need_to_feedback_next_weight = false;
+    # This is not need to be checked if Mother
     @need_to_feedback_next_terminated = false;
 
+    # Mother check
+    @need_to_feedback_more_than_one_mother = false;
+    @need_to_feedback_mother_not_found = false;
+    @need_to_feedback_mother_not_same_wf = false;
+    @need_to_feedback_next_not_mother = false;
+
     all_check_are_passed = true;
+
+
+
+    # START the checks **************************************************************
+
+    if @list_mother_array.size > 1 then
+
+      #puts 'Xroad 0 - we found: ' + @list_mother_array.size.to_s
+      all_check_are_passed = false;
+
+      # There are several mother and we need to let the user know
+      @need_to_feedback_more_than_one_mother = true;
+    elsif (@list_mother_array.size == 1) then
+      # ----------------- We are in mother case
+      are_we_associating_to_mother = true;
+    end
 
 
     #If we found none
@@ -263,6 +309,32 @@ class BarcodeController < ApplicationController
       # Some have not been found
       need_to_feedback_not_found = true;
     end
+
+    # We need to check if we find the mother or no
+    if !(@list_mother_array.empty?) then
+
+
+      # Check Mother
+      # This Q will retrieve the count of all FOUND elements (Condition: ALL_FOUND)
+      sql_query_mother_count = "SELECT COUNT(1) AS mother_count FROM mother mt "
+      # Clause w/ barcode table only
+      sql_query_ck_where_mother_table_only = " WHERE mt.partner_id = " + @current_user.partner.to_s + sql_query_where_mother_cut + " ;"
+
+      sql_query_check_mother_count = sql_query_mother_count + sql_query_ck_where_mother_table_only
+      @resultSetCheckMotherCount = ActiveRecord::Base.connection.exec_query(sql_query_check_mother_count)
+
+      puts 'XMroad 2 - we found: ' + @resultSetCheckMotherCount[0]['mother_count'].to_s
+      if @resultSetCheckMotherCount[0]['mother_count'].to_i == 0 then
+        #puts 'XMroad 2 - we found: ' + @resultSetCheckMotherCount[0]['mother_count'].to_s
+        all_check_are_passed = false;
+
+        # Some have not been found
+        @need_to_feedback_mother_not_found = true;
+      end
+    end
+
+
+
 
 
     # We check here if they are all the same or not
@@ -287,10 +359,12 @@ class BarcodeController < ApplicationController
       @need_to_feedback_incident_exists = true;
     end
 
+
+
     # Weight Exception
     # We will avoid to goes to DB if previous check are KO
     # We go on category 3 check
-    if all_check_are_passed then
+    if all_check_are_passed and !(are_we_associating_to_mother) then
 
         # This Q check the column with specific where clause
         # Need to return zero lines max
@@ -319,7 +393,7 @@ class BarcodeController < ApplicationController
     # Terminated Exception
     # We will avoid to goes to DB if previous check are KO
     # We go on category 312 check
-    if all_check_are_passed then
+    if all_check_are_passed and !(are_we_associating_to_mother) then
 
         # This Q check the column with specific where clause
         # Need to return zero lines max
@@ -344,14 +418,70 @@ class BarcodeController < ApplicationController
     end
 
 
+    if all_check_are_passed and (are_we_associating_to_mother) then
+      # This Q check the column with specific where clause
+      # Need to return zero lines max
+      sql_query_ck_mother_not_same_wf_col = ' SELECT DISTINCT bc.wf_id FROM barcode bc JOIN mother mt ON mt.wf_id = bc.wf_id '
+      # Clause with wk_tag table
+      sql_query_where_ck_not_same_wf =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
+                                                            sql_query_where_mother_cut + " " + sql_query_where_cut
 
+
+      sql_query_big_ck_not_same_moth = sql_query_ck_mother_not_same_wf_col + sql_query_where_ck_not_same_wf
+      @resultSetCheckNotSameMother = ActiveRecord::Base.connection.exec_query(sql_query_big_ck_not_same_moth)
+
+
+      # We check here if we have mix Delivery (D) and Pickup (P) with next steps 2 or 4
+      # 2 is for Delivery Reception
+      # 4 is for Pickup Enlèvement
+      if @resultSetCheckNotSameMother.length == 0 then
+        #puts 'Xroad 31 - we found: ' + @resultSetCheckWeight.length.to_s
+        all_check_are_passed = false;
+
+        # We have more than one line which is not possible that means the barcode are not the same
+        @need_to_feedback_mother_not_same_wf = true;
+      end
+    end
+
+
+    # Mother next Exception
+    # We will avoid to goes to DB if previous check are KO
+    # We are in case of mother we need to check next step
+    if all_check_are_passed and (are_we_associating_to_mother) then
+
+      # This Q check the column with specific where clause
+      # Need to return zero lines max
+      sql_query_ck_next_moth_col = ' SELECT DISTINCT rte.id AS end_step_id '
+      # Clause with wk_tag table
+      sql_query_where_ck_next_moth =  " WHERE bc.partner_id = " + @current_user.partner.to_s +
+                                            " AND rte.handle_mother = 'Y' " +
+                                            " AND bc.status = wt.current_step_id " + sql_query_where_cut
+
+      sql_query_big_ck_next_moth = sql_query_ck_next_moth_col + sql_query_join + sql_query_where_ck_next_moth
+      @resultSetCheckNextIsMother = ActiveRecord::Base.connection.exec_query(sql_query_big_ck_next_moth)
+
+      # We check here if we have mix Delivery (D) and Pickup (P) with next steps 2 or 4
+      # 2 is for Delivery Reception
+      # 4 is for Pickup Enlèvement
+      puts 'XMroad 31 - we found: ' + @resultSetCheckNextIsMother.length.to_s
+      if @resultSetCheckNextIsMother.length < 1 then
+        #puts 'Xroad 31 - we found: ' + @resultSetCheckWeight.length.to_s
+        all_check_are_passed = false;
+
+        # We have more than one line which is not possible that means the barcode are not the same
+        @need_to_feedback_next_not_mother = true;
+      end
+
+
+    end
 
 
     ##### FROM HERE we need to pass or feedback
     # The variable need_to_feedback_not_all_the_same tells us if pass or not
     # Then we go on if else management
 
-    if all_check_are_passed then
+    # WE ARE IN STANDARD GROUPING NO ASSOCIATION
+    if all_check_are_passed and !(are_we_associating_to_mother) then
       #puts 'all_check_are_passed : EVERYTHING IS OK HERE'
 
 
@@ -380,6 +510,11 @@ class BarcodeController < ApplicationController
 
 
       render 'resultgrpgetnext'
+    elsif all_check_are_passed then
+      # We are in association
+
+      render 'resultgrpassociation'
+
     else
       # We need to get feedback
       # We need to access database for feedback !

@@ -300,7 +300,7 @@ function runjsMotherGrid(){
             // print U is for Unpring
             // print P is for Print
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-check"></i>' + '</button>';
+            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>';
           }
         },
         { name: "create_date",
