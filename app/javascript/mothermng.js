@@ -321,13 +321,13 @@ function runjsMotherGrid(){
           name: "id",
           title: '<i class="fas fa-th-list"></i>',
           type: "string",
-          align: "left",
+          align: "center",
           width: 10,
           itemTemplate: function(value, item) {
             // print U is for Unpring
             // print P is for Print
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-            return '<button id="status-mt-' + value + '" class="btn btn-default' + (item.status_sel == 'N' ? '' : '-light') + ' btn-sm btn-block btn-status-mng" data-order="' + item.status_sel + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>';
+            return (item.status_code == null) ? ('<i class="mg-light fas fa-layer-group"></i>')  : ('<button id="status-mt-' + value + '" class="btn btn-default' + (item.status_sel == 'N' ? '' : '-light') + ' btn-sm btn-block btn-status-mng" data-order="' + item.status_sel + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>');
           }
         },
         { name: "create_date",
