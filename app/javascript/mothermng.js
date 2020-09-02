@@ -8,6 +8,13 @@ $(document).on('turbolinks:load', function() {
     // Handle specific page
     // Dashboard
     if($('#mg-graph-identifier').text() == 'motdash-gr'){
+      // INIT
+      $("#re-init-status-dash").click(function() {
+        // Do something
+        clearStatusSel();
+      });
+      $('#filter-status').hide(10);
+
       // Button creation mother main
       $( ".crt-moth" ).click(function() {
         reqConfMother();
@@ -18,8 +25,8 @@ $(document).on('turbolinks:load', function() {
         // Do something
         createMotherBarcode();
       });
-
       handleMotherDashboard();
+
 
     }
 
@@ -320,7 +327,7 @@ function runjsMotherGrid(){
             // print U is for Unpring
             // print P is for Print
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-            return '<button id="print-bc-' + value + '" class="btn btn-default' + (item.print == 'U' ? '' : '-light') + ' btn-sm btn-block btn-print-mng" data-order="' + item.print + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>';
+            return '<button id="status-mt-' + value + '" class="btn btn-default' + (item.status_sel == 'N' ? '' : '-light') + ' btn-sm btn-block btn-status-mng" data-order="' + item.status_sel + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>';
           }
         },
         { name: "create_date",
@@ -367,7 +374,13 @@ function runjsMotherGrid(){
           //console.log(JSON.stringify($target));
           //console.log(JSON.stringify(args.event));
           //console.log(args.item.id);
-          if($target.closest(".btn-print-mng").length) {
+          if($target.closest(".btn-status-mng").length) {
+             // handle cell click
+             //console.log('IN btn-print-mng');
+
+             batchSelMoth(args.item.id, args.item.status_sel, args.item.rfw_code, args.item.mstatus, args.item.status_code);
+          }
+          else if($target.closest(".btn-print-mng").length) {
              // handle cell click
              //console.log('IN btn-print-mng');
              printMngOrder(args.item.id, args.item.print, args.item.mt_ref, args.item.c_crt, args.item.rfw_code);
@@ -623,4 +636,137 @@ function generatePrintedPDF(){
 
   doc.save('MGSuivi_Mother_Print');
 
+}
+
+// ********************* STATUS MANAGEMENT *********************
+
+function batchSelMoth(mid, order, rfw_code, status, status_code){
+  // order : N when Not selected and S when Selected
+
+  let readCurrentWF = $('#sel-wf').html();
+  let readCurrentStatus = $('#sel-status').html();
+  let readCurrentStatusCode = $('#sel-status-code').html();
+
+  let updateStatusArray = false;
+
+  if(status_code == null){
+    $('#status-sel-msg').html(' - ' + status + "/Un nouveau doit d'abord grouper d'autres références");
+  }
+  else{
+    updateStatusArray = true;
+  }
+
+  // Check Status
+  if(updateStatusArray){
+        // Manage status
+        if((readCurrentStatusCode == null) || (readCurrentStatusCode == '')){
+          $('#sel-status').html(status);
+          $('#sel-status-code').html(status_code);
+
+          $('#status-sel-msg').html('');
+          // Need to update the array list
+
+          updateStatusArray = true;
+        }
+        else if (readCurrentStatusCode == status_code){
+          $('#status-sel-msg').html('');
+
+          // Then we are good add in the line
+          updateStatusArray = true;
+        }
+        else{
+          // Else we display error
+          $('#status-sel-msg').html(' - ' + status + '/Vous ne pouvez évoluer ensemble que des MOTHER à la même étape');
+          updateStatusArray = false;
+        }
+  }
+
+  // Check WF
+  if(updateStatusArray){
+        // Manage workflow
+        if((readCurrentWF == null) || (readCurrentWF == '')){
+          $('#sel-wf').html(rfw_code);
+          $('#status-sel-msg').html('');
+          // Need to update the array list
+
+          updateStatusArray = true;
+        }
+        else if (readCurrentWF == rfw_code){
+          $('#status-sel-msg').html('');
+
+          // Then we are good add in the line
+          updateStatusArray = true;
+        }
+        else{
+          // Else we display error
+          $('#status-sel-msg').html(' - ' + rfw_code + '/Vous ne pouvez évoluer ensemble que des MOTHER de même workflow');
+          updateStatusArray = false;
+        }
+  }
+
+  // If all check are done then we allow the update
+  if(updateStatusArray){
+      manageStatusSelected(mid, order);
+      $('#filter-status').show();
+  }
+}
+
+
+function manageStatusSelected(mid, order){
+  if(order == 'N'){
+    statusArray.push(mid);
+  }
+  else{
+    let index = -1;
+
+    for(i=0; i<statusArray.length; i++){
+      if(statusArray[i] == parseInt(mid)){
+        index = i;
+        break;
+      }
+    }
+    if (index !== -1){
+      //console.log('5');
+      statusArray.splice(index, 1);
+    }
+  }
+  updateStatusElemntArray(mid);
+  // Update the count to let the user knows
+  $('#cpt-sel-wf').html(statusArray.length);
+  if(statusArray.length == 0){
+    clearStatusSel();
+  }
+}
+
+function updateStatusElemntArray(id){
+  // Then update row data
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    if(dataTagToJsonArray[i].id == id){
+      // console.log('O Found element: ' + i);
+
+      if(dataTagToJsonArray[i].status_sel == 'N'){
+        //console.log('O Found element U: ' + dataTagToJsonArray[i].print);
+        dataTagToJsonArray[i].status_sel = 'S';
+      }
+      else{
+        // console.log('O Found element P: ' + dataTagToJsonArray[i].print);
+        dataTagToJsonArray[i].status_sel = 'N';
+      }
+      break;
+    }
+  }
+  runjsMotherGrid();
+}
+
+function clearStatusSel(){
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    dataTagToJsonArray[i].status_sel = 'N';
+  }
+  runjsMotherGrid();
+  $('#sel-wf').html('');
+  $('#sel-status').html('');
+  $('#sel-status-code').html('');
+
+  $('#filter-status').hide(200);
+  statusArray = new Array();
 }

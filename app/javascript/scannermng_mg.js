@@ -461,7 +461,7 @@ function loadBCTag(){
   }
 
   let headerTracking = '<h2>Tracking</h2><br>'
-  let headerParam = '<br><h2>Mise à jour</h2><br>'
+  let headerParam = '<br><h2>Informations additionnelles</h2><br>'
 
   if(dataTagToJsonArray.length == 0){
     headerTracking = ''

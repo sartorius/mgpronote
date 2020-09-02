@@ -1,6 +1,6 @@
 <%# Menu bar %>
 <%# This is the old "trouvé" %>
-<span class="info-sm"><i id='nb-el-dash'>0</i>&nbsp;mother(s) trouvé(s)</span><span class="info-sm"><i id='print-max-msg'></i></span>
+<span class="info-sm"><i id='nb-el-dash'>0</i>&nbsp;mother(s) trouvé(s)</span><span class="info-sm"><i id='print-max-msg'></i><i id='status-sel-msg' class='mgs-red'></i></span>
 <div class="row filter-banner" id="filter-block">
   <div class="col-sm-2 fil-el">
     <button id="new-dash" type="button" class="btn btn-md btn-block btn-default crt-moth">
@@ -49,4 +49,37 @@
     </button>
 
   </div>
+</div>
+<div class="row filter-banner" id="filter-status">
+
+  <div class="col-sm-2 fil-el-txt">
+    &nbsp;&nbsp;<i class="fas fa-helicopter"></i>&nbsp;<i id="sel-wf"></i>:&nbsp;<i id="cpt-sel-wf"></i>
+  </div>
+  <div class="col-sm-2 fil-el-txt">
+    &nbsp;&nbsp;<i class="fas fa-clipboard-list"></i>&nbsp;<i id="sel-status"></i><i id="sel-status-code" class="no-show"></i>
+  </div>
+
+  <div class="col-sm-2 fil-el">
+  </div>
+
+  <div class="col-sm-3 fil-el">
+    <select class="form-control" id="positionOffset">
+      <% for i in 0..@maxPrintConstEnv.to_i do %>
+        <option><%= i %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="col-sm-2 fil-el">
+    <button id="re-valid-status" type="button" class="btn btn-md btn-block btn-default">
+      Marquer&nbsp;<i class="fas fa-qrcode"></i>
+    </button>
+  </div>
+
+  <div class="col-sm-1 fil-el">
+    <button id="re-init-status-dash" type="button" class="btn btn-md btn-block btn-default">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
 </div>
