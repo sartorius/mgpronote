@@ -162,7 +162,7 @@ class PartnerController < ApplicationController
       sql_clause = ''
     end
     sql_query = "SELECT bc.id AS id, uo.id AS oid, uo.name AS oname, uo.firstname AS ofirstname, uo.client_ref AS oclient_ref, " +
-                      " uo.phone AS ophone, bc.description as bcdescription, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
+                      " uo.phone AS ophone, uo.email AS oemail, bc.description as bcdescription, bc.mother_ref, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
                       " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
                       " rs.step AS step, rs.step_short, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
                       " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
