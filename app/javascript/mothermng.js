@@ -24,6 +24,9 @@ $(document).on('turbolinks:load', function() {
         if(selectedValue == -1){
           dissociateMother();
         }
+        else if(selectedValue == -2){
+          // Declare stand by
+        }
         else{
           markStepMother($('#sel-wf-id').html(), selectedValue);
         }
@@ -740,6 +743,7 @@ function batchSelMoth(mid, order, rfw_code, status, status_code, rfw_id){
       optionStr =  optionStr + '<option value="' + filteredDataTagToJsonArrayWorkflowMt[i].end_id + '">' + filteredDataTagToJsonArrayWorkflowMt[i].en_step + '</option>';
     }
     optionStr =  optionStr + '<option value="-1">Dissocier</option>';
+    optionStr =  optionStr + '<option value="-2">Stand by</option>';
     $('#mt-wkf-step').html(optionStr);
   }
 

@@ -315,3 +315,55 @@ BEGIN
     RETURN var_return_code;
 END
 $$ LANGUAGE plpgsql;
+
+
+-- This will not change the step but add a comment
+-- Parameters are BC ID/USER ID/Comment
+DROP FUNCTION IF EXISTS CLI_STAND_BY_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT);
+CREATE OR REPLACE FUNCTION CLI_STAND_BY_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT)
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(300))
+                -- Do the return at the end xxx
+AS $$
+DECLARE
+  var_last_wk_tag     BIGINT;
+  var_incident_exists SMALLINT;
+BEGIN
+
+
+    -- Be careful we can have only one comment per working tag
+    INSERT INTO wk_tag_com (wk_tag_id, user_id, comment)
+                SELECT wt_id, par_user_id, 'Stand by - Opérationnel' FROM
+                (
+                    SELECT MAX(wt.id) AS wt_id, wt.bc_id AS bc_id
+                    FROM wk_tag wt JOIN barcode bc ON bc.id = wt.bc_id
+                                                    AND bc.under_incident = FALSE
+                    WHERE bc.mother_id IN (SELECT(UNNEST((par_bc_mt_arr))))
+                    GROUP BY wt.bc_id
+                ) AS tp;
+
+    -- Update the BC with the Mother ref
+    UPDATE barcode
+      SET under_incident = TRUE,
+          update_date = CURRENT_TIMESTAMP
+      WHERE mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+
+    RETURN QUERY
+    SELECT
+        bc.id,
+        bc.secure,
+        u.name,
+        u.firstname,
+        u.email,
+        CAST ('Stand by' AS VARCHAR(50)),
+        CAST ('Votre paquet a été mis en Stand By par un de nos fournisseurs. Nous vous tenons au courant de son évolution.' AS VARCHAR(300))
+        FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                        WHERE bc.mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+
+END
+$$ LANGUAGE plpgsql;

@@ -584,8 +584,8 @@ BEGIN
         u.name,
         u.firstname,
         u.email,
-        CAST ('Incident' AS VARCHAR(50)),
-        CAST ('Un incident a été relevé: ' || $3 AS VARCHAR(300))
+        CAST ('Stand by' AS VARCHAR(50)),
+        CAST ('Votre paquet est en stand by: ' || $3 AS VARCHAR(300))
         FROM barcode bc JOIN users u ON u.id = bc.owner_id
                         WHERE bc.id = $1;
 
