@@ -112,6 +112,83 @@ class MotherController < ApplicationController
 
   end
 
+  # ********************************************* OPERATION FROM SCREEN *********************************************
+
+  def markstepmother
+    @list_mother_array = JSON.parse(params[:list_of_mt])
+    puts '@list_mother_array: ' + @list_mother_array.inspect
+    puts 'step_id: ' + params[:step_id] + ' /wf_id: ' + params[:wf_id]
+
+    unless (@list_mother_array.empty?) then
+      # Construct the array
+      mother_array_id = ''
+      start_coma = ''
+      for mother_id in @list_mother_array do
+        mother_array_id = mother_array_id + start_coma + get_safe_pg_number(mother_id.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      mother_array_id = " '{"+ mother_array_id + "}'::BIGINT[] "
+
+      # (array_of_mother_id, mwkf_id, step_id, geo_l, user_id)
+      sql_query_mother_id = "SELECT * FROM CLI_STEP_MT ("+ mother_array_id + ", CAST (" + params[:wf_id] + " AS SMALLINT), CAST (" + params[:step_id] + " AS SMALLINT), TRIM('N'), " + @current_user.id.to_s  + ");"
+      #puts 'Q Pure ID: ' + sql_query_pure_id
+
+      @resultSetCallStepMother = ActiveRecord::Base.connection.exec_query(sql_query_mother_id)
+      # There is no notification to send
+      @resultSetCallStepMother.each do |notification|
+        # conveniently, row is a hash
+        # the keys are the fields, as you'd expect
+        # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
+        # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
+        # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
+        # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
+        # puts 'Notif Ext: ' + notification.inspect
+        sendEmailNotification(notification['to_addr'].to_s,
+                                notification['firstname'].to_s,
+                                encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
+                                notification['step'].to_s,
+                                notification['msg'].to_s)
+      end
+
+      render plain: 'ok'
+
+    else
+      render plain: 'ko'
+    end
+
+  end
+
+
+
+  def dissociatemother
+    @list_mother_array = JSON.parse(params[:list_of_mt])
+    puts '@list_mother_array: ' + @list_mother_array.inspect
+
+    unless (@list_mother_array.empty?) then
+      # Construct the array
+      mother_array_id = ''
+      start_coma = ''
+      for mother_id in @list_mother_array do
+        mother_array_id = mother_array_id + start_coma + get_safe_pg_number(mother_id.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      mother_array_id = " '{"+ mother_array_id + "}'::BIGINT[] "
+
+      sql_query_mother_id = "SELECT * FROM CLI_UNGRP_MT ("+ mother_array_id + ", " + @current_user.id.to_s  + ");"
+      #puts 'Q Pure ID: ' + sql_query_pure_id
+      @resultSetCallStepMother = ActiveRecord::Base.connection.exec_query(sql_query_mother_id)
+
+      render plain: 'ok'
+
+    else
+      render plain: 'ko'
+    end
+
+  end
+
 
   private
 
@@ -120,7 +197,7 @@ class MotherController < ApplicationController
     sql_query_with = " WITH moth_occ AS ( SELECT mother_id, count(1) AS occ from mother_barcode_xref GROUP BY mother_id) "
 
     sql_query = sql_query_with + " SELECT 'X' AS mt_ref, 'X' AS c_crt, mt.id AS id, mt.secure, mt.status AS status_code, CASE WHEN rs.step_short IS NULL THEN 'Nouveau' ELSE rs.step_short END AS mstatus, CASE WHEN rfw.code IS NULL THEN 'na' ELSE rfw.code END AS rfw_code, " +
-                      " partner_id, creator_id, u.firstname AS u_firstname, u.client_ref AS u_client_ref, to_char(mt.create_date, 'DD/MM/YYYY') AS create_date, " +
+                      " partner_id, rfw.id AS rfw_id, creator_id, u.firstname AS u_firstname, u.client_ref AS u_client_ref, to_char(mt.create_date, 'DD/MM/YYYY') AS create_date, " +
                       " CASE WHEN mo.occ IS NULL THEN 0 ELSE mo.occ END AS occ, " +
                       " 'U' AS print, 'N' AS ald_print, 'N' AS status_sel, " +
                       " UPPER(CONCAT(u.name, u.firstname, CASE WHEN rs.step_short IS NULL THEN 'Nouveau' ELSE rs.step_short END, rfw.description)) AS raw_data " +
@@ -134,11 +211,23 @@ class MotherController < ApplicationController
                       " ORDER BY mt.id DESC LIMIT "+ ENV['SQL_LIMIT_SM'] +";"
 
 
+    sql_query_workflow_mt = " SELECT rw.code AS rw_code, mw.start_id, rts.step AS st_step, mw.end_id, rte.step AS en_step, rts.handle_mother AS st_mt, rte.handle_mother AS en_mt FROM mod_workflow mw " +
+                    				" JOIN ref_workflow rw ON rw.id = mw.wkf_id " +
+                    				" JOIN ref_partner_workflow rpw ON rpw.wf_id = rw.id " +
+                    				" JOIN ref_status rts ON rts.id = mw.start_id " +
+                    				" JOIN ref_status rte ON rte.id = mw.end_id " +
+                    				" WHERE rpw.partner_id = " + @current_user.partner.to_s +
+                    				" AND (rts.handle_mother || rte.handle_mother) IN ('NY', 'YY') " +
+                    				" ORDER BY mw.start_id, rw.code; "
+
     begin
 
       #flash[:info] = "Step save: " + params[:stepstep] + " /" + params.to_s + " //" + sql_query
       #@resultSet = ActiveRecord::Base.connection.execute(sql_query)
       @resultSet = ActiveRecord::Base.connection.exec_query(sql_query)
+
+      @resultSetWorkflowMt = ActiveRecord::Base.connection.exec_query(sql_query_workflow_mt)
+
       @emptyResultSet = @resultSet.empty?
 
       @maxRowParamSM = " Cet écran récupère un maximum de " + ENV['SQL_LIMIT_SM'].to_s + " références. Si vous avez besoin de plus contactez-nous avec le code UPG259."

@@ -10,13 +10,24 @@
   </script>
 <% else %>
   <script>
+		// Result set
     var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
 
     dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
 		// We init here the filter value
 		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
 		var printArray = new Array();
+
+
+		// Workflow
+		var dataTagToJsonWorkflowMt = '<%= @resultSetWorkflowMt.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonWorkflowMt = dataTagToJsonWorkflowMt.replace(/&quot;/g,"\"");
+    var dataTagToJsonArrayWorkflowMt = JSON.parse(dataTagToJsonWorkflowMt);
+		var filteredDataTagToJsonArrayWorkflowMt = dataTagToJsonArrayWorkflowMt.slice(0);
+
 
 		// We load the workflows Here @resultSetWorkflow
 		var dataTagToJsonWorkflow = '<%= @resultSetWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
@@ -62,5 +73,6 @@
 		<hr>
 		Une référence MOTHER "nouveau" doit d'abord grouper d'autres références pour pouvoir évoluer.<br>
 		Pour évoluer ensemble plusieurs références MOTHER, elles doivent être de même workflow et à la même étape.<br>
+		Une référence dissociée (Disso.) est terminée. Elle ne peut plus être associée ni évoluer des sous-référence.<br>
 	</div>
 </div>

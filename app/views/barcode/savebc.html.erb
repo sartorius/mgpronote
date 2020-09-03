@@ -100,6 +100,7 @@
 						<hr>
 
 						<% unless @resultSet[0]['rp_hdl_price'].to_s == 'N' %>
+						<div id="blc-pay-all">
 							<div class="center btn-cnc-step">
 								<a class="btn btn-default btn-md" id="btn-step-paid">
 										<% if @resultSet[0]['bc_paid_code'].to_s == 'N' %>
@@ -110,6 +111,7 @@
 								</a>
 							</div>
 							<hr>
+						</div>
 						<% end %>
 
 						<div class="center btn-cnc-step">

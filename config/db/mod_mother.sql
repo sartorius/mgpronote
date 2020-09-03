@@ -189,3 +189,129 @@ BEGIN
     RETURN var_return_code;
 END
 $$ LANGUAGE plpgsql;
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- Create Procedure Insert Step as we need to handle ref_status
+-- CALL stored_procedure_name(parameter_list);
+-- sql_query = "INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l)" "VALUES ("+ params[:stepcbid] +", "+ params[:steprwfid] +", "+ params[:stepstep] +", TRIM('"+ params[:stepgeol] +"'));"
+-- (array_of_mother_id, mwkf_id, step_id, geo_l, user_id)
+-- Change to a function to get notification
+-- CREATE OR REPLACE FUNCTION CLI_STEP_MT
+DROP FUNCTION IF EXISTS CLI_STEP_MT(BIGINT[], SMALLINT, SMALLINT, VARCHAR(250), BIGINT);
+CREATE OR REPLACE FUNCTION CLI_STEP_MT(BIGINT[], SMALLINT, SMALLINT, VARCHAR(250), BIGINT)
+RETURNS TABLE (bc_id                   BIGINT,
+                bc_sec                  SMALLINT,
+                name                    VARCHAR(250),
+                firstname               VARCHAR(250),
+                to_addr                 VARCHAR(250),
+                step                    VARCHAR(50),
+                msg                     VARCHAR(250))
+                -- Do the return at the end xxx
+AS $$
+DECLARE
+  var_msg             VARCHAR(250);
+BEGIN
+
+    SELECT CASE WHEN (rs.txt_to_notify IS NULL) THEN rs.description ELSE rs.txt_to_notify END INTO var_msg
+      FROM ref_status rs
+      WHERE rs.id = $3;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l, user_id)
+          SELECT mbx.bc_id, $2, $3, $4, $5
+          FROM mother_barcode_xref mbx
+          WHERE mother_id IN (SELECT(UNNEST(($1))));
+
+    UPDATE barcode
+      SET status = $3,
+      under_incident = FALSE,
+      update_date = CURRENT_TIMESTAMP
+      WHERE id IN (
+        SELECT mbx.bc_id FROM mother_barcode_xref mbx WHERE mother_id IN (SELECT(UNNEST(($1))))
+      );
+
+    UPDATE mother
+      SET status = $3,
+      under_incident = FALSE,
+      update_date = CURRENT_TIMESTAMP
+      WHERE id IN (SELECT(UNNEST(($1))));
+
+    -- After Status update
+
+    RETURN QUERY
+    SELECT
+        bc.id,
+        bc.secure,
+        u.name,
+        u.firstname,
+        u.email,
+        rs.step,
+        CASE WHEN ($3 = 10) THEN CONCAT(var_msg, ' Votre code de vérification: ', bc.secret_code::varchar(20), ' - ce code est confidentiel, ne le partagez pas.') ELSE var_msg END -- handle the case $3 = 10 here
+        FROM barcode bc JOIN users u ON u.id = bc.owner_id
+                        JOIN ref_status rs ON rs.id = bc.status
+                        WHERE bc.id IN (
+                          SELECT mbx.bc_id FROM mother_barcode_xref mbx WHERE mother_id IN (SELECT(UNNEST(($1))))
+                        )
+                        -- Make sure we retrieve only when we need to notify
+                        AND need_to_notify = TRUE;
+END
+$$ LANGUAGE plpgsql;
+
+
+-- /!\ NEW PARAMETERS NEED TO BE APPEND AT THE END !!! !!!
+-- CALL stored_procedure_name(parameter_list);
+-- CALL CLI_GRPASSO_PURE('{20, 19, 18}'::BIGINT[], CAST(7 AS SMALLINT), 'N', 140);
+-- CLI_GRPSTEP_TAG_EXT(par_bc_ext_arr VARCHAR(35)[], par_target_step_id SMALLINT, par_geo_l VARCHAR(250), par_user_id BIGINT)
+DROP FUNCTION IF EXISTS CLI_UNGRP_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT);
+CREATE OR REPLACE FUNCTION CLI_UNGRP_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT)
+RETURNS INTEGER
+AS $$
+DECLARE
+    var_return_code SMALLINT;
+    var_partner     SMALLINT;
+    var_status      SMALLINT;
+BEGIN
+    var_return_code := -1;
+    var_partner := -1;
+    SELECT partner INTO var_partner
+      FROM users u
+      WHERE u.id = par_user_id;
+
+    -- Do the INSERT
+    -- INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, geo_l) VALUES (params[:stepcbid], params[:steprwfid], params[:stepstep], TRIM('params[:stepgeol]'));
+    -- select * from ref_status rs
+    -- select * from ref_status where id IN (SELECT(UNNEST(('{5, 6, 7, 9}'::bigint[]))));
+    INSERT INTO wk_param (bc_id, user_id, comment)
+            SELECT id, par_user_id, '- Dissocié//MOTHER'
+            FROM barcode
+            WHERE partner_id = var_partner
+            AND mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+
+
+    -- Remove
+    DELETE FROM mother_barcode_xref
+            WHERE mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+
+    -- Update the BC with the Mother ref
+    UPDATE barcode
+      SET mother_id = NULL,
+          mother_ref = NULL,
+          update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+
+
+    -- Update MOTHER - it must take the status
+    UPDATE mother
+      SET status = -2, -- Handle ended
+          update_date = CURRENT_TIMESTAMP
+      WHERE partner_id = var_partner
+      AND id IN (SELECT(UNNEST((par_bc_mt_arr))));
+
+    var_return_code := 0;
+
+    RETURN var_return_code;
+END
+$$ LANGUAGE plpgsql;

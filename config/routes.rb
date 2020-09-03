@@ -82,9 +82,14 @@ Rails.application.routes.draw do
   #Route for mothers
   get     '/mothermng',    to: 'mother#mothermng'
   post    '/createmother',    to: 'mother#createmother'
+  post    '/mark_step_mother',    to: 'mother#markstepmother'
 
   post    '/associate_mother' => 'mother#associatemother'
   get     '/associate_mother' => 'mother#associatemother'
+
+  post    '/dissociate_mother' => 'mother#dissociatemother'
+  get     '/dissociate_mother' => 'mother#dissociatemother'
+
 
   # File: config/routes.rb
   if Rails.env.production?

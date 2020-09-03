@@ -13,6 +13,8 @@ function mainScanLoaderInCaseOfChange(){
         $("#blk-cmt").show(400);
         $("#mg-save-step-btn").val('Enregistrer incident');
         $("#btn-step-inc").hide();
+        $("#blc-pay-all").hide(10);
+
         $("#btn-step-inc-cnl").show(400);
 
         //Weight need to be hide
@@ -28,6 +30,7 @@ function mainScanLoaderInCaseOfChange(){
         $("#mg-save-step-btn").val('Enregistrer une étape');
         $("#btn-step-inc-cnl").hide();
         $("#btn-step-inc").show(400);
+        $("#blc-pay-all").show(10);
         //We need to clean the step comment
         $("#stpcmt").val('');
         //Call Weight manager if needed
@@ -231,6 +234,7 @@ function weightManager(){
 function weightManagerDisable(){
   if(dataTagToJsonArray[0].end_step_id == 6){
     $('#blk-weight').hide();
+    $('#wght-in-kg-blc').hide(10);
     $('#mg-save-step-btn').show();
   }
 }
@@ -446,7 +450,7 @@ function loadBCTag(){
 
           if (((dataTagToJsonArray[i].com != null)) &&
                   (dataTagToJsonArray[i].com != '')) {
-            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="fas fa-exclamation-triangle"></i>&nbsp;Un incident est identifié :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="fas fa-barcode"></i>&nbsp;Taggué par: ' + mgsEncodeClientRef(dataTagToJsonArray[i].ucomfirstname, dataTagToJsonArray[i].ucomid, dataTagToJsonArray[i].ucomclient_ref) + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
+            resulTag = resulTag + '<br><hr><div class="t-of-use mgs-med-note-imp"><i class="fas fa-exclamation-triangle"></i>&nbsp;En stand by :<br> ' + dataTagToJsonArray[i].com + ' <br><i class="fas fa-barcode"></i>&nbsp;Taggué par: ' + mgsEncodeClientRef(dataTagToJsonArray[i].ucomfirstname, dataTagToJsonArray[i].ucomid, dataTagToJsonArray[i].ucomclient_ref) + ' - ' + dataTagToJsonArray[i].ucom_date + '</div>';
           }
           resulTag = resulTag + "<hr>";
 
@@ -512,11 +516,11 @@ function loadCameraRead(isGrp){
       // DEBUG CHANGE
       // 4 pures are OK ***
 
-      listOfBCToHandle.push("B0000000UNI");
-      listOfBCToHandle.push("B0000000IY0");
-      listOfBCToHandle.push("B0000000ES7");
+      listOfBCToHandle.push("B0000001JEX");
+      listOfBCToHandle.push("B0000001BKF");
+      //listOfBCToHandle.push("B0000000ES7");
 
-      listOfBCToHandle.push("M0000000HA1");
+      //listOfBCToHandle.push("M0000000HA1");
       //listOfBCToHandle.push("B0000000ZFE");
 
 

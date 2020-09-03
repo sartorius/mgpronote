@@ -13,6 +13,23 @@ $(document).on('turbolinks:load', function() {
         // Do something
         clearStatusSel();
       });
+
+      $("#re-valid-status").click(function() {
+        // Do something xxx
+        let e = document.getElementById('mt-wkf-step');
+        let selectedValue = e.options[e.selectedIndex].value;
+        console.log('Option : ' + selectedValue + ' WF Code: ' + $('#sel-wf-id').html());
+
+        // -1 is disociation
+        if(selectedValue == -1){
+          dissociateMother();
+        }
+        else{
+          markStepMother($('#sel-wf-id').html(), selectedValue);
+        }
+      });
+
+
       $('#filter-status').hide(10);
 
       // Button creation mother main
@@ -27,7 +44,7 @@ $(document).on('turbolinks:load', function() {
       });
       handleMotherDashboard();
 
-
+      //console.log('filteredDataTagToJsonArrayWorkflowMt 0: ' + JSON.stringify(filteredDataTagToJsonArrayWorkflowMt));
     }
 
 })
@@ -68,7 +85,7 @@ function displayErrorDialog(){
 }
 
 function reqConfMother(){
-  console.log( ": reqConfMother" );
+  //console.log( ": reqConfMother" );
 
   //dataTagToJsonWorkflowArray
   let optionStr = '';
@@ -327,7 +344,7 @@ function runjsMotherGrid(){
             // print U is for Unpring
             // print P is for Print
             // onclick="printMngOrder(' + value + ', "' + item.print + '")"
-            return (item.status_code == null) ? ('<i class="mg-light fas fa-layer-group"></i>')  : ('<button id="status-mt-' + value + '" class="btn btn-default' + (item.status_sel == 'N' ? '' : '-light') + ' btn-sm btn-block btn-status-mng" data-order="' + item.status_sel + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>');
+            return ((item.status_code == null) || (item.status_code == -2)) ? ('<i class="mg-light fas fa-layer-group"></i>')  : ('<button id="status-mt-' + value + '" class="btn btn-default' + (item.status_sel == 'N' ? '' : '-light') + ' btn-sm btn-block btn-status-mng" data-order="' + item.status_sel + '" value="' + value + '">' + '<i class="fas fa-layer-group"></i>' + '</button>');
           }
         },
         { name: "create_date",
@@ -378,7 +395,7 @@ function runjsMotherGrid(){
              // handle cell click
              //console.log('IN btn-print-mng');
 
-             batchSelMoth(args.item.id, args.item.status_sel, args.item.rfw_code, args.item.mstatus, args.item.status_code);
+             batchSelMoth(args.item.id, args.item.status_sel, args.item.rfw_code, args.item.mstatus, args.item.status_code, args.item.rfw_id);
           }
           else if($target.closest(".btn-print-mng").length) {
              // handle cell click
@@ -640,7 +657,7 @@ function generatePrintedPDF(){
 
 // ********************* STATUS MANAGEMENT *********************
 
-function batchSelMoth(mid, order, rfw_code, status, status_code){
+function batchSelMoth(mid, order, rfw_code, status, status_code, rfw_id){
   // order : N when Not selected and S when Selected
 
   let readCurrentWF = $('#sel-wf').html();
@@ -648,6 +665,8 @@ function batchSelMoth(mid, order, rfw_code, status, status_code){
   let readCurrentStatusCode = $('#sel-status-code').html();
 
   let updateStatusArray = false;
+
+  let needUpdSelectStep = false;
 
   if(status_code == null){
     $('#status-sel-msg').html(' - ' + status + "/Un nouveau doit d'abord grouper d'autres références");
@@ -665,6 +684,11 @@ function batchSelMoth(mid, order, rfw_code, status, status_code){
 
           $('#status-sel-msg').html('');
           // Need to update the array list
+          // var filteredDataTagToJsonArrayWorkflowMt = dataTagToJsonArrayWorkflowMt.slice(0);
+          filteredDataTagToJsonArrayWorkflowMt = dataTagToJsonArrayWorkflowMt.filter(function (el) {
+                                            return (el.start_id == status_code)
+                                        });
+          // console.log('filteredDataTagToJsonArrayWorkflowMt 1: ' + JSON.stringify(filteredDataTagToJsonArrayWorkflowMt));
 
           updateStatusArray = true;
         }
@@ -686,9 +710,15 @@ function batchSelMoth(mid, order, rfw_code, status, status_code){
         // Manage workflow
         if((readCurrentWF == null) || (readCurrentWF == '')){
           $('#sel-wf').html(rfw_code);
+          $('#sel-wf-id').html(rfw_id);
           $('#status-sel-msg').html('');
           // Need to update the array list
+          filteredDataTagToJsonArrayWorkflowMt = filteredDataTagToJsonArrayWorkflowMt.filter(function (el) {
+                                            return (el.rw_code == rfw_code)
+                                        });
+          needUpdSelectStep = true;
 
+          //console.log('filteredDataTagToJsonArrayWorkflowMt 2: ' + JSON.stringify(filteredDataTagToJsonArrayWorkflowMt));
           updateStatusArray = true;
         }
         else if (readCurrentWF == rfw_code){
@@ -704,11 +734,21 @@ function batchSelMoth(mid, order, rfw_code, status, status_code){
         }
   }
 
+  if(needUpdSelectStep){
+    let optionStr = '';
+    for(i=0; i<filteredDataTagToJsonArrayWorkflowMt.length; i++){
+      optionStr =  optionStr + '<option value="' + filteredDataTagToJsonArrayWorkflowMt[i].end_id + '">' + filteredDataTagToJsonArrayWorkflowMt[i].en_step + '</option>';
+    }
+    optionStr =  optionStr + '<option value="-1">Dissocier</option>';
+    $('#mt-wkf-step').html(optionStr);
+  }
+
   // If all check are done then we allow the update
   if(updateStatusArray){
       manageStatusSelected(mid, order);
       $('#filter-status').show();
   }
+
 }
 
 
@@ -766,7 +806,82 @@ function clearStatusSel(){
   $('#sel-wf').html('');
   $('#sel-status').html('');
   $('#sel-status-code').html('');
+  $('#sel-wf-id').html('');
 
   $('#filter-status').hide(200);
   statusArray = new Array();
+  filteredDataTagToJsonArrayWorkflowMt = dataTagToJsonArrayWorkflowMt.slice(0);
+}
+
+
+function markStepMother(wfId, stepId){
+  // We call an asynchronous ajax
+
+  $.ajax('/mark_step_mother', {
+      type: 'POST',  // http method
+      data: {
+              list_of_mt: JSON.stringify(statusArray),
+              step_id: stepId,
+              wf_id: wfId,
+              auth_token: $('#auth-token-s').val()
+      },  // data to submit
+      success: function (data, status, xhr) {
+          console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
+          if(xhr.responseText == 'unk'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau MOZE926-" + xhr.responseText);
+          }
+          else if(xhr.responseText == 'ko'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur inconnue MOZU926-" + xhr.responseText);
+          }
+          else{
+            //$('#msg-feedback').html("Super ! Le code mother créé est le suivant : " + xhr.responseText);
+            let msgToDisp = "Super ! La référence MOTHER et les références incluses ont été marquées avec succès !";
+            // As we reload the Page - we need to save the data in local storage
+            sessionStorage.setItem("msgStDisp", msgToDisp);
+            document.location.reload(true);
+          }
+          displaySuccessDialog();
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-feedback').html("Navré ! Une erreur MOE6980 est survenue");
+          displayErrorDialog();
+      }
+  });
+  clearStatusSel();
+}
+
+function dissociateMother(){
+  // We call an asynchronous ajax
+
+  $.ajax('/dissociate_mother', {
+      type: 'POST',  // http method
+      data: {
+              list_of_mt: JSON.stringify(statusArray),
+              auth_token: $('#auth-token-s').val()
+      },  // data to submit
+      success: function (data, status, xhr) {
+          console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
+          if(xhr.responseText == 'unk'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau MOZE926-" + xhr.responseText);
+          }
+          else if(xhr.responseText == 'ko'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur inconnue MOZU926-" + xhr.responseText);
+          }
+          else{
+            //$('#msg-feedback').html("Super ! Le code mother créé est le suivant : " + xhr.responseText);
+            let msgToDisp = "Super ! La référence MOTHER a été dissociée de ses références incluses avec succès !";
+            // As we reload the Page - we need to save the data in local storage
+            sessionStorage.setItem("msgStDisp", msgToDisp);
+            document.location.reload(true);
+          }
+          displaySuccessDialog();
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-feedback').html("Navré ! Une erreur MOE6980 est survenue");
+          displayErrorDialog();
+      }
+  });
+  clearStatusSel();
 }

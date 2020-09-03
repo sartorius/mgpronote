@@ -32,7 +32,7 @@ M000055Y2/M00004YAK
 -- Simple hard coded for existing users
 UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
 
-
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-2, 'Disso.', 'Dissocié', 'Gestion terminée.', 'N', 'P', TRUE, 8);
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-1, 'Remis', 'Remis au client', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE, 8);
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (0, 'A. Livr', 'Attente de livraison', 'Créé, attente de livraions.', 'Y', 'P', 1);
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (3, 'A. Adre', 'Attente de saisie adresse', 'Créé, l''adresse enlèvement doit être saisie.', 'Y', 'P', 1);
