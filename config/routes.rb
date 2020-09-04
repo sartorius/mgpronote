@@ -53,6 +53,7 @@ Rails.application.routes.draw do
   get     '/dashboard',    to: 'partner#dashboard'
   post     '/dashboard',    to: 'partner#dashboard'
   post     '/dashboardbyclient',    to: 'partner#dashboardbyclient'
+  post     '/dashboardbymother',    to: 'partner#dashboardbymother'
   get     '/printtwelve',    to: 'partner#printtwelve'
   get     '/printnotrack',    to: 'partner#printnotrack'
 

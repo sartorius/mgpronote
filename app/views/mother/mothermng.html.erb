@@ -76,3 +76,12 @@
 		Une référence dissociée (Disso.) est terminée. Elle ne peut plus être associée ni évoluer des sous-référence.<br>
 	</div>
 </div>
+
+<div class="hid-display">
+	<form action="/dashboardbymother" method="post" id="mg-checkbc-form">
+		<input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-dash-by-client"
+						value="Voir"/>
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		<textarea class="form-control step-hid" rows="1" id="mother-id-post" name="motherid" placeholder="mother" style="resize: none;"></textarea>
+	</form>
+</div>

@@ -101,7 +101,7 @@ class PartnerController < ApplicationController
   end
 
   def dashboardbyclient
-      load_dashboard(params[:clientid])
+      load_dashboard(params[:clientid], nil)
 
       if params[:clientid].nil?
         flash.now[:danger] = "Problème dans le chargement client. Erreur NDH738"
@@ -111,10 +111,22 @@ class PartnerController < ApplicationController
   end
 
 
+  def dashboardbymother
+    puts "Read Mother id: " + params[:motherid]
+    load_dashboard(nil, params[:motherid])
+
+    if params[:motherid].nil?
+      flash.now[:danger] = "Problème dans le chargement client. Erreur NDH721"
+    end
+
+    render 'dashboard'
+  end
+
+
   # Get the next step BC
   def dashboard
     #sendEmailTest('ratinahirana@gmail.com', 'Blou Ratinahirana', 'M03200202', 'Arrivé au centre de dépot')
-      load_dashboard(nil)
+      load_dashboard(nil, nil)
 
       render 'dashboard'
     end
@@ -154,10 +166,12 @@ class PartnerController < ApplicationController
 
   private
 
-  def load_dashboard(client_id)
+  def load_dashboard(client_id, mother_id)
 
-    unless client_id.nil?
+    if !client_id.nil?
       sql_clause = " AND bc.owner_id = " + client_id.to_s
+    elsif !mother_id.nil?
+      sql_clause = " AND bc.mother_id = " + mother_id.to_s
     else
       sql_clause = ''
     end

@@ -51,7 +51,7 @@ function mainScanLoaderInCaseOfChange(){
     getGeoL();
 
     // Load the step
-    if(dataTagToJsonArray[0].mother_ref == 'null'){
+    if(dataTagToJsonArray[0].mother_ref == null){
       console.log('bc_mother_ref IS NULL: ' + dataTagToJsonArray[0].mother_ref);
       displayNext(false);
     }
@@ -108,7 +108,7 @@ function mainScanLoaderInCaseOfChange(){
       loadCameraRead(true);
 
       //DEBUG CHANGE keep for test
-      $('#mg-grp-step-btn').show();
+      // $('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -529,12 +529,16 @@ function loadCameraRead(isGrp){
 
       // DEBUG CHANGE
       // 4 pures are OK ***
+      // /!\ On NORMAL WAY we handle duplicate without error
 
-      listOfBCToHandle.push("B0000001Z1K");
-      listOfBCToHandle.push("B0000001RUJ");
-      listOfBCToHandle.push("B00000016C7");
+      // listOfBCToHandle.push("B0000001Z1K");
+      // listOfBCToHandle.push("B0000001RUJ");
+      // listOfBCToHandle.push("B00000016C7");
+      // listOfBCToHandle.push("B0000002958");
 
-      listOfBCToHandle.push("M0000000EWB");
+
+
+      //listOfBCToHandle.push("M0000000EWB");
       //listOfBCToHandle.push("B0000000ZFE");
 
 
@@ -794,7 +798,7 @@ function loadCameraRead(isGrp){
                         //console.log('Already read ?' + alreadyRead(result.text, listOfBCToHandle));
                         if (alreadyRead(result.text, listOfBCToHandle)) {
                           // It exists already
-                          // We do nothing except we feedback
+                          // We do nothing except we feedback OK we do not block if loaded several times
                           $('#grp-last-read').html(result.text);
                           $('#grp-last-already').show();
                         }

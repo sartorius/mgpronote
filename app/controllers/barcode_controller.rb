@@ -235,6 +235,9 @@ class BarcodeController < ApplicationController
     # Clause w/ barcode table only
     sql_query_ck_where_bc_table_only = " WHERE bc.partner_id = " + @current_user.partner.to_s + sql_query_where_cut
 
+    # Clause w/ unexpected mother
+    sql_query_ck_where_bc_unexpected_mt = " WHERE bc.partner_id = " + @current_user.partner.to_s + " AND bc.mother_id IS NOT NULL " + sql_query_where_cut
+
     # This Q check there is no incident and only one status
     # We need to check if more than one row is returned and if there is no incident
     sql_query_check_distinct = sql_query_ck_col_distinct + sql_query_ck_where_bc_table_only
@@ -248,7 +251,9 @@ class BarcodeController < ApplicationController
     # MOTHER SQL
     sql_query_where_mother_cut = " AND ((mt.id, mt.secure) IN ( " + mother_clause  + ' )) '
 
-
+    # We should get zero to be safe has no mother need to be involved in simple grouping
+    sql_query_check_count_unexpected_mt = sql_query_count + sql_query_ck_where_bc_unexpected_mt
+    @resultSetCheckCountUnexpectedMt = ActiveRecord::Base.connection.exec_query(sql_query_check_count_unexpected_mt)
 
 
     # Are we in associating to Mother ?
@@ -264,6 +269,9 @@ class BarcodeController < ApplicationController
     @need_to_feedback_next_weight = false;
     # This is not need to be checked if Mother
     @need_to_feedback_next_terminated = false;
+
+    # This need to be blocked : if at least one has a mother and we try to evolve it separatly from his/her mother
+    @need_to_feedback_unexpected_mother = false;
 
     # Mother check
     @need_to_feedback_more_than_one_mother = false;
@@ -338,7 +346,7 @@ class BarcodeController < ApplicationController
 
 
     # We check here if they are all the same or not
-    # If they are all the same the distinc retrieve only one line
+    # If they are all the same the distinct retrieve only one line
     if @resultSetCheckOne.length > 1 then
       #puts 'Xroad 3 - we found: ' + @resultSetCheckOne.length.to_s
       all_check_are_passed = false;
@@ -357,6 +365,16 @@ class BarcodeController < ApplicationController
       # This is important if the result retrieve only one line (means all are the same)
       # But all are under incident then we need to tells the user that we have an issue.
       @need_to_feedback_incident_exists = true;
+    end
+
+    # We check here unexpected mother
+    if (@resultSetCheckCountUnexpectedMt[0]['mg_count'].to_i > 0) && !(are_we_associating_to_mother) then
+      #puts 'Xroad 4 - we found: ' + @resultSetCheckOne[0]['under_incident'].to_s
+      all_check_are_passed = false;
+
+      # This is important if the result retrieve only one line (means all are the same)
+      # But all are under incident then we need to tells the user that we have an issue.
+      @need_to_feedback_unexpected_mother = true;
     end
 
 
@@ -518,11 +536,11 @@ class BarcodeController < ApplicationController
     else
       # We need to get feedback
       # We need to access database for feedback !
-      if need_to_feedback_not_all_the_same || @need_to_feedback_incident_exists || @need_to_feedback_next_weight || @need_to_feedback_next_terminated then
+      if need_to_feedback_not_all_the_same || @need_to_feedback_incident_exists || @need_to_feedback_next_weight || @need_to_feedback_next_terminated || @need_to_feedback_unexpected_mother then
         #puts 'Xroad 3 & 4 feedback'
         # We go on feedback mode here
         # We fill the result set for feedback
-        debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
+        debug_sql_query_ck_col = "SELECT bc.id, bc.secure, bc.ext_ref, bc.under_incident, bc.type_pack AS bc_type_pack, bc.mother_ref AS bc_mother_ref, rs.step, rs.description AS rs_description, rw.code AS rw_code, rw.description AS rw_description "
         debug_sql_query_ck_col_from = " FROM barcode bc JOIN ref_status rs ON rs.id = bc.status JOIN ref_workflow rw on rw.id = bc.wf_id "
         # We still use the
         debug_sql_query_check_distinct = debug_sql_query_ck_col + debug_sql_query_ck_col_from  + sql_query_ck_where_bc_table_only

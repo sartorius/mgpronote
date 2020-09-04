@@ -43,6 +43,10 @@
           <br>Vous ne pouvez associer que sur <strong>une seule référence mother</strong> <i class="fas fa-info-circle"></i>
         <% end %>
 
+				<% if @need_to_feedback_unexpected_mother %>
+          <br>Vous ne pouvez pas évoluer séparément des références <strong>qui ont déjà une mother</strong> <i class="fas fa-info-circle"></i>
+        <% end %>
+
 				<% if @need_to_feedback_mother_not_same_wf %>
           <br>La référence mother et les code barres filles <strong>ne sont pas de même workflow</strong>. Vous ne pouvez associer une référence mother qu'avec les codes barres de même types <i class="fas fa-info-circle"></i>
         <% end %>
@@ -90,6 +94,7 @@
 
             <strong>Status actuel: </strong><%= "#{result['step']}" %><br>
             <strong>Workflow: </strong><%= "#{result['rw_code']}" %><br>
+            <strong>MOTHER: </strong><%= "#{result['bc_mother_ref']}" %><br>
 
             <% if "#{result['under_incident']}" == 'false' %>
               <strong>Incident en cours: </strong>Non<br>
