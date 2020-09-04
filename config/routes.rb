@@ -90,6 +90,10 @@ Rails.application.routes.draw do
   post    '/dissociate_mother' => 'mother#dissociatemother'
   get     '/dissociate_mother' => 'mother#dissociatemother'
 
+  post    '/incident_mother' => 'mother#incidentmother'
+  get     '/incident_mother' => 'mother#incidentmother'
+
+
 
   # File: config/routes.rb
   if Rails.env.production?

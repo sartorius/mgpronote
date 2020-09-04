@@ -179,7 +179,7 @@ class MotherController < ApplicationController
 
       sql_query_mother_id = "SELECT * FROM CLI_UNGRP_MT ("+ mother_array_id + ", " + @current_user.id.to_s  + ");"
       #puts 'Q Pure ID: ' + sql_query_pure_id
-      @resultSetCallStepMother = ActiveRecord::Base.connection.exec_query(sql_query_mother_id)
+      @resultSetCallDisMother = ActiveRecord::Base.connection.exec_query(sql_query_mother_id)
 
       render plain: 'ok'
 
@@ -190,13 +190,60 @@ class MotherController < ApplicationController
   end
 
 
+  def incidentmother
+    @list_mother_array = JSON.parse(params[:list_of_mt])
+    puts '@list_mother_array: ' + @list_mother_array.inspect
+
+    unless (@list_mother_array.empty?) then
+      # Construct the array
+      mother_array_id = ''
+      start_coma = ''
+      for mother_id in @list_mother_array do
+        mother_array_id = mother_array_id + start_coma + get_safe_pg_number(mother_id.to_s)
+        start_coma = ', '
+      end
+      # Finalize
+      mother_array_id = " '{"+ mother_array_id + "}'::BIGINT[] "
+
+      sql_query_mother_id = "SELECT * FROM CLI_DECLARE_INC_MT("+ mother_array_id + ", " + @current_user.id.to_s  + ");"
+      #puts 'Q Pure ID: ' + sql_query_pure_id
+      @resultSetCallIncMother = ActiveRecord::Base.connection.exec_query(sql_query_mother_id)
+
+      @resultSetCallIncMother.each do |notification|
+        # conveniently, row is a hash
+        # the keys are the fields, as you'd expect
+        # the values are pre-built ruby primitives mapped from their corresponding field types in MySQL
+        # Here's an otter: http://farm1.static.flickr.com/130/398077070_b8795d0ef3_b.jpg
+        # <%= "#{val['id']}, #{val['name']}, #{val['age']}" %>
+        # puts 'Notif: ' + notification['bc_id'].to_s +' / '+ notification['bc_sec'].to_s +' / '+ notification['name'].to_s +' / '+ notification['firstname'].to_s +' / '+ notification['to_addr'].to_s +' / '+ notification['step'].to_s +' / '+ notification['msg'].to_s
+        # sendEmailNotification(to_addr, firstname_name, cb_code, status, msg)
+        # puts 'Notif Ext: ' + notification.inspect
+        sendEmailNotification(notification['to_addr'].to_s,
+                                notification['firstname'].to_s,
+                                encodeMGS(notification['bc_id'].to_s, notification['bc_sec'].to_s),
+                                notification['step'].to_s,
+                                notification['msg'].to_s)
+      end
+
+      render plain: 'ok'
+
+    else
+      render plain: 'ko'
+    end
+
+  end
+
+
+
+  # ************************************************* PRIVATE ****************************************************
+
   private
 
   def load_mother_dashboard
 
     sql_query_with = " WITH moth_occ AS ( SELECT mother_id, count(1) AS occ from mother_barcode_xref GROUP BY mother_id) "
 
-    sql_query = sql_query_with + " SELECT 'X' AS mt_ref, 'X' AS c_crt, mt.id AS id, mt.secure, mt.status AS status_code, CASE WHEN rs.step_short IS NULL THEN 'Nouveau' ELSE rs.step_short END AS mstatus, CASE WHEN rfw.code IS NULL THEN 'na' ELSE rfw.code END AS rfw_code, " +
+    sql_query = sql_query_with + " SELECT 'X' AS mt_ref, 'X' AS c_crt, mt.id AS id, mt.secure, mt.status AS status_code, mt.under_incident, CASE WHEN rs.step_short IS NULL THEN 'Nouveau' ELSE rs.step_short END AS mstatus, CASE WHEN rfw.code IS NULL THEN 'na' ELSE rfw.code END AS rfw_code, " +
                       " partner_id, rfw.id AS rfw_id, creator_id, u.firstname AS u_firstname, u.client_ref AS u_client_ref, to_char(mt.create_date, 'DD/MM/YYYY') AS create_date, " +
                       " CASE WHEN mo.occ IS NULL THEN 0 ELSE mo.occ END AS occ, " +
                       " 'U' AS print, 'N' AS ald_print, 'N' AS status_sel, " +

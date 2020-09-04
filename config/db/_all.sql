@@ -1343,8 +1343,8 @@ $$ LANGUAGE plpgsql;
 
 -- This will not change the step but add a comment
 -- Parameters are BC ID/USER ID/Comment
-DROP FUNCTION IF EXISTS CLI_STAND_BY_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT);
-CREATE OR REPLACE FUNCTION CLI_STAND_BY_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT)
+DROP FUNCTION IF EXISTS CLI_DECLARE_INC_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT);
+CREATE OR REPLACE FUNCTION CLI_DECLARE_INC_MT(par_bc_mt_arr BIGINT[], par_user_id BIGINT)
 RETURNS TABLE (bc_id                   BIGINT,
                 bc_sec                  SMALLINT,
                 name                    VARCHAR(250),
@@ -1375,7 +1375,13 @@ BEGIN
     UPDATE barcode
       SET under_incident = TRUE,
           update_date = CURRENT_TIMESTAMP
-      WHERE mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+      WHERE mother_id IN (SELECT(UNNEST((par_bc_mt_arr)))) AND under_incident = FALSE;
+
+    -- Update the BC with the Mother ref
+    UPDATE mother
+      SET under_incident = TRUE,
+          update_date = CURRENT_TIMESTAMP
+      WHERE id IN (SELECT(UNNEST((par_bc_mt_arr)))) AND under_incident = FALSE;
 
     RETURN QUERY
     SELECT
@@ -1387,7 +1393,8 @@ BEGIN
         CAST ('Stand by' AS VARCHAR(50)),
         CAST ('Votre paquet a été mis en Stand By par un de nos fournisseurs. Nous vous tenons au courant de son évolution.' AS VARCHAR(300))
         FROM barcode bc JOIN users u ON u.id = bc.owner_id
-                        WHERE bc.mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
+                        WHERE bc.under_incident = TRUE
+                        AND bc.mother_id IN (SELECT(UNNEST((par_bc_mt_arr))));
 
 END
 $$ LANGUAGE plpgsql;

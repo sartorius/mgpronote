@@ -516,11 +516,11 @@ function loadCameraRead(isGrp){
       // DEBUG CHANGE
       // 4 pures are OK ***
 
-      listOfBCToHandle.push("B0000001JEX");
-      listOfBCToHandle.push("B0000001BKF");
-      //listOfBCToHandle.push("B0000000ES7");
+      listOfBCToHandle.push("B0000001Z1K");
+      listOfBCToHandle.push("B0000001RUJ");
+      listOfBCToHandle.push("B00000016C7");
 
-      //listOfBCToHandle.push("M0000000HA1");
+      listOfBCToHandle.push("M0000000EWB");
       //listOfBCToHandle.push("B0000000ZFE");
 
 

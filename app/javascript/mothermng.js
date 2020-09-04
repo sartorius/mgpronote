@@ -26,6 +26,7 @@ $(document).on('turbolinks:load', function() {
         }
         else if(selectedValue == -2){
           // Declare stand by
+          declareIncidentMother();
         }
         else{
           markStepMother($('#sel-wf-id').html(), selectedValue);
@@ -71,6 +72,11 @@ function handleMotherDashboard(){
     $('#msg-feedback').html(msgToDisp);
     sessionStorage.removeItem("msgStDisp");
     displaySuccessDialog();
+
+    $("#close-feeback").click(function() {
+      //console.log('$("#close-feeback").click');
+      $('#mgs-dialog-feedback').hide(100);
+    });
   }
 }
 
@@ -294,7 +300,7 @@ function runjsMotherGrid(){
           width: 50,
           headercss: "h-jsG-r",
           itemTemplate: function(value, item) {
-            return '<i class="monosp-ft">' + value + '</i>';
+            return '<i class="monosp-ft">' + ((item.under_incident) ? '<i class="fas fa-exclamation-triangle"></i>&nbsp;' : '') + value + '</i>';
 
           }
         },
@@ -743,7 +749,7 @@ function batchSelMoth(mid, order, rfw_code, status, status_code, rfw_id){
       optionStr =  optionStr + '<option value="' + filteredDataTagToJsonArrayWorkflowMt[i].end_id + '">' + filteredDataTagToJsonArrayWorkflowMt[i].en_step + '</option>';
     }
     optionStr =  optionStr + '<option value="-1">Dissocier</option>';
-    optionStr =  optionStr + '<option value="-2">Stand by</option>';
+    optionStr =  optionStr + '<option value="-2">Incident opérationnel</option>';
     $('#mt-wkf-step').html(optionStr);
   }
 
@@ -875,6 +881,42 @@ function dissociateMother(){
           else{
             //$('#msg-feedback').html("Super ! Le code mother créé est le suivant : " + xhr.responseText);
             let msgToDisp = "Super ! La référence MOTHER a été dissociée de ses références incluses avec succès !";
+            // As we reload the Page - we need to save the data in local storage
+            sessionStorage.setItem("msgStDisp", msgToDisp);
+            document.location.reload(true);
+          }
+          displaySuccessDialog();
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-feedback').html("Navré ! Une erreur MOE6980 est survenue");
+          displayErrorDialog();
+      }
+  });
+  clearStatusSel();
+}
+
+
+function declareIncidentMother(){
+  // We call an asynchronous ajax
+
+  $.ajax('/incident_mother', {
+      type: 'POST',  // http method
+      data: {
+              list_of_mt: JSON.stringify(statusArray),
+              auth_token: $('#auth-token-s').val()
+      },  // data to submit
+      success: function (data, status, xhr) {
+          console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
+          if(xhr.responseText == 'unk'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur réseau MOZE926-" + xhr.responseText);
+          }
+          else if(xhr.responseText == 'ko'){
+            $('#msg-feedback').html("Navré ! L'opération a retourné une erreur inconnue MOZU926-" + xhr.responseText);
+          }
+          else{
+            //$('#msg-feedback').html("Super ! Le code mother créé est le suivant : " + xhr.responseText);
+            let msgToDisp = "Un incident a été déclaré sur la référence MOTHER avec succès !";
             // As we reload the Page - we need to save the data in local storage
             sessionStorage.setItem("msgStDisp", msgToDisp);
             document.location.reload(true);
