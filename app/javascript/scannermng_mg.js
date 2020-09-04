@@ -49,8 +49,22 @@ function mainScanLoaderInCaseOfChange(){
         getGeoL();
     });
     getGeoL();
+
     // Load the step
-    displayNext(false);
+    if(dataTagToJsonArray[0].mother_ref == 'null'){
+      console.log('bc_mother_ref IS NULL: ' + dataTagToJsonArray[0].mother_ref);
+      displayNext(false);
+    }
+    else{
+      // We need to block the integration
+      console.log('bc_mother_ref IS NOT NULL: ' + dataTagToJsonArray[0].mother_ref);
+      $('#blc-step-ctrl').hide(10);
+      $('#mg-save-step-btn').hide(10);
+      $('#curr-status').html('Cette référence est associée au ' + dataTagToJsonArray[0].mother_ref + '//MOTHER. Elle est groupée et elle ne peut pas évoluer seule.<br> Vous devez évoluer la référence MOTHER ou la dissocier.');
+
+      $('#btn-cnl-nstp').html('Retour');
+
+    }
   }
   else if($('#mg-graph-identifier').text() == 'grpsavebc-gr'){
     // Make sure we geolocalize everyone
