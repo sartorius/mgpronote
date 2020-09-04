@@ -415,7 +415,7 @@ function runjsMotherGrid(){
             //console.log('OUT btn-print-mng');
             //goToPartBarcode(args.item.id, args.item.secure);
             if(args.item.occ > 0){
-              goToDshBC(args.item.id);
+              goToDshBC(args.item.id, args.item.mt_ref);
             }
           }
         },
@@ -935,9 +935,10 @@ function declareIncidentMother(){
   clearStatusSel();
 }
 
-function goToDshBC(mid){
+function goToDshBC(mid, ref){
   //alert('You clicked on item: ' + el);
   $("#mother-id-post").val(mid);
+  $("#mother-ref-post").val(ref);
 
   $("#mg-checkbc-form").submit();
 }

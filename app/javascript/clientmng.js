@@ -427,6 +427,7 @@ function runjsClientGrid(){
             }
             else{
               $('#client-id-post').val(args.item.id);
+              $('#client-ref-post').val(args.item.enc_client_ref);
               //Run submit
               //console.log('button not recognized');
               $('#mg-checkbc-form').submit();

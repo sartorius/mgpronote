@@ -103,6 +103,8 @@ class PartnerController < ApplicationController
   def dashboardbyclient
       load_dashboard(params[:clientid], nil)
 
+      @msgToDisplay = 'Filtre client: '+ params[:clientref]
+
       if params[:clientid].nil?
         flash.now[:danger] = "Problème dans le chargement client. Erreur NDH738"
       end
@@ -114,6 +116,8 @@ class PartnerController < ApplicationController
   def dashboardbymother
     puts "Read Mother id: " + params[:motherid]
     load_dashboard(nil, params[:motherid])
+
+    @msgToDisplay = 'Filtre MOTHER: '+ params[:motherref]
 
     if params[:motherid].nil?
       flash.now[:danger] = "Problème dans le chargement client. Erreur NDH721"

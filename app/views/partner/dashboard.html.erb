@@ -33,6 +33,8 @@
 <i class="hid-display" id="max-print-const"><%= @maxPrintConstEnv.to_s %></i>
 <%-# We display the filter only if there is data to filter -%>
 <% unless @emptyResultSet %>
+		<span class="info-sm"><i id='msg-dsh'><%= @msgToDisplay.to_s %></i></span>
+
 		<div class="row filter-banner" id="filter-block">
 			<div class="col-sm-2 fil-el">
 				<button id="print-dash" type="button" class="btn btn-md btn-block btn-default">
