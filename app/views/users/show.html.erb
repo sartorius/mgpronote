@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
 </style>
 
-<% if @resultSetCompany[0][0].to_i < 2 %>
+<% if (@resultSetCompany.nil?) || (@resultSetCompany[0][0].to_i < 2) %>
     <%= render 'users/showclient' %>
 <% else %>
     <%= render 'users/showpartner' %>

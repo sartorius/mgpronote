@@ -183,6 +183,7 @@ class PartnerController < ApplicationController
                       " uo.phone AS ophone, uo.email AS oemail, bc.description as bcdescription, bc.mother_ref, to_char(bc.create_date, 'DD/MM/YYYY') AS create_date, " +
                       " DATE_PART('day', NOW() - bc.create_date) AS diff_days, bc.ref_tag AS ref_tag, " +
                       " rs.step AS step, rs.step_short, LPAD(bc.secure::CHAR(4), 4, '0') AS secure, " +
+                      " CASE WHEN bc.p_name_firstname IS NULL THEN '-' ELSE p_name_firstname END, CASE WHEN bc.p_phone IS NULL THEN '-' ELSE bc.p_phone END, CASE WHEN bc.p_address_note IS NULL THEN '-' ELSE bc.p_address_note END, " +
                       " LPAD(bc.secret_code::CHAR(4), 4, '0') AS bsecret_code, " +
                       " bc.type_pack, bc.ext_ref, 'U' AS print, 'N' AS ald_print, rfw.code AS rfw_code, rfw.description AS rfw_desc, bc.paid_code, bc.mother_ref, " +
                       " UPPER(CONCAT(uo.name, uo.firstname, bc.ext_ref, uo.phone, rs.step, rfw.description, rfw.code, bc.mother_ref)) AS raw_data " +

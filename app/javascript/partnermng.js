@@ -881,10 +881,10 @@ function generatePartDashCSV(){
   let csvContent = "";
   const SEP_ = ";"
 
-	let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Email" + SEP_ + "Numéro" + SEP_ + "Description" + SEP_ + "Date de création" + SEP_ + "MOTHER ref" + SEP_ + "En attente depuis" + SEP_ + "\n";
+	let dataString = "#" + SEP_ + "Référence" + SEP_ + "Status" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Email" + SEP_ + "Numéro" + SEP_ + "Description" + SEP_ + "Date de création" + SEP_ + "MOTHER ref" + SEP_ + "En attente depuis" + SEP_ + "Contact ELV" + SEP_ + "Téléphone ELV" + SEP_ + "Adresse ELV" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArray.length; i++){
-		dataString = dataTagToJsonArray[i].id + SEP_ + removeDiacritics(dataTagToJsonArray[i].ref_tag) + SEP_ + removeDiacritics(dataTagToJsonArray[i].step) + SEP_ +  dataTagToJsonArray[i].oname + SEP_ +  dataTagToJsonArray[i].ofirstname + SEP_ + dataTagToJsonArray[i].oemail + SEP_ + dataTagToJsonArray[i].ophone + SEP_ + (dataTagToJsonArray[i].bcdescription == null ? '-' : dataTagToJsonArray[i].bcdescription) + SEP_ + dataTagToJsonArray[i].create_date + SEP_ + (dataTagToJsonArray[i].mother_ref == null ? '-' : dataTagToJsonArray[i].mother_ref) + SEP_ +   dataTagToJsonArray[i].diff_days + SEP_ ;
+		dataString = dataTagToJsonArray[i].id + SEP_ + removeDiacritics(dataTagToJsonArray[i].ref_tag) + SEP_ + removeDiacritics(dataTagToJsonArray[i].step) + SEP_ +  dataTagToJsonArray[i].oname + SEP_ +  dataTagToJsonArray[i].ofirstname + SEP_ + dataTagToJsonArray[i].oemail + SEP_ + dataTagToJsonArray[i].ophone + SEP_ + (dataTagToJsonArray[i].bcdescription == null ? '-' : dataTagToJsonArray[i].bcdescription) + SEP_ + dataTagToJsonArray[i].create_date + SEP_ + (dataTagToJsonArray[i].mother_ref == null ? '-' : dataTagToJsonArray[i].mother_ref) + SEP_ +   dataTagToJsonArray[i].diff_days + SEP_ +   dataTagToJsonArray[i].p_name_firstname + SEP_ +   dataTagToJsonArray[i].p_phone + SEP_ +   dataTagToJsonArray[i].p_address_note + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArray.length ? dataString+ "\n" : dataString;
 	}
@@ -898,7 +898,7 @@ function generatePartDashCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'suiviListeMGSuiviPartenaire.csv';
+  link.download = 'MGSListeRef.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
