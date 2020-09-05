@@ -37,6 +37,8 @@ INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, deli
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (3, 'Test 3 Fret Service', 'Test 3 Fret Service', 'C', 2, '0664066109', 'Test Trois Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y', 'Y');
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (4, 'Test 4 Transport', 'Test Quatre', 'C', 2, '0664078109', 'Test Quatre Transport@ 12 RUE DES BRINS, 93170 BAGNOLET', 'Y', 'Y');
 
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (5, 'Mada Groupage', 'Mada Groupage', 'C', 1, '0664078109', 'Mada Groupage@ 12 RUE DES PRIMTEMPS, 93170 BAGNOLET', 'Y', 'Y');
+
 
 CREATE TABLE ref_partner_workflow (
   id                SMALLINT        PRIMARY KEY,
@@ -52,3 +54,6 @@ INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_pho
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (3, 3, 3, 'AEROPORT A.A NETO - FACE NOUVEL AEROGARE POINTE NOIRE CONGO', '055743447/066443676');
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (4, 3, 4, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (5, 3, 5, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
+
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (6, 5, 1, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (7, 5, 6, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');

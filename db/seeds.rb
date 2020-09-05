@@ -1,4 +1,4 @@
-
+=begin
 # Create a main sample user.
 User.create!(name:  "Ratinahirana",
              firstname: "Herinirina",
@@ -117,21 +117,35 @@ User.create!(name:  "Rakomandroso",
             incharge:  false,
             activated: true,
             activated_at: Time.zone.now)
-
+=end
 ###########################################################################
 # Bunch of Clients
-# Client
-User.create!(name:  "Delamare",
-            firstname: "Tsiky",
-            email: "tsiky.d@gmail.com",
+
+User.create!(name:  "Mada Groupage",
+            firstname: "Tsoa",
+            email: "tsoa.r@mg.com",
             password:              "madagascar12",
             password_confirmation: "madagascar12",
-            phone: "0320102045",
+            phone: "0322345690",
             admin:     false,
-            incharge:     false,
+            partner:   5,
+            incharge:  false,
             activated: true,
             activated_at: Time.zone.now)
 
+User.create!(name:  "Mada Groupage",
+            firstname: "Holy",
+            email: "holy.r@mg.com",
+            password:              "madagascar12",
+            password_confirmation: "madagascar12",
+            phone: "0322345690",
+            admin:     false,
+            partner:   5,
+            incharge:  false,
+            activated: true,
+            activated_at: Time.zone.now)
+
+=begin
 # Client
 User.create!(name:  "Razafy",
             firstname: "Mavo",
@@ -167,3 +181,4 @@ User.create!(name:  "Etsesamis",
             incharge:     false,
             activated: true,
             activated_at: Time.zone.now)
+=end

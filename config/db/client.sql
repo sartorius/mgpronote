@@ -18,6 +18,11 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 3);
 
 
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 5);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 5);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 5);
+
+
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
 -- UPDATE users SET name = 'Mada techno mafy' WHERE email = 'njara.h@gmail.com';
 

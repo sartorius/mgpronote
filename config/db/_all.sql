@@ -61,6 +61,8 @@ INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, deli
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (3, 'Test 3 Fret Service', 'Test 3 Fret Service', 'C', 2, '0664066109', 'Test Trois Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y', 'Y');
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (4, 'Test 4 Transport', 'Test Quatre', 'C', 2, '0664078109', 'Test Quatre Transport@ 12 RUE DES BRINS, 93170 BAGNOLET', 'Y', 'Y');
 
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (5, 'Mada Groupage', 'Mada Groupage', 'C', 1, '0664078109', 'Mada Groupage@ 12 RUE DES PRIMTEMPS, 93170 BAGNOLET', 'Y', 'Y');
+
 
 CREATE TABLE ref_partner_workflow (
   id                SMALLINT        PRIMARY KEY,
@@ -76,6 +78,9 @@ INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_pho
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (3, 3, 3, 'AEROPORT A.A NETO - FACE NOUVEL AEROGARE POINTE NOIRE CONGO', '055743447/066443676');
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (4, 3, 4, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (5, 3, 5, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
+
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (6, 5, 1, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (7, 5, 6, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
 -- Transition ref
 CREATE TABLE ref_status (
   id                  SMALLINT      PRIMARY KEY,
@@ -126,16 +131,19 @@ INSERT INTO ref_status (id, step_short, step, description, next_input_needed, ac
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (8, 'Ft. Orl', 'Déposé frêt Orly', 'Le paquet a été déposé en zone de frêt Orly.', 'N', 'P', 5, 'Y');
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (11, 'Ft. Exp', 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5, 'Y');
 
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (9, 'Tana', 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il est en formalité entrée de territoire.', 'N', 'P', 6, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (9, 'Tana', 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il passe les formalités.', 'N', 'P', 6, 'Y');
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (10, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7, 'Y');
 
 
 
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (12, 'Pt. Noi', 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il est en formalité entrée de territoire.', 'N', 'P', 6, 'Y');
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (13, 'Brazzav', 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il est en formalité entrée de territoire.', 'N', 'P', 6, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (12, 'Pt. Noi', 'Arrivé à Pointe Noire', 'Le paquet est arrivé à Pointe Noire. Il passe les formalités.', 'N', 'P', 6, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (13, 'Brazzav', 'Arrivé à Brazzaville', 'Le paquet est arrivé à Brazzaville. Il passe les formalités.', 'N', 'P', 6, 'Y');
 
 
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (14, 'Ft. Hav', 'Déposé frêt Le Havre', 'Le paquet a été déposé en zone de frêt port Le Havre.', 'N', 'P', 5, 'Y');
+
+
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (15, 'Tamatv.', 'Arrivé à Tamatave', 'Le paquet est arrivé à Tamatave. Il passe les formalités.', 'N', 'P', 6, 'Y');
 
 -- Particular case of pickup but it is as well created from screen
 UPDATE ref_status SET need_to_notify = FALSE;
@@ -176,7 +184,9 @@ CREATE TABLE ref_workflow (
 );
 
 -- The code or workflow may be duplicates but the code is different for the partner
+-- mode is to know how to display Plane or B boat
 INSERT INTO ref_workflow (id, code, description, mode) VALUES (1, 'TA', 'Paris Tana aérien', 'P');
+INSERT INTO ref_workflow (id, code, description, mode) VALUES (6, 'TM', 'Paris Tana Maritime via Tamatave', 'B');
 
 
 INSERT INTO ref_workflow (id, code, description, mode) VALUES (2, 'PA', 'Paris Pointe Noire aérien', 'P');
@@ -207,6 +217,20 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 7, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 11, 9);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 9, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (1, 10, -1);
+
+
+-- Paris Tana Maritime
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 0, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 3, 1);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 1, 4);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 4, 2);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 2, 6);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 6, 14);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 14, 15);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 15, 9);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 9, 10);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (6, 10, -1);
+
 
 -- Paris Pointe Noire Aérien
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (2, 0, 2);
@@ -860,6 +884,11 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 3);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 3);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 3);
+
+
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 5);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 5);
+INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 5);
 
 
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
