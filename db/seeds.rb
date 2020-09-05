@@ -121,7 +121,6 @@ User.create!(name:  "Rakomandroso",
 ###########################################################################
 # Bunch of Clients
 
-=begin
 User.create!(name:  "Mada Groupage",
             firstname: "Tsoa",
             email: "tsoa.r@mg.com",
@@ -145,7 +144,7 @@ User.create!(name:  "Mada Groupage",
             incharge:  false,
             activated: true,
             activated_at: Time.zone.now)
-=end
+
 
 # Client
 User.create!(name:  "Razafy",
