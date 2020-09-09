@@ -491,7 +491,7 @@ function createBarCodeFor(pName, id, o){
   $('#nm-t-cf').html(' choisir notre partenaire ' + pName + ((o == 'D') ? ' pour un suivi <strong>livraison</strong>&nbsp;<i class="fas fa-box"></i>' : ' pour un suivi <strong>enlèvement</strong>&nbsp;<i class="fas fa-truck"></i>'));
 
   if(o == 'D'){
-    $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + arrayWfListToValidate[0].rw_code + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de reconnaître votre colis. Et le code de destination : <strong>" + arrayWfListToValidate[0].rw_code + "</strong> qui lui permettra de vous l'envoyer.</i>");
+    $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + arrayWfListToValidate[0].rw_code + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de vous reconnaître.<br>Et le code de destination : <strong>" + arrayWfListToValidate[0].rw_code + "</strong> qui lui permettra de vous l'envoyer.</i>");
   }
   else{
     $('#nm-t-cf-add').html('');
@@ -502,7 +502,7 @@ function createBarCodeFor(pName, id, o){
     const result = document.querySelector('#opt-wkf');
     //console.log('You like ' + event.target.value);
     if(o == 'D'){
-      $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + event.target.value + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de reconnaître votre colis. Et le code de destination : <strong>" + event.target.value + "</strong> qui lui permettra de vous l'envoyer.</i>");
+      $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + event.target.value + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de vous reconnaître.<br>Et le code de destination : <strong>" + event.target.value + "</strong> qui lui permettra de vous l'envoyer.</i>");
     }
     else{
       $('#nm-t-cf-add').html('');
