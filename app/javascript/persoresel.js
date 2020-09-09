@@ -465,22 +465,50 @@ function createBarCodeFor(pName, id, o){
   //console.log('createBarCodeFor: you did click on me: ' + name + '#' + id);
   //console.log('Here is o: ' + o);
   let arrayWfListToValidate;
+  let addr;
+  let uid;
+  let clientRef;
+  let firstname;
   for(i=0; i<dataTagToJsonArray.length; i++){
     if(id == dataTagToJsonArray[i].cpx_partner_id){
       arrayWfListToValidate = dataTagToJsonArray[i].workflow_list;
+      addr = dataTagToJsonArray[i].rp_delivery_addr;
+      uid = dataTagToJsonArray[i].uid;
+      clientRef = dataTagToJsonArray[i].uclient_ref;
+      firstname = dataTagToJsonArray[i].ufirstname;
       break;
     }
   }
 
   let optionStr = '';
   for(i=0; i<arrayWfListToValidate.length; i++){
-    optionStr =  optionStr + '<option value="' + arrayWfListToValidate[i].rw_code + '">' + arrayWfListToValidate[i].rw_description + '</option>';
+    optionStr =  optionStr + '<option value="' + arrayWfListToValidate[i].rw_code + '">' + arrayWfListToValidate[i].rw_code + '/' + arrayWfListToValidate[i].rw_description + '</option>';
   }
   $('#opt-wkf').html(optionStr);
   $('#multiple-workflow').show();
 
   // The value here is the partner id
   $('#nm-t-cf').html(' choisir notre partenaire ' + pName + ((o == 'D') ? ' pour un suivi <strong>livraison</strong>&nbsp;<i class="fas fa-box"></i>' : ' pour un suivi <strong>enlèvement</strong>&nbsp;<i class="fas fa-truck"></i>'));
+
+  if(o == 'D'){
+    $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + arrayWfListToValidate[0].rw_code + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de reconnaître votre colis. Et la destination et le mode: <strong>" + arrayWfListToValidate[0].rw_code + "</strong> qui lui permettra de vous l'envoyer.</i>");
+  }
+  else{
+    $('#nm-t-cf-add').html('');
+  }
+
+  const selectElement = document.querySelector('#opt-wkf');
+  selectElement.addEventListener('change', (event) => {
+    const result = document.querySelector('#opt-wkf');
+    //console.log('You like ' + event.target.value);
+    if(o == 'D'){
+      $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + event.target.value + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de reconnaître votre colis. Et la destination et le mode: <strong>" + event.target.value + "</strong> qui lui permettra de vous l'envoyer.</i>");
+    }
+    else{
+      $('#nm-t-cf-add').html('');
+    }
+  });
+
   // Parameters in dialog !
 
   $('#crt-cb-param').html(id);

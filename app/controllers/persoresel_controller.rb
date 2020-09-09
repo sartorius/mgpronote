@@ -35,12 +35,12 @@ class PersoreselController < ApplicationController
 
 
   def getmypartnerlist
-    sql_query = "SELECT rp.id AS id, rp.name AS rp_name, rp.description AS rp_desc, rp.hdl_pickup, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, cpx.partner_id AS cpx_partner_id,  bc.partner_id AS bc_partner_id, 'X' AS workflow_list, count(1) AS totalbc "
+    sql_query = "SELECT rp.id AS id, rp.name AS rp_name, rp.description AS rp_desc, rp.hdl_pickup, rp.delivery_addr AS rp_delivery_addr, u.firstname AS ufirstname, u.id AS uid, u.client_ref AS uclient_ref, to_char(cpx.create_date, 'DD/MM/YYYY') AS since, cpx.partner_id AS cpx_partner_id,  bc.partner_id AS bc_partner_id, 'X' AS workflow_list, count(1) AS totalbc "
     sql_query += " FROM client_partner_xref cpx JOIN users u on cpx.client_id = u.id "
     sql_query += " JOIN ref_partner rp on rp.id = cpx.partner_id "
     sql_query += " AND cpx.client_id = " + @current_user.id.to_s
     sql_query += " LEFT JOIN barcode bc ON bc.owner_id = u.id AND bc.partner_id = rp.id "
-    sql_query += " GROUP BY rp.id, rp.name, rp.description, cpx.partner_id, bc.partner_id, cpx.create_date, rp.hdl_pickup "
+    sql_query += " GROUP BY rp.id, rp.name, rp.description, cpx.partner_id, bc.partner_id, cpx.create_date, rp.hdl_pickup, rp.delivery_addr, u.firstname, u.id, u.client_ref "
     sql_query += " ORDER BY cpx.create_date DESC;"
 
     begin
