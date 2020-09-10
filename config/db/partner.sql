@@ -56,4 +56,5 @@ INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_pho
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (5, 3, 5, '9 BIS RUE MBOKO, MOUNGALI', '066251108');
 
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (6, 5, 1, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
-INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (7, 5, 6, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
+-- We wait to handle the boat
+-- INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (7, 5, 6, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
