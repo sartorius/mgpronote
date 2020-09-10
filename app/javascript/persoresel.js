@@ -624,7 +624,7 @@ function runjsPartnerListGrid(){
             align: "left",
             width: 30,
             itemTemplate: function(value, item) {
-              return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '">' + '<i class="c-w fas fa-box"></i>' + '</button>';
+              return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Livraison: utilisez ce suivi si vous voulez que le site marchand ou un proche livre au local du transporteur">' + '<i class="c-w fas fa-box"></i>' + '</button>';
             }
           },
           {
@@ -634,7 +634,7 @@ function runjsPartnerListGrid(){
             align: "left",
             width: 20,
             itemTemplate: function(value, item) {
-              return (item.hdl_pickup == 'N') ? ('<p class="center"><i class="fas fa-window-close"></i></p>') : ('<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '">' + '<i class="c-b fas fa-truck"></i>' + '</button>');
+              return (item.hdl_pickup == 'N') ? ('<p class="center"><i class="fas fa-window-close"></i></p>') : ('<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '"  data-toggle="tooltip" data-placement="bottom" title="Enlèvement: utilisez ce suivi si vous voulez que le transporteur fasse un enlèvement de votre colis à une adresse donnée">' + '<i class="c-b fas fa-truck"></i>' + '</button>');
             }
           }
       ]
