@@ -101,11 +101,35 @@ class PartnerController < ApplicationController
   end
 
   def dashboardbyclient
-      load_dashboard(params[:clientid], nil)
 
-      @msgToDisplay = 'Filtre client: '+ params[:clientref]
+      # Save the data when we get them
+      unless params[:clientid].nil? then
+        session[:clientid] = params[:clientid]
+      end
 
-      if params[:clientid].nil?
+      unless params[:clientref].nil? then
+        session[:clientref] = params[:clientref]
+      end
+
+
+
+      filter_client_id = params[:clientid]
+      filter_client_ref = params[:clientref]
+      # Read the data when back
+      if filter_client_id.nil? && !session[:clientid].nil? then
+        filter_client_id = session[:clientid]
+      end
+
+      if filter_client_ref.nil? && !session[:clientref].nil? then
+        filter_client_ref = session[:clientref]
+      end
+
+
+      load_dashboard(filter_client_id, nil)
+
+      @msgToDisplay = 'Filtre client: '+ filter_client_ref
+
+      if filter_client_id.nil?
         flash.now[:danger] = "Problème dans le chargement client. Erreur NDH738"
       end
 
@@ -114,6 +138,28 @@ class PartnerController < ApplicationController
 
 
   def dashboardbymother
+
+    # Save the data when we get them
+    unless params[:motherid].nil? then
+      session[:motherid] = params[:motherid]
+    end
+
+    unless params[:motherref].nil? then
+      session[:motherref] = params[:motherref]
+    end
+
+    filter_mother_id = params[:motherid]
+    filter_mother_ref = params[:motherref]
+
+    # Read the data when back
+    if filter_mother_id.nil? && !session[:motherid].nil? then
+      filter_mother_id = session[:motherid]
+    end
+
+    if filter_mother_ref.nil? && !session[:motherref].nil? then
+      filter_mother_ref = session[:motherref]
+    end
+
     puts "Read Mother id: " + params[:motherid]
     load_dashboard(nil, params[:motherid])
 
@@ -171,6 +217,17 @@ class PartnerController < ApplicationController
   private
 
   def load_dashboard(client_id, mother_id)
+
+    # Save the data when we get them
+    if client_id.nil? then
+      session[:clientid] = nil
+      session[:clientref] = nil
+    end
+
+    if mother_id.nil? then
+      session[:motherid] = nil
+      session[:motherref] = nil
+    end
 
     if !client_id.nil?
       sql_clause = " AND bc.owner_id = " + client_id.to_s

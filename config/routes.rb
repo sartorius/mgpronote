@@ -53,6 +53,9 @@ Rails.application.routes.draw do
   #Route for Partner Controller
   get     '/dashboard',    to: 'partner#dashboard'
   post     '/dashboard',    to: 'partner#dashboard'
+  get     '/dashboardbyclient',    to: 'partner#dashboardbyclient'
+  get     '/dashboardbymother',    to: 'partner#dashboardbymother'
+
   post     '/dashboardbyclient',    to: 'partner#dashboardbyclient'
   post     '/dashboardbymother',    to: 'partner#dashboardbymother'
   get     '/printtwelve',    to: 'partner#printtwelve'
