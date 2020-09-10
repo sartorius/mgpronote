@@ -160,8 +160,8 @@ class PartnerController < ApplicationController
       filter_mother_ref = session[:motherref]
     end
 
-    puts "Read Mother id: " + params[:motherid]
-    load_dashboard(nil, params[:motherid])
+    #puts "Read Mother id: " + params[:motherid]
+    load_dashboard(nil, filter_mother_id)
 
     @msgToDisplay = 'Filtre MOTHER: '+ params[:motherref]
 
