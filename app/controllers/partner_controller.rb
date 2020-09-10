@@ -163,9 +163,9 @@ class PartnerController < ApplicationController
     #puts "Read Mother id: " + params[:motherid]
     load_dashboard(nil, filter_mother_id)
 
-    @msgToDisplay = 'Filtre MOTHER: '+ params[:motherref]
+    @msgToDisplay = 'Filtre MOTHER: '+ filter_mother_ref
 
-    if params[:motherid].nil?
+    if filter_mother_id.nil?
       flash.now[:danger] = "Problème dans le chargement client. Erreur NDH721"
     end
 

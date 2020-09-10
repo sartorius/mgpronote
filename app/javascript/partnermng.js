@@ -177,7 +177,7 @@ function generateCb12PDF(){
       cel1 = cel1 + setCellSize(' - Étape: ' + dataTagToJsonArray[i].step);
     }
     cel1 = cel1 + " - Ce paquet ne vous appartient pas? Contactez contact@partenaire.com";
-    var celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);;
+    var celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString() + ' - Utilisez www.mgsuivi.com', cellSize);;
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, 3 + (offsetY2 + 1)*rowReseter, celRef);
 
 
@@ -360,16 +360,16 @@ function generatePrintedPDF(){
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2margin, celTitleRef);
 
     let celClient = '';
-    celClient = celClient + setCellSize(printArray[i].cliref + ' - ' + printArray[i].bcref);
+    celClient = celClient + setCellSize(printArray[i].bcref);
     let celClientRef = doc.setFontSize(9).splitTextToSize(celClient, cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2CltDetails + offsetY2margin, celClientRef);
 
     let cel1 = '';
-    cel1 = cel1 + setCellSize('Type: ' + (printArray[i].typedorp == 'D' ? 'LIVRAISON_' : 'ENLEVEMENT'));
+    cel1 = cel1 + setCellSize(printArray[i].cliref + ' - Type: ' + (printArray[i].typedorp == 'D' ? 'LIVRAISON_' : 'ENLEVEMENT'));
     cel1 = cel1 + setCellSize(' - Desc: ' + printArray[i].wfdesc);
-    cel1 = cel1 + " - Appartient à: " + $('#part-tech-name').html();
+    cel1 = cel1 + "//" + $('#part-tech-name').html();
     //.setFont('Lucida Console')
-    let celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString(), cellSize);
+    let celRef = doc.setFontSize(6).splitTextToSize(cel1 + ' - Imprimé le ' + currentDate.toLocaleString() + ' - Utilisez www.mgsuivi.com', cellSize);
     doc.text(offsetX + oddOffsetX + barcodeWidth + 2, (offsetY2)*rowReseter + offsetY2Details + offsetY2margin, celRef);
 
     //console.log('Element print read: mbc-' + i );

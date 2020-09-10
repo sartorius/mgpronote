@@ -108,7 +108,7 @@ function mainScanLoaderInCaseOfChange(){
       loadCameraRead(true);
 
       //DEBUG CHANGE keep for test
-      // $('#mg-grp-step-btn').show();
+       $('#mg-grp-step-btn').show();
   }
   else if($('#mg-graph-identifier').text() == 'grpnexterr-gr'){
     // We have an error after trying to group evoluate
@@ -531,9 +531,9 @@ function loadCameraRead(isGrp){
       // 4 pures are OK ***
       // /!\ On NORMAL WAY we handle duplicate without error
 
-      // listOfBCToHandle.push("B0000001Z1K");
-      // listOfBCToHandle.push("B0000001RUJ");
-      // listOfBCToHandle.push("B00000016C7");
+      listOfBCToHandle.push("M0000000B6J");
+      listOfBCToHandle.push("B0000000HI0");
+      listOfBCToHandle.push("B0000000EN9");
       // listOfBCToHandle.push("B0000002958");
 
 
