@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get    '/features', to: 'static_pages#features'
   get    '/accessrightserror', to: 'static_pages#accessrightserror'
   get    '/signup',  to: 'users#new'
+  post    '/signup',  to: 'users#new'
   get    '/editpwd',  to: 'users#editpwd'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'

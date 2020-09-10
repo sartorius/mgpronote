@@ -30,6 +30,7 @@ $main-color: #300055;
 $main-color-light: #F9F5FA;
 $main-color-medium: #6D5D7C;
 $main-color-light-contrast: #D6CADD;
+$placeholder-color: #D7CFE4;
 
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
@@ -378,6 +379,19 @@ p {
 
 .c-b{
 
+}
+
+.classy-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: $placeholder-color;
+  opacity: 1; /* Firefox */
+}
+
+.classy-input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: $placeholder-color;
+}
+
+.classy-input::-ms-input-placeholder { /* Microsoft Edge */
+  color: $placeholder-color;
 }
 
 #no-found-bc{
