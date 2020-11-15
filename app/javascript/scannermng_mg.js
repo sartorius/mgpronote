@@ -531,9 +531,9 @@ function loadCameraRead(isGrp){
       // 4 pures are OK ***
       // /!\ On NORMAL WAY we handle duplicate without error
 
-      listOfBCToHandle.push("M0000000B6J");
-      listOfBCToHandle.push("B0000000HI0");
-      listOfBCToHandle.push("B0000000EN9");
+      //listOfBCToHandle.push("M0000000B6J");
+      //listOfBCToHandle.push("B0000000HI0");
+      //listOfBCToHandle.push("B0000000EN9");
       // listOfBCToHandle.push("B0000002958");
 
 
