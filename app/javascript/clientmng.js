@@ -351,7 +351,7 @@ function runjsClientGrid(){
           align: "left",
           width: 35,
           itemTemplate: function(value, item) {
-            return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Livraison: utilisez ce suivi si vous voulez que le site marchand ou un proche livre au local du transporteur">' + '<i class="c-w fas fa-box"></i>' + '</button>';
+            return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block d-bc-crt-clt" data-order="D" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Livraison: utilisez ce suivi si vous voulez que le site marchand ou un proche livre au local du partenaire">' + '<i class="c-w fas fa-box"></i>' + '</button>';
           }
         }
     ];
@@ -368,7 +368,7 @@ function runjsClientGrid(){
       align: "left",
       width: 20,
       itemTemplate: function(value, item) {
-        return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Enlèvement: utilisez ce suivi si vous voulez que le transporteur fasse un enlèvement de votre colis à une adresse donnée">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
+        return '<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block p-bc-crt-clt" data-order="P" data-email="' + item.email + '" data-name="' + item.name + " " + item.firstname + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Enlèvement: utilisez ce suivi si vous voulez que le partenaire fasse un enlèvement de votre colis à une adresse donnée">' + '<i class="c-b fas fa-truck"></i>' + '</button>';
       }
     };
     responsivefields.push(columnPickUp);

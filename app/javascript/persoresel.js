@@ -491,7 +491,7 @@ function createBarCodeFor(pName, id, o){
   $('#nm-t-cf').html(' choisir notre partenaire ' + pName + ((o == 'D') ? ' pour un suivi <strong>livraison</strong>&nbsp;<i class="fas fa-box"></i>' : ' pour un suivi <strong>enlèvement</strong>&nbsp;<i class="fas fa-truck"></i>'));
 
   if(o == 'D'){
-    $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + arrayWfListToValidate[0].rw_code + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de vous reconnaître.<br>Et le code de destination : <strong>" + arrayWfListToValidate[0].rw_code + "</strong> qui lui permettra de vous l'envoyer.</i>");
+    $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + arrayWfListToValidate[0].rw_code + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au partenaire de vous reconnaître.<br>Et le code de destination : <strong>" + arrayWfListToValidate[0].rw_code + "</strong> qui lui permettra de vous l'envoyer.</i>");
   }
   else{
     $('#nm-t-cf-add').html('');
@@ -502,7 +502,7 @@ function createBarCodeFor(pName, id, o){
     const result = document.querySelector('#opt-wkf');
     //console.log('You like ' + event.target.value);
     if(o == 'D'){
-      $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + event.target.value + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au transporteur de vous reconnaître.<br>Et le code de destination : <strong>" + event.target.value + "</strong> qui lui permettra de vous l'envoyer.</i>");
+      $('#nm-t-cf-add').html("<hr> Vous devez faire livrer à l'adresse suivante:<br><i class='mgs-addr'>" + addr.replace(/@/g, (' - ' + mgsEncodeClientRef(firstname, uid, clientRef) + "/<i class='mgs-addr-wf'>" + event.target.value + '</i><br>')) + "</i><br><br><i class='mgs-addr-note'>Cette adresse contient votre référence client : <strong>" + mgsEncodeClientRef(firstname, uid, clientRef) + "</strong> qui permet au partenaire de vous reconnaître.<br>Et le code de destination : <strong>" + event.target.value + "</strong> qui lui permettra de vous l'envoyer.</i>");
     }
     else{
       $('#nm-t-cf-add').html('');
@@ -624,7 +624,7 @@ function runjsPartnerListGrid(){
             align: "left",
             width: 30,
             itemTemplate: function(value, item) {
-              return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Livraison: utilisez ce suivi si vous voulez que le site marchand ou un proche livre au local du transporteur">' + '<i class="c-w fas fa-box"></i>' + '</button>';
+              return '<button type="submit" id="cltd-' + value + '" class="btn btn-default btn-sm btn-block bc-crt-clt" data-order="D" data-partner_name="' + item.rp_name + '" value="' + value + '" data-toggle="tooltip" data-placement="bottom" title="Livraison: utilisez ce suivi si vous voulez que le site marchand ou un proche livre au local du partenaire">' + '<i class="c-w fas fa-box"></i>' + '</button>';
             }
           },
           {
@@ -634,7 +634,7 @@ function runjsPartnerListGrid(){
             align: "left",
             width: 20,
             itemTemplate: function(value, item) {
-              return (item.hdl_pickup == 'N') ? ('<p class="center"><i class="fas fa-window-close"></i></p>') : ('<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '"  data-toggle="tooltip" data-placement="bottom" title="Enlèvement: utilisez ce suivi si vous voulez que le transporteur fasse un enlèvement de votre colis à une adresse donnée">' + '<i class="c-b fas fa-truck"></i>' + '</button>');
+              return (item.hdl_pickup == 'N') ? ('<p class="center"><i class="fas fa-window-close"></i></p>') : ('<button type="submit" id="cltp-' + value + '" class="btn btn-alternative btn-sm btn-block bc-crt-clt" data-order="P" data-partner_name="' + item.rp_name + " " + '" value="' + value + '"  data-toggle="tooltip" data-placement="bottom" title="Enlèvement: utilisez ce suivi si vous voulez que le partenaire fasse un enlèvement de votre colis à une adresse donnée">' + '<i class="c-b fas fa-truck"></i>' + '</button>');
             }
           }
       ]
