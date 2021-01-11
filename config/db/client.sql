@@ -118,6 +118,9 @@ DECLARE
   var_secure                        SMALLINT;
   var_count_client_created          SMALLINT;
   var_max_bc_clt                    SMALLINT;
+  var_part_type                     CHAR(1);
+
+  var_create_step_id                SMALLINT;
 
   var_result          BIGINT;
   var_result_exists   SMALLINT;
@@ -136,6 +139,7 @@ BEGIN
 
     -- Not in general way
     IF var_partner_id IS NULL THEN
+
       -- The creator is not a partner but client: personal or reseller
       -- For this partner
       SELECT has_poc INTO var_can_crt
@@ -164,16 +168,28 @@ BEGIN
 
     ELSE
       var_can_crt := TRUE;
+
     END IF;
 
     IF var_can_crt = TRUE THEN
 
+      -- Check if the partner is manufacturer
+      -- par_partner_id > the partner on which we create the bc
+      -- var_partner_id > we read if the creator is partner or not
+      SELECT type INTO var_part_type
+        FROM ref_partner rp
+        WHERE rp.id = par_partner_id;
+
+      -- Manufacture is overwritting
+      var_create_step_id := CASE WHEN par_order = 'D' THEN 0 ELSE 3 END;
+      var_create_step_id := CASE WHEN var_part_type = 'M' THEN 16 ELSE var_create_step_id END;
+
       -- Do the insert
       var_secure := FLOOR(random() * 9999 + 1)::INT;
       INSERT INTO barcode (creator_id, owner_id, partner_id, wf_id, secure, secret_code, type_pack, status)
-        VALUES (par_creator_id, par_client_id, par_partner_id, par_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
+        VALUES (par_creator_id, par_client_id, par_partner_id, par_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, var_create_step_id) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, par_wf_id, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, par_wf_id, var_create_step_id, par_creator_id);
 
       var_result := var_bc_id;
     ELSIF var_reach_limit = TRUE THEN
