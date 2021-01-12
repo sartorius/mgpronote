@@ -46,6 +46,7 @@ function mainScanLoaderInCaseOfChange(){
     });
 
     $("#mg-save-step-btn").click(function() {
+        $("#screen-load").show();
         getGeoL();
     });
     getGeoL();
@@ -69,6 +70,7 @@ function mainScanLoaderInCaseOfChange(){
   else if($('#mg-graph-identifier').text() == 'grpsavebc-gr'){
     // Make sure we geolocalize everyone
     $("#mg-save-step-btn").click(function() {
+        $("#screen-load").show();
         getGeoL();
     });
     getGeoL();
