@@ -57,11 +57,14 @@
     <div class="field-md">
       <%= @resultSet[0]['part_name'].to_s %>
     </div>
-    <% if @screenClient %>
+    <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+        <% if @screenClient %>
 
-      <button id="disp-add-info" type="button" class="btn btn-md btn-block btn-default">
-        Gérer information additionnel&nbsp; <i class="fas fa-th"></i>
-      </button>
+          <button id="disp-add-info" type="button" class="btn btn-md btn-block btn-default">
+            Gérer information additionnel&nbsp; <i class="fas fa-th"></i>
+          </button>
+        <% end %>
+    # End of Manufacturer
     <% end %>
     <div class="crt-block">Création</div>
 
@@ -197,38 +200,44 @@
       <%= @resultSet[0]['pickup_phone'].to_s %>
     </div>
     <hr>
-    <% if (@resultSet[0]['tname'].nil?) || ((@resultSet[0]['tname'] == @resultSet[0]['oname']) && (@resultSet[0]['tfirstname'] == @resultSet[0]['ofirstname'])) %>
-      <label>Receptionneur.euse</label><br>
-      <div class="field-md">
-        <i id='alr-rec-name'><%= @resultSet[0]['oname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['ofirstname'].to_s %></i>
-      </div>
-      <label>Téléphone</label><br>
-      <div class="field-md">
-        <i id='alr-rec-phone'><%= @resultSet[0]['ophone'].to_s %></i>
-      </div>
-    <% else %>
-      <label>Receptionneur.euse</label><br>
-      <div class="field-md">
-        <i id='alr-rec-name'><%= @resultSet[0]['tname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['tfirstname'].to_s %></i>
-      </div>
-      <label>Téléphone</label><br>
-      <div class="field-md">
-        <i id='alr-rec-phone'><%= @resultSet[0]['tphone'].to_s %></i>
-      </div>
-    <% end %>
 
-    <% if @screenClient %>
+    <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+          <% if (@resultSet[0]['tname'].nil?) || ((@resultSet[0]['tname'] == @resultSet[0]['oname']) && (@resultSet[0]['tfirstname'] == @resultSet[0]['ofirstname'])) %>
+            <label>Receptionneur.euse</label><br>
+            <div class="field-md">
+              <i id='alr-rec-name'><%= @resultSet[0]['oname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['ofirstname'].to_s %></i>
+            </div>
+            <label>Téléphone</label><br>
+            <div class="field-md">
+              <i id='alr-rec-phone'><%= @resultSet[0]['ophone'].to_s %></i>
+            </div>
+          <% else %>
+            <label>Receptionneur.euse</label><br>
+            <div class="field-md">
+              <i id='alr-rec-name'><%= @resultSet[0]['tname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['tfirstname'].to_s %></i>
+            </div>
+            <label>Téléphone</label><br>
+            <div class="field-md">
+              <i id='alr-rec-phone'><%= @resultSet[0]['tphone'].to_s %></i>
+            </div>
+          <% end %>
 
-      <div class="crt-block">Vérification</div>
-      <div class="t-of-use mgs-med-note-imp">
-        <strong><i class="fas fa-star"></i>&nbsp;Confidentiel</strong>&nbsp;
-        La remise en main propre: il sera demandé la pièce d'identité mais aussi ce code. Il ne doit pas être partagé. Seul vous pouvez le connaître.
-      </div>
-      <label>Code de vérification</label><br>
-      <div class="field-md">
-        <%= @resultSet[0]['secret_code'].to_s %>
-      </div>
 
+          <% if @screenClient %>
+
+            <div class="crt-block">Vérification</div>
+            <div class="t-of-use mgs-med-note-imp">
+              <strong><i class="fas fa-star"></i>&nbsp;Confidentiel</strong>&nbsp;
+              La remise en main propre: il sera demandé la pièce d'identité mais aussi ce code. Il ne doit pas être partagé. Seul vous pouvez le connaître.
+            </div>
+            <label>Code de vérification</label><br>
+            <div class="field-md">
+              <%= @resultSet[0]['secret_code'].to_s %>
+            </div>
+
+          <% end %>
+
+    # End if Manufacturer
     <% end %>
 
 

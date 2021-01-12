@@ -26,7 +26,7 @@ INSERT INTO ref_status (id, step_short, step, description, next_input_needed, ac
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (20, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7, 'Y');
 
 
-INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (6, 'Exemple Manufacture', 'Exemple Manufacture', 'M', 7, '032 89 879 38', 'RAKOTOMANGA@ LOT IIC AKT, ANTANANARIVO 101', 'N', 'Y');
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother, hdl_pickup) VALUES (6, 'Exemple Manufacture', 'Exemple Manufacture', 'M', 7, '032 89 879 38', 'RAKOTOMANGA@ LOT IIC AKT, ANTANANARIVO 101', 'N', 'Y', 'N');
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (8, 6, 7, 'LOT IIC AKT, ANTANANARIVO 101', '032 89 879 38');
 
 -- Tana Manufacture
