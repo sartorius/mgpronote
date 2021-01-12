@@ -124,28 +124,32 @@ function runStatusStat(){
 
 
   var ctx = document.getElementById('statAllWeights');
-  var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: listOfLabelAllWeights,
-          datasets: [{
-              label: 'Poids par status',
-              data: listOfDataAllWeights,
-              backgroundColor: backgroundColorRef,
-              borderColor: borderColorRef,
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
+  if (ctx != null) {
+      // Exists.
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: listOfLabelAllWeights,
+              datasets: [{
+                  label: 'Poids par status',
+                  data: listOfDataAllWeights,
+                  backgroundColor: backgroundColorRef,
+                  borderColor: borderColorRef,
+                  borderWidth: 1
               }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
           }
-      }
-  });
+      });
+  }
+
 
   let nsp1 = '<i class="wght-title-stat">'
   let nsp2 = '</i>&nbsp;<i class="wght-title-stp">kg</i><br>'
@@ -155,7 +159,11 @@ function runStatusStat(){
   for(i=0; i<dataTagAllWeightsToJsonArray.length; i++){
     weightToDisplay = weightToDisplay + '<i class="wght-title-stp">' + dataTagAllWeightsToJsonArray[i].step + '</i>' + ':&nbsp;&nbsp;' + nsp1 + dataTagAllWeightsToJsonArray[i].sum_weight + nsp2
   }
-  $("#weight-blc-stat").html(weightToDisplay);
+
+  if ($("#weight-blc-stat") != null ) {
+    // Exists.
+    $("#weight-blc-stat").html(weightToDisplay);
+  }
 
 
 };

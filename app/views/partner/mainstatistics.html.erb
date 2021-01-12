@@ -29,21 +29,23 @@
   </script>
 <% end %>
 
-<div class="row">
-		<div class="col-lg-6">
-			<div class="center">Poids</div>
-			<hr>
-			<canvas id="statAllWeights"></canvas>
-		</div>
-    <div class="col-lg-6">
-			<div class="center">Statistiques poids</div>
-			<hr>
-			<div id="weight-blc-stat">
-			</div>
+<% unless (@resultSetCompany[0][11].to_s == 'M') %>
+			<div class="row">
+					<div class="col-lg-6">
+						<div class="center">Poids</div>
+						<hr>
+						<canvas id="statAllWeights"></canvas>
+					</div>
+			    <div class="col-lg-6">
+						<div class="center">Statistiques poids</div>
+						<hr>
+						<div id="weight-blc-stat">
+						</div>
 
-    </div>
-</div>
-<br><br><br><br><br>
+			    </div>
+			</div>
+			<br><br><br><br><br>
+<% end %>
 <div class="row">
     <div class="col-lg-6">
 			<div class="center">Volume client</div>
