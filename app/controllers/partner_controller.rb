@@ -107,7 +107,7 @@ class PartnerController < ApplicationController
                         " LEFT JOIN barcode bc ON bc.status = rs.id " +
                         						" AND bc.id = " + params[:checkcbid] +
                         						" LEFT JOIN ref_status bcrs ON bcrs.id = bc.status " +
-                                    " WHERE gs.mode IN ((SELECT mode FROM ref_workflow rw WHERE rw.id = (select wf_id from barcode bc where bc.id = " + params[:checkcbid] + ")), 'A') " +
+                                    " WHERE gs.mode IN ((SELECT CASE WHEN mode IN ('P', 'B') THEN 'T' ELSE mode END FROM ref_workflow rw WHERE rw.id = (select wf_id from barcode bc where bc.id = " + params[:checkcbid] + ")), 'A') " +
                         " order by bc.id, gs.order_id ASC; "
     end
 
