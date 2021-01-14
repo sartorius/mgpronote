@@ -1,20 +1,26 @@
 
+-- NEW
 
+ALTER TABLE ref_workflow ADD COLUMN avg_delivery  SMALLINT      DEFAULT 0;
+UPDATE ref_workflow SET avg_delivery = 20 WHERE ID = 7;
+
+-- UPD all
 
 INSERT INTO ref_workflow (id, code, description, mode) VALUES (7, 'MA', 'Tana manufacture', 'M');
 
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (9, 'Créée', TRUE, 1);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (10, 'Commencée', TRUE, 2);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (11, 'Finalisée', TRUE, 3);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (12, 'Réalisée', TRUE, 4);
+DELETE FROM grp_status WHERE id IN (9, 10, 11, 12);
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (9, 'Créé', TRUE, 1, 'M');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (10, 'Commencé', TRUE, 2, 'M');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (11, 'Finalisé', TRUE, 3, 'M');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (12, 'Réalisé', TRUE, 4, 'M');
 
 
 -- Manufacturer status
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (16, 'Créée', 'Commande créée', 'Votre commande est créée.', 'N', 'P', 9, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (16, 'Créé', 'Commande créé', 'Votre commande est créée.', 'N', 'P', 9, 'Y');
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (17, 'Commen.', 'Commande commencée', 'Un ouvrier a pris en charge votre commande.', 'N', 'P', 10, 'Y');
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (18, 'Finiti.', 'Commande en cours de finition', 'Votre commande est en cours de finition.', 'N', 'P', 11, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (18, 'Finiti.', 'Commande en cours', 'Votre commande est en cours de finition.', 'N', 'P', 11, 'Y');
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (19, 'Réali.', 'Commande réalisée', 'Votre commande est réalisée.', 'N', 'P', 12, 'Y');
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (20, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (20, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 5007, 'Y');
 
 
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother, hdl_pickup) VALUES (6, 'Exemple Manufacture', 'Exemple Manufacture', 'M', 7, '032 89 879 38', 'RAKOTOMANGA@ LOT IIC AKT, ANTANANARIVO 101', 'N', 'Y', 'N');

@@ -140,7 +140,7 @@
   <div class="col-sm-4">
 
     <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
-      # Need to check if Delivery or Pickup
+
             <% if @resultSet[0]['type_pack'] == 'D' %>
 
                 <div class="crt-block">Livraison chez le partenaire</div>
@@ -185,7 +185,17 @@
     <% end %>
 
 
-
+    <% if (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+      <% if (@resultSet[0]['rwf_avg_delivery'].to_i > 0) %>
+        <div class="crt-block">Estimation de disponibilité</div>
+        <div class="t-of-use mgs-med-note">
+          C'est la date à laquelle nous estimons en moyenne que votre commande sera disponible par rapport à sa création. Veuillez considérer que les jours fériés et d'autres évènements imprévisibles peuvent impacter cette prévision.
+        </div>
+        <div class="field-md">
+          <%= @resultSet[0]['estim_delivery'].to_s %> - <%= @resultSet[0]['is_late'].to_i %> jour(s)
+        </div>
+      <% end %>
+    <% end %>
     <div class="crt-block">Récupération</div>
     <div class="t-of-use mgs-med-note">
       Le lieu où aller récupérer.
