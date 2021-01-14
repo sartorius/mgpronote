@@ -192,9 +192,9 @@
           C'est la date à laquelle nous estimons en moyenne que votre commande sera disponible par rapport à sa création. Veuillez considérer que les jours fériés et d'autres évènements imprévisibles peuvent impacter cette prévision.
         </div>
         <div class="field-md">
-          <%= @resultSet[0]['estim_delivery'].to_s %> - <%= @resultSet[0]['is_late'].to_i %> jour(s)
+          <%= @resultSet[0]['estim_delivery'].to_s %> dans <%= @resultSet[0]['is_late'].to_i %> jour(s)
         </div>
-      
+
       <% end %>
 
     <% end %>
