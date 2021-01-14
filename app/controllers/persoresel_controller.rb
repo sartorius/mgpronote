@@ -136,7 +136,7 @@ class PersoreselController < ApplicationController
                 		" bc.to_phone AS tphone, bc.description as bcdescription, bc.ext_ref, bc.secret_code AS secret_code, bc.type_pack AS type_pack, rp.delivery_addr, rpw.pickup_addr, rpw.pickup_phone, rp.name AS part_name,  " +
                     " bc.type_pack, bc.p_name_firstname, bc.p_phone, bc.p_address_note, bc.category, bc.weight_in_gr, bc.wf_id, " +
                     " to_char(bc.create_date, 'DD/MM/YYYY HH24:MI UTC') AS create_date, " +
-                    " rp.hdl_price, bc.price_cts, bc.paid_code,  to_char(bc.create_date + interval '1' day * rwf.avg_delivery, 'DD/MM/YYYY') AS estim_delivery, DATE_PART('day', (bc.create_date + interval '1' day * rwf.avg_delivery) - CURRENT_DATE) AS is_late, " +
+                    " rp.hdl_price, bc.price_cts, bc.paid_code, rwf.avg_delivery AS rwf_avg_delivery,  to_char(bc.create_date + interval '1' day * rwf.avg_delivery, 'DD/MM/YYYY') AS estim_delivery, DATE_PART('day', (bc.create_date + interval '1' day * rwf.avg_delivery) - CURRENT_DATE) AS is_late, " +
                 		" rs.id AS step_id, rs.step, rs.description, rs.next_input_needed, rs.act_owner, rwf.code AS rwf_code, rwf.description  AS rwf_description, rwf.mode AS rwf_mode, " +
                 		" uo.id AS oid, uo.name AS oname, uo.client_ref AS oclient_ref, uo.firstname AS ofirstname, uo.email AS oemail, uo.phone AS ophone, " +
                 		" uc.name AS cname, uc.firstname AS cfirstname, uc.id AS cid, uc.client_ref AS cclient_ref, uc.email AS cemail, uc.phone AS cphone " +
