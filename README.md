@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # mgpronote
 =======
 # MGSuivi based on Ruby on Rails Tutorial sample application
@@ -79,4 +78,3 @@ In case of issue
 ```
 $ heroku logs --tails
 ```
->>>>>>> fea9fd5371f55e59fa4ef3ad8661002fc8a537eb

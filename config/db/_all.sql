@@ -30,6 +30,7 @@ CREATE TABLE ref_partner (
   -- C for Carrier
   -- P for Personal
   -- R for Resell
+  -- M for Manufacture
   -- O for Other
   type              CHAR(1)         DEFAULT 'P',
   website           VARCHAR(500),
@@ -53,15 +54,17 @@ CREATE TABLE ref_partner (
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- These are example of Carrier
+
 INSERT INTO ref_partner (id, name, description) VALUES (0, 'Particulier', 'Client particulier, je suis le consommateur final du produit');
 INSERT INTO ref_partner (id, name, description, type) VALUES (1, 'Revendeur', 'Revendeur, je revends les produits que j''ai commandé', 'R');
 
+-- type C: Carrier
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_pickup) VALUES (2, 'Dummy Transporteur', 'Exemple de transporteur', 'C', 1, '0624788912', 'DUMMY Transport@ 48 RUE DE LA BOETIE, 95078 Roissy Z.I', 'N');
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (3, 'Test 3 Fret Service', 'Test 3 Fret Service', 'C', 2, '0664066109', 'Test Trois Fret Service@ 13 AVENUE ALBERT EINSTEIN, 93150 LE BLANC MESNIL', 'Y', 'Y');
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (4, 'Test 4 Transport', 'Test Quatre', 'C', 2, '0664078109', 'Test Quatre Transport@ 12 RUE DES BRINS, 93170 BAGNOLET', 'Y', 'Y');
-
 INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother) VALUES (5, 'Mada Groupage France', 'Mada Groupage France', 'C', 1, '06 19 24 13 08', 'RAKOTOMANGA@ 22 AVENUE MAURICE THOREZ, 94200 IVRY SUR SEINE', 'N', 'Y');
+
+INSERT INTO ref_partner (id, name, description, type, main_wf_id, to_phone, delivery_addr, hdl_price, hdl_mother, hdl_pickup) VALUES (6, 'Exemple Manufacture', 'Exemple Manufacture', 'M', 1, '032 89 879 38', 'RAKOTOMANGA@ LOT IIC AKT, ANTANANARIVO 101', 'N', 'Y', 'N');
 
 
 CREATE TABLE ref_partner_workflow (
@@ -82,6 +85,8 @@ INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_pho
 INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (6, 5, 1, '87 TER RUE RAINANDRIAMAMPIANDRY FARAVOHITRA TANA 101', '034 81 450 68');
 -- We wait to handle the boat
 -- INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (7, 5, 6, 'BOX 762, CENTRE RIVIERA MALAZA TANA 101', '0326711567');
+
+INSERT INTO ref_partner_workflow (id, partner_id, wf_id, pickup_addr, pickup_phone) VALUES (8, 6, 1, 'LOT IIC AKT, ANTANANARIVO 101', '032 89 879 38');
 -- Transition ref
 CREATE TABLE ref_status (
   id                  SMALLINT      PRIMARY KEY,
@@ -116,8 +121,8 @@ M000055Y2/M00004YAK
 -- Simple hard coded for existing users
 UPDATE users SET client_ref = (FLOOR(random() * 999 + 1)::INT);
 
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-2, 'Disso.', 'Dissocié', 'Gestion terminée.', 'N', 'P', TRUE, 8);
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-1, 'Remis', 'Remis au client', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE, 8);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-2, 'Disso.', 'Dissocié', 'Gestion terminée.', 'N', 'P', TRUE, 5008);
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id) VALUES (-1, 'Remis', 'Remis au client', 'La gestion de ce paquet est terminée.', 'N', 'P', TRUE, 5008);
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (0, 'A. Livr', 'Attente de livraison', 'Créé, attente de livraison.', 'Y', 'P', 1);
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id) VALUES (3, 'A. Adre', 'Attente de saisie adresse', 'Créé, l''adresse enlèvement doit être saisie.', 'Y', 'P', 1);
 
@@ -133,7 +138,7 @@ INSERT INTO ref_status (id, step_short, step, description, next_input_needed, ac
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (11, 'Ft. Exp', 'Déposé frêt Express', 'Le paquet a été déposé en zone de frêt Express.', 'N', 'P', 5, 'Y');
 
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (9, 'Tana', 'Arrivé à Tana', 'Le paquet est arrivé à Tana. Il passe les formalités.', 'N', 'P', 6, 'Y');
-INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (10, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 7, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (10, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 5007, 'Y');
 
 
 
@@ -145,6 +150,14 @@ INSERT INTO ref_status (id, step_short, step, description, next_input_needed, ac
 
 
 INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (15, 'Tamatv.', 'Arrivé à Tamatave', 'Le paquet est arrivé à Tamatave. Il passe les formalités.', 'N', 'P', 6, 'Y');
+
+-- Manufacturer status
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (16, 'Créé', 'Commande créé', 'Votre commande est créée.', 'N', 'P', 9, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (17, 'Commen.', 'Commande commencée', 'Un ouvrier a pris en charge votre commande.', 'N', 'P', 10, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (18, 'Finiti.', 'Commande en cours', 'Votre commande est en cours de finition.', 'N', 'P', 11, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, grp_id, handle_mother) VALUES (19, 'Réali.', 'Commande réalisée', 'Votre commande est réalisée.', 'N', 'P', 12, 'Y');
+INSERT INTO ref_status (id, step_short, step, description, next_input_needed, act_owner, need_to_notify, grp_id, handle_mother) VALUES (20, 'Dispo.', 'Disponible Client', 'Le client peut venir récupérer son paquet', 'N', 'P', TRUE, 5007, 'Y');
+
 
 -- Particular case of pickup but it is as well created from screen
 UPDATE ref_status SET need_to_notify = FALSE;
@@ -159,17 +172,30 @@ CREATE TABLE grp_status (
   id                  SMALLINT      PRIMARY KEY,
   order_id            SMALLINT      NOT NULL,
   common              BOOLEAN       DEFAULT TRUE,
-  grp_step            VARCHAR(50)   NOT NULL
+  grp_step            VARCHAR(50)   NOT NULL,
+  -- Transport T
+  -- Manufacture M
+  -- All A
+  mode                CHAR(1)       DEFAULT 'M'
 );
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (1, 'Réception', TRUE, 1);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (2, 'Enlèvement', FALSE, 2);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (3, 'Local transporteur', TRUE, 3);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (4, 'Pesée', TRUE, 4);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (5, 'Dépot frêt', TRUE, 5);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (6, 'Arrivée au pays', TRUE, 6);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (7, 'Disponible client', TRUE, 7);
-INSERT INTO grp_status (id, grp_step, common, order_id) VALUES (8, 'Remis', TRUE, 8);
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (1, 'Réception', TRUE, 1, 'T');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (2, 'Enlèvement', FALSE, 2, 'T');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (3, 'Local transporteur', TRUE, 3, 'T');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (4, 'Pesée', TRUE, 4, 'T');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (5, 'Dépot frêt', TRUE, 5, 'T');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (6, 'Arrivée au pays', TRUE, 6, 'T');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (5007, 'Disponible client', TRUE, 7, 'A');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (5008, 'Remis', TRUE, 8, 'A');
 
+DELETE FROM grp_status WHERE id IN (9, 10, 11, 12);
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (9, 'Créé', TRUE, 1, 'M');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (10, 'Commencé', TRUE, 2, 'M');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (11, 'Finalisé', TRUE, 3, 'M');
+INSERT INTO grp_status (id, grp_step, common, order_id, mode) VALUES (12, 'Réalisé', TRUE, 4, 'M');
+
+
+update ref_status rs set grp_id = 5007 where rs.grp_id = 7;
+update ref_status rs set grp_id = 5008 where rs.grp_id = 8;
 -- END GRP Workflow
 
 
@@ -180,7 +206,9 @@ CREATE TABLE ref_workflow (
   -- P for plane
   -- B for boat
   -- R for road
+  -- M for manufacture
   mode          CHAR(1)       NOT NULL,
+  avg_delivery  SMALLINT      DEFAULT 0,
   create_date   TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -194,6 +222,9 @@ INSERT INTO ref_workflow (id, code, description, mode) VALUES (2, 'PA', 'Paris P
 INSERT INTO ref_workflow (id, code, description, mode) VALUES (3, 'PM', 'Paris Pointe Noire maritime', 'B');
 INSERT INTO ref_workflow (id, code, description, mode) VALUES (4, 'BA', 'Paris Brazzaville aérien', 'P');
 INSERT INTO ref_workflow (id, code, description, mode) VALUES (5, 'BM', 'Paris Brazzaville maritime', 'B');
+
+
+INSERT INTO ref_workflow (id, code, description, mode, avg_delivery) VALUES (7, 'MA', 'Tana manufacture', 'M', 20);
 
 
 CREATE TABLE mod_workflow (
@@ -287,6 +318,12 @@ INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 13, 10);
 INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (5, 10, -1);
 
 
+-- Tana Manufacture
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (7, 16, 17);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (7, 17, 18);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (7, 18, 19);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (7, 19, 20);
+INSERT INTO mod_workflow (wkf_id, start_id, end_id) VALUES (7, 20, -1);
 
 CREATE TABLE barcode(
   id                    BIGSERIAL      PRIMARY KEY,
@@ -879,7 +916,7 @@ CREATE TABLE client_partner_xref (
   PRIMARY KEY (client_id, partner_id)
 );
 
-
+/*
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 2);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 2);
@@ -892,7 +929,7 @@ INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM 
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@protonmail.com'), 5);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'mgsuivi@gmail.com'), 5);
 INSERT INTO client_partner_xref (client_id, partner_id) VALUES ((SELECT id FROM users WHERE email = 'tapotyetsesamis@gmail.com'), 5);
-
+*/
 
 -- UPDATE users SET name = 'Delamare' WHERE email = 'tsiky.d@gmail.com';
 -- UPDATE users SET name = 'Mada techno mafy' WHERE email = 'njara.h@gmail.com';
@@ -989,6 +1026,9 @@ DECLARE
   var_secure                        SMALLINT;
   var_count_client_created          SMALLINT;
   var_max_bc_clt                    SMALLINT;
+  var_part_type                     CHAR(1);
+
+  var_create_step_id                SMALLINT;
 
   var_result          BIGINT;
   var_result_exists   SMALLINT;
@@ -1007,6 +1047,7 @@ BEGIN
 
     -- Not in general way
     IF var_partner_id IS NULL THEN
+
       -- The creator is not a partner but client: personal or reseller
       -- For this partner
       SELECT has_poc INTO var_can_crt
@@ -1035,16 +1076,28 @@ BEGIN
 
     ELSE
       var_can_crt := TRUE;
+
     END IF;
 
     IF var_can_crt = TRUE THEN
 
+      -- Check if the partner is manufacturer
+      -- par_partner_id > the partner on which we create the bc
+      -- var_partner_id > we read if the creator is partner or not
+      SELECT type INTO var_part_type
+        FROM ref_partner rp
+        WHERE rp.id = par_partner_id;
+
+      -- Manufacture is overwritting
+      var_create_step_id := CASE WHEN par_order = 'D' THEN 0 ELSE 3 END;
+      var_create_step_id := CASE WHEN var_part_type = 'M' THEN 16 ELSE var_create_step_id END;
+
       -- Do the insert
       var_secure := FLOOR(random() * 9999 + 1)::INT;
       INSERT INTO barcode (creator_id, owner_id, partner_id, wf_id, secure, secret_code, type_pack, status)
-        VALUES (par_creator_id, par_client_id, par_partner_id, par_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END) RETURNING id INTO  var_bc_id;
+        VALUES (par_creator_id, par_client_id, par_partner_id, par_wf_id, var_secure, FLOOR(random() * 9999 + 1)::INT, par_order, var_create_step_id) RETURNING id INTO  var_bc_id;
       -- Need to insert the first step Nouveau
-      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, par_wf_id, CASE WHEN par_order = 'D' THEN 0 ELSE 3 END, par_creator_id);
+      INSERT INTO wk_tag (bc_id, mwkf_id, current_step_id, user_id) VALUES (var_bc_id, par_wf_id, var_create_step_id, par_creator_id);
 
       var_result := var_bc_id;
     ELSIF var_reach_limit = TRUE THEN
