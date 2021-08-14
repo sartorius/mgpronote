@@ -1,0 +1,127 @@
+package com.example.app;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.webkit.PermissionRequest;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+
+import android.Manifest;
+import android.webkit.WebViewClient;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class MainActivity extends Activity {
+
+    public static final String TAG = "MG Suivi";
+
+    private WebView mWebView;
+
+    @Override
+    @SuppressLint("SetJavaScriptEnabled")
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Log.e(TAG, "start");
+        setContentView(R.layout.activity_main);
+        mWebView = findViewById(R.id.activity_main_webview);
+        WebSettings webSettings = mWebView.getSettings();
+
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        //mWebView.setWebViewClient(new MyWebViewClient());
+        // Thit to avoid chrome in android
+        mWebView.setWebViewClient(new WebViewClient());
+
+
+        Log.e(TAG, "start 1");
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+
+
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                //Log.d('mgs', "onPermissionRequest");
+                Log.e(TAG, "start A1");
+                Log.e(TAG, "onPermissionRequest");
+                System.out.println(">>>>" + "onPermissionRequest");
+
+
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @TargetApi(Build.VERSION_CODES.M)
+                    @Override
+                    public void run() {
+                        Log.e(TAG, "start A2");
+                        Log.e(TAG, request.getOrigin().toString());
+                        System.out.println(">>>>" + request.getOrigin().toString());
+                        if(request.getOrigin().toString().equals("file:///")) {
+                            Log.e(TAG, "GRANTED");
+                            System.out.println(">>>> GRANTED");
+                            request.grant(request.getResources());
+                        } else {
+                            Log.e(TAG, "DENIED");
+                            System.out.println(">>>> DENIED");
+                            request.deny();
+                        }
+                    }
+                });
+            }
+
+
+        });
+
+        Log.e(TAG, "start 2");
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+            // Some method can come only after API 23
+            @TargetApi(Build.VERSION_CODES.M)
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                Log.e(TAG, "start 3");
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Log.e(TAG, "Greater than Lollipop");
+
+                    int hasCameraPermission = checkSelfPermission(Manifest.permission.CAMERA);
+
+                    List<String> permissions = new ArrayList<String>();
+
+                    if (hasCameraPermission != PackageManager.PERMISSION_GRANTED) {
+                        permissions.add(Manifest.permission.CAMERA);
+
+                    }
+
+                    if (!permissions.isEmpty()) {
+                        requestPermissions(permissions.toArray(new String[permissions.size()]), 111);
+                    }
+                    request.grant(request.getResources());
+                }
+            }
+
+        });
+
+        // REMOTE RESOURCE
+        mWebView.loadUrl("https://www.mgsuivi.com");
+
+        // LOCAL RESOURCE
+        // mWebView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+}

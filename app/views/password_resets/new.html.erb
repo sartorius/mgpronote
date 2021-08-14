@@ -1,0 +1,23 @@
+<% provide(:title, "Mot de passe oublié") %>
+<h1>Mot de passe oublié</h1>
+<br><br>
+<div class="row">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
+    <div class="crt-block">Mot de passe</div>
+
+    <div class="t-of-use mgs-med-note">
+      Un email va vous être envoyé. Il contient un lui qui vous permet de changer votre mot de passe.
+    </div>
+    <%= form_with(url: password_resets_path, scope: :password_reset,
+                  local: true) do |f| %>
+      <%= f.email_field :email, class: 'form-control', placeholder: "Email" %>
+
+      <%= f.submit "Valider", class: "btn btn-default" %>
+    <% end %>
+  </div>
+  <div class="col-md-3">
+  </div>
+</div>
+<br><br><br><br><br>

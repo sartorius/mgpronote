@@ -1,0 +1,26 @@
+<% provide(:title, "Edit user") %>
+<div id="mg-graph-identifier">editpwd-gr</div>
+
+<div class="row usr-block">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_with(model: @user, local: true) do |f| %>
+      <%= render 'shared/error_messages' %>
+
+      <div class="crt-block">Mot de passe à modifier</div>
+      <br>
+
+      <label>Mot de passe <span id="ck-pwd" class="ctr-ck-grp">(min. 7 caractères)</span></label>
+      <%= f.password_field :password, class: 'form-control crt-fill-form', placeholder: "Mot de passe", id: 'crt-pwd' %>
+
+      <label>Confirmation du mot de passe <span id="ck-cpwd" class="ctr-ck-grp"> - obligatoire</span></label>
+      <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
+
+      <%= f.submit "Sauvergarder le nouveau mot de passe", class: "btn btn-default btn-block", id: "editpwd-submit" %>
+    <% end %>
+
+    <div class="pos-center blc-cancel">
+      <a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="far fa-times-circle"></i></a>
+    </div>
+
+  </div>
+</div>

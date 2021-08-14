@@ -1,0 +1,92 @@
+<% provide(:title, "Liste partenaire") %>
+<div id="mg-graph-identifier">persom-gr</div>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+		// We load the workflows Here @resultSetWorkflow
+		var dataTagToJsonWorkflow = '<%= @resultSetWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+    dataTagToJsonWorkflow = dataTagToJsonWorkflow.replace(/&quot;/g,"\"");
+    var dataTagToJsonWorkflowArray = JSON.parse(dataTagToJsonWorkflow);
+
+
+		for(i=0; i<dataTagToJsonArray.length; i++){
+			// Handle here the left join count total
+			if(dataTagToJsonArray[i].bc_partner_id == null){
+				dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
+			}
+
+			let arrayWfList = new Array();
+			for(k=0; k<dataTagToJsonWorkflowArray.length; k++){
+				if(dataTagToJsonWorkflowArray[k].rpw_partner_id == dataTagToJsonArray[i].cpx_partner_id){
+					let wf = {
+						//rw.id AS rw_id, rw.code AS rw_code, rw.description AS rw_description, rpw.partner_id AS rpw_partner_id
+						rw_id: dataTagToJsonWorkflowArray[k].rw_id,
+						rw_code: dataTagToJsonWorkflowArray[k].rw_code,
+						rw_description: dataTagToJsonWorkflowArray[k].rw_description,
+						rpw_partner_id: dataTagToJsonArray[i].cpx_partner_id
+					};
+					arrayWfList.push(wf);
+				}
+			}
+			dataTagToJsonArray[i].workflow_list = arrayWfList;
+		}
+  </script>
+<% end %>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Liste des partenaires</h1>
+    <h2>chez qui vous pouvez créer un suivi</h2>
+  </div>
+</div>
+
+<%= render 'layouts/mgs_modal' %>
+
+<input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
+
+<div class="mgs-note mgs-note-mrg-grid">
+  <i id="optim-big-scr">Cet écran est optimisé pour une utilisation ordinateur ou tablette.</i>
+</div>
+<% if @emptyResultSet %>
+  <div class="col-sm-12 no-data">
+		<i class="fas fa-box-open"></i>&nbsp;
+    Désolé, Aucun partenaire partenaire n'a encore ajouté votre compte.<br>Veuillez contacter le partenaire avec qui vous êtes en contact pour qu'il vous ajoute.
+
+  </div>
+<% end %>
+
+<% if !@emptyResultSet %>
+	<div class="row">
+	  <div class="col-sm-12">
+	    <div id="jsGridPartnerList">
+	    </div>
+	  </div>
+	</div>
+	<br><br>
+	<div class="row">
+	  <div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-sm-12 mgs-med-note">
+			<hr>
+			Le &nbsp; <i class="c-w fas fa-box"></i> &nbsp;indique que vous créez un suivi pour une livraison au local du partenaire.<br>
+			Le &nbsp; <i class="c-b fas fa-truck"></i> &nbsp;indique que vous créez un suivi pour un enlèvement chez un de vos contact particuliers. <i class="fas fa-window-close"></i> si le partenaire ne propose pas l'enlèvement.<br>
+			La &nbsp; <i class="far fa-list-alt"></i> &nbsp;indique le nombre de suivi que vous avez chez ce partenaire actuellement.<br>
+		</div>
+	</div>
+<% end %>

@@ -1,0 +1,16 @@
+<h1>MG Suivi</h1>
+
+<p>Bonjour <%= @user.name %>&nbsp;<%= @user.firstname %>,</p>
+
+<p>
+Bienvenue sur MGSuivi !<br>Cliquez sur le lien suivant pour profiter du meilleur de votre suivi:
+</p>
+
+<%= link_to "Activer", edit_account_activation_url(@user.activation_token,
+                                                    email: @user.email) %>
+<hr>
+Si ce lien ne fonctionne pas, copier collez le dans votre navigateur :
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>
+<hr>
+Merci de nous avoir choisi.<br>
+Notre équipe est là pour vous aider à avoir la meilleur expérience de suivi possible.

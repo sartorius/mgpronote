@@ -1,0 +1,60 @@
+<% provide(:title, "Check") %>
+<div id="mg-graph-identifier">checktag-gr</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+<% if (@resultSet.nil?) || (@resultSet.empty?) %>
+	//Error
+	<script>
+		// Making them empty will trigger not found error
+		var dataTagToJsonArray = new Array();
+		var dataTagToJsonParamArray = new Array();
+	</script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+
+    var dataTagToJsonParam = '<%= @resultSetParam.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonParam = dataTagToJsonParam.replace(/&quot;/g,"\"");
+    var dataTagToJsonParamArray = JSON.parse(dataTagToJsonParam);
+  </script>
+<% end %>
+<div>
+  <div class="row">
+    <div class="col-lg-4">
+    </div>
+    <div class="col-lg-4">
+			<div class="mgs-note">
+				Code barre lu
+			</div>
+			<div class="mgs-read-bc">
+				<p id="readBC" class="monosp-ft-subtitle">
+					<%= @cbToCheck.to_s %>
+				</p>
+			</div>
+
+      <div id="block-of-tag">
+      </div>
+
+
+			<% if @checkBCFromHome.nil? %>
+				<div class="pos-center blc-cancel">
+					<a href="/checkbc" id="btn-cnl-nstp" class="btn btn-default btn-lg btn-block">Vérifier un autre</a>
+				</div>
+			<% end %>
+			<div class="pos-center blc-cancel">
+				<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-md btn-block">Retour</a>
+			</div>
+			<div id="no-found-bc" class="col-lg-12 pos-center img-ill">
+				<%= image_tag("map404400x400.png", alt: "Rails logo", width: "150") %>
+			</div>
+    </div>
+    <div class="col-lg-4">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,176 @@
+<% provide(:title, "Grouper next") %>
+<div id="mg-graph-identifier">grpnexterr-gr</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<div>
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+			<div class="mgs-read-bc">
+				<h1>
+					Grouper impossible
+				</h1>
+			</div>
+      <div class="crt-block">Règles à respecter</div>
+      <div class="t-of-use mgs-med-note-imp">
+        Pour évoluer ensemble, ces codes barres doivent <strong>tous</strong> être :<br>
+        <strong>Reconnus, sans incident en cours, de même status et de même workflow&nbsp;<i class="fas fa-skull-crossbones"></i></strong>
+        <hr>
+        <% if @need_to_feedback_incident_exists %>
+          <br>Les codes barres ci-dessous ont un incident <i class="fas fa-info-circle"></i>
+        <% end %>
+
+        <% if @need_to_feedback_next_weight %>
+          <br>La prochaine étape obligatoire est la <strong>pesée</strong>. Cette action ne peut être groupée. <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_next_terminated %>
+          <br>La prochaine étape est la <strong>remise au client</strong>. Cette action ne peut être groupée. <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_mother_not_found %>
+          <br>Une référence mother <strong>est introuvable</strong>. Veuillez scanner à nouveau <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_next_not_mother %>
+          <br>La prochaine étape possible ne peut être gérée <strong>par une référence mother</strong>. Vous devez les scannez séparément <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_more_than_one_mother %>
+          <br>Vous ne pouvez associer que sur <strong>une seule référence mother</strong> <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_unexpected_mother %>
+          <br>Vous ne pouvez pas évoluer séparément des références <strong>qui ont déjà une mother</strong> <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if @need_to_feedback_mother_not_same_wf %>
+          <br>La référence mother et les code barres filles <strong>ne sont pas de même workflow</strong>. Vous ne pouvez associer une référence mother qu'avec les codes barres de même types <i class="fas fa-info-circle"></i>
+        <% end %>
+
+				<% if (@need_to_feedback_more_than_one_mother) || (@need_to_feedback_more_than_one_mother) %>
+					<br>
+				  <% @list_mother_array_raw.each do |mother| %>
+				  <div class="row">
+				        <div class="col-lg-3">
+				        </div>
+				        <div class="col-lg-6">
+				          <div class="mgs-read-bc">
+				            <p class="monosp-ft-subtitle">
+				              <%= mother.to_s %>
+				            </p>
+				          </div>
+				          <hr>
+				        </div>
+				        <div class="col-lg-3">
+				        </div>
+				  </div>
+				  <% end %>
+
+        <% end %>
+      </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+
+
+    <% i = 0 %>
+    <% @debugResultSetCheckOne.each do |result| %>
+    <div class="row">
+          <div class="col-lg-3">
+          </div>
+          <div class="col-lg-6">
+      			<div class="mgs-read-bc">
+      				<p class="monosp-ft-subtitle">
+                <span id="grp-bc-<%= i.to_s %>">Code barre</span>
+                <span id="id-grp-res-<%= i.to_s %>" class="hid-display"><%= "#{result['id']}" %></span>
+                <span id="sec-grp-res-<%= i.to_s %>" class="hid-display"><%= "#{result['secure']}" %></span>
+      				</p>
+      			</div>
+
+            <strong>Status actuel: </strong><%= "#{result['step']}" %><br>
+            <strong>Workflow: </strong><%= "#{result['rw_code']}" %><br>
+            <strong>MOTHER: </strong><%= "#{result['bc_mother_ref']}" %><br>
+
+            <% if "#{result['under_incident']}" == 'false' %>
+              <strong>Incident en cours: </strong>Non<br>
+            <% else %>
+              <strong>Incident en cours: <i class="mgs-red">Oui</i></strong><br>
+            <% end %>
+
+
+            <% unless "#{result['ext_ref']}" == '' %>
+              <strong>Reférence externe: </strong><i class="monosp-ft-nc"><%= "#{result['ext_ref']}" %></i><br>
+            <% end %>
+            <hr>
+          </div>
+          <div class="col-lg-3">
+          </div>
+    </div>
+      <% i = i + 1 %>
+    <% end %>
+    <span id="max-err-grp" class="hid-display"><%= i.to_s %></span>
+</div>
+
+
+<% if (!@pureResultSetNotFound.nil?) || (!@extResultSetNotFound.nil?) %>
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+      <div class="crt-block">Non reconnu&nbsp;<i class="fas fa-barcode"></i></div>
+      <div class="t-of-use mgs-med-note-imp">
+        Les codes barres suivants sont manquants ou non reconnus :<br>
+        <hr>
+      </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+
+  <% i = 0 %>
+  <% @pureResultSetNotFound.each do |result| %>
+  <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6">
+          <div class="mgs-read-bc">
+            <p class="monosp-ft-subtitle">
+              <span id="grp-nf-pure-bc-<%= i.to_s %>">Code barre</span>
+              <span id="id-grp-nf-pure-res-<%= i.to_s %>" class="hid-display"><%= "#{result['id']}" %></span>
+              <span id="sec-grp-nf-pure-res-<%= i.to_s %>" class="hid-display"><%= "#{result['secure']}" %></span>
+            </p>
+          </div>
+          <hr>
+        </div>
+        <div class="col-lg-3">
+        </div>
+  </div>
+    <% i = i + 1 %>
+  <% end %>
+  <span id="max-nf-err-grp" class="hid-display"><%= i.to_s %></span>
+
+
+
+  <% @extResultSetNotFound.each do |result| %>
+  <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6">
+          <div class="mgs-read-bc">
+            <p class="monosp-ft-subtitle">
+              <span><%= "#{result['ext_ref']}" %></span>
+            </p>
+          </div>
+          <hr>
+        </div>
+        <div class="col-lg-3">
+        </div>
+  </div>
+  <% end %>
+
+<% end %>

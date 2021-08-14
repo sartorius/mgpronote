@@ -1,0 +1,77 @@
+<% provide(:title, "Suivi") %>
+<div id="mg-graph-identifier">pereone-gr</div>
+<%= render 'partner/dirtyqrcode' %>
+<% if @resultSet.nil? %>
+	//Error TDY789
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+		var dataTagToJsonStepWF = '<%= @resultSetStepWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonStepWF = dataTagToJsonStepWF.replace(/&quot;/g,"\"");
+    var dataTagToJsonStepWFArray = JSON.parse(dataTagToJsonStepWF);
+
+  </script>
+<% end %>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<div class="row mgs-title">
+	<div class="col-lg-4 center mid-blc">
+			<div id="mbc-0" class="qr-one qr-client">
+			</div>
+			<div class="mid-blc qr-clt-txt">
+				Le qr-code pour récupérer votre colis.
+			</div>
+	</div>
+	<div class="col-lg-1">
+	</div>
+  <div class="col-lg-6">
+		<div class="monosp-ft-title">
+    	<span id="bc-seeone">Suivi</span>
+		</div>
+    <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
+    <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
+		<div class="monosp-ft-title-mini">
+				<span>
+			    appartenant à <i id="cli-ref"><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></i>
+			  </span>
+		</div>
+  </div>
+	<div class="col-lg-1">
+	</div>
+</div>
+
+<%= render 'persoresel/displayworkflow' %>
+<div class="mgs-note mgs-note-mrg-grid">
+  <i id="optim-big-scr">Cet écran est optimisé pour une utilisation ordinateur ou tablette.</i>
+</div>
+
+<div id="return-list-mobile" class="step-no-disp">
+	<a class="cancel-btn btn btn-default-light btn-sm btn-block" href="/persoreseldash"><i class="fas fa-arrow-circle-left"></i>&nbsp;Retour mes suivis</a>
+</div>
+
+<% if (@resultSet[0]['step_id'] == 3) && (@resultSet[0]['type_pack'] == 'P') %>
+    <div class="row">
+      <div class="col-sm-12">
+				<%# Everytime I am in pickup needed this is triggered %>
+				<%= render 'persoresel/wfrtopickup' %>
+      </div>
+    </div>
+<% end %>
+
+
+<div id="add-inf-blc">
+	<%= render 'persoresel/additionnalinformation' %>
+</div>
+
+<%= render 'persoresel/mainseeone' %>

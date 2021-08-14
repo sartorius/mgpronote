@@ -1,0 +1,71 @@
+<% provide(:title, "Imprimer 12") %>
+<%= render 'partner/partnerutils' %>
+<div id="mg-graph-identifier">parprint12-gr</div>
+<%= render 'partner/dirtyjspdf' %>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+<% end %>
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Imprimer 12</h1>
+  </div>
+</div>
+
+<div class="grid-contener">
+    <div class="row">
+      <div class="col-sm-12 btn-print">
+          <button id="btn-print-12" class="btn btn-default btn-lg btn-print">Imprimer ces codes barres</button>
+      </div>
+    </div>
+    <div class="row">
+      <% if @emptyResultSet %>
+        <div class="col-sm-12 no-data">
+          Désolé, nous n'avons pas trouvé de suivi &nbsp; <i class="fas fa-inbox"></i>
+        </div>
+      <% end %>
+        <% i = 0 %>
+        <% @resultSet.each do |result| %>
+							<% if i % 2 == 0 %>
+								<div class="row">
+							<% end %>
+			              <div class="col-sm-4 bc-block-print img-center">
+			                  <div>
+			                    <img id="mbc-<%= i %>">
+			                  </div>
+										</div>
+										<div class="col-sm-2 bc-block-print-note">
+			                  <%= "#{result['id']}" %> //
+			                  <span id="item-bc-<%= i %>"></span><br>
+			                  <%= "#{result['step']}" %>
+			                  <%= "#{result['bsecret_code']}" %> <br>
+			                  <%= "#{result['dest_email']}" %> <br>
+			              </div>
+							<% if i % 2 == 1 %>
+								</div>
+							<% end %>
+              <% i = i + 1 %>
+        <% end %>
+      </div>
+			<div class="row">
+				<div class="col-sm-12 btn-print">
+	      	Nous avons trouvé <span id="nb-lines"><%= i %></span> codes barres.
+				</div>
+			</div>
+
+	    <div class="row">
+				<div class="col-sm-12 btn-print">
+						<a href="/printnotrack" id="btn-print-12-no-track" class="btn btn-default btn-sm btn-print">Imprimer 12 codes barres non suivi</a>
+	      </div>
+	    </div>
+</div>

@@ -1,0 +1,90 @@
+<% provide(:title, "Grouper next") %>
+<div id="mg-graph-identifier">grpsavebc-gr</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+<% if @resultSet.nil? %>
+	//Error
+<% else %>
+  <script>
+    var dataTagToJson = "<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>";
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+    var dataTagToJsonPure = "<%= @list_pure_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+    var dataTagToJsonArrayPure = JSON.parse(dataTagToJsonPure);
+
+    var dataTagToJsonExt = "<%= @list_ext_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+    var dataTagToJsonArrayExt = JSON.parse(dataTagToJsonExt);
+
+  </script>
+<% end %>
+
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <div class="mgs-note">
+          Les <span class="grp-read-nb"></span> codes barres suivants ont été correctement lu
+        </div>
+        <div id="list-of-read-bc">
+        </div>
+        <div>
+        </div>
+        <hr>
+
+				<div id="no-next-step" class="t-of-use mgs-med-note-imp">
+					Navré. Aucune des prochaines étapes ci-dessous ne peut être effectuée par le partenaire. Contactez le propriétaire du code barre pour qu'il passe à la prochaine étape. Si vous pensez qu'il s'agit d'une erreur, contactez nous avec le code UQSK76.
+				</div>
+
+        <%-# Removed the block incident comment -%>
+
+        <form action="/grpsave_step" method="post">
+          <div class="form-group" id="blc-step-ctrl">
+            <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer pour les <span class="grp-read-nb"></span> codes barres</label>
+            <select name="stepstep" class="custom-select custom-select-lg mb-3" id="stepCtrl">
+              <option value="X">Error HGZ1</option>
+              <option value="Y">Error HGZ2</option>
+              <option value="Z">Error HGZ3</option>
+            </select>
+          </div>
+
+          <%-# Removed the block comment as well as it is for incident. We do not apply incident on group -%>
+
+
+          <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-save-step-btn"
+                  value="Enregistrer une étape pour tous"/>
+					<div class="pos-center blc-cancel">
+						<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="far fa-times-circle"></i></a>
+					</div>
+
+          <%-# Removed the block incident. We do not apply incident on group -%>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="stepcbid" placeholder="code barre id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-mwfk" name="stepmwfid" placeholder="code barre id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-rwfk" name="steprwfid" placeholder="code barre id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-step-txt" name="steptxt" placeholder="code barre" style="resize: none;">Err</textarea>
+
+
+          <%-# In current form they are construct here -%>
+					<%-# This is used in pure grouping. We are not using this for association ! -%>
+					<%-# ************************* NO MOTHER IS EXPECTED HERE ************************* -%>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-pure" name="grpcheckcbpure" placeholder="code barre pure" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-pure-id" name="grpcheckcbpureid" placeholder="code barre pure" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-ext" name="grpcheckcbext" placeholder="code barre externes" style="resize: none;"></textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"><% if @stepgeol %><%= @stepgeol %><% else %>N<% end %></textarea>
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+
+        </form>
+
+
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

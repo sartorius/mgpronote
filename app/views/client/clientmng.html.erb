@@ -1,0 +1,127 @@
+<% provide(:title, "Client Manager") %>
+<div id="mg-graph-identifier">cltmng-gr</div>
+<%= render 'partner/partnerutils' %>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+		//Initalize JSON Array
+		for(i=0; i<dataTagToJsonArray.length; i++){
+			dataTagToJsonArray[i].enc_client_ref = mgsEncodeClientRef(dataTagToJsonArray[i].firstname, dataTagToJsonArray[i].id, dataTagToJsonArray[i].client_ref);
+			dataTagToJsonArray[i].raw_data = dataTagToJsonArray[i].name.toUpperCase() +
+																				dataTagToJsonArray[i].firstname.toUpperCase() +
+																				dataTagToJsonArray[i].email.toUpperCase() +
+																				dataTagToJsonArray[i].enc_client_ref.toUpperCase();
+
+			if(dataTagToJsonArray[i].owner_id == null){
+				dataTagToJsonArray[i].totalbc = parseInt(dataTagToJsonArray[i].totalbc) -1;
+			}
+		}
+		// We init here the filter value
+		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
+
+
+
+		// We load the workflows Here @resultSetWorkflow
+		var dataTagToJsonWorkflow = '<%= @resultSetWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+    dataTagToJsonWorkflow = dataTagToJsonWorkflow.replace(/&quot;/g,"\"");
+    var dataTagToJsonWorkflowArray = JSON.parse(dataTagToJsonWorkflow);
+
+
+  </script>
+<% end %>
+<%= render 'layouts/dirtycsv' %>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1>Client.e.s</h1>
+  </div>
+</div>
+
+<%= render 'layouts/mgs_modal' %>
+
+<input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
+
+<%-# We display the filter only if there is data to filter -%>
+<% unless @emptyResultSet %>
+		<div class="row filter-banner" id="filter-block">
+
+
+			<div class="col-sm-2 fil-el-txt">
+				&nbsp;<span><i id='nb-el-dash'>0</i>&nbsp;trouvé(s)</span>
+			</div>
+			<div class="col-sm-6">
+		  </div>
+
+			<div class="col-sm-3 fil-el">
+				<textarea class="form-control" rows="1" id="filter-all" placeholder="Filtrez min. 3 caractères" style="resize: none;"></textarea>
+		  </div>
+			<div class="col-sm-1 fil-el">
+				<button id="re-init-dash" type="button" class="btn btn-md btn-block btn-default">
+					<i class="fas fa-sync-alt"></i>
+				</button>
+
+			</div>
+		</div>
+<% end %>
+
+
+<div class="mgs-note mgs-note-mrg-grid">
+  <i id="optim-big-scr">Cet écran est optimisé pour une utilisation ordinateur ou tablette.</i><% unless @maxRowParamMD.nil? %><%= @maxRowParamMD.to_s %><% end %>
+</div>
+<% if @emptyResultSet %>
+  <div class="col-sm-12 no-data">
+		<i class="fas fa-box-open"></i>&nbsp;
+    Désolé, nous n'avons pas trouvé de suivi. Si vous venez de nous rejoindre ou si c'est un nouveau client, c'est normal !<br> Déjà, bienvenue ! Ensuite, nous vous invitons à dire à vos clients de créer leurs comptes et vous verrez vos premiers suivis.
+  </div>
+<% end %>
+
+<% if !@emptyResultSet %>
+	<div class="row">
+	  <div class="col-sm-12">
+	    <div id="jsGrid">
+	    </div>
+	  </div>
+	</div>
+	<br><br>
+	<div class="row">
+	  <div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+	  </div>
+		<div class="col-lg-3">
+				<button id="mgs-print-csv" class="btn btn-default-light btn-md btn-block">Exporter CSV &nbsp; <i class="fas fa-th"></i>
+				</button>
+	  </div>
+		<div class="col-sm-12 mgs-med-note">
+			<hr>
+			Le bouton&nbsp; <i class="c-w fas fa-box"></i> &nbsp;indique que vous créez un code barre pour une livraison à votre local.<br>
+			Le bouton&nbsp; <i class="c-b fas fa-truck"></i> &nbsp;indique que vous créez un code barre pour enlèvement.<br>
+			La colonne&nbsp; <i class="far fa-list-alt"></i> &nbsp;indique le nombre de code barre pour ce client actuellement.<br>
+			La colonne&nbsp; <i class="far fa-copy"></i> &nbsp;indique que le client est authorisé à créer ses propres codes barres - dans la limite configurée par votre abonnement.<br>
+
+			La colonne&nbsp; <i class="fas fa-check-square"></i> &nbsp;indique que le client a le droit de créer des suivi/codes barres.<br>
+			La colonne&nbsp; <i class="fas fa-times"></i> &nbsp;indique que le client n'a pas le droit de créer des suivi/codes barres.
+		</div>
+	</div>
+
+	<div class="hid-display">
+		<form action="/dashboardbyclient" method="post" id="mg-checkbc-form">
+			<input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-dash-by-client"
+							value="Voir client"/>
+			<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+			<textarea class="form-control step-hid" rows="1" id="client-id-post" name="clientid" placeholder="geolocalization" style="resize: none;"></textarea>
+			<textarea class="form-control step-hid" rows="1" id="client-ref-post" name="clientref" placeholder="geolocalization" style="resize: none;"></textarea>
+		</form>
+	</div>
+<% end %>

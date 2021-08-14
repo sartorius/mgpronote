@@ -1,0 +1,149 @@
+<% provide(:title, "Marquer") %>
+<div id="mg-graph-identifier">savebc-gr</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+<% if @resultSet.nil? %>
+	//Error
+<% else %>
+  <script>
+    var dataTagToJson = "<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>";
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+<% end %>
+
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <div class="mgs-note">
+          Code barre lu
+        </div>
+        <div class="mgs-read-bc">
+          <p id="readBC" class="monosp-ft-subtitle">
+            <%= @readBC %>
+          </p>
+        </div>
+        <div class="mgs-returnmsg">
+          <span id="displaymsg" class="badge badge-primary-medium">Code barre reconnu</span>
+
+        </div>
+        <br>
+        <div class="mgs-info">
+          <i class="fas fa-tag"></i>&nbsp;<span id="curr-status">EXXX1234</span>
+        </div>
+        <div class="mgs-info">
+          <%= @stepgeol %>
+        </div>
+        <hr>
+
+				<%# There is no next step for the partner %>
+				<div id="no-next-step" class="t-of-use mgs-med-note-imp">
+					Navré. Aucune des prochaines étapes ci-dessous ne peut être effectuée par le partenaire. Contactez le propriétaire du code barre pour qu'il passe à la prochaine étape. Si vous pensez qu'il s'agit d'une erreur, contactez nous avec le code UQSK76.
+				</div>
+
+				<%# Message INCIDENT %>
+				<div id="decl-incident" class="t-of-use mgs-med-note-imp">
+					L'incident suivant est en cours. En passant à l'étape suivante, il sera considéré comme résolu :<br>
+					<span id="descr-incident"></span>
+				</div>
+
+				<%# Message WEIGHT %>
+				<div class="center hid-display" id="wght-in-kg-blc">
+					<i id="wght-in-kg" class="wght-title">0</i>&nbsp;<i class="wght-in-kg-txt">kg</i><br>
+				</div>
+
+				<%# Message WEIGHT %>
+				<div class="center hid-display" id="verif-blc">
+					<i class="fas fa-th"></i> <strong>Un code de vérification a été transmis au client par email</strong><br>Il est aussi disponible dans le détail du menu client "Mes suivis"<br>
+					Cette vérification est obligatoire et le partenaire n'a pas accès à ce code.
+					<hr>
+				</div>
+
+
+        <form action="/save_step" method="post" id="savebc-form">
+          <div class="form-group" id="blc-step-ctrl">
+            <label for="exampleFormControlSelect1" class="lbl-opt">Nouvelle étape à marquer</label>
+            <select name="stepstep" class="custom-select custom-select-lg mb-3" id="stepCtrl">
+              <option value="X">Error XYZ1</option>
+              <option value="Y">Error XYZ2</option>
+              <option value="Z">Error XYZ3</option>
+            </select>
+          </div>
+
+          <div class="form-group hid-display" id="blk-cmt">
+            <textarea class="form-control" name="stepcomment" placeholder="Commentaire" id="stpcmt" rows="3" style="resize: none;"></textarea>
+          </div>
+
+					<div class="form-group hid-display" id="blk-weight">
+            <textarea class="form-control classy-input" name="stepweight" placeholder="En Kilogrammes - min. 0.25 - Format X ou X.XX" id="stpweight" inputmode="numeric" rows="1" style="resize: none;"></textarea>
+						<hr>
+					</div>
+
+					<div class="form-group hid-display" id="blk-verif">
+            <textarea class="form-control classy-input" name="verif" placeholder="Entrez le code" id="stpverif" inputmode="numeric" rows="1" style="resize: none;"></textarea>
+						<hr>
+					</div>
+
+
+          <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-save-step-btn"
+                  value="Enregistrer une étape"/>
+					<div class="pos-center blc-cancel">
+						<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="far fa-times-circle"></i></a>
+					</div>
+
+
+					<div id="blok-inc-btn">
+						<hr>
+
+						<% unless @resultSet[0]['rp_hdl_price'].to_s == 'N' %>
+						<div id="blc-pay-all">
+							<div class="center btn-cnc-step">
+								<a class="btn btn-default btn-md" id="btn-step-paid">
+										<% if @resultSet[0]['bc_paid_code'].to_s == 'N' %>
+											Valider le paiement&nbsp;<i class="fas fa-check-circle"></i><i class="hid-display" id="paid-order">Y</i>
+										<% else %>
+											Invalider le paiement&nbsp;<i class="fas fa-times-circle"></i><i class="hid-display" id="paid-order">N</i>
+										<% end %>
+								</a>
+							</div>
+							<hr>
+						</div>
+						<% end %>
+
+						<div class="center btn-cnc-step">
+							<a class="btn btn-default-light btn-md" id="btn-step-inc">
+									Déclarer un incident&nbsp;<i class="fas fa-exclamation-triangle"></i>
+							</a>
+						</div>
+						<div class="center">
+							<a class="btn btn-default-light btn-md" id="btn-step-inc-cnl">
+									Annuler la déclaration d'incident&nbsp;<i class="far fa-times-circle"></i>
+							</a>
+					</div>
+
+
+          <textarea class="form-control step-hid" rows="1" id="read-paid" name="steppaid" placeholder="read paid" style="resize: none;"></textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="stepcbid" placeholder="code barre id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-mwfk" name="stepmwfid" placeholder="wkf id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-rwfk" name="steprwfid" placeholder="rwfk id" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-step-txt" name="steptxt" placeholder="code barre" style="resize: none;">Err</textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb" name="stepcb" placeholder="code barre" style="resize: none;"><%= @readBC %></textarea>
+          <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"><% if @stepgeol %><%= @stepgeol %><% else %>N<% end %></textarea>
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+
+        </form>
+
+
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<% provide(:title, "Étape") %>
+<div id="mg-graph-identifier">stepsaved</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<div class="row">
+  <div class="col-lg-3">
+  </div>
+  <div class="col-lg-6">
+    <div class="mgs-read-bc">
+      <p id="readBC" class="monosp-ft-subtitle">
+        <%= @stepcb %>
+      </p>
+    </div>
+
+		<% if  @paymentUpdate %>
+				<%= render 'barcode/resultsaveparamupdate' %>
+		<% elsif @incidentDeclared == 'N' %>
+        <%= render 'barcode/resultsavestepnoincident' %>
+    <% else %>
+        <%= render 'barcode/resultsavestepwithincident' %>
+    <% end %>
+
+		<% unless @notificationResultSet.nil? || @notificationResultSet.empty?  %>
+			<hr>
+			<div class="mgs-info">
+				<i class="far fa-envelope"></i>&nbsp;Le.la client.e a reçu une notification par email.
+			</div>
+		<% end %>
+		<div class="pos-center blc-cancel">
+			<a href="/getnext" id="btn-cnl-nstp" class="btn btn-default btn-lg btn-block">Marquer un autre colis</a>
+		</div>
+		<div class="pos-center blc-cancel">
+			<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-md btn-block">Retour</a>
+		</div>
+  </div>
+  <div class="col-lg-3">
+  </div>
+</div>

@@ -1,0 +1,73 @@
+
+$main-color-link: #57009f;
+$main-color-active: #e8cdff;
+$main-color-active-dpm: #dfd9f1;
+
+
+
+@media (min-width:1000px){
+  .navbar{
+    padding-left: 90px;
+    padding-right: 90px;
+  }
+  .navbar-expand-lg .navbar-nav .nav-link{
+    padding-right: 0.7rem;
+  }
+}
+
+.navbar{
+  font-size: 15px;
+}
+
+/* Nav bar */
+.navbar-inverse{
+  background-color: #F9F5FA;
+  border-color: #F9F5FA;
+}
+
+// Link in menu
+.navbar-inverse .navbar-nav > li > a{
+  font-size: 1.2em;
+  color: #727272;
+}
+.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
+  color: #4C045E;
+  background-color: transparent;
+}
+
+.dropdown-menu > a{
+  color: #565656;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.dropdown-menu > a:hover,
+.dropdown-menu > a:focus,
+.dropdown-menu > a:active{
+  text-decoration: none;
+  color: $main-color-link;
+}
+
+.dropdown-menu > a:active {
+  background-color: $main-color-active-dpm;
+}
+
+.dropdown-toggle:focus {
+    outline: none !important;
+}
+
+.navbar-toggler:focus {
+    outline: none !important;
+}
+
+.fa-1x {
+font-size: 1.5rem;
+}
+
+.navbar-toggle{
+  background-color: #C6B2D8;
+}
+
+.navzebra {
+  background-color: #EDEDED;
+}

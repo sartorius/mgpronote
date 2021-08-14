@@ -1,0 +1,22 @@
+<% provide(:title, @user.name) %>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<% if (@resultSetCompany.nil?) || (@resultSetCompany[0][0].to_i < 2) %>
+    <%= render 'users/showclient' %>
+<% else %>
+    <%= render 'users/showpartner' %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-4">
+  </div>
+  <div class="col-md-4">
+    <%= link_to "Modifier", edit_user_path(current_user), class: "btn btn-default btn-lg btn-block" %>
+    <hr>
+    <%= link_to "Changer le mot de passe", "/editpwd", class: "btn btn-sm btn-default-light btn-block" %>
+  </div>
+  <div class="col-md-4">
+  </div>
+</div>

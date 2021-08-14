@@ -1,0 +1,42 @@
+<% provide(:title, "Home") %>
+<div id="mg-graph-identifier">home-gr</div>
+
+<div class="row" id="home-search">
+    <div class="col-lg-12">
+      <div class="mgs-homeq">
+        <form action="/check_step_home" method="post" class="center" autocomplete="new-password" id="vrf-main-form">
+            <div>
+              <div class="row">
+                <div class="col-lg-12">
+
+                  <div class="mg-verify-logo pos-center">
+                    <%= image_tag("logoRD400.png", alt: "MGSuivi logo", width: "125", id: "logo-home", class: "img-trans")%>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3">
+                </div>
+
+                    <div class="col-lg-3 form-group">
+                      <textarea class="form-control classy-input crt-fill-form" rows="1" id="inputMG" name="checkcb" placeholder="#Suivi" style="resize: none;"></textarea>
+                    </div>
+                    <div class="col-lg-3 form-group mg-verify-bar">
+
+                      <button type="submit"  name="formSubmit" id="btnVerify" class="btn btn btn-default btn-lg btn-block">
+                         <i class="fas fa-binoculars"></i>&nbsp;&nbsp;Vérifier
+                      </button>
+
+                    </div>
+
+                <div class="col-lg-3">
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <textarea class="form-control step-hid" rows="1" id="read-cb-id" name="checkcbid" placeholder="code barre id" style="resize: none;"></textarea>
+            <textarea class="form-control step-hid" rows="1" id="read-cb-sec" name="checkcbsec" placeholder="code barre sec" style="resize: none;"></textarea>
+        </form>
+      </div>
+    </div>
+  </div>

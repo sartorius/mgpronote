@@ -1,0 +1,24 @@
+<% provide(:title, "Inscrire un nouveau client") %>
+<div id="mg-graph-identifier">signupclt-gr</div>
+<%= render 'partner/partnerutils' %>
+<h1><i class="fas fa-plus-square"></i>&nbsp;Nouveau client</h1>
+
+
+<div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+        <div class="crt-block">Ajouter un nouveau client</div>
+
+        <div class="t-of-use mgs-med-note">
+          Vous avez un nouveau client. Félicitation ! Pour l'inscrire comme client de votre compagnie, vous devez lui demander de créer un compte MGSuivi. Si c'est déjà fait, vous n'avez plus quà enregistrer son email ici.<br>
+          Pour éviter toute erreur, nous vous conseillons de demander l'email par écrit (Email, Messenger, Whatsapp, Viber etc.) et de le copier coller ici.
+        </div>
+
+        <div>
+          <%= render 'form_new_client' %>
+        </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+</div>

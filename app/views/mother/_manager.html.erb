@@ -1,0 +1,31 @@
+<div class="mgs-note mgs-note-mrg-grid">
+  Cet écran est optimisé pour une utilisation ordinateur ou tablette. <% unless @maxRowParamSM.nil? %><%= @maxRowParamSM.to_s %><% end %>
+</div>
+<% if @emptyResultSet %>
+  <div class="row">
+    <div class="col-sm-12 pos-center msg-med-vt">
+      <i class="fas fa-box-open"></i>&nbsp;
+      Vous n'avez pas de référence MOTHER en cours, n'hésitez pas en créer pour optimiser votre activité.<br>
+    </div>
+  </div>
+  <div class="row msg-bot-vt">
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-4">
+      <button id="new-dash" type="button" class="btn btn-md btn-block btn-default crt-moth">
+        Nouveau&nbsp;<i class="fas fa-cubes"></i>
+      </button>
+    </div>
+    <div class="col-sm-4">
+    </div>
+  </div>
+<% else %>
+  <div class="row">
+    <div class="col-sm-12">
+      <div id="jsGrid">
+      </div>
+    </div>
+  </div>
+  <br><br><br>
+  <%= render 'partner/printmax' %>
+<% end %>

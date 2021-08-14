@@ -1,0 +1,78 @@
+<% provide(:title, "Association") %>
+<div id="mg-graph-identifier">grpassoc-gr</div>
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+<script>
+
+  var dataTagToJsonPure = "<%= @list_pure_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+  var dataTagToJsonArrayPure = JSON.parse(dataTagToJsonPure);
+
+  var dataTagToJsonExt = "<%= @list_ext_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+  var dataTagToJsonArrayExt = JSON.parse(dataTagToJsonExt);
+
+  var dataTagToJsonMother = "<%= @list_mother_array.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+  var dataTagToJsonArrayMother = JSON.parse(dataTagToJsonMother);
+
+  var dataTagToJsonMotherRaw = "<%= @list_mother_array_raw.inspect %>".replace(/&quot;/g,"\"").replace(/=&gt;/g, ":");
+  var dataTagToJsonArrayMotherRaw = JSON.parse(dataTagToJsonMotherRaw);
+
+</script>
+
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <div class="mgs-note">
+          Les <span class="grp-read-nb"></span> codes barres suivants ont été correctement lu
+        </div>
+        <div id="list-of-read-bc">
+        </div>
+        <div>
+        </div>
+        <hr>
+        <div class="mgs-note">
+          Ils vont être associés au MOTHER
+        </div>
+        <div id="list-of-mother-one" class="monosp-ft-subtitle">
+        </div>
+
+        <br><br><br>
+
+        <form action="/associate_mother" method="post">
+
+          <%-# Removed the block comment as well as it is for incident. We do not apply incident on group -%>
+
+
+          <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-save-step-btn"
+                  value="Associer au MOTHER"/>
+					<div class="pos-center blc-cancel">
+						<a href="/" id="btn-cnl-nstp" class="btn btn-default-light btn-sm btn-block">Annuler&nbsp;<i class="far fa-times-circle"></i></a>
+					</div>
+
+
+          <%-# In current form they are construct here -%>
+					<%-# This is used in pure grouping. We are not using this for association ! -%>
+					<%-# ************************* NO MOTHER IS EXPECTED HERE ************************* -%>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-pure" name="grpcheckcbpure" placeholder="code barre pure" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-pure-id" name="grpcheckcbpureid" placeholder="code barre pure" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-ext" name="grpcheckcbext" placeholder="code barre externes" style="resize: none;"></textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-mother" name="grpcheckcbmother" placeholder="code barre mother" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-mother-raw" name="grpcheckcbmotherraw" placeholder="code barre mother raw" style="resize: none;"></textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"><% if @stepgeol %><%= @stepgeol %><% else %>N<% end %></textarea>
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+
+        </form>
+
+
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

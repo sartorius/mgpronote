@@ -1,0 +1,258 @@
+
+<div class="row">
+  <div class="col-sm-4">
+    <% unless @screenClient %>
+      <% unless (@resultSet[0]['mother_ref'].nil?) %>
+        <div class="crt-block">Référence MOTHER</div>
+        <div class="t-of-use mgs-med-note">
+          Associé sur le
+        </div>
+        <div class="field-md">
+          <%= @resultSet[0]['mother_ref'].to_s %>
+        </div>
+      <% end %>
+    <% end %>
+    <div class="crt-block">Paquet</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations suivantes concernent le paquet.
+    </div>
+    <label>Statut actuel</label><br>
+    <div class="field-big">
+      <%= @resultSet[0]['step'].to_s %>
+    </div>
+    <label>Description du status</label><br>
+    <div class="field-sm">
+      <%= @resultSet[0]['description'].to_s %>
+    </div>
+    <% if !(@resultSet[0]['ext_ref'].nil?) %>
+        <label>Référence externe</label><br>
+        <div class="field-md">
+          <i id='alr-ref-ext'><%= @resultSet[0]['ext_ref'].to_s %></i>
+        </div>
+    <% end %>
+
+    <% if !(@resultSet[0]['bcdescription'].nil?) %>
+        <label>Description du contenu du suivi</label><br>
+        <div class="field-md">
+          <i id='alr-descr'><%= @resultSet[0]['bcdescription'].to_s %></i>
+        </div>
+    <% end %>
+
+    <label>Mode de transport</label><br>
+    <div class="field-md">
+
+      <%= @resultSet[0]['rwf_code'].to_s %>/<%= @resultSet[0]['rwf_description'].to_s %>&nbsp;
+      <% if (@resultSet[0]['rwf_mode'].to_s == 'P') %>
+        <i class="fas fa-plane-departure"></i>
+      <% elsif (@resultSet[0]['rwf_mode'].to_s == 'B') %>
+        <i class="fas fa-anchor"></i>
+      <% elsif (@resultSet[0]['rwf_mode'].to_s == 'R') %>
+          <i class="fas fa-road"></i>
+      <% else %>
+        <i class="fas fa-toolbox"></i>
+      <% end %>
+    </div>
+
+    <label>Partenaire</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['part_name'].to_s %>
+    </div>
+    <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+        <% if @screenClient %>
+
+          <button id="disp-add-info" type="button" class="btn btn-md btn-block btn-default">
+            Gérer information additionnel&nbsp; <i class="fas fa-th"></i>
+          </button>
+        <% end %>
+
+    <% end %>
+    <div class="crt-block">Création</div>
+
+    <label>Suivi créé par</label><br>
+    <div class="field-md">
+      <%= encode_client_ref(@resultSet[0]['cfirstname'].to_s, @resultSet[0]['cid'].to_s, @resultSet[0]['cclient_ref'].to_s) %>
+    </div>
+    <label>Date de création</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['create_date'].to_s %>
+    </div>
+    <div class="crt-block">Expiration</div>
+    <div class="t-of-use mgs-med-note">
+      Pour des raisons de charge de volumes les suivis terminés (donc remis au client final) expirent et disparaissent au bout de un mois.
+      <strong>Si vous désirez conserver ces informations, nous vous invitons à régulièrement exporter vers Excel vos suivis terminés&nbsp;<i class="fas fa-star"></i></strong>
+    </div>
+
+  </div>
+  <div class="col-sm-4">
+
+
+    <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+          <div class="crt-block">Poids</div>
+          <div class="t-of-use mgs-med-note">
+            Poids en Kilogramme(s)
+          </div>
+            <% unless (@resultSet[0]['weight_in_gr'].nil?) %>
+          <div class="field-big">
+              <%= @resultSet[0]['weight_in_gr'].to_f/1000 %>
+            <% else %>
+          <div class="field-md">
+              Non renseigné pour l'instant
+            <% end %>
+          </div>
+    <% end %>
+
+    <%# Payment block %>
+    <% unless (@resultSet[0]['hdl_price'].to_s == 'N') %>
+        <div class="crt-block">Statut paiement</div>
+        <div class="field-md">
+          <% if (@resultSet[0]['paid_code'].to_s == 'N') %>
+            Non payé
+          <% else %>
+            Payé
+          <% end %>
+        </div>
+    <% end %>
+
+
+    <div class="crt-block">Propriétaire</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations suivantes concernent le propriétaire du paquet.
+    </div>
+    <label>Propriétaire</label><br>
+    <div class="field-big">
+      <%= @resultSet[0]['oname'].to_s %><br><%= @resultSet[0]['ofirstname'].to_s %>
+    </div>
+    <label>Email</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['oemail'].to_s %>
+    </div>
+    <label>Téléphone</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['ophone'].to_s %>
+    </div>
+
+
+
+
+
+
+  </div>
+  <div class="col-sm-4">
+
+    <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+
+            <% if @resultSet[0]['type_pack'] == 'D' %>
+
+                <div class="crt-block">Livraison chez le partenaire</div>
+                <div class="t-of-use mgs-med-note">
+                  Vous avez choisi un suivi livraison.
+                </div>
+                <label>À quelle adresse faire livrer votre colis ?</label><br>
+                <div class="field-md">
+                  <%= @resultSet[0]['delivery_addr'].split('@')[0].upcase %> - <%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %>/<%= @resultSet[0]['rwf_code'].to_s %><br>
+                  <%= @resultSet[0]['delivery_addr'].split('@')[1].upcase %>
+                </div>
+                <div class="t-of-use mgs-med-note-imp">
+                  <strong><i class="fas fa-star"></i>&nbsp;Important</strong>&nbsp;Cette adresse contient
+                   votre référence client unique: <strong><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></strong> et
+                   le mode de transport <strong><%= @resultSet[0]['rwf_code'].to_s %></strong>: <%= @resultSet[0]['rwf_description'].to_s %>.<br>
+                  Cela permettra au partenaire d'identifier rapidement votre paquet et vous évitera des risques d'erreur.<br>
+                  <strong>Chaque client a son code de référence unique et il ne doit pas être partagé.</strong>
+                </div>
+            <% else %>
+                <%# This to know if someone has been updated to pick up %>
+                <% if !(@resultSet[0]['p_name_firstname'].nil?) %>
+                  <div class="crt-block">Enlèvement&nbsp;<i class="c-b fas fa-truck"></i></div>
+                  <div class="t-of-use mgs-med-note">
+                    Information concernant l'enlèvement.
+                  </div>
+                  <label>Nom du contact enlèvement</label><br>
+                  <div class="field-md">
+                    <%= @resultSet[0]['p_name_firstname'].to_s %>
+                  </div>
+                  <label>Téléphone du contact enlèvement</label><br>
+                  <div class="field-md">
+                    <%= @resultSet[0]['p_phone'].to_s %>
+                  </div>
+                  <label>Adresse enlèvement</label><br>
+                  <div class="field-md">
+                    <%= @resultSet[0]['p_address_note'].to_s %>
+                  </div>
+                <% end %>
+            <% end %>
+
+
+    <% end %>
+
+
+    <% if (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+      <% if (@resultSet[0]['rwf_avg_delivery'].to_i > 0) %>
+        <div class="crt-block">Estimation de disponibilité</div>
+        <div class="t-of-use mgs-med-note">
+          C'est la date à laquelle nous estimons en moyenne que votre commande sera disponible par rapport à sa création. Veuillez considérer que les jours fériés et d'autres évènements imprévisibles peuvent impacter cette prévision.
+        </div>
+        <div class="field-md">
+          <%= @resultSet[0]['estim_delivery'].to_s %> dans <%= @resultSet[0]['is_late'].to_i %> jour(s)
+        </div>
+
+      <% end %>
+
+    <% end %>
+
+    <div class="crt-block">Récupération</div>
+    <div class="t-of-use mgs-med-note">
+      Le lieu où aller récupérer.
+    </div>
+    <label><i class="fas fa-warehouse"></i>&nbsp;Destination finale où récupérer le colis</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['pickup_addr'].to_s %>
+    </div>
+    <label><i class="fas fa-warehouse"></i>&nbsp;Téléphone du partenaire</label><br>
+    <div class="field-md">
+      <%= @resultSet[0]['pickup_phone'].to_s %>
+    </div>
+    <hr>
+
+    <% unless (@resultSet[0]['rwf_mode'].to_s == 'M') %>
+          <% if (@resultSet[0]['tname'].nil?) || ((@resultSet[0]['tname'] == @resultSet[0]['oname']) && (@resultSet[0]['tfirstname'] == @resultSet[0]['ofirstname'])) %>
+            <label>Receptionneur.euse</label><br>
+            <div class="field-md">
+              <i id='alr-rec-name'><%= @resultSet[0]['oname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['ofirstname'].to_s %></i>
+            </div>
+            <label>Téléphone</label><br>
+            <div class="field-md">
+              <i id='alr-rec-phone'><%= @resultSet[0]['ophone'].to_s %></i>
+            </div>
+          <% else %>
+            <label>Receptionneur.euse</label><br>
+            <div class="field-md">
+              <i id='alr-rec-name'><%= @resultSet[0]['tname'].to_s %></i>&nbsp;<i id='alr-rec-fname'><%= @resultSet[0]['tfirstname'].to_s %></i>
+            </div>
+            <label>Téléphone</label><br>
+            <div class="field-md">
+              <i id='alr-rec-phone'><%= @resultSet[0]['tphone'].to_s %></i>
+            </div>
+          <% end %>
+
+
+          <% if @screenClient %>
+
+            <div class="crt-block">Vérification</div>
+            <div class="t-of-use mgs-med-note-imp">
+              <strong><i class="fas fa-star"></i>&nbsp;Confidentiel</strong>&nbsp;
+              La remise en main propre: il sera demandé la pièce d'identité mais aussi ce code. Il ne doit pas être partagé. Seul vous pouvez le connaître.
+            </div>
+            <label>Code de vérification</label><br>
+            <div class="field-md">
+              <%= @resultSet[0]['secret_code'].to_s %>
+            </div>
+
+          <% end %>
+
+
+    <% end %>
+
+
+
+  </div>
+</div>

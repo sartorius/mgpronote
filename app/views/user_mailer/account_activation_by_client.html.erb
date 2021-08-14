@@ -1,0 +1,24 @@
+<h1>MG Suivi</h1>
+
+<p>Bonjour <%= @user.name %>&nbsp;<%= @user.firstname %>,</p>
+
+<p>
+Ce compte a été créé automatiquement par <%= @partner_name.to_s %>.<br>
+Bienvenue sur MGSuivi !<br>
+</p>
+<strong>Votre mot de passe généré automatiquement est: <%= @pwd.to_s %></strong><br>
+Nous vous invitons très fortement à le changer dès que vous avez activé votre compte.<br><br>
+
+Cliquez sur le lien suivant pour activier votre compte et profiter du meilleur de votre suivi:<br>
+
+<%= link_to "Activer", edit_account_activation_url(@user.activation_token,
+                                                    email: @user.email) %>
+<hr>
+Dès maintenant vous pouvez faire livrer chez ce partenaire.
+<%= @add_info.html_safe %>
+<hr>
+Si ce lien d'activation ne fonctionne pas, copier collez ceci dans votre navigateur :
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>
+<hr>
+Merci d'avoir choisi de travailler avec notre partenaire.<br>
+Notre équipe est là pour vous aider à avoir la meilleur expérience de suivi possible.

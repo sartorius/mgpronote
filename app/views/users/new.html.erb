@@ -1,0 +1,66 @@
+<% provide(:title, 'Créer un compte') %>
+<h1>Créer un compte</h1>
+<div id="mg-graph-identifier">formuser-gr</div>
+
+<div class="row">
+  <div class="col-md-3">
+  </div>
+  <div class="col-md-6">
+    <%= form_with(model: @user, local: true) do |f| %>
+      <%= render 'shared/error_messages' %>
+
+      <div class="crt-block">Identifiant</div>
+
+      <div class="t-of-use mgs-med-note">
+        Un email de vérification va vous être envoyé. Assurez-vous que vous avez accès à votre boîte au lettre.
+      </div>
+
+      <label>Email <span id="ck-email" class="ctr-ck-grp"> - obligatoire</span></label>
+      <%= f.email_field :email, class: 'form-control crt-fill-form classy-input', placeholder: "Email", id: 'crt-email' %>
+
+      <label>Mot de passe <span id="ck-pwd" class="ctr-ck-grp">(min. 7 caractères)</span></label>
+      <%= f.password_field :password, class: 'form-control crt-fill-form classy-input', placeholder: "Mot de passe", id: 'crt-pwd' %>
+
+      <label>Confirmation du mot de passe <span id="ck-cpwd" class="ctr-ck-grp"> - obligatoire</span></label>
+      <%= f.password_field :password_confirmation, class: 'form-control crt-fill-form classy-input', placeholder: "Confirmation du mot de passe", id: 'crt-cpwd' %>
+
+
+
+      <div class="crt-block">Information vous concernant</div>
+      <div class="t-of-use mgs-med-note">
+      Par défaut, c'est avec ce nom et ce prénom que vous pourrez récupérer votre paquet en présentant une pièce d'identité.
+      </div>
+
+      <label>Nom de famille <span id="ck-name" class="ctr-ck-grp"> - obligatoire</span></label>
+      <%= f.text_field :name, class: 'form-control crt-fill-form classy-input', placeholder: "Rakoto", id: 'crt-name' %>
+
+      <label>Prénom <span id="ck-fname" class="ctr-ck-grp"> - obligatoire</span></label>
+      <%= f.text_field :firstname, class: 'form-control crt-fill-form classy-input', placeholder: "Aina", id: 'crt-fname' %>
+
+      <label>Numéro de téléphone <span id="ck-phone"class="ctr-ck-grp"> - obligatoire</span></label>
+      <%= f.text_field :phone, class: 'form-control crt-fill-form classy-input', placeholder: "Téléphone", id: 'crt-phone' %>
+
+      <label>Vous êtes</label>
+      <%= select(:user, :partner, [['Particulier', 0], ['Entreprise', 1]], class: 'form-control') %>
+
+      <hr>
+
+      <div class="t-of-use mgs-med-note">
+      En créant votre compte, vous acceptez <%= link_to "les conditions d'utilisation de MGSuivi", termsofuse_path %>
+      </div>
+
+      <%= f.submit "Créer mon compte", class: "btn btn-default btn-lg", id: "crt-submit" %>
+    <% end %>
+    <div class="mgs-med-note">
+      Nous ne vous demandons que les informations essentielles. Le but est de pouvoir identifier et contacter le plus facilement le propriétaire du paquet. En dehors du partenaire qui doit vous acheminer votre paquet, nous ne partagerons jamais vos informations. Le partenaire signe une charte de confidentialité sur l'utilisation de vos données. Vous avez le droit de nous demander les informations que nous possédons vous concernants.
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="crt-block">Les données</div>
+
+    <div class="t-of-use mgs-lg-note">
+      Nous avons réduis tant que possible les données à nous fournir. Ces informations ne seront pas partagées et vous ne serez pas spammé.<br><br> Nous savons que c'est pénible pour tout le monde de créer un compte. Mais nous savons aussi que c'est une source de stress de commander à distance.<br><br><strong>Mais on vous assure que ça en vaut la peine.</strong>
+
+    </div>
+  </div>
+</div>

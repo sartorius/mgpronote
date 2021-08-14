@@ -1,0 +1,82 @@
+<div class="row mgs-title">
+  <div class="col-lg-12 monosp-ft-title">
+    <span id="bc-seeone"><%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %></span>
+
+  </div>
+  <div class="col-lg-12 monosp-ft-title-mini">
+      <span>
+        <i class="fas fa-exclamation-triangle"></i>&nbsp;Votre référence livraison
+      </span>
+  </div>
+</div>
+
+<div class="row usr-block">
+  <div class="col-md-4">
+    <div class="crt-block">Client</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations sur vous.
+    </div>
+    <label>Nom prénom</label>
+    <div class="field-md">
+      <%= @user.name + ' ' + @user.firstname %>
+    </div>
+    <div class="crt-block">Contact</div>
+    <div class="t-of-use mgs-med-note">
+      Les informations utiles pour vous contacter.
+    </div>
+    <label>Email</label>
+    <div class="field-md">
+      <%= @user.email %>
+    </div>
+    <label>Profil</label>
+    <div class="field-md">
+      <% if @user.partner == 0 %>
+        Particulier
+      <% elsif @user.partner == 1 %>
+        Entreprise
+      <% else %>
+        Partenaire <% if @user.incharge? %>et <strong>en charge</strong><% end %>
+      <% end %>
+    </div>
+    <label>Téléphone</label>
+    <div class="field-md">
+      <%= @user.phone %>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="crt-block">Référence client</div>
+    <div class="t-of-use mgs-med-note-imp">
+      <strong>Nous avons à coeur la discrétion et les données personnelles de nos clients.</strong><br>
+      Votre référence client est une référence anonymisée qui peut apparaître publiquement sur un numéro de suivi. Seuls vous et le partenaire, vous savez que vous êtes propriétaire de la commande.<br>
+
+    </div>
+    <label>Votre référence</label>
+    <div class="field-md">
+      <%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %>
+    </div>
+    <div class="t-of-use mgs-med-note">
+      Cette référence est unique, anonymisée et personnelle. Vous ne devez pas la partager.
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="crt-block">Partenaire transporteur</div>
+    <div class="t-of-use mgs-med-note">
+      Si vous devez utilisez MG Suivi avec un partenaire transporteur, vous devez utiliser votre référence client si vous faîtes livrer chez lui.
+      <br><strong>Cette action permet au partenaire de vous identifier rapidement et efficacement comme le propriétaire d'une commande&nbsp;<i class="fas fa-star"></i></strong>
+      <hr>
+      Si vous deviez faire livrer à l'adresse suivante :<br>
+      MADA COLIS TRANSPORT<br>
+      15 RUE DE LA GARE<br>
+      93170 BAGNOLET<br>
+    </div>
+    <div class="crt-block">&nbsp;</div>
+    <div class="t-of-use mgs-med-note-imp">
+      Vous devez entrer l'adresse suivante :<br>
+      MADA COLIS TRANSPORT - <strong><%= encode_client_ref(@user.firstname, @user.id.to_s, @user.client_ref.to_s) %></strong><br>
+      15 RUE DE LA GARE<br>
+      93170 BAGNOLET<br>
+      <hr>
+    </div>
+
+  </div>
+</div>

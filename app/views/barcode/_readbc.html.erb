@@ -1,0 +1,136 @@
+<%= render 'barcode/dirtyzxingjs' %>
+
+<div id="mgs-main-cam">
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+        <p class="mgs-note">
+        Scannez les codes barres liés à MG Suivi pour marquer une étape du processus ou obtenir plus d'informations. Mettez vous bien en face du code barre, le téléphone parallèle à la surface à scanner. La lecture fonctionne mieux sur les surfaces planes.
+        </p>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+  <div>
+    <div class="row">
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6" id="demo-content">
+
+
+
+            <br><br>
+            <div class="col-lg-12 mgs-cam">
+              <% if !@checkBCIndicator.nil? %>
+                  <video id="video" width="275" height="275" style="background-color: #CACACA">
+                  </video>
+              <% elsif !@grpIndicator.nil? %>
+                  <video id="video" width="275" height="275" style="background-color: #342349">
+                  </video>
+              <% else %>
+                  <video id="video" width="275" height="275" style="background-color: #C6B2D8">
+                  </video>
+              <% end %>
+            </div>
+
+            <div class="mgs-btn-lst">
+              <div class="mgs-bg-scan col-sm-12">
+
+                  <% if !@checkBCIndicator.nil? %>
+                  <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                    <i class="fas fa-binoculars"></i> &nbsp; Vérifier
+                  <% elsif !@grpIndicator.nil? %>
+                  <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                    <i class="fas fa-layer-group"></i> &nbsp; Grouper
+                  <% else %>
+                    <button id="startButton" type="button" class="btn btn-lg btn-block btn-default">
+                      <i class="fas fa-qrcode"></i> &nbsp; Marquer
+                  <% end %>
+                </button>
+
+              </div>
+
+              <div class="mgs-bg-scan col-sm-12">
+                <button id="resetButton" type="button" class="btn btn-sm btn-block btn-default">
+                  Stopper la Caméra &nbsp; <i class="fas fa-stop"></i>
+                </button>
+              </div>
+            </div>
+
+            <hr>
+
+            <% if !@checkBCIndicator.nil? %>
+            <% elsif !@grpIndicator.nil? %>
+            <% else %>
+            <% end %>
+
+            <div class="mgs-bg-scan col-sm-12 mgs-cam">
+              <%-# Button trigger modal -%>
+              <button id="switchCam" type="button" class="btn btn-sm btn-default">
+                Changer de Caméra &nbsp; <i class="fas fa-camera-retro"></i>
+              </button>
+            </div>
+
+            <% if @grpIndicator.nil? %>
+                <%-# We allow manual entry -%>
+                <div class="mgs-bg-scan col-sm-12 mgs-cam">
+                  <button id="startManualButton" type="button" class="btn btn-sm btn-default">
+                    Entrer le numéro de code barre à la main &nbsp; <i class="far fa-hand-pointer"></i>
+                  </button>
+                </div>
+            <% else %>
+
+                  <div id="grp-blc-cam" class="col-sm-12">
+                    <div class="t-of-use mgs-med-note-imp">
+                      <i class="fas fa-exclamation-triangle"></i>&nbsp;Tous les codes barres groupés doivent être reconnus et à la même étape pour pouvoir évoluer ensemble. Le grouping est limité à 12.<br>Si un code barre MOTHER est scanné, tous les autres vont être associé à cette référence MOTHER.
+                    </div>
+                    <div id="grp-read-fdb">
+                      <hr>
+                      <label>Dernier lu:</label>&nbsp;<i id="grp-last-read" class="monosp-ft-nc"></i>&nbsp;<strong><i id="grp-last-already" class="mgs-red">(déjà lu)</i></strong><br><label>Nombre de lecture:</label> <i id="grp-nb-lec">0</i>
+                    </div>
+                    <hr>
+                    <label><span id="grp-tap-to-del">Tappez pour supprimer de la liste</span></label>
+                    <div id="grp-of-bc">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 blc-grp-step">
+                    <button id="mg-grp-step-btn" class="btn btn-default btn-lg btn-block">
+                      Marquer une étape pour tous&nbsp;<i class="fas fa-th-list"></i>
+                    </button>
+
+                  </div>
+            <% end %>
+
+            <div id="cam-code-original">
+              <label>Code lecture:</label>
+              <pre><code id="result"></code></pre>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+        </div>
+    </div>
+  </div>
+</div>
+
+<div id="mgs-manual-cam">
+  <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="col-lg-6">
+
+        <div class="manual-block manual-el">
+          <textarea class="form-control classy-input" rows="1" id="manual-cb" placeholder="Entrez manuellement le code barre" style="resize: none;"></textarea>
+          <button id="manualValid" type="button" class="btn btn-lg btn-block btn-default manual-el">
+            Valider &nbsp; <i class="fas fa-qrcode"></i>
+          </button>
+        </div>
+
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+  <br><br><br><br><br>
+</div>

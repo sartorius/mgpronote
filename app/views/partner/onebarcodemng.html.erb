@@ -1,0 +1,63 @@
+<% provide(:title, "Suivi") %>
+<div id="mg-graph-identifier">partonebc-gr</div>
+<%= render 'partner/partnerutils' %>
+<%= render 'partner/dirtyjspdf' %>
+<%= render 'partner/dirtyqrcode' %>
+<% if @resultSet.nil? %>
+	//Error TDY789
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJsonOneBC = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonOneBC = dataTagToJsonOneBC.replace(/&quot;/g,"\"");
+    var dataTagToJsonOneBCArray = JSON.parse(dataTagToJsonOneBC);
+		var dataTagToJsonArray;
+		var printArray = new Array();
+
+		var dataTagToJsonStepWF = '<%= @resultSetStepWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonStepWF = dataTagToJsonStepWF.replace(/&quot;/g,"\"");
+    var dataTagToJsonStepWFArray = JSON.parse(dataTagToJsonStepWF);
+  </script>
+<% end %>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+
+<div class="row mgs-title">
+  <div class="col-lg-6">
+		<div class="monosp-ft-title">
+    	<span id="bc-seeone">Suivi</span>
+		</div>
+    <span id="id-seeone"><%= @resultSet[0]['id'].to_s %></span>
+    <span id="sec-seeone"><%= @resultSet[0]['secure'].to_s %></span>
+		<div class="monosp-ft-title-mini">
+				<span>
+			    appartenant à <i id="cli-ref"><%= encode_client_ref(@resultSet[0]['ofirstname'].to_s, @resultSet[0]['oid'].to_s, @resultSet[0]['oclient_ref'].to_s) %></i>
+			  </span>
+		</div>
+  </div>
+	<div class="col-lg-1">
+	</div>
+	<div class="col-lg-4 center mid-blc">
+			<div id="mbc-0" class="qr-one">
+			</div>
+			<div class="mid-blc">
+				<button id="btn-print-bc" class="btn btn-default btn-sm btn-print btn-block">Imprimer&nbsp;&nbsp;<i class="fas fa-print"></i></button>
+			</div>
+	</div>
+	<div class="col-lg-1">
+	</div>
+</div>
+
+<%= render 'persoresel/displayworkflow' %>
+<div class="mgs-note mgs-note-mrg-grid">
+  <i id="optim-big-scr">Cet écran est optimisé pour une utilisation ordinateur ou tablette.</i>
+</div>
+<hr>
+<%= render 'persoresel/mainseeone' %>

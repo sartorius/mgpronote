@@ -1,0 +1,5 @@
+Bonjour <%= @user.name %> <%= @user.firstname %>,
+
+Bienvenue sur MG Suivi! Copiez coller le lien suivant dans votre navigateur pour profiter du meilleur de votre suivi:
+
+<%= edit_account_activation_url(@user.activation_token, email: @user.email) %>

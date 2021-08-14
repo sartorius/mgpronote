@@ -1,0 +1,38 @@
+<div class="mgs-returnmsg">
+  <span class="badge badge-primary-medium">&nbsp;<%= @returnmessage %>&nbsp;</span>
+
+</div>
+<p>
+
+
+  <% unless !@verificationIsOK %>
+    <div class="mgs-note mgs-note-top">
+      L'étape suivante a été enregistrée
+    </div>
+  <% end %>
+  <div class="mgs-info-big">
+    <%= @steptxt %>
+    <% unless (@stepweight.nil?) || (@stepweight == '') %>
+    <div class="mgs-note mgs-note-top">
+      Poids
+    </div>
+    <div class="mgs-info">
+      <%= @stepweight %> Kg
+    </div>
+    <% end %>
+  </div>
+
+  <div class="mgs-note mgs-note-top">
+    Localisation
+  </div>
+
+  <div class="mgs-info">
+    <% if @stepgeol == 'N' %>
+      Localisation indisponible ou refusée.
+    <% else %>
+      <%= @stepgeol %>
+    <% end %>
+  </div>
+
+
+</p>

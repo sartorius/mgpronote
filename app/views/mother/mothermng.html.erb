@@ -1,0 +1,88 @@
+<% provide(:title, "Mother") %>
+<div id="mg-graph-identifier">motdash-gr</div>
+<%= render 'partner/partnerutils' %>
+<%= render 'partner/dirtyjspdf' %>
+<%= render 'partner/dirtyqrcode' %>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+		// Result set
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+		// We init here the filter value
+		var filteredDataTagToJsonArray = dataTagToJsonArray.slice(0);
+		var printArray = new Array();
+
+
+		// Workflow
+		var dataTagToJsonWorkflowMt = '<%= @resultSetWorkflowMt.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJsonWorkflowMt = dataTagToJsonWorkflowMt.replace(/&quot;/g,"\"");
+    var dataTagToJsonArrayWorkflowMt = JSON.parse(dataTagToJsonWorkflowMt);
+		var filteredDataTagToJsonArrayWorkflowMt = dataTagToJsonArrayWorkflowMt.slice(0);
+
+
+		// We load the workflows Here @resultSetWorkflow
+		var dataTagToJsonWorkflow = '<%= @resultSetWorkflow.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+    dataTagToJsonWorkflow = dataTagToJsonWorkflow.replace(/&quot;/g,"\"");
+    var dataTagToJsonWorkflowArray = JSON.parse(dataTagToJsonWorkflow);
+
+		var statusArray = new Array();
+
+  </script>
+<% end %>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<div class="row">
+  <div class="col-lg-12">
+    <h1><i class="fas fa-cubes"></i>&nbsp;Référence mother</h1>
+  </div>
+</div>
+
+<%= render 'layouts/mgs_modal' %>
+<input id="auth-token-s" type="hidden" name="authenticity_token" value="<%= @getAuthToken %>">
+<i class="hid-display" id="max-print-const"><%= @maxPrintConstEnv.to_s %></i>
+<br><br>
+
+<% if @resultSetCompany[0][9].to_s == 'N' %>
+  <%# We are not handling MOTHER Workflow %>
+  <div class="row">
+      <div class="col-sm-12 no-data">
+    		<i class="fas fa-box-open"></i>&nbsp;
+        Désolé, vous n'avez pas encore souscrit à l'offre MOTHER. Cette option permet d'avoir une référence unique qui contrôle plusieurs sous-références. Comme par exemple une palette qui contient 20 colis. En mettant à jour uniquement la référence MOTHER de la palette, vous mettez à jour automatiquement tous les 20 colis.<br><br>
+        Si vous êtes intéressé, n'hésitez pas à nous contacter avec le code UPM821, nous serons ravis de vous répondre.
+      </div>
+  </div>
+<% else %>
+  <%= render 'mother/menubar' %>
+  <%= render 'mother/manager' %>
+
+
+<% end %>
+<div class="row">
+	<div class="col-sm-12 mgs-med-note">
+		<hr>
+		Une référence MOTHER "nouveau" doit d'abord grouper d'autres références pour pouvoir évoluer.<br>
+		Pour évoluer ensemble plusieurs références MOTHER, elles doivent être de même workflow et à la même étape.<br>
+		Une référence dissociée (Disso.) est terminée. Elle ne peut plus être associée ni évoluer des sous-référence.<br>
+	</div>
+</div>
+
+<div class="hid-display">
+	<form action="/dashboardbymother" method="post" id="mg-checkbc-form">
+		<input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-dash-by-client"
+						value="Voir"/>
+		<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+		<textarea class="form-control step-hid" rows="1" id="mother-id-post" name="motherid" placeholder="mother" style="resize: none;"></textarea>
+		<textarea class="form-control step-hid" rows="1" id="mother-ref-post" name="motherref" placeholder="mother" style="resize: none;"></textarea>
+	</form>
+</div>

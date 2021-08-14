@@ -1,0 +1,34 @@
+<% provide(:title, "Marquer") %>
+<div id="mg-graph-identifier">grpgetnext-gr</div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+<%= render 'barcode/readbc' %>
+<hr>
+<div id="mgs-readbc-bottom">
+  <div class="row">
+    <div class="col-lg-3">
+
+    </div>
+    <div class="col-lg-6">
+        <form action="/grpsave_bc" method="post" id="mg-checkbc-form">
+
+          <%-# This button is visibility hidden -%>
+          <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-step-btn"
+                  value="Marquer Étape"/>
+
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <textarea class="form-control step-hid" rows="1" id="step-geol" name="stepgeol" placeholder="geolocalization" style="resize: none;"></textarea>
+
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-pure" name="grpcheckcbpure" placeholder="code barre pure" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-mother" name="grpcheckcbmother" placeholder="code barre mother" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-mother-raw" name="grpcheckcbmotherraw" placeholder="code barre mother raw" style="resize: none;"></textarea>
+          <textarea class="form-control step-hid" rows="1" id="read-cb-grp-ext" name="grpcheckcbext" placeholder="code barre externes" style="resize: none;"></textarea>
+
+        </form>
+    </div>
+    <div class="col-lg-3">
+    </div>
+  </div>
+</div>

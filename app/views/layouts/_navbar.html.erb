@@ -1,0 +1,70 @@
+
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #F9F5FA;">
+      <%= link_to image_tag("logoSQ100.png", alt: "Rails logo", width: "45"), root_path, class: "nav-link", id: "logo" %>
+
+      <button class="navbar-toggler"
+              type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+              <span><i class="fas fa-bars fa-1x"></i></span>
+      </button>
+
+
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+
+          <%# Handle here the different menu%>
+          <%# Remove the HOME_LINK As I don't want it on mobile %>
+          <% unless (mobile_device == "mobile") && is_partner?  %>
+            <li class="nav-item"><%= link_to "Home", root_path, class: "nav-link" %></li>
+          <% end %>
+
+          <% if logged_in? %>
+              <%# Is logged in %>
+              <% unless (mobile_device == "mobile")  %>
+                    <% if is_partner? %>
+                        <%# I am a partner not in mobile %>
+                        <%= render 'layouts/nav/part_off_mobile' %>
+                      <% else %>
+                          <%# I am a not a partner not in mobile %>
+                          <%= render 'layouts/nav/client_off_mobile' %>
+                      <% end %>
+              <% else %>
+                <%# I am on mobile %>
+                <% if is_partner? %>
+                    <%= render 'layouts/nav/part_on_mobile' %>
+                <% else %>
+                    <%# I am a not a partner not in mobile %>
+                    <%= render 'layouts/nav/client_on_mobile' %>
+                <% end %>
+              <% end %>
+          <% else %>
+            <%# Not logged in %>
+            <% unless (mobile_device == "mobile")  %>
+                <%= render 'layouts/nav/nologging_not_mobile' %>
+            <% else %>
+                <%= render 'layouts/nav/nologging_on_mobile' %>
+            <% end %>
+          <% end %>
+          <% if logged_in? %>
+
+              <% if false %>
+                code to comment for admin never be compile
+                <li class="nav-item"><%= link_to "Users", users_path %></li>
+              <% end %>
+
+              <% if (mobile_device == "mobile")  %>
+                <%# MOBILE %>
+                <%= render 'layouts/nav/logging_util_on_mobile' %>
+              <% else %>
+                  <%# NOT MOBILE %>
+                  <%= render 'layouts/nav/logging_util_off_mobile' %>
+              <% end %>
+          <% else %>
+              <li class="nav-item"><%= link_to "Se connecter", login_path, class: "nav-link" %></li>
+          <% end %>
+        </ul>
+      </div>
+    </nav>
+    <br>
