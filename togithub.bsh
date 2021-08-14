@@ -2,6 +2,6 @@
 
 git add .
 git commit -m "$*"
-git push -u origin master
+git push origin HEAD:main
 
 # git push heroku master
