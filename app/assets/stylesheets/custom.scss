@@ -26,11 +26,11 @@ $gray-lighter: #B7B7B7;
 */
 $state-danger-text: #830000;
 $gray-medium-light: #eaeaea;
-$main-color: #300055;
-$main-color-light: #F9F5FA;
+$main-color: #305B9F;
+$main-color-light: #FAFAFA;
 $main-color-medium: #6D5D7C;
 $main-color-light-contrast: #D6CADD;
-$placeholder-color: #D7CFE4;
+$placeholder-color: #C6DAEC;
 
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
@@ -68,20 +68,20 @@ textarea {
 .btn-default{
    color: white !important;
    background-color:$main-color;
-   border-color:#130022;
+   border-color:#172D4F;
  }
 .btn.btn-default:hover,
 .btn.btn-default:focus,
 .btn.btn-default:active,
 .btn.btn-default.active {
-    color: #45007B !important;
+    color: $main-color !important;
     background-color: $main-color-light;
 }
 
 .btn-default-light{
    color: $main-color;
    background-color:$main-color-light;
-   border-color:#130022;
+   border-color:#172D4F;
  }
 .btn.btn-default-light:hover,
 .btn.btn-default-light:focus,
@@ -108,7 +108,7 @@ textarea {
 .btn-alternative-light{
    color: #00277B;
    background-color: #CDDDFF;
-   border-color:#130022;
+   border-color:#172D4F;
  }
 .btn.btn-alternative-light:hover,
 .btn.btn-alternative-light:focus,
@@ -637,7 +637,7 @@ p {
 }
 
 .mgs-dialog-window{
-  background-color: #F9F5FA;
+  background-color: #FAFAFA;
   padding-top: 10px;
   min-height: 90px;
   font-size: 1.2em;
