@@ -1,0 +1,43 @@
+<% provide(:title, "Wake up Note") %>
+<div id="mg-graph-identifier">wakeupnote-gr</div>
+<% if @resultSet.nil? %>
+	//Error
+  <script>
+    var dataTagToJsonArray = "";
+  </script>
+<% else %>
+  <script>
+    var dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    var dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+  </script>
+<% end %>
+<%= render 'layouts/dirtycsv' %>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');
+</style>
+
+
+<h1>RAKOTOARINIA Tsiky</h1>
+
+<div class="row">
+  <div class="col-lg-4">
+    Promotion : 2024/L3<br>
+    Cursus : Marketing International
+  </div>
+  <div class="col-lg-8">
+  </div>
+</div>
+
+
+<hr>
+<div class="row">
+  <div class="col-lg-12 pos-center top-text-pc">
+
+    <div id="jsGrid">
+    </div>
+
+  </div>
+</div>

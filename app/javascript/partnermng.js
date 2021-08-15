@@ -26,6 +26,9 @@ function mainPartnLoaderInCaseOfChange(){
       fillMaxPrint();
     });
   }
+  else if($('#mg-graph-identifier').text() == 'wakeupnote-gr'){
+    runjsWakeUpNoteGrid();
+  }
   else if(($('#mg-graph-identifier').text() == 'parprint12-gr') ||
           ($('#mg-graph-identifier').text() == 'parprintnotrack-gr')){
     $("#btn-print-12").click(function() {
@@ -557,6 +560,141 @@ function printBtnAvailability(){
     $("#print-dash").prop('disabled', true);
   }
 }
+
+
+/* JS GRID */
+function runjsWakeUpNoteGrid(){
+  console.log('runjsWakeUpNoteGrid');
+  let fields;
+
+  if(window.screen.availWidth < 1100){
+      // We are in SMALL screens !
+      responsivefields = [
+          { name: "wp_exam_date",
+            title: '<i class="fa fa-calendar"></i>',
+            type: "date",
+            align: "left",
+            width: 25,
+            headercss: "h-jsG-r",
+            itemTemplate: function(value, item) {
+              return '<i class="mob-size">' + value.toString().substring(8) + '/' + value.toString().substring(5, 7) + '</i>';
+
+            }
+          },
+          { name: "wp_exam_subject",
+            title: '<i class="fa fa-briefcase"></i>',
+            type: "text",
+            align: "left",
+            width: 25,
+            headercss: "h-jsG-c",
+            itemTemplate: function(value, item) {
+              return '<i class="mob-size">' + value.substring(0, 5).toUpperCase() + '</i>';
+
+            }
+          },
+          { name: "wp_exam_name",
+            title: 'Sujet',
+            type: "text",
+            align: "left",
+            headercss: "h-jsG-c",
+            itemTemplate: function(value, item) {
+              return '<i class="mob-size">' + value + '</i>';
+
+            }
+          },
+          { name: "wp_exam_note",
+            title: '<i class="fa fa-clipboard"></i>',
+            type: "number",
+            align: "right",
+            width: 10,
+            headercss: "h-jsG-c",
+            itemTemplate: function(value, item) {
+              return '<i class="mob-size">' + value + '</i>';
+
+            }
+          }
+      ];
+      }
+      else{
+        // We are in BIIIIIG screens !
+        responsivefields = [
+            { name: "wp_exam_date",
+              title: "Date",
+              type: "date",
+              align: "left",
+              width: 25,
+              headercss: "h-jsG-r",
+              itemTemplate: function(value, item) {
+                return '<i>' + value.toString().substring(8) + '/' + value.toString().substring(5, 7) + '</i>';
+
+              }
+            },
+            { name: "wp_exam_subject",
+              title: 'Matière',
+              type: "text",
+              align: "left",
+              width: 30,
+              headercss: "h-jsG-c"
+            },
+            { name: "wp_exam_name",
+              title: 'Sujet',
+              type: "text",
+              align: "left",
+              headercss: "h-jsG-c"
+            },
+            { name: "wp_exam_note",
+              title: 'Note',
+              type: "number",
+              align: "right",
+              width: 10,
+              headercss: "h-jsG-c"
+            },
+            { name: "wp_exam_best",
+              title: 'Meilleure',
+              type: "number",
+              align: "right",
+              width: 10,
+              headercss: "h-jsG-c"
+            },
+            { name: "wp_exam_avg",
+              title: 'Moyenne',
+              type: "number",
+              align: "right",
+              width: 10,
+              headercss: "h-jsG-c"
+            }
+        ];
+      }
+
+  // Options ------------------------------------
+
+  if(dataTagToJsonArray.length > 0){
+    //Set the number of data
+    $("#nb-el-dash").html(dataTagToJsonArray.length);
+    $("#jsGrid").jsGrid({
+        height: "auto",
+        width: "100%",
+
+        sorting: true,
+        paging: true,
+
+        data: dataTagToJsonArray,
+
+        fields: responsivefields
+    });
+  }
+  else{
+    $("#jsGrid").hide();
+  }
+  /*
+  console.log('size jsonArray: ' + dataTagToJsonArray.length);
+  console.log('size of filter De la Cannelle: ' +
+            dataTagToJsonArray.filter(function (el) {
+                return el.raw_data.includes('De la Cannelle')
+            }).length)
+            */
+}
+
 
 
 /* JS GRID */
