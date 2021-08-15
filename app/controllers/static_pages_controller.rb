@@ -33,7 +33,9 @@ class StaticPagesController < ApplicationController
     render 'wakeupnote'
   end
 
-
+  def wakeupcertif
+    render 'wakeupcertif'
+  end
 
   def why
     render 'why'

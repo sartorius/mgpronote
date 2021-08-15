@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get    '/howtouse',    to: 'static_pages#howtouse'
   get    '/why',    to: 'static_pages#why'
   get    '/wakeupnote',   to: 'static_pages#wakeupnote'
+  get    '/wakeupcertif',   to: 'static_pages#wakeupcertif'
   get    '/about',   to: 'static_pages#about'
   get    '/contact', to: 'static_pages#contact'
   get    '/termsofuse', to: 'static_pages#termsofuse'
